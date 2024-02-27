@@ -29,7 +29,7 @@ public class GameSim {
 		}
 		int turns = 0;
 		//HP, Damage, Turn, Name, X, Y, Range, Movement, Ult
-		Player p1 = new Player(2650, 175, true, "Lunar", 0, 0, 30, 100, 0);
+		Player p1 = new Player(2650, 175, true, "Max", 0, 0, 30, 100, 0);
 		Player p3 = new Player(2900, 325, false, "Cherry", 0, 3, 10, 100, 0);
 		Player p5 = new Player(4850, 575, false, "Rocco", 3, 0, 6, 500, 0);
 		
@@ -2943,7 +2943,7 @@ public class GameSim {
 		System.out.print("Who do you want to see the Sunrise: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
-			a.takeDamage(500);
+			a.takeDamage(700);
 			a.addEffects(e);
 			a.applyEffects();
 			if(b.inRange(a, 10)) {
@@ -2954,11 +2954,11 @@ public class GameSim {
 				c.addEffects(e3);
 				c.applyEffects();
 			}
-			p.heal(500, 0.1);
+			p.heal(0.2);
 			p.resetUlt();
 		}
 		if(targetResponse.equals("2")) {
-			b.takeDamage(500);
+			b.takeDamage(700);
 			b.addEffects(e);
 			b.applyEffects();
 			if(a.inRange(b, 10)) {
@@ -2969,11 +2969,11 @@ public class GameSim {
 				c.addEffects(e3);
 				c.applyEffects();
 			}
-			p.heal(500, 0.1);
+			p.heal(0.2);
 			p.resetUlt();
 		}
 		if(targetResponse.equals("3")) {
-			c.takeDamage(500);
+			c.takeDamage(700);
 			c.addEffects(e);
 			c.applyEffects();
 			if(a.inRange(c, 10)) {
@@ -2984,7 +2984,7 @@ public class GameSim {
 				b.addEffects(e3);
 				b.applyEffects();
 			}
-			p.heal(500, 0.1);
+			p.heal(0.2);
 			p.resetUlt();
 		}
 		System.out.println();
