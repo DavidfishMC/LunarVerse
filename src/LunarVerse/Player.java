@@ -87,6 +87,14 @@ public class Player {
 		jumps = 1;
 	}
 	
+	public void addJumps(int i) {
+		jumps = jumps + i;
+	}
+	
+	public void addDashes(int i) {
+		dashes = dashes + i;
+	}
+	
 	public void useJump() {
 		jumps--;
 	}
