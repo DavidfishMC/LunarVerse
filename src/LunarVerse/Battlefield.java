@@ -23,11 +23,11 @@ public class Battlefield {
 
 	public Battlefield(String nameIn, Player aIn, Player bIn, Player cIn, Player dIn, Player eIn, Player fIn) {
 		a = aIn;
-		b = aIn;
-		c = aIn;
-		d = aIn;
-		e = aIn;
-		f = aIn;
+		b = bIn;
+		c = cIn;
+		d = dIn;
+		e = eIn;
+		f = fIn;
 		players.add(a);
 		players.add(b);
 		players.add(c);

@@ -20,7 +20,7 @@ public class GameSim {
 	public static void main(String[] args) {
 		
 		try {
-			String audio = "sproutedit.wav";
+			String audio = "battleedit.wav";
 			audioPlayer = new Music(audio); 
 			audioPlayer.play();
 			audioPlayer.pause();
@@ -49,7 +49,7 @@ public class GameSim {
 		System.out.print("Enter any key to start: ");
 		String temp = input.next();
 		System.out.println();
-		//audioPlayer.play();
+		audioPlayer.play();
 		game = true;
 		while(game) {
 			if(turns % 2 == 0) {
