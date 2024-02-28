@@ -35,6 +35,7 @@ public class Player {
 	boolean stunned = false;
 	boolean paralyzed = false;
 	boolean reflection = false;
+	boolean counter = false;
 	boolean freezed = false;
 	boolean refined = false;
 	boolean ultActive = false;
@@ -164,8 +165,16 @@ public class Player {
 		return ultActive;
 	}
 	
+	public void ultDown() {
+		ultActive = false;
+	}
+	
 	public void resetCooldown() {
 		cooldown = 0;
+	}
+	
+	public boolean usedAbility() {
+		return cooldown > 0;
 	}
 	
 	public void setName(String name2) {
@@ -252,7 +261,7 @@ public class Player {
 		int randomX = (int)(Math.random() * (5 - (-5) + 1)) + -5;
 		int randomY = (int)(Math.random() * (5 - (-5) + 1)) + -5;
 		curLoc.adjust(randomX, randomY);
-		if(curLoc.getX() > 40) {
+		if(curLoc.getX() > 41) {
 			curLoc.setX(40);
 			takeDamage(100);
 		}
@@ -260,7 +269,7 @@ public class Player {
 			curLoc.setX(0);
 			takeDamage(100);
 		}
-		if(curLoc.getY() > 40) {
+		if(curLoc.getY() > 41) {
 			curLoc.setY(40);
 			takeDamage(100);
 		}
@@ -355,6 +364,12 @@ public class Player {
 		}
 		if(name.equals("Sammi") && range > 100) {
 			p.takeDamage(damage + randomNum + c);
+			if(p.getName().equals("Thunder") && p.isCountering()) {
+				takeDamage(p.getDamage() * 1.25);
+			}
+			if(p.isReflecting()) {
+				takeDamage((damage + randomNum + c) * 0.5);
+			}
 			attacked = true;
 			return;
 		}
@@ -364,11 +379,23 @@ public class Player {
 			return;
 		}
 		if(p.getCover().equals("Partial")) {
-			double rand = Math.random();
-			if(rand <= 0.5) {
-				System.out.println("Attacked was Covered!");
+			if(name.equals("Thunder")) {
+				p.takeDamage((damage * 0.5) + randomNum + c);
 				attacked = true;
+				if(p.isReflecting()) {
+					takeDamage((damage + randomNum + c) * 0.5);
+				}
+				if(p.getName().equals("Thunder") && p.isCountering()) {
+					takeDamage(p.getDamage() * 1.25);
+				}
 				return;
+			}else {
+				double rand = Math.random();
+				if(rand <= 0.5) {
+					System.out.println("Attacked was Covered!");
+					attacked = true;
+					return;
+				}
 			}
 		}
 		if(p.isReflecting()) {
@@ -376,13 +403,24 @@ public class Player {
 		}
 		p.takeDamage(damage + randomNum + c);
 		attacked = true;
+		if(p.getName().equals("Thunder") && p.isCountering()) {
+			takeDamage(p.getDamage() * 1.25);
+		}
 		if(c > 0) {
 			System.out.println("Critical shot!");
 		}
 	}
 	
+	public boolean isCountering() {
+		return counter;
+	}
+	
 	public boolean isDazed() {
 		return dazed;
+	}
+	
+	public void increaseDPSNum(double d) {
+		damage = damage + d;
 	}
 	
 	public void addEffects(ArrayList<Effect> e) {
@@ -476,6 +514,17 @@ public class Player {
 			if(e.get(i).getName().equals("refine") && !refined) {
 				refined = true;
 				System.out.println(name + " has been refined.");
+			}
+			if(e.get(i).getName().equals("counter") && counter) {
+				for(int j = 0; j < effects.size(); j++) {
+					if(effects.get(i).getName().equals("counter")) {
+						effects.remove(effects.get(i));
+					}
+				}
+			}
+			if(e.get(i).getName().equals("counter") && !counter) {
+				counter = true;
+				System.out.println(name + " is now countering.");
 			}
 			effects.add(e.get(i));
 		}
@@ -589,6 +638,11 @@ public class Player {
 				if(e.getName().equals("refine")) {
 					refined = false;
 					System.out.println(name + " is no longer refined.");
+					i--;
+				}
+				if(e.getName().equals("counter")) {
+					counter = false;
+					System.out.println(name + " is no longer countering.");
 					i--;
 				}
 				effects.remove(e);
@@ -1064,6 +1118,28 @@ public class Player {
 			}
 			if(randomNum == 3) {
 				return ("\"Don't try to hide, it's pointless.\"");
+			}
+		}
+		if(name.equals("Clara")) {
+			if(randomNum == 1) {
+				return ("\"Look out, I'm coming through!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"I got your backs, just from the front.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"No 4k camera will see me zoom by them.\"");
+			}
+		}
+		if(name.equals("Thunder")) {
+			if(randomNum == 1) {
+				return ("\"Mess with me? I'll mess with you.\"");
+			}
+			if(randomNum == 2) {
+				return ("\"You sure you want to hit me now?\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Go on, attack! You'll meet your fate sooner.\"");
 			}
 		}
 		return "";

@@ -18,6 +18,9 @@ public class Party {
 		for(int i = 0; i < 3; i++) {
 			roster[i].endTurn();
 			roster[i].applyRegen();
+			if(roster[i].getName().equals("Clara") && roster[i].ultActive()) {
+				roster[i].ultDown();
+			}
 		}
 		turn = false;
 		p.setTurn();
@@ -46,7 +49,6 @@ public class Party {
 			}
 		}
 		if(!roster[0].isAlive() || roster[0].isStunned()) {
-			System.out.print("here");
 			roster[1].setTurn();
 		}else if(!roster[0].isAlive() && roster[1].isStunned()) {
 			roster[2].setTurn();

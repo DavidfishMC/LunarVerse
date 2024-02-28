@@ -15,10 +15,16 @@ public class GameSim {
 	int xBound;
 	int yBound;
 	static Music audioPlayer;
+	static Example image;
 	static int turns2 = 0;
 
 	public static void main(String[] args) {
-		
+		/*
+		try {
+			image = new Example();
+		} catch (IOException e) {
+		}
+		*/
 		try {
 			String audio = "battleedit.wav";
 			audioPlayer = new Music(audio); 
@@ -29,18 +35,13 @@ public class GameSim {
 		}
 		int turns = 0;
 		//HP, Damage, Turn, Name, X, Y, Range, Movement, Ult
-		Player p1 = new Player(2650, 175, true, "Max", 0, 0, 30, 100, 0);
+		Player p1 = new Player(2650, 175, true, "Clara", 40, 40, 30, 100, 0);
 		Player p3 = new Player(2900, 325, false, "Cherry", 0, 3, 10, 100, 0);
 		Player p5 = new Player(4850, 575, false, "Rocco", 3, 0, 6, 500, 0);
 		
 		Player p2 = new Player(10000, 225, false, "Finley", 40, 40, 9, 100, 0);
 		Player p4 = new Player(10000, 200, false, "Louis", 40, 37, 10, 100, 0);
 		Player p6 = new Player(10000, 200, false, "Solar", 37, 40, 10, 100, 0);
-		
-		Party party1 = new Party(true, p1, p3, p5);
-		Party party2 = new Party(false, p2, p4, p6);
-		
-		Battlefield b = new Battlefield("Galactical Laboratories", p1, p3, p5, p2, p4, p6);
 		boolean game = false;
 		Scanner input = new Scanner(System.in);
 		System.out.println("\033[3mLunarVerse\033[0m");
@@ -49,7 +50,44 @@ public class GameSim {
 		System.out.print("Enter any key to start: ");
 		String temp = input.next();
 		System.out.println();
-		audioPlayer.play();
+		//audioPlayer.play();
+		if(temp.equals("a")) {
+			//image.close();
+			System.out.println("Team A, pick your characters.");
+			System.out.print("Character Selection 1: ");
+			String temp2 = input.next();
+			p1 = CharacterSelection(p1, temp2, true, 0, 0);
+			System.out.print("Character Selection 2: ");
+			String temp3 = input.next();
+			p3 = CharacterSelection(p3, temp3, false, 0, 3);
+			System.out.print("Character Selection 3: ");
+			String temp4 = input.next();
+			p5 = CharacterSelection(p5, temp4, false, 3, 0);
+			System.out.println();
+			System.out.println("Team B, pick your characters.");
+			System.out.print("Character Selection 1: ");
+			String temp5 = input.next();
+			p2 = CharacterSelection(p2, temp5, true, 40, 40);
+			System.out.print("Character Selection 2: ");
+			String temp6 = input.next();
+			p4 = CharacterSelection(p4, temp6, false, 40, 37);
+			System.out.print("Character Selection 3: ");
+			String temp7 = input.next();
+			p6 = CharacterSelection(p6, temp7, false, 37, 40);
+		}else {
+			p1 = new Player(2650, 175, true, "Thunder", 40, 40, 30, 100, 0);
+			p3 = new Player(2900, 325, false, "Cherry", 0, 3, 10, 100, 0);
+			p5 = new Player(4850, 575, false, "Rocco", 3, 0, 6, 500, 0);
+			
+			p2 = new Player(10000, 225, false, "Lunar", 40, 40, 9, 100, 0);
+			p4 = new Player(10000, 200, false, "Louis", 40, 38, 10, 100, 0);
+			p6 = new Player(10000, 200, false, "Solar", 38, 40, 10, 100, 0);
+
+		}
+		Battlefield b = new Battlefield("Galactical Laboratories", p1, p3, p5, p2, p4, p6);
+		Party party1 = new Party(true, p1, p3, p5);
+		Party party2 = new Party(false, p2, p4, p6);
+		System.out.println();
 		game = true;
 		while(game) {
 			if(turns % 2 == 0) {
@@ -147,6 +185,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p1.getName().equals("Thunder")) {
+								ThunderUltimate(p1, p2, p4, p6);
+							}
+							if(p1.getName().equals("Clara")) {
+								ClaraUltimate(p1);
+							}
 							if(p1.getName().equals("Sammi")) {
 								SammiUltimate(p1);
 							}
@@ -294,6 +338,12 @@ public class GameSim {
 							if(p1.getName().equals("Sammi")) {
 								SammiAbility(p1);
 							}
+							if(p1.getName().equals("Clara")) {
+								ClaraAbility(p1);
+							}
+							if(p1.getName().equals("Thunder")) {
+								ThunderAbility(p1);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -372,6 +422,12 @@ public class GameSim {
 											if(p1.getName().equals("Sammi")) {
 												SammiAttack(p1, p2);
 											}
+											if(p1.getName().equals("Clara")) {
+												ClaraAttack(p1, p2);
+											}
+											if(p1.getName().equals("Thunder")) {
+												ThunderAttack(p1, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -429,6 +485,12 @@ public class GameSim {
 											}
 											if(p1.getName().equals("Sammi")) {
 												SammiAttack(p1, p4);
+											}
+											if(p1.getName().equals("Clara")) {
+												ClaraAttack(p1, p4);
+											}
+											if(p1.getName().equals("Thunder")) {
+												ThunderAttack(p1, p4, p2, p6);
 											}
 										}
 									}
@@ -488,6 +550,12 @@ public class GameSim {
 											}
 											if(p1.getName().equals("Sammi")) {
 												SammiAttack(p1, p6);
+											}
+											if(p1.getName().equals("Clara")) {
+												ClaraAttack(p1, p6);
+											}
+											if(p1.getName().equals("Thunder")) {
+												ThunderAttack(p1, p6, p4, p2);
 											}
 										}
 									}
@@ -561,6 +629,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p3.getName().equals("Thunder")) {
+								ThunderUltimate(p3, p2, p4, p6);
+							}
+							if(p3.getName().equals("Clara")) {
+								ClaraUltimate(p3);
+							}
 							if(p3.getName().equals("Sammi")) {
 								SammiUltimate(p3);
 							}
@@ -714,6 +788,12 @@ public class GameSim {
 							if(p3.getName().equals("Sammi")) {
 								SammiAbility(p3);
 							}
+							if(p3.getName().equals("Clara")) {
+								ClaraAbility(p3);
+							}
+							if(p3.getName().equals("Thunder")) {
+								ThunderAbility(p3);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -792,6 +872,12 @@ public class GameSim {
 											if(p3.getName().equals("Sammi")) {
 												SammiAttack(p3, p2);
 											}
+											if(p3.getName().equals("Clara")) {
+												ClaraAttack(p3, p2);
+											}
+											if(p3.getName().equals("Thunder")) {
+												ThunderAttack(p3, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -851,6 +937,12 @@ public class GameSim {
 											if(p3.getName().equals("Sammi")) {
 												SammiAttack(p3, p4);
 											}
+											if(p3.getName().equals("Clara")) {
+												ClaraAttack(p3, p4);
+											}
+											if(p3.getName().equals("Thunder")) {
+												ThunderAttack(p3, p4, p2, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -909,6 +1001,12 @@ public class GameSim {
 											}
 											if(p3.getName().equals("Sammi")) {
 												SammiAttack(p3, p6);
+											}
+											if(p3.getName().equals("Clara")) {
+												ClaraAttack(p3, p6);
+											}
+											if(p3.getName().equals("Thunder")) {
+												ThunderAttack(p3, p6, p4, p2);
 											}
 										}
 									}
@@ -985,6 +1083,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p5.getName().equals("Thunder")) {
+								ThunderUltimate(p5, p2, p4, p6);
+							}
+							if(p5.getName().equals("Clara")) {
+								ClaraUltimate(p5);
+							}
 							if(p5.getName().equals("Sammi")) {
 								SammiUltimate(p5);
 							}
@@ -1132,6 +1236,12 @@ public class GameSim {
 							if(p5.getName().equals("Sammi")) {
 								SammiAbility(p5);
 							}
+							if(p5.getName().equals("Clara")) {
+								ClaraAbility(p5);
+							}
+							if(p5.getName().equals("Thunder")) {
+								ThunderAbility(p5);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -1210,6 +1320,12 @@ public class GameSim {
 											if(p5.getName().equals("Sammi")) {
 												SammiAttack(p5, p2);
 											}
+											if(p5.getName().equals("Clara")) {
+												ClaraAttack(p5, p2);
+											}
+											if(p5.getName().equals("Thunder")) {
+												ThunderAttack(p5, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1269,6 +1385,12 @@ public class GameSim {
 											if(p5.getName().equals("Sammi")) {
 												SammiAttack(p5, p4);
 											}
+											if(p5.getName().equals("Clara")) {
+												ClaraAttack(p5, p4);
+											}
+											if(p5.getName().equals("Thunder")) {
+												ThunderAttack(p5, p4, p2, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -1327,6 +1449,12 @@ public class GameSim {
 											}
 											if(p5.getName().equals("Sammi")) {
 												SammiAttack(p5, p6);
+											}
+											if(p5.getName().equals("Clara")) {
+												ClaraAttack(p5, p6);
+											}
+											if(p5.getName().equals("Thunder")) {
+												ThunderAttack(p5, p6, p4, p2);
 											}
 										}
 									}
@@ -1414,6 +1542,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p2.getName().equals("Thunder")) {
+								ThunderUltimate(p2, p1, p3, p5);
+							}
+							if(p2.getName().equals("Clara")) {
+								ClaraUltimate(p2);
+							}
 							if(p2.getName().equals("Sammi")) {
 								SammiUltimate(p2);
 							}
@@ -1561,6 +1695,12 @@ public class GameSim {
 							if(p2.getName().equals("Sammi")) {
 								SammiAbility(p2);
 							}
+							if(p2.getName().equals("Clara")) {
+								ClaraAbility(p2);
+							}
+							if(p2.getName().equals("Thunder")) {
+								ThunderAbility(p2);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -1639,6 +1779,12 @@ public class GameSim {
 											if(p2.getName().equals("Sammi")) {
 												SammiAttack(p2, p1);
 											}
+											if(p2.getName().equals("Clara")) {
+												ClaraAttack(p2, p1);
+											}
+											if(p2.getName().equals("Thunder")) {
+												ThunderAttack(p2, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1698,6 +1844,12 @@ public class GameSim {
 											if(p2.getName().equals("Sammi")) {
 												SammiAttack(p2, p3);
 											}
+											if(p2.getName().equals("Clara")) {
+												ClaraAttack(p2, p3);
+											}
+											if(p2.getName().equals("Thunder")) {
+												ThunderAttack(p2, p3, p1, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -1756,6 +1908,12 @@ public class GameSim {
 											}
 											if(p2.getName().equals("Sammi")) {
 												SammiAttack(p2, p5);
+											}
+											if(p2.getName().equals("Clara")) {
+												ClaraAttack(p2, p5);
+											}
+											if(p2.getName().equals("Thunder")) {
+												ThunderAttack(p2, p5, p3, p1);
 											}
 										}
 									}
@@ -1832,6 +1990,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p4.getName().equals("Thunder")) {
+								ThunderUltimate(p4, p1, p3, p5);
+							}
+							if(p4.getName().equals("Clara")) {
+								ClaraUltimate(p4);
+							}
 							if(p4.getName().equals("Sammi")) {
 								SammiUltimate(p4);
 							}
@@ -1979,6 +2143,12 @@ public class GameSim {
 							if(p4.getName().equals("Sammi")) {
 								SammiAbility(p4);
 							}
+							if(p4.getName().equals("Clara")) {
+								ClaraAbility(p4);
+							}
+							if(p4.getName().equals("Thunder")) {
+								ThunderAbility(p4);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -2057,6 +2227,12 @@ public class GameSim {
 											if(p4.getName().equals("Sammi")) {
 												SammiAttack(p4, p1);
 											}
+											if(p4.getName().equals("Clara")) {
+												ClaraAttack(p4, p1);
+											}
+											if(p4.getName().equals("Thunder")) {
+												ThunderAttack(p4, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2116,6 +2292,12 @@ public class GameSim {
 											if(p4.getName().equals("Sammi")) {
 												SammiAttack(p4, p3);
 											}
+											if(p4.getName().equals("Clara")) {
+												ClaraAttack(p4, p3);
+											}
+											if(p4.getName().equals("Thunder")) {
+												ThunderAttack(p4, p3, p1, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -2174,6 +2356,12 @@ public class GameSim {
 											}
 											if(p4.getName().equals("Sammi")) {
 												SammiAttack(p4, p5);
+											}
+											if(p4.getName().equals("Clara")) {
+												ClaraAttack(p4, p5);
+											}
+											if(p4.getName().equals("Thunder")) {
+												ThunderAttack(p4, p5, p3, p1);
 											}
 										}
 									}
@@ -2250,6 +2438,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p6.getName().equals("Thunder")) {
+								ThunderUltimate(p6, p1, p3, p5);
+							}
+							if(p6.getName().equals("Clara")) {
+								ClaraUltimate(p6);
+							}
 							if(p6.getName().equals("Sammi")) {
 								SammiUltimate(p6);
 							}
@@ -2397,6 +2591,12 @@ public class GameSim {
 							if(p6.getName().equals("Sammi")) {
 								SammiAbility(p6);
 							}
+							if(p6.getName().equals("Clara")) {
+								ClaraAbility(p6);
+							}
+							if(p6.getName().equals("Thunder")) {
+								ThunderAbility(p6);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -2475,6 +2675,12 @@ public class GameSim {
 											if(p6.getName().equals("Sammi")) {
 												SammiAttack(p6, p1);
 											}
+											if(p6.getName().equals("Clara")) {
+												ClaraAttack(p6, p1);
+											}
+											if(p6.getName().equals("Thunder")) {
+												ThunderAttack(p6, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2533,6 +2739,12 @@ public class GameSim {
 											}
 											if(p6.getName().equals("Sammi")) {
 												SammiAttack(p6, p3);
+											}
+											if(p6.getName().equals("Clara")) {
+												ClaraAttack(p6, p3);
+											}
+											if(p6.getName().equals("Thunder")) {
+												ThunderAttack(p6, p3, p1, p5);
 											}
 										}
 									}
@@ -2593,6 +2805,12 @@ public class GameSim {
 											if(p6.getName().equals("Sammi")) {
 												SammiAttack(p6, p5);
 											}
+											if(p6.getName().equals("Clara")) {
+												ClaraAttack(p6, p5);
+											}
+											if(p6.getName().equals("Thunder")) {
+												ThunderAttack(p6, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -2611,6 +2829,78 @@ public class GameSim {
 		} catch (LineUnavailableException e) {
 		}
 		
+	}
+	
+	public static Player CharacterSelection(Player p, String name, boolean start, int x, int y) {
+		switch (name) {
+		  case "Lunar":
+			  p = new Player(2700, 225, start, name, x, y, 10, 10, 5);
+		    break;
+		  case "Finley":
+			  p = new Player(3325, 275, start, name, x, y, 8, 9, 6);
+		    break;
+		  case "Mack":
+			  p = new Player(3200, 250, start, name, x, y, 11, 10, 6);
+		    break;
+		  case "Solar":
+			  p = new Player(2800, 175, start, name, x, y, 10, 10, 5);
+		    break;
+		  case "Cherry":
+			  p = new Player(2600, 100, start, name, x, y, 12, 9, 5);
+		    break;
+		  case "Dylan":
+			  p = new Player(2700, 200, start, name, x, y, 10, 10, 5);
+		    break;
+		  case "Zero":
+			  p = new Player(2625, 250, start, name, x, y, 10, 12, 6);
+		    break;
+		  case "Kailani":
+			  p = new Player(2650, 225, start, name, x, y, 30, 10, 6);
+		    break;
+		  case "Max":
+			  p = new Player(3000, 50, start, name, x, y, 7, 10, 6);
+		    break;
+		  case "Via":
+			  p = new Player(2900, 325, start, name, x, y, 10, 10, 6);
+		    break;
+		  case "Alex":
+			  p = new Player(2750, 250, start, name, x, y, 12, 10, 6);
+		    break;
+		  case "Louis":
+			  p = new Player(2650, 225, start, name, x, y, 9, 10, 6);
+		    break;
+		  case "Eli":
+			  p = new Player(2525, 100, start, name, x, y, 10, 10, 7);
+		    break;
+		  case "Ashley":
+			  p = new Player(2550, 200, start, name, x, y, 10, 10, 6);
+		    break;
+		  case "Orion":
+			  p = new Player(4325, 225, start, name, x, y, 10, 10, 6);
+		    break;
+		  case "Bedrock":
+			  p = new Player(4850, 575, start, name, x, y, 7, 7, 6);
+		    break;
+		  case "Rocco":
+			  p = new Player(2725, 200, start, name, x, y, 10, 10, 5);
+		    break;
+		  case "Sammi":
+			  p = new Player(2750, 275, start, name, x, y, 10, 10, 6);
+		    break;
+		  case "Clara":
+			  p = new Player(2850, 350, start, name, x, y, 10, 10, 6);
+		    break;
+		  case "Thunder":
+			  p = new Player(4750, 375, start, name, x, y, 6, 9, 6);
+		    break;
+		  case "Burt":
+			  p = new Player(2800, 250, start, name, x, y, 10, 11, 5);
+		    break;
+		  case "Bolo":
+			  p = new Player(3250, 225, start, name, x, y, 13, 9, 6);
+		    break;
+		}
+		return p;
 	}
 	
 	public static void Jump(Player p, Player a, Player b) {
@@ -2667,16 +2957,23 @@ public class GameSim {
 			System.out.println();
 			return;
 		}
+		double damage = 75;
+		if(p.getName().equals("Clara") && p.usedAbility()) {
+			damage = 150;
+		}
+		if (p.getName().equals("Clara") && p.ultActive()) {
+			damage = 225;
+		}
 		if(p.getLoc().eqLoc(a.getLoc()) && p.canDash()) {
-			a.takeDamage(75);
+			a.takeDamage(damage);
 			p.useDash();
 		}
 		if(p.getLoc().eqLoc(b.getLoc()) && p.canDash()) {
-			b.takeDamage(75);
+			b.takeDamage(damage);
 			p.useDash();
 		}
 		if(p.getLoc().eqLoc(c.getLoc()) && p.canDash()) {
-			c.takeDamage(75);
+			c.takeDamage(damage);
 			p.useDash();
 		}
 		System.out.println();
@@ -2795,8 +3092,8 @@ public class GameSim {
 		if(turns2 >= 3) {
 			orbs.clear();
 			for(int i = 0; i < d; i++) {
-				int randomX = (int)(Math.random() * (25 - 15 + 1)) + 15;
-				int randomY = (int)(Math.random() * (25 - 15 + 1)) + 15;
+				int randomX = (int)(Math.random() * (27 - 14 + 1)) + 14;
+				int randomY = (int)(Math.random() * (27 - 14 + 1)) + 14;
 				Location l = new Location(randomX, randomY);
 				Orb o = new Orb(l);
 				orbs.add(o);
@@ -2814,15 +3111,15 @@ public class GameSim {
 		}
 		cover.clear();
 		for(int i = 0; i < d1; i++) {
-			int randomX = (int)(Math.random() * (30 - 10 + 1)) + 10;
-			int randomY = (int)(Math.random() * (30 - 10 + 1)) + 10;
+			int randomX = (int)(Math.random() * (32 - 9 + 1)) + 9;
+			int randomY = (int)(Math.random() * (32 - 9 + 1)) + 9;
 			Location l = new Location(randomX, randomY);
 			Cover c = new Cover("Full", l);
 			cover.add(c);
 		}
 		for(int i = 0; i < d2; i++) {
-			int randomX = (int)(Math.random() * (30 - 10 + 1)) + 10;
-			int randomY = (int)(Math.random() * (30 - 10 + 1)) + 10;
+			int randomX = (int)(Math.random() * (32 - 9 + 1)) + 9;
+			int randomY = (int)(Math.random() * (32 - 9 + 1)) + 9;
 			Location l = new Location(randomX, randomY);
 			Cover c = new Cover("Partial", l);
 			cover.add(c);
@@ -4070,6 +4367,11 @@ public class GameSim {
 		e.add(LouisVulnerable);
 		e2.add(LouisVulnerable2);
 		e3.add(LouisVulnerable3);
+		if(!a.inRange(p, 12) && !b.inRange(p, 12) && !c.inRange(p, 12)) {
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
 		if(a.inRange(l, 12)) {
 			a.addEffects(e);
 			a.applyEffects();
@@ -4748,6 +5050,95 @@ public class GameSim {
 		p.applyEffects();
 		p.resetUlt();
 		System.out.println("\"Locking in. It's over for them now.\"");
+		System.out.println();
+	}
+	
+	public static void ClaraAttack(Player p, Player a) {
+		p.attack(a);
+		double rand = Math.random();
+		if(rand <= 0.35) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect BurtParalyze = new Effect("paralyze", 0, 1);
+			Effect ClaraIgnite = new Effect("ignite", 0, 1);
+			e.add(BurtParalyze);
+			e.add(ClaraIgnite);
+			a.addEffects(e);
+			a.applyEffects();
+		}
+		System.out.println();
+	}
+	
+	public static void ClaraAbility(Player p) {
+		p.increaseMovement(10);
+		p.addDashes(2);
+		p.addJumps(2);
+		p.setCooldown(2);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void ClaraUltimate(Player p) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect ClaraProtect = new Effect("protect", 0.6, 2);
+		e.add(ClaraProtect);
+		p.addEffects(e);
+		p.applyEffects();
+		p.increaseMovement(20);
+		p.addDashes(4);
+		p.addJumps(4);
+		p.setUlt();
+		p.resetUlt();
+		System.out.println("\"The only thing they'll see soon is the darkmess.\"");
+		System.out.println();
+	}
+	
+	public static void ThunderAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		a.resetCover();
+		if(a.inRange(b, 4)) {
+			b.takeDamage(300);
+		}
+		if(a.inRange(c, 4)) {
+			c.takeDamage(300);
+		}
+		System.out.println();
+	}
+	
+	public static void ThunderAbility(Player p) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect ThunderCounter = new Effect("counter", 0, 2);
+		e.add(ThunderCounter);
+		p.addEffects(e);
+		p.applyEffects();
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void ThunderUltimate(Player p, Player a, Player b, Player c) {
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getName() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.print("Who do you want to trap in the Energy Cage: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			a.takeDamage(a.getMaxHP() * 0.2);
+			p.increaseDPSNum(a.getDamage() * 0.5);
+			p.resetUlt();
+		}
+		if(targetResponse.equals("2")) {
+			b.takeDamage(b.getMaxHP() * 0.2);
+			p.increaseDPSNum(b.getDamage() * 0.5);
+			p.resetUlt();
+		}
+		if(targetResponse.equals("3")) {
+			c.takeDamage(c.getMaxHP() * 0.2);
+			p.increaseDPSNum(c.getDamage() * 0.5);
+			p.resetUlt();
+		}
+		System.out.println();
+		System.out.println("\"Your power is mine now!\"");
 		System.out.println();
 	}
 	

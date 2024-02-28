@@ -16,7 +16,7 @@ public class Battlefield {
 	Player d;
 	Player e;
 	Player f;
-	String[][] field = new String[41][41];
+	String[][] field = new String[42][42];
 	ArrayList<Tile> tiles = new ArrayList<Tile>();
 	ArrayList<Player> players = new ArrayList<Player>();
 	String name;
@@ -35,16 +35,16 @@ public class Battlefield {
 		players.add(e);
 		players.add(f);
 		name = nameIn;
-		for(int i = 0; i < 41; i++) {
-			for(int j = 0; j < 41; j++){
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
 				field[i][j] = "∙";
 			}
 		}
 		if(name.equals("Galactical Laboratories")) {
 			Tile t = new Tile("Rift", new Location(9,9));
-			Tile t2 = new Tile("Rift", new Location(30,9));
-			Tile t3 = new Tile("Rift", new Location(9,30));
-			Tile t4 = new Tile("Rift", new Location(30,30));
+			Tile t2 = new Tile("Rift", new Location(32,9));
+			Tile t3 = new Tile("Rift", new Location(9,32));
+			Tile t4 = new Tile("Rift", new Location(30,32));
 			tiles.add(t);
 			tiles.add(t2);
 			tiles.add(t3);
@@ -59,13 +59,13 @@ public class Battlefield {
 		four = d.getLoc();
 		five = e.getLoc();
 		six = f.getLoc();
-		for(int i = 0; i < 41; i++) {
-			for(int j = 0; j < 41; j++){
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
 				field[i][j] = "∙";
 			}
 		}
-		for(int i = 0; i < 41; i++) {
-			for(int j = 0; j < 41; j++){
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
 				for(Orb o: orbLoc) {
 					if(i == o.getLoc().getY() && j == o.getLoc().getX()) {
 						field[i][j] = "O";
@@ -134,12 +134,12 @@ public class Battlefield {
 			}
 			
 		}
-		for(int i = 0; i < 41; i ++) {
+		for(int i = 0; i < 42; i ++) {
 			System.out.print(i + " ");
 			if(i < 10) {
 				System.out.print(" ");
 			}
-			for(int j = 0; j < 41; j++) {
+			for(int j = 0; j < 42; j++) {
 				System.out.print(field[i][j] + " ");
 			}
 			System.out.println();
@@ -151,7 +151,7 @@ public class Battlefield {
 				System.out.print(j + " ");	
 			}
 		}
-		System.out.print("4");
+		System.out.print("4 4");
 		System.out.println();
 		System.out.print("   ");
 		for(int j = 0; j < 4; j++) {
@@ -159,7 +159,7 @@ public class Battlefield {
 				System.out.print(i + " ");	
 			}
 		}
-		System.out.print("0");
+		System.out.print("0 1");
 		System.out.println();
 		System.out.println();
 		
