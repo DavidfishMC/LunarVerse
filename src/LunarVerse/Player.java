@@ -26,6 +26,7 @@ public class Player {
 	double damage;
 	String name;
 	String ogName;
+	String nameSkin;
 	String cover = "None";
 	boolean turn;
 	boolean alive = true;
@@ -54,6 +55,7 @@ public class Player {
 	int orbCount = 0;
 	int ultCharge;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
+	public static final String reset = "\u001B[0m";
 	
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -70,6 +72,7 @@ public class Player {
 		ultCharge = u;
 		ogName = name;
 		ogRange = r;
+		nameSkin = name;
 	}
 	
 	public void setAttacked() {
@@ -98,6 +101,14 @@ public class Player {
 	
 	public void useJump() {
 		jumps--;
+	}
+	
+	public void skin(String s) {
+		nameSkin = s;
+	}
+	
+	public String getSkin() {
+		return nameSkin;
 	}
 	
 	public boolean canJump() {
@@ -157,8 +168,21 @@ public class Player {
 		}
 	}
 	
+	public boolean overRange(Player p, double r) {
+		Location otherLoc = p.getLoc();
+		double d = curLoc.distanceTo(otherLoc);
+		if(d >= r) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 	public void setUlt() {
 		ultActive = true;
+		if(name.equals("Lunar")) {
+			ultCharge = 2;
+		}
 	}
 	
 	public boolean ultActive() {
@@ -167,6 +191,9 @@ public class Player {
 	
 	public void ultDown() {
 		ultActive = false;
+		if(name.equals("Lunar")) {
+			ultCharge = 5;
+		}
 	}
 	
 	public void resetCooldown() {
@@ -262,7 +289,7 @@ public class Player {
 		int randomY = (int)(Math.random() * (5 - (-5) + 1)) + -5;
 		curLoc.adjust(randomX, randomY);
 		if(curLoc.getX() > 41) {
-			curLoc.setX(40);
+			curLoc.setX(41);
 			takeDamage(100);
 		}
 		if(curLoc.getX() < 0) {
@@ -270,7 +297,7 @@ public class Player {
 			takeDamage(100);
 		}
 		if(curLoc.getY() > 41) {
-			curLoc.setY(40);
+			curLoc.setY(41);
 			takeDamage(100);
 		}
 		if(curLoc.getY() < 0) {
@@ -278,7 +305,7 @@ public class Player {
 			takeDamage(100);
 		}
 		resetCover();
-		System.out.println(name + " has been knocked back.");
+		System.out.println(nameSkin + " has been knocked back.");
 	}
 	
 	public void move(int x, int y) {
@@ -294,6 +321,13 @@ public class Player {
 	}
 	
 	public void getOrb() {
+		try {
+			String audio = "orbedit.wav";
+			Music victoryPlayer = new Music(audio, false); 
+			victoryPlayer.play();
+		}catch (Exception e) {
+			System.out.println(e);
+		}
 		orbCount++;
 	}
 	
@@ -330,9 +364,10 @@ public class Player {
 		if(health < 0) {
 			health = 0;
 		}
-		System.out.println(name + " has taken " + d + " damage.");
+		System.out.println(nameSkin + " has taken " + d + " damage.");
 		if(health == 0) {
-			System.out.println(name + " is downed!");
+			alive = false;
+			System.out.println(nameSkin + " is downed!");
 		}
 	}
 	
@@ -445,7 +480,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("ignite") && !ignite) {
 				ignite = true;
-				System.out.println(name + " has been ignited.");
+				System.out.println(nameSkin + " has been ignited.");
 			}
 			
 			if(e.get(i).getName().equals("daze") && dazed) {
@@ -457,7 +492,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("daze") && !dazed) {
 				dazed = true;
-				System.out.println(name + " has been dazed.");
+				System.out.println(nameSkin + " has been dazed.");
 			}
 			
 			if(e.get(i).getName().equals("stun") && stunned) {
@@ -469,7 +504,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("stun") && !stunned) {
 				stunned = true;
-				System.out.println(name + " has been stunned.");
+				System.out.println(nameSkin + " has been stunned.");
 			}
 			if(e.get(i).getName().equals("paralyze") && paralyzed) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -480,7 +515,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("paralyze") && !paralyzed) {
 				paralyzed = true;
-				System.out.println(name + " has been paralyzed.");
+				System.out.println(nameSkin + " has been paralyzed.");
 			}
 			if(e.get(i).getName().equals("reflection") && reflection) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -491,7 +526,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("reflection") && !reflection) {
 				reflection = true;
-				System.out.println(name + " is now reflecting.");
+				System.out.println(nameSkin + " is now reflecting.");
 			}
 			if(e.get(i).getName().equals("freeze") && freezed) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -502,7 +537,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("freeze") && !freezed) {
 				freezed = true;
-				System.out.println(name + " has been freezed.");
+				System.out.println(nameSkin + " has been freezed.");
 			}
 			if(e.get(i).getName().equals("refine") && refined) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -513,7 +548,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("refine") && !refined) {
 				refined = true;
-				System.out.println(name + " has been refined.");
+				System.out.println(nameSkin + " has been refined.");
 			}
 			if(e.get(i).getName().equals("counter") && counter) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -524,7 +559,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("counter") && !counter) {
 				counter = true;
-				System.out.println(name + " is now countering.");
+				System.out.println(nameSkin + " is now countering.");
 			}
 			effects.add(e.get(i));
 		}
@@ -544,27 +579,27 @@ public class Player {
 			Effect e = effects.get(i);
 			if(e.getName().equals("power") && !e.isUsed()) {
 				damage = damage + (ogDamage * e.getIncrease());
-				System.out.println(name + " has been powered.");
+				System.out.println(nameSkin + " has been powered.");
 			}
 			if(e.getName().equals("protect") && !e.isUsed()) {
 				protect = protect - e.getIncrease();
-				System.out.println(name + " has been protected.");
+				System.out.println(nameSkin + " has been protected.");
 			}
 			if(e.getName().equals("weak") && !e.isUsed()) {
 				damage = damage - (ogDamage * e.getIncrease());
-				System.out.println(name + " has been weakened.");
+				System.out.println(nameSkin + " has been weakened.");
 			}
 			if(e.getName().equals("vulnerable") && !e.isUsed()) {
 				protect = protect + e.getIncrease();
-				System.out.println(name + " is now vulnerable.");
+				System.out.println(nameSkin + " is now vulnerable.");
 			}
 			if(e.getName().equals("blind") && !e.isUsed()) {
 				range = range - (ogRange * e.getIncrease());
-				System.out.println(name + " has been blinded.");
+				System.out.println(nameSkin + " has been blinded.");
 			}
 			if(e.getName().equals("poison") && !e.isUsed()) {
 				absorb = absorb - e.getIncrease();
-				System.out.println(name + " has been poisoned.");
+				System.out.println(nameSkin + " has been poisoned.");
 			}
 			e.used();
 		}
@@ -577,72 +612,72 @@ public class Player {
 			if(e.getTurns() == 0) {
 				if(e.getName().equals("power")) {
 					damage = damage - (ogDamage * e.getIncrease());
-					System.out.println(name + " is no longer powered.");
+					System.out.println(nameSkin + " is no longer powered.");
 					i--;
 				}
 				if(e.getName().equals("protect")) {
 					protect = protect + e.getIncrease();
-					System.out.println(name + " is no longer protected.");
+					System.out.println(nameSkin + " is no longer protected.");
 					i--;
 				}
 				if(e.getName().equals("poison")) {
 					absorb = absorb + e.getIncrease();
-					System.out.println(name + " is no longer poisoned.");
+					System.out.println(nameSkin + " is no longer poisoned.");
 					i--;
 				}
 				if(e.getName().equals("blind")) {
 					range = range + (ogRange * e.getIncrease());
-					System.out.println(name + " is no longer blinded.");
+					System.out.println(nameSkin + " is no longer blinded.");
 					i--;
 				}
 				if(e.getName().equals("vulnerable")) {
 					protect = protect - e.getIncrease();
-					System.out.println(name + " is no longer vulnerable.");
+					System.out.println(nameSkin + " is no longer vulnerable.");
 					i--;
 				}
 				if(e.getName().equals("weak")) {
 					damage = damage + (ogDamage * e.getIncrease());
-					System.out.println(name + " is no longer weakened.");
+					System.out.println(nameSkin + " is no longer weakened.");
 					i--;
 				}
 				if(e.getName().equals("ignite")) {
 					ignite = false;
-					System.out.println(name + " is no longer ignited.");
+					System.out.println(nameSkin + " is no longer ignited.");
 					i--;
 				}
 				if(e.getName().equals("daze")) {
 					dazed = false;
-					System.out.println(name + " is no longer dazed.");
+					System.out.println(nameSkin + " is no longer dazed.");
 					i--;
 				}
 				if(e.getName().equals("stun")) {
 					stunned = false;
-					System.out.println(name + " is no longer stunned.");
+					System.out.println(nameSkin + " is no longer stunned.");
 					i--;
 				}
 				if(e.getName().equals("paralyze")) {
 					paralyzed = false;
-					System.out.println(name + " is no longer paralyzed.");
+					System.out.println(nameSkin + " is no longer paralyzed.");
 					i--;
 				}
 				if(e.getName().equals("reflection")) {
 					reflection = false;
-					System.out.println(name + " is no longer reflecting.");
+					System.out.println(nameSkin + " is no longer reflecting.");
 					i--;
 				}
 				if(e.getName().equals("freeze")) {
 					freezed = false;
-					System.out.println(name + " is no longer freezed.");
+					System.out.println(nameSkin + " is no longer freezed.");
 					i--;
 				}
 				if(e.getName().equals("refine")) {
 					refined = false;
-					System.out.println(name + " is no longer refined.");
+					System.out.println(nameSkin + " is no longer refined.");
 					i--;
 				}
 				if(e.getName().equals("counter")) {
 					counter = false;
-					System.out.println(name + " is no longer countering.");
+					System.out.println(nameSkin + " is no longer countering.");
 					i--;
 				}
 				effects.remove(e);
@@ -661,12 +696,12 @@ public class Player {
 	public void passTurn(Player p) {
 		if(p.isStunned()) {
 			System.out.println();
-			System.out.println(p.getName() + " is stunned! Cannot switch.");
+			System.out.println(p.getSkin() + " is stunned! Cannot switch.");
 			return;
 		}
 		if(!p.isAlive()) {
 			System.out.println();
-			System.out.println(p.getName() + " is downed! Cannot switch.");
+			System.out.println(p.getSkin() + " is downed! Cannot switch.");
 		}else {
 			turn = false;
 			p.setTurn();
@@ -725,52 +760,52 @@ public class Player {
 			Effect e = effects.get(i);
 			if(e.getName().equals("vulnerable")) {
 				protect = protect - e.getIncrease();
-				System.out.println(name + " is no longer vulnerable.");
+				System.out.println(nameSkin + " is no longer vulnerable.");
 				i--;
 			}
 			if(e.getName().equals("weak")) {
 				damage = damage + (ogDamage * e.getIncrease());
-				System.out.println(name + " is no longer weakened.");
+				System.out.println(nameSkin + " is no longer weakened.");
 				i--;
 			}
 			if(e.getName().equals("ignite")) {
 				ignite = false;
-				System.out.println(name + " is no longer ignited.");
+				System.out.println(nameSkin + " is no longer ignited.");
 				i--;
 			}
 			if(e.getName().equals("daze")) {
 				dazed = false;
-				System.out.println(name + " is no longer dazed.");
+				System.out.println(nameSkin + " is no longer dazed.");
 				i--;
 			}
 			if(e.getName().equals("stun")) {
 				stunned = false;
-				System.out.println(name + " is no longer stunned.");
+				System.out.println(nameSkin + " is no longer stunned.");
 				i--;
 			}
 			if(e.getName().equals("paralyze")) {
 				paralyzed = false;
-				System.out.println(name + " is no longer paralyzed.");
+				System.out.println(nameSkin + " is no longer paralyzed.");
 				i--;
 			}
 			if(e.getName().equals("freeze")) {
 				freezed = false;
-				System.out.println(name + " is no longer freezed.");
+				System.out.println(nameSkin + " is no longer freezed.");
 				i--;
 			}
 			if(e.getName().equals("blind")) {
 				range = range + (ogRange * e.getIncrease());
-				System.out.println(name + " is no longer blind.");
+				System.out.println(nameSkin + " is no longer blind.");
 				i--;
 			}
 			if(e.getName().equals("poison")) {
 				absorb = absorb + e.getIncrease();
-				System.out.println(name + " is no longer poisoned.");
+				System.out.println(nameSkin + " is no longer poisoned.");
 				i--;
 			}
 			effects.remove(e);
 		}
-		System.out.println(name + " has been cleansed.");
+		System.out.println(nameSkin + " has been cleansed.");
 	}
 	
 	public void increaseMovement(int i) {
@@ -787,7 +822,7 @@ public class Player {
 			}
 			double e = (maxHealth * d) * absorb2;
 			health = health + e;
-			System.out.println(name + " has healed for " + e);
+			System.out.println(nameSkin + " has healed for " + e);
 			if(health > maxHealth) {
 				health = maxHealth;
 			}
@@ -804,7 +839,7 @@ public class Player {
 			}
 			double e = (d * i) * absorb2;
 			health = health + e;
-			System.out.println(name + " has healed for " + e);
+			System.out.println(nameSkin + " has healed for " + e);
 			if(health > maxHealth) {
 				health = maxHealth;
 			}
@@ -825,7 +860,7 @@ public class Player {
 		if(cooldown <= 0) {
 			return false;
 		}else {
-			System.out.println(name + "'s ability is on Cooldown!");
+			System.out.println(nameSkin + "'s ability is on Cooldown!");
 			System.out.println();
 			return true;
 		}
@@ -840,44 +875,53 @@ public class Player {
 	}
 	
 	public String toString() {
-		String weapon = "Not Used ❎";
-		String ability = "Ready ✅";
+		String weapon = "Not Used " + "\u001b[38;5;" + 197 + "m" +"❎"+reset;
+		String ability = "Ready " + "\u001b[38;5;" + 10 + "m" +"✅"+reset;
 		String move = String.valueOf(movement);
-		String healthshow = "Health ❤️: ";
-		String damageshow = ", Damage ⚔️: ";
+		String healthshow = "Health " + "\u001b[38;5;" + 196 + "m" +"❤️"+reset+": ";
+		String damageshow = ", Damage " + "\u001b[38;5;" + 124 + "m" +"⚔️"+reset + ": ";
 		String covershow = ", Cover: ";
+		String ultimate = ". Ultimate " + "\u001b[38;5;" + 189 + "m" +"🪩"+reset + ": ";
+		String dash = ", Dashes " + "\u001b[38;5;" + 248 + "m" +"💨"+reset + ": ";
+		String moveshow = ", Movement " + "\u001b[38;5;" + 81 + "m" +"👟"+reset + ": ";
+		String jump = ", Jumps " + "\u001b[38;5;" + 241 + "m" +"🦿"+reset + ": ";
+		String loc = "Location " + "\u001b[38;5;" + 130 + "m" +"🗺️"+reset + ": ";
 		if(attacked) {
 			weapon = "Used ✅";
+			weapon = "Used " + "\u001b[38;5;" + 10 + "m" +"✅"+reset;
 		}
 		if(cooldown > 0) {
-			ability = "On Cooldown 🕒 (" + cooldown + ")";
+			ability = "On Cooldown " + "\u001b[38;5;" + 220 + "m" +"🕒"+reset+ "(" + cooldown + ")";
 		}
 		if(freezed == true) {
-			weapon = "Freezed ❄️";
+			weapon = "Freezed " + "\u001b[38;5;" + 87 + "m" +"❄️"+reset;
 		}
 		if(dazed == true) {
-			ability = "Dazed 🌀";
+			ability = "Dazed " + "\u001b[38;5;" + 175 + "m" +"🌀"+reset;
 		}
 		if(paralyzed == true) {
 			move = "Paralyzed";
 		}
 		if(health <= (maxHealth * 0.35)) {
-			healthshow = "Health 💔: ";
+			healthshow = "Health " + "\u001b[38;5;" + 196 + "m" +"💔"+reset+": ";
 		}
 		if(damage < ogDamage) {
-			damageshow = ", Damage 😞: ";
+			damageshow = ", Damage " + "\u001b[38;5;" + 220 + "m" +"😞"+reset+": ";
 		}
 		if(damage > ogDamage) {
-			damageshow = ", Damage 💪: ";
+			damageshow = ", Damage " + "\u001b[38;5;" + 9 + "m" +"💪"+reset+": ";
 		}
 		if(cover.equals("Full")) {
 			covershow = ", Cover 🛡️: ";
 		}
 		if(cover.equals("Partial")) {
-			covershow = ", Cover 🪨: ";
+			healthshow = ", Cover " + "\u001b[38;5;" + 243 + "m" +"🪨"+reset+": ";
+		}
+		if(orbCount == ultCharge) {
+			ultimate = ". Ultimate " + "\u001b[38;5;" + 221 + "m" +"✨"+reset+": ";
 		}
 		health = Math.round(health * 10.0) / 10.0;
-		return (healthshow + health + "/" + maxHealth + damageshow + damage +  covershow + cover + "\n" +"Weapon: " + weapon + ". Ability: " + ability + ". Ultimate Orbs 🪩: " + orbCount + "/" + ultCharge + "\n" + "Location 🗺️: " + curLoc + ", Movement 👟: " + move + ", Dashes 💨: " + dashes + ", Jumps 🦿: " + jumps);
+		return (healthshow + health + "/" + maxHealth + damageshow + damage +  covershow + cover + "\n" +"Weapon: " + weapon + ". Ability: " + ability + ultimate + orbCount + "/" + ultCharge + "\n" + loc + curLoc + moveshow + move + dash + dashes + jump + jumps);
 	}
 	
 	public String effects() {
@@ -1140,6 +1184,24 @@ public class Player {
 			}
 			if(randomNum == 3) {
 				return ("\"Go on, attack! You'll meet your fate sooner.\"");
+			}
+		}
+		if(name.equals("Aidan")) {
+			if(randomNum == 1) {
+				return ("\"Look at me, I'm cranking 90s!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"I'm gonna make Tilted Towers the way I be building.\"");
+			}
+			if(randomNum == 3) {
+				try {
+					String audio = "fortedit.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+				return ("\033[3m🎵 I said right foot creep, ooh, I'm walking with that heater 🎵\033[0m");
 			}
 		}
 		return "";

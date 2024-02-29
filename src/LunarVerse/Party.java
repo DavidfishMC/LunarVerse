@@ -31,12 +31,22 @@ public class Party {
 	}
 	
 	public void setTurn() {
+		try {
+			String audio = "passturnedit.wav";
+			Music victoryPlayer = new Music(audio, false); 
+			victoryPlayer.play();
+		}catch (Exception e) {
+			System.out.println(e);
+		}
 		for(int i = 0; i < 3; i++) {
 			roster[i].resetMovement();
 			if(!roster[i].getName().equals("Zero")) {
 				roster[i].setSights(0);
 			}
 			roster[i].resetName();
+			if(roster[i].getName().equals("Lunar") && roster[i].ultActive()) {
+				roster[i].ultDown();
+			}
 			roster[i].resetDashes();
 			roster[i].resetJumps();
 			roster[i].resetCover();
@@ -56,6 +66,15 @@ public class Party {
 			roster[2].setTurn();
 		}else {
 			roster[0].setTurn();
+		}
+	}
+	
+	public void checkDown() {
+		if(!roster[0].isAlive()) {
+			System.out.println("here");
+			roster[0].passTurn(roster[1]);
+		}else if(!roster[0].isAlive() && !roster[1].isAlive()) {
+			roster[0].passTurn(roster[2]);
 		}
 	}
 	

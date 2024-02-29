@@ -17,6 +17,9 @@ public class GameSim {
 	static Music audioPlayer;
 	static Example image;
 	static int turns2 = 0;
+	static final String reset = "\u001B[0m";
+	static final String color = "\u001b[38;5;";
+	static final String bold = "\u001b[1m";
 
 	public static void main(String[] args) {
 		/*
@@ -26,8 +29,8 @@ public class GameSim {
 		}
 		*/
 		try {
-			String audio = "battleedit.wav";
-			audioPlayer = new Music(audio); 
+			String audio = "sproutedit.wav";
+			audioPlayer = new Music(audio, true);
 			audioPlayer.play();
 			audioPlayer.pause();
 		}catch (Exception e) {
@@ -39,20 +42,19 @@ public class GameSim {
 		Player p3 = new Player(2900, 325, false, "Cherry", 0, 3, 10, 100, 0);
 		Player p5 = new Player(4850, 575, false, "Rocco", 3, 0, 6, 500, 0);
 		
-		Player p2 = new Player(10000, 225, false, "Finley", 40, 40, 9, 100, 0);
-		Player p4 = new Player(10000, 200, false, "Louis", 40, 37, 10, 100, 0);
+		Player p2 = new Player(10, 225, false, "Finley", 40, 40, 9, 100, 0);
+		Player p4 = new Player(10, 200, false, "Louis", 40, 37, 10, 100, 0);
 		Player p6 = new Player(10000, 200, false, "Solar", 37, 40, 10, 100, 0);
 		boolean game = false;
 		Scanner input = new Scanner(System.in);
-		System.out.println("\033[3mLunarVerse\033[0m");
+		//System.out.print("\u001b[38;5;" + 87 + "m");
+		System.out.println("\u001b[38;5;" + 87 + "m" + "\033[3mLunarVerse\033[0m");
 		System.out.println("Created by Davidfish. Inspired by the Mario and Rabbids games and the V.C., R.C., and D.C. trilogies.");
 		System.out.println("Music taken from the Mario and Rabbids games.");
 		System.out.print("Enter any key to start: ");
 		String temp = input.next();
 		System.out.println();
-		//audioPlayer.play();
 		if(temp.equals("a")) {
-			//image.close();
 			System.out.println("Team A, pick your characters.");
 			System.out.print("Character Selection 1: ");
 			String temp2 = input.next();
@@ -67,21 +69,21 @@ public class GameSim {
 			System.out.println("Team B, pick your characters.");
 			System.out.print("Character Selection 1: ");
 			String temp5 = input.next();
-			p2 = CharacterSelection(p2, temp5, true, 40, 40);
+			p2 = CharacterSelection(p2, temp5, true, 41, 41);
 			System.out.print("Character Selection 2: ");
 			String temp6 = input.next();
-			p4 = CharacterSelection(p4, temp6, false, 40, 37);
+			p4 = CharacterSelection(p4, temp6, false, 41, 38);
 			System.out.print("Character Selection 3: ");
 			String temp7 = input.next();
-			p6 = CharacterSelection(p6, temp7, false, 37, 40);
+			p6 = CharacterSelection(p6, temp7, false, 38, 41);
 		}else {
-			p1 = new Player(2650, 175, true, "Thunder", 40, 40, 30, 100, 0);
-			p3 = new Player(2900, 325, false, "Cherry", 0, 3, 10, 100, 0);
-			p5 = new Player(4850, 575, false, "Rocco", 3, 0, 6, 500, 0);
+			p1 = new Player(2650, 175, true, "Lunar", 40, 40, 30, 100, 1);
+			p3 = new Player(2900, 325, false, "Via", 40, 40, 10, 100, 0);
+			p5 = new Player(4850, 575, false, "Rocco", 40, 40, 6, 500, 0);
 			
-			p2 = new Player(10000, 225, false, "Lunar", 40, 40, 9, 100, 0);
-			p4 = new Player(10000, 200, false, "Louis", 40, 38, 10, 100, 0);
-			p6 = new Player(10000, 200, false, "Solar", 38, 40, 10, 100, 0);
+			p2 = new Player(200, 225, false, "Aidan", 40, 40, 9, 100, 5);
+			p4 = new Player(1, 200, false, "Louis", 40, 38, 10, 100, 0);
+			p6 = new Player(1, 200, false, "Solar", 38, 40, 10, 100, 1);
 
 		}
 		Battlefield b = new Battlefield("Galactical Laboratories", p1, p3, p5, p2, p4, p6);
@@ -89,11 +91,15 @@ public class GameSim {
 		Party party2 = new Party(false, p2, p4, p6);
 		System.out.println();
 		game = true;
+		//audioPlayer.play();
 		while(game) {
 			if(turns % 2 == 0) {
 				turns2++;
 			}
 			while(party1.getTurn()) {
+				if(party1.teamDown()) {
+					break;
+				}
 				if((p1.isStunned() || !p1.isAlive()) && (p3.isStunned() || !p3.isAlive()) && (p5.isStunned() || !p5.isAlive())) {
 					party1.passTurn(party2);
 					party1.reduceTeamEffects();
@@ -104,7 +110,7 @@ public class GameSim {
 				}
 				while(p1.getTurn() && !p1.isStunned()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team 1's Turn (Go " + p1.getName() + "!)");
+					System.out.println("Team A's Turn (Go " + p1.getSkin() + "!)");
 					System.out.println(p1);
 					System.out.print("What would " + p1.getName() + " like to do: ");
 					String response = input.next();
@@ -135,7 +141,7 @@ public class GameSim {
 						if(switchResponse.equals("p")) {
 							if(party2.teamDown()) {
 								System.out.println();
-								System.out.println("Team 1 Wins!");
+								System.out.println("Team A Wins!");
 								party1.passTurn(party2);
 								game = false;
 							}else {
@@ -185,6 +191,9 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p1.getName().equals("Aidan")) {
+								AidanUltimate(p1, p2, p4, p6, p3, p5);
+							}
 							if(p1.getName().equals("Thunder")) {
 								ThunderUltimate(p1, p2, p4, p6);
 							}
@@ -344,6 +353,9 @@ public class GameSim {
 							if(p1.getName().equals("Thunder")) {
 								ThunderAbility(p1);
 							}
+							if(p1.getName().equals("Aidan")) {
+								AidanAbility(p1, p3, p5);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -428,6 +440,9 @@ public class GameSim {
 											if(p1.getName().equals("Thunder")) {
 												ThunderAttack(p1, p2, p4, p6);
 											}
+											if(p1.getName().equals("Aidan")) {
+												AidanAttack(p1, p2);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -491,6 +506,9 @@ public class GameSim {
 											}
 											if(p1.getName().equals("Thunder")) {
 												ThunderAttack(p1, p4, p2, p6);
+											}
+											if(p1.getName().equals("Aidan")) {
+												AidanAttack(p1, p4);
 											}
 										}
 									}
@@ -557,6 +575,9 @@ public class GameSim {
 											if(p1.getName().equals("Thunder")) {
 												ThunderAttack(p1, p6, p4, p2);
 											}
+											if(p1.getName().equals("Aidan")) {
+												AidanAttack(p1, p6);
+											}
 										}
 									}
 								}
@@ -567,7 +588,7 @@ public class GameSim {
 				
 				while(p3.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team 1's Turn (Go " + p3.getName() + "!)");
+					System.out.println("Team A's Turn (Go " + p3.getName() + "!)");
 					System.out.println(p3);
 					System.out.print("What would " + p3.getName() + " like to do: ");
 					String response = input.next();
@@ -598,7 +619,7 @@ public class GameSim {
 						if(switchResponse.equals("p")) {
 							if(party2.teamDown()) {
 								System.out.println();
-								System.out.println("Team 1 Wins!");
+								System.out.println("Team A Wins!");
 								party1.passTurn(party2);
 								game = false;
 							}else {
@@ -629,6 +650,9 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p3.getName().equals("Aidan")) {
+								AidanUltimate(p3, p2, p4, p6, p1, p5);
+							}
 							if(p3.getName().equals("Thunder")) {
 								ThunderUltimate(p3, p2, p4, p6);
 							}
@@ -794,6 +818,9 @@ public class GameSim {
 							if(p3.getName().equals("Thunder")) {
 								ThunderAbility(p3);
 							}
+							if(p3.getName().equals("Aidan")) {
+								AidanAbility(p3, p1, p5);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -878,6 +905,9 @@ public class GameSim {
 											if(p3.getName().equals("Thunder")) {
 												ThunderAttack(p3, p2, p4, p6);
 											}
+											if(p3.getName().equals("Aidan")) {
+												AidanAttack(p3, p2);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -942,6 +972,9 @@ public class GameSim {
 											}
 											if(p3.getName().equals("Thunder")) {
 												ThunderAttack(p3, p4, p2, p6);
+											}
+											if(p3.getName().equals("Aidan")) {
+												AidanAttack(p3, p4);
 											}
 										}
 									}
@@ -1008,6 +1041,9 @@ public class GameSim {
 											if(p3.getName().equals("Thunder")) {
 												ThunderAttack(p3, p6, p4, p2);
 											}
+											if(p3.getName().equals("Aidan")) {
+												AidanAttack(p3, p6);
+											}
 										}
 									}
 								}
@@ -1018,7 +1054,7 @@ public class GameSim {
 				
 				while(p5.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team 1's Turn (Go " + p5.getName() + "!)");
+					System.out.println("Team A's Turn (Go " + p5.getName() + "!)");
 					System.out.println(p5);
 					System.out.print("What would " + p5.getName() + " like to do: ");
 					String response = input.next();
@@ -1049,7 +1085,7 @@ public class GameSim {
 						if(switchResponse.equals("p")) {
 							if(party2.teamDown()) {
 								System.out.println();
-								System.out.println("Team 1 Wins!");
+								System.out.println("Team A Wins!");
 								party1.passTurn(party2);
 								game = false;
 							}else {
@@ -1083,6 +1119,9 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p1.getName().equals("Aidan")) {
+								AidanUltimate(p5, p2, p4, p6, p3, p1);
+							}
 							if(p5.getName().equals("Thunder")) {
 								ThunderUltimate(p5, p2, p4, p6);
 							}
@@ -1242,6 +1281,9 @@ public class GameSim {
 							if(p5.getName().equals("Thunder")) {
 								ThunderAbility(p5);
 							}
+							if(p5.getName().equals("Aidan")) {
+								AidanAbility(p5, p3, p1);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -1326,6 +1368,9 @@ public class GameSim {
 											if(p5.getName().equals("Thunder")) {
 												ThunderAttack(p5, p2, p4, p6);
 											}
+											if(p5.getName().equals("Aidan")) {
+												AidanAttack(p5, p2);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1390,6 +1435,9 @@ public class GameSim {
 											}
 											if(p5.getName().equals("Thunder")) {
 												ThunderAttack(p5, p4, p2, p6);
+											}
+											if(p5.getName().equals("Aidan")) {
+												AidanAttack(p5, p4);
 											}
 										}
 									}
@@ -1456,6 +1504,9 @@ public class GameSim {
 											if(p5.getName().equals("Thunder")) {
 												ThunderAttack(p5, p6, p4, p2);
 											}
+											if(p5.getName().equals("Aidan")) {
+												AidanAttack(p5, p6);
+											}
 										}
 									}
 								}
@@ -1467,6 +1518,9 @@ public class GameSim {
 			}
 			
 			while(party2.getTurn()) {
+				if(party2.teamDown()) {
+					break;
+				}
 				if((p2.isStunned() || !p2.isAlive()) && (p4.isStunned() || !p4.isAlive()) && (p6.isStunned() || !p6.isAlive())) {
 					party2.passTurn(party1);
 					party2.reduceTeamEffects();
@@ -1477,7 +1531,7 @@ public class GameSim {
 				}
 				while(p2.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team 2's Turn (Go " + p2.getName() + "!)");
+					System.out.println("Team B's Turn (Go " + p2.getName() + "!)");
 					System.out.println(p2);
 					System.out.print("What would " + p2.getName() + " like to do: ");
 					String response = input.next();
@@ -1508,7 +1562,7 @@ public class GameSim {
 						if(switchResponse.equals("p")) {
 							if(party1.teamDown()) {
 								System.out.println();
-								System.out.println("Team 2 Wins!");
+								System.out.println("Team B Wins!");
 								party2.passTurn(party1);
 								game = false;
 							}else {
@@ -1542,6 +1596,9 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p2.getName().equals("Aidan")) {
+								AidanUltimate(p2, p1, p3, p5, p4, p6);
+							}
 							if(p2.getName().equals("Thunder")) {
 								ThunderUltimate(p2, p1, p3, p5);
 							}
@@ -1701,6 +1758,9 @@ public class GameSim {
 							if(p2.getName().equals("Thunder")) {
 								ThunderAbility(p2);
 							}
+							if(p2.getName().equals("Aidan")) {
+								AidanAbility(p2, p4, p6);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -1785,6 +1845,9 @@ public class GameSim {
 											if(p2.getName().equals("Thunder")) {
 												ThunderAttack(p2, p1, p3, p5);
 											}
+											if(p2.getName().equals("Aidan")) {
+												AidanAttack(p2, p1);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1849,6 +1912,9 @@ public class GameSim {
 											}
 											if(p2.getName().equals("Thunder")) {
 												ThunderAttack(p2, p3, p1, p5);
+											}
+											if(p2.getName().equals("Aidan")) {
+												AidanAttack(p2, p3);
 											}
 										}
 									}
@@ -1915,6 +1981,9 @@ public class GameSim {
 											if(p2.getName().equals("Thunder")) {
 												ThunderAttack(p2, p5, p3, p1);
 											}
+											if(p2.getName().equals("Aidan")) {
+												AidanAttack(p2, p5);
+											}
 										}
 									}
 								}
@@ -1925,7 +1994,7 @@ public class GameSim {
 				
 				while(p4.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team 2's Turn (Go " + p4.getName() + "!)");
+					System.out.println("Team B's Turn (Go " + p4.getName() + "!)");
 					System.out.println(p4);
 					System.out.print("What would " + p4.getName() + " like to do: ");
 					String response = input.next();
@@ -1956,7 +2025,7 @@ public class GameSim {
 						if(switchResponse.equals("p")) {
 							if(party1.teamDown()) {
 								System.out.println();
-								System.out.println("Team 2 Wins!");
+								System.out.println("Team B Wins!");
 								party2.passTurn(party1);
 								game = false;
 							}else {
@@ -1990,6 +2059,9 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p4.getName().equals("Aidan")) {
+								AidanUltimate(p4, p1, p3, p5, p2, p6);
+							}
 							if(p4.getName().equals("Thunder")) {
 								ThunderUltimate(p4, p1, p3, p5);
 							}
@@ -2149,6 +2221,9 @@ public class GameSim {
 							if(p4.getName().equals("Thunder")) {
 								ThunderAbility(p4);
 							}
+							if(p4.getName().equals("Aidan")) {
+								AidanAbility(p4, p2, p6);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -2233,6 +2308,9 @@ public class GameSim {
 											if(p4.getName().equals("Thunder")) {
 												ThunderAttack(p4, p1, p3, p5);
 											}
+											if(p4.getName().equals("Aidan")) {
+												AidanAttack(p4, p1);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2297,6 +2375,9 @@ public class GameSim {
 											}
 											if(p4.getName().equals("Thunder")) {
 												ThunderAttack(p4, p3, p1, p5);
+											}
+											if(p4.getName().equals("Aidan")) {
+												AidanAttack(p4, p3);
 											}
 										}
 									}
@@ -2363,6 +2444,9 @@ public class GameSim {
 											if(p4.getName().equals("Thunder")) {
 												ThunderAttack(p4, p5, p3, p1);
 											}
+											if(p4.getName().equals("Aidan")) {
+												AidanAttack(p4, p5);
+											}
 										}
 									}
 								}
@@ -2373,7 +2457,7 @@ public class GameSim {
 				
 				while(p6.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team 2's Turn (Go " + p6.getName() + "!)");
+					System.out.println("Team B's Turn (Go " + p6.getName() + "!)");
 					System.out.println(p6);
 					System.out.print("What would " + p6.getName() + " like to do: ");
 					String response = input.next();
@@ -2404,7 +2488,7 @@ public class GameSim {
 						if(switchResponse.equals("p")) {
 							if(party1.teamDown()) {
 								System.out.println();
-								System.out.println("Team 2 Wins!");
+								System.out.println("Team B Wins!");
 								party2.passTurn(party1);
 								game = false;
 							}else {
@@ -2438,6 +2522,9 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p6.getName().equals("Aidan")) {
+								AidanUltimate(p6, p1, p3, p5, p4, p2);
+							}
 							if(p6.getName().equals("Thunder")) {
 								ThunderUltimate(p6, p1, p3, p5);
 							}
@@ -2597,6 +2684,9 @@ public class GameSim {
 							if(p6.getName().equals("Thunder")) {
 								ThunderAbility(p6);
 							}
+							if(p6.getName().equals("Aidan")) {
+								AidanAbility(p6, p4, p2);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -2681,6 +2771,9 @@ public class GameSim {
 											if(p6.getName().equals("Thunder")) {
 												ThunderAttack(p6, p1, p3, p5);
 											}
+											if(p6.getName().equals("Aidan")) {
+												AidanAttack(p6, p1);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2745,6 +2838,9 @@ public class GameSim {
 											}
 											if(p6.getName().equals("Thunder")) {
 												ThunderAttack(p6, p3, p1, p5);
+											}
+											if(p6.getName().equals("Aidan")) {
+												AidanAttack(p6, p3);
 											}
 										}
 									}
@@ -2811,6 +2907,9 @@ public class GameSim {
 											if(p6.getName().equals("Thunder")) {
 												ThunderAttack(p6, p5, p3, p1);
 											}
+											if(p6.getName().equals("Aidan")) {
+												AidanAttack(p6, p5);
+											}
 										}
 									}
 								}
@@ -2828,6 +2927,15 @@ public class GameSim {
 		} catch (IOException e) {
 		} catch (LineUnavailableException e) {
 		}
+		try {
+			String audio = "victoryedit.wav";
+			Music victoryPlayer = new Music(audio, false); 
+			victoryPlayer.play();
+		}catch (Exception e) {
+			System.out.println(e);
+		}
+		while(true) {
+		}
 		
 	}
 	
@@ -2835,21 +2943,27 @@ public class GameSim {
 		switch (name) {
 		  case "Lunar":
 			  p = new Player(2700, 225, start, name, x, y, 10, 10, 5);
+			  name = bold + color + 147 + "m" + "Lun" + color + 87 + "m" + "ar" + reset;
+			  p.skin(name);
 		    break;
 		  case "Finley":
 			  p = new Player(3325, 275, start, name, x, y, 8, 9, 6);
 		    break;
 		  case "Mack":
-			  p = new Player(3200, 250, start, name, x, y, 11, 10, 6);
+			  p = new Player(2900, 250, start, name, x, y, 11, 10, 6);
 		    break;
 		  case "Solar":
 			  p = new Player(2800, 175, start, name, x, y, 10, 10, 5);
 		    break;
 		  case "Cherry":
-			  p = new Player(2600, 100, start, name, x, y, 12, 9, 5);
+			  p = new Player(2700, 100, start, name, x, y, 12, 9, 5);
+			  name = bold + color + 196 + "m" + "C" + color + 201 + "m" + "h"  + color + 196 + "m" + "e" + color + 201 + "m" + "r" + color + 196 + "m" + "r" + color + 201 + "m" + "y" + reset;
+			  p.skin(name);
 		    break;
 		  case "Dylan":
 			  p = new Player(2700, 200, start, name, x, y, 10, 10, 5);
+			  name = bold + color + 41 + "m" + "D" + color + 42 + "m" + "y"  + color + 43 + "m" + "l" + color + 44 + "m" + "a" + color + 45 + "m" + "n" + reset;
+			  p.skin(name);
 		    break;
 		  case "Zero":
 			  p = new Player(2625, 250, start, name, x, y, 10, 12, 6);
@@ -2860,8 +2974,13 @@ public class GameSim {
 		  case "Max":
 			  p = new Player(3000, 50, start, name, x, y, 7, 10, 6);
 		    break;
+		  case "Aidan":
+			  p = new Player(2700, 175, start, name, x, y, 11, 9, 6);
+		    break;
 		  case "Via":
 			  p = new Player(2900, 325, start, name, x, y, 10, 10, 6);
+			  name = bold + color + 124 + "m" + "Via" + reset;
+			  p.skin(name);
 		    break;
 		  case "Alex":
 			  p = new Player(2750, 250, start, name, x, y, 12, 10, 6);
@@ -2894,10 +3013,10 @@ public class GameSim {
 			  p = new Player(4750, 375, start, name, x, y, 6, 9, 6);
 		    break;
 		  case "Burt":
-			  p = new Player(2800, 250, start, name, x, y, 10, 11, 5);
+			  p = new Player(2800, 250, start, name, x, y, 10, 11, 6);
 		    break;
 		  case "Bolo":
-			  p = new Player(3250, 225, start, name, x, y, 13, 9, 6);
+			  p = new Player(3050, 225, start, name, x, y, 13, 9, 6);
 		    break;
 		}
 		return p;
@@ -2927,11 +3046,23 @@ public class GameSim {
 			return;
 		}
 		if(p.getLoc().eqLoc(a.getLoc()) && p.canJump()) {
-			p.getLoc().set(x, y);
-			p.useJump();
+			if(!a.isAlive()) {
+				System.out.println("Ally is downed! Cannot perform a jump.");
+				System.out.println();
+				return;
+			}else {
+				p.getLoc().set(x, y);
+				p.useJump();
+			}
 		}else if(p.getLoc().eqLoc(b.getLoc()) && p.canJump()) {
-			p.getLoc().set(x, y);
-			p.useJump();
+			if(!a.isAlive()) {
+				System.out.println("Ally is downed! Cannot perform a jump.");
+				System.out.println();
+				return;
+			}else {
+				p.getLoc().set(x, y);
+				p.useJump();
+			}
 		}
 		for(int i = 0; i < cover.size(); i++) {
 			if(p.getLoc().eqLoc(cover.get(i).getLoc())) {
@@ -3181,18 +3312,21 @@ public class GameSim {
 		System.out.print("Who do you want to make a copy of: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
+			p.setUlt();
 			p.setName(a.getName());
 			p.resetCooldown();
 			p.resetAttack();
 			p.resetUlt();
 		}
 		if(targetResponse.equals("2")) {
+			p.setUlt();
 			p.setName(b.getName());
 			p.resetCooldown();
 			p.resetAttack();
 			p.resetUlt();
 		}
 		if(targetResponse.equals("3")) {
+			p.setUlt();
 			p.setName(c.getName());
 			p.resetCooldown();
 			p.resetAttack();
@@ -5088,7 +5222,7 @@ public class GameSim {
 		p.addJumps(4);
 		p.setUlt();
 		p.resetUlt();
-		System.out.println("\"The only thing they'll see soon is the darkmess.\"");
+		System.out.println("\"Hold on, let me cook.\"");
 		System.out.println();
 	}
 	
@@ -5138,7 +5272,122 @@ public class GameSim {
 			p.resetUlt();
 		}
 		System.out.println();
-		System.out.println("\"Your power is mine now!\"");
+		System.out.println("\"You've been... Thunderstruck!\"");
+		System.out.println();
+	}
+	
+	public static void AidanAttack(Player p, Player a) {
+		System.out.println();
+		Scanner input = new Scanner(System.in);
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect AidanParalyze = new Effect("paralyze", 0, 1);
+		Effect AidanDaze = new Effect("daze", 0, 1);
+		System.out.println("1: Striker Assault Rifle");
+		System.out.println("2: Frenzy Auto Shotgun");
+		System.out.println("3: Reaper Sniper Rifle");
+		System.out.print("Which gun do you want to use: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			p.attack(a);
+			double rand = Math.random();
+			if(rand <= 0.2) {
+				e.add(AidanDaze);
+				a.addEffects(e);
+				a.applyEffects();
+			}
+		}
+		if(targetResponse.equals("2")) {
+			p.attack(a);
+			if(p.inRange(a, 4)) {
+				a.takeDamage(175);
+			}
+		}
+		if(targetResponse.equals("3")) {
+			if(p.overRange(a, 10)) {
+				p.attack(a);
+				a.takeDamage(175);
+				double rand = Math.random();
+				if(rand <= 0.2) {
+					e.add(AidanParalyze);
+					a.addEffects(e);
+					a.applyEffects();
+				}
+			}else {
+				p.attack(a);
+				double rand = Math.random();
+				if(rand <= 0.2) {
+					e.add(AidanParalyze);
+					a.addEffects(e);
+					a.applyEffects();
+				}
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void AidanAbility(Player p, Player a, Player b) {
+		p.heal(0.15);
+		a.heal(0.15);
+		b.heal(0.15);
+		Cover c = new Cover("Full", p.getLoc());
+		Cover c2 = new Cover("Full", a.getLoc());
+		Cover c3 = new Cover("Full", b.getLoc());
+		p.setCover("Full");
+		a.setCover("Full");
+		b.setCover("Full");
+		cover.add(c);
+		cover.add(c2);
+		cover.add(c3);
+		//p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void AidanUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		ArrayList<Effect> e4 = new ArrayList<Effect>();
+		ArrayList<Effect> e5 = new ArrayList<Effect>();
+		ArrayList<Effect> e6 = new ArrayList<Effect>();
+		Effect AidanRefine = new Effect("refine", 0, 2);
+		Effect AidanRefine2 = new Effect("refine", 0, 2);
+		Effect AidanRefine3 = new Effect("refine", 0, 2);
+		Effect AidanVulnerable = new Effect("vulnerable", 0.1, 2);
+		Effect AidanVulnerable2 = new Effect("vulnerable", 0.1, 2);
+		Effect AidanVulnerable3 = new Effect("vulnerable", 0.1, 2);
+		Effect AidanWeak = new Effect("weak", 0.3, 2);
+		Effect AidanWeak2 = new Effect("weak", 0.3, 2);
+		Effect AidanWeak3 = new Effect("weak", 0.3, 2);
+		p.heal(0.10);
+		d.heal(0.10);
+		e.heal(0.10);
+		a.takeDamage(250);
+		b.takeDamage(250);
+		c.takeDamage(250);
+		e1.add(AidanRefine);
+		e5.add(AidanRefine2);
+		e6.add(AidanRefine3);
+		e2.add(AidanVulnerable);
+		e2.add(AidanWeak);
+		e3.add(AidanVulnerable2);
+		e3.add(AidanWeak2);
+		e4.add(AidanVulnerable3);
+		e4.add(AidanWeak3);
+		p.addEffects(e1);
+		p.applyEffects();
+		a.addEffects(e2);
+		a.applyEffects();
+		b.addEffects(e3);
+		b.applyEffects();
+		c.addEffects(e4);
+		c.applyEffects();
+		d.addEffects(e5);
+		d.applyEffects();
+		e.addEffects(e6);
+		e.applyEffects();
+		p.resetUlt();
+		System.out.println("\"Just because we're in the storm, doesn't mean the game's over.\"");
 		System.out.println();
 	}
 	

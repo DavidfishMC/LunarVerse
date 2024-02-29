@@ -61,7 +61,7 @@ public class Battlefield {
 		six = f.getLoc();
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
-				field[i][j] = "∙";
+				field[i][j] = " ";
 			}
 		}
 		for(int i = 0; i < 42; i++) {
@@ -144,6 +144,7 @@ public class Battlefield {
 			}
 			System.out.println();
 		}
+		//Print the x axis.
 		System.out.print("   ");
 		
 		for(int j = 0; j < 4; j++) {
@@ -170,8 +171,8 @@ public class Battlefield {
 			for(Tile t: tiles) {
 				if(p.getLoc().eqLoc(t.getLoc())) {
 					if(t.getName().equals("Rift")) {
-						int x = (int)(Math.random() * (40 - 0 + 1)) + 0;
-						int y = (int)(Math.random() * (40 - 0 + 1)) + 0;
+						int x = (int)(Math.random() * (41 - 0 + 1)) + 0;
+						int y = (int)(Math.random() * (41 - 0 + 1)) + 0;
 						p.getLoc().set(x, y);
 						System.out.println(p.getName() + " rifted to " + p.getLoc() + ".");
 						System.out.println();

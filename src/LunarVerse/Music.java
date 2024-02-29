@@ -21,7 +21,7 @@ public class Music {
     static String filePath; 
   
     // constructor to initialize streams and clip 
-    public Music(String s) 
+    public Music(String s, boolean b) 
         throws UnsupportedAudioFileException, 
         IOException, LineUnavailableException  
     { 
@@ -34,8 +34,9 @@ public class Music {
           
         // open audioInputStream to the clip 
         clip.open(audioInputStream); 
-          
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
+        if(b) {
+        	clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
     }
 
 	public void play() {
