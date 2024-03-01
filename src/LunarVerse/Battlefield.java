@@ -20,6 +20,7 @@ public class Battlefield {
 	ArrayList<Tile> tiles = new ArrayList<Tile>();
 	ArrayList<Player> players = new ArrayList<Player>();
 	String name;
+	static final String reset = "\u001B[0m";
 
 	public Battlefield(String nameIn, Player aIn, Player bIn, Player cIn, Player dIn, Player eIn, Player fIn) {
 		a = aIn;
@@ -44,7 +45,7 @@ public class Battlefield {
 			Tile t = new Tile("Rift", new Location(9,9));
 			Tile t2 = new Tile("Rift", new Location(32,9));
 			Tile t3 = new Tile("Rift", new Location(9,32));
-			Tile t4 = new Tile("Rift", new Location(30,32));
+			Tile t4 = new Tile("Rift", new Location(32,32));
 			tiles.add(t);
 			tiles.add(t2);
 			tiles.add(t3);

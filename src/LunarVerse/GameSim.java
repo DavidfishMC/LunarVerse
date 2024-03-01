@@ -77,13 +77,13 @@ public class GameSim {
 			String temp7 = input.next();
 			p6 = CharacterSelection(p6, temp7, false, 38, 41);
 		}else {
-			p1 = new Player(2650, 175, true, "Lunar", 40, 40, 30, 100, 1);
+			p1 = new Player(2650, 175, true, "Bolo", 40, 40, 30, 100, 0);
 			p3 = new Player(2900, 325, false, "Via", 40, 40, 10, 100, 0);
 			p5 = new Player(4850, 575, false, "Rocco", 40, 40, 6, 500, 0);
 			
-			p2 = new Player(200, 225, false, "Aidan", 40, 40, 9, 100, 5);
-			p4 = new Player(1, 200, false, "Louis", 40, 38, 10, 100, 0);
-			p6 = new Player(1, 200, false, "Solar", 38, 40, 10, 100, 1);
+			p2 = new Player(10, 225, false, "Cherry", 40, 40, 9, 100, 5);
+			p4 = new Player(10, 200, false, "Louis", 40, 38, 10, 100, 0);
+			p6 = new Player(10, 200, false, "Solar", 38, 40, 10, 100, 1);
 
 		}
 		Battlefield b = new Battlefield("Galactical Laboratories", p1, p3, p5, p2, p4, p6);
@@ -588,7 +588,7 @@ public class GameSim {
 				
 				while(p3.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team A's Turn (Go " + p3.getName() + "!)");
+					System.out.println("Team A's Turn (Go " + p3.getSkin() + "!)");
 					System.out.println(p3);
 					System.out.print("What would " + p3.getName() + " like to do: ");
 					String response = input.next();
@@ -662,9 +662,6 @@ public class GameSim {
 							if(p3.getName().equals("Sammi")) {
 								SammiUltimate(p3);
 							}
-							if(p3.getName().equals("Sammi")) {
-								SammiUltimate(p3);
-							}
 							if(p3.getName().equals("Rocco")) {
 								RoccoUltimate(p3, p2, p4, p6);
 							}
@@ -712,7 +709,7 @@ public class GameSim {
 							if(p3.getName().equals("Zero")) {
 								ZeroUltimate(p3);
 							}
-							if(p1.getName().equals("Burt")) {
+							if(p3.getName().equals("Burt")) {
 								BurtUltimate(p3, p2, p4, p6);
 							}
 							if(p3.getName().equals("Eli")) {
@@ -1054,7 +1051,7 @@ public class GameSim {
 				
 				while(p5.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team A's Turn (Go " + p5.getName() + "!)");
+					System.out.println("Team A's Turn (Go " + p5.getSkin() + "!)");
 					System.out.println(p5);
 					System.out.print("What would " + p5.getName() + " like to do: ");
 					String response = input.next();
@@ -1531,7 +1528,7 @@ public class GameSim {
 				}
 				while(p2.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team B's Turn (Go " + p2.getName() + "!)");
+					System.out.println("Team B's Turn (Go " + p2.getSkin() + "!)");
 					System.out.println(p2);
 					System.out.print("What would " + p2.getName() + " like to do: ");
 					String response = input.next();
@@ -1994,7 +1991,7 @@ public class GameSim {
 				
 				while(p4.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team B's Turn (Go " + p4.getName() + "!)");
+					System.out.println("Team B's Turn (Go " + p4.getSkin() + "!)");
 					System.out.println(p4);
 					System.out.print("What would " + p4.getName() + " like to do: ");
 					String response = input.next();
@@ -2457,7 +2454,7 @@ public class GameSim {
 				
 				while(p6.getTurn()) {
 					System.out.println("Turn: " + turns2);
-					System.out.println("Team B's Turn (Go " + p6.getName() + "!)");
+					System.out.println("Team B's Turn (Go " + p6.getSkin() + "!)");
 					System.out.println(p6);
 					System.out.print("What would " + p6.getName() + " like to do: ");
 					String response = input.next();
@@ -2948,16 +2945,22 @@ public class GameSim {
 		    break;
 		  case "Finley":
 			  p = new Player(3325, 275, start, name, x, y, 8, 9, 6);
+			  name = bold + color + 223 + "m" + "Fin" + color + 196 + "m" + "ley" + reset;
+			  p.skin(name);
 		    break;
 		  case "Mack":
 			  p = new Player(2900, 250, start, name, x, y, 11, 10, 6);
+			  name = bold + color + 200 + "m" + "Mack" + reset;
+			  p.skin(name);
 		    break;
 		  case "Solar":
 			  p = new Player(2800, 175, start, name, x, y, 10, 10, 5);
+			  name = bold + color + 214 + "m" + "Sol" + color + 206 + "m" + "ar" + reset;
+			  p.skin(name);
 		    break;
 		  case "Cherry":
 			  p = new Player(2700, 100, start, name, x, y, 12, 9, 5);
-			  name = bold + color + 196 + "m" + "C" + color + 201 + "m" + "h"  + color + 196 + "m" + "e" + color + 201 + "m" + "r" + color + 196 + "m" + "r" + color + 201 + "m" + "y" + reset;
+			  name = bold + color + 196 + "m" + "C" + color + 197 + "m" + "h"  + color + 198 + "m" + "e" + color + 199 + "m" + "r" + color + 200 + "m" + "r" + color + 201 + "m" + "y" + reset;
 			  p.skin(name);
 		    break;
 		  case "Dylan":
@@ -2967,15 +2970,23 @@ public class GameSim {
 		    break;
 		  case "Zero":
 			  p = new Player(2625, 250, start, name, x, y, 10, 12, 6);
+			  name = bold + color + 196 + "m" + "Z" + color + 243 + "m" + "er" + color + 196 + "m" + "o" + reset;
+			  p.skin(name);
 		    break;
 		  case "Kailani":
 			  p = new Player(2650, 225, start, name, x, y, 30, 10, 6);
+			  name = bold + color + 187 + "m" + "Kai" + color + 87 + "m" + "l" + color + 69 + "m" + "ani" + reset;
+			  p.skin(name);
 		    break;
 		  case "Max":
 			  p = new Player(3000, 50, start, name, x, y, 7, 10, 6);
+			  name = bold + color + 180 + "m" + "Max" + reset;
+			  p.skin(name);
 		    break;
 		  case "Aidan":
 			  p = new Player(2700, 175, start, name, x, y, 11, 9, 6);
+			  name = bold + color + 209 + "m" + "A" + color + 75 + "m" + "ida" + color + 209 + "m" + "n" + reset;
+			  p.skin(name);
 		    break;
 		  case "Via":
 			  p = new Player(2900, 325, start, name, x, y, 10, 10, 6);
@@ -2984,39 +2995,63 @@ public class GameSim {
 		    break;
 		  case "Alex":
 			  p = new Player(2750, 250, start, name, x, y, 12, 10, 6);
+			  name = bold + color + 196 + "m" + "A" + color + 226 + "m" + "le" + color + 196 + "m" + "x" + reset;
+			  p.skin(name);
 		    break;
 		  case "Louis":
 			  p = new Player(2650, 225, start, name, x, y, 9, 10, 6);
+			  name = bold + color + 226 + "m" + "Lo" + color + 141 + "m" + "uis" + reset;
+			  p.skin(name);
 		    break;
 		  case "Eli":
 			  p = new Player(2525, 100, start, name, x, y, 10, 10, 7);
+			  name = bold + color + 39 + "m" + "Eli" + reset;
+			  p.skin(name);
 		    break;
 		  case "Ashley":
 			  p = new Player(2550, 200, start, name, x, y, 10, 10, 6);
+			  name = bold + color + 219 + "m" + "A" + color + 220 + "m" + "s"  + color + 221 + "m" + "h" + color + 222 + "m" + "l" + color + 223 + "m" + "e" + color + 224 + "m" + "y" + reset;
+			  p.skin(name);
 		    break;
 		  case "Orion":
 			  p = new Player(4325, 225, start, name, x, y, 10, 10, 6);
+			  name = bold + color + 101 + "m" + "O" + color + 102 + "m" + "r"  + color + 103 + "m" + "i" + color + 104 + "m" + "o" + color + 105 + "m" + "n" + reset;
+			  p.skin(name);
 		    break;
 		  case "Bedrock":
 			  p = new Player(4850, 575, start, name, x, y, 7, 7, 6);
+			  name = bold + color + 240 + "m" + "B" + color + 241 + "m" + "e"  + color + 242 + "m" + "d" + color + 243 + "m" + "r" + color + 245 + "m" + "o" + color + 246 + "m" + "c" + color + 247 + "m" + "k" + reset;
+			  p.skin(name);
 		    break;
 		  case "Rocco":
 			  p = new Player(2725, 200, start, name, x, y, 10, 10, 5);
+			  name = bold + color + 65 + "m" + "R" + color + 66 + "m" + "o"  + color + 67 + "m" + "c" + color + 68 + "m" + "c" + color + 69 + "m" + "o" + reset;
+			  p.skin(name);
 		    break;
 		  case "Sammi":
 			  p = new Player(2750, 275, start, name, x, y, 10, 10, 6);
+			  name = bold + color + 160 + "m" + "S" + color + 196 + "m" + "a"  + color + 202 + "m" + "m" + color + 166 + "m" + "m" + color + 208 + "m" + "i" + reset;
+			  p.skin(name);
 		    break;
 		  case "Clara":
 			  p = new Player(2850, 350, start, name, x, y, 10, 10, 6);
+			  name = bold + color + 162 + "m" + "C" + color + 163 + "m" + "l"  + color + 164 + "m" + "a" + color + 165 + "m" + "r" + color + 166 + "m" + "a" + reset;
+			  p.skin(name);
 		    break;
 		  case "Thunder":
 			  p = new Player(4750, 375, start, name, x, y, 6, 9, 6);
+			  name = bold + color + 226 + "m" + "Thu" + color + 244 + "m" + "nder" + reset;
+			  p.skin(name);
 		    break;
 		  case "Burt":
 			  p = new Player(2800, 250, start, name, x, y, 10, 11, 6);
+			  name = bold + color + 21 + "m" + "Burt" + reset;
+			  p.skin(name);
 		    break;
 		  case "Bolo":
 			  p = new Player(3050, 225, start, name, x, y, 13, 9, 6);
+			  name = bold + color + 47 + "m" + "Bolo" + reset;
+			  p.skin(name);
 		    break;
 		}
 		return p;
@@ -3055,7 +3090,7 @@ public class GameSim {
 				p.useJump();
 			}
 		}else if(p.getLoc().eqLoc(b.getLoc()) && p.canJump()) {
-			if(!a.isAlive()) {
+			if(!b.isAlive()) {
 				System.out.println("Ally is downed! Cannot perform a jump.");
 				System.out.println();
 				return;
@@ -3076,6 +3111,13 @@ public class GameSim {
 				}
 			}else {
 				p.resetCover();
+			}
+		}
+		for(int i = 0; i < orbs.size(); i++) {
+			if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
+				p.getOrb();
+				orbs.remove(i);
+				System.out.println(p.getName() + " has gotten an orb.");
 			}
 		}
 		System.out.println("Jumped to " + p.getLoc() + ".");
@@ -3217,7 +3259,7 @@ public class GameSim {
 	
 	public static void SpawnOrbs() {
 		int d = 3;
-		if(turns2 >= 10) {
+		if(turns2 >= 8) {
 			d = 6;
 		}
 		if(turns2 >= 3) {
@@ -3235,10 +3277,10 @@ public class GameSim {
 	
 	public static void SpawnCover() {
 		int d1 = 2;
-		int d2 = 5;
-		if(turns2 >= 10) {
+		int d2 = 4;
+		if(turns2 >= 8) {
 			d1 = 1;
-			d2 = 3;
+			d2 = 2;
 		}
 		cover.clear();
 		for(int i = 0; i < d1; i++) {
@@ -3760,9 +3802,9 @@ public class GameSim {
 		if(p.inRange(c)) {
 			range3 = "Yes";
 		}
-		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
-		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ".");
-		System.out.println("3: " + c.getName() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ".");
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ".");
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ".");
 		System.out.println("Where do you want to send the Skateboard Surprise: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
@@ -3893,9 +3935,9 @@ public class GameSim {
 	
 	public static void BurtUltimate(Player p, Player a, Player b, Player c) {
 		Scanner input = new Scanner(System.in);
-		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
-		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
-		System.out.println("3: " + c.getName() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
 		System.out.print("Who do you want to suffer the wrath of dual wielding: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
@@ -3948,27 +3990,63 @@ public class GameSim {
 		int randomY = (int)(Math.random() * (3 - 1 + 1)) + 1;
 		if(randomX == 1) {
 			if(randomY == 1) {
-				a.takeDamage(a.getMaxHP() * 0.5);
+				if(!a.isAlive()) {
+					if(b.isAlive()) {
+						b.takeDamage(b.getMaxHP() * 0.5);
+					}else {
+						c.takeDamage(c.getMaxHP() * 0.5);
+					}
+				}else {
+					a.takeDamage(a.getMaxHP() * 0.5);
+				}
 			}
 			if(randomY == 2) {
-				b.takeDamage(b.getMaxHP() * 0.5);
+				if(!b.isAlive()) {
+					if(c.isAlive()) {
+						c.takeDamage(c.getMaxHP() * 0.5);
+					}else {
+						a.takeDamage(a.getMaxHP() * 0.5);
+					}
+				}else {
+					b.takeDamage(b.getMaxHP() * 0.5);
+				}
 			}
 			if(randomY == 3) {
-				c.takeDamage(c.getMaxHP() * 0.5);
+				if(!c.isAlive()) {
+					if(a.isAlive()) {
+						a.takeDamage(a.getMaxHP() * 0.5);
+					}else {
+						b.takeDamage(b.getMaxHP() * 0.5);
+					}
+				}else {
+					c.takeDamage(c.getMaxHP() * 0.5);
+				}
 			}
 		}
 		if(randomX == 2) {
 			if(randomY == 1) {
-				a.takeDamage(a.getMaxHP() * 0.5);
-				b.takeDamage(b.getMaxHP() * 0.5);
+				if(!a.isAlive() && !b.isAlive()) {
+					c.takeDamage(c.getMaxHP() * 0.5);
+				}else {
+					a.takeDamage(a.getMaxHP() * 0.5);
+					b.takeDamage(b.getMaxHP() * 0.5);
+				}
 			}
 			if(randomY == 2) {
-				b.takeDamage(b.getMaxHP() * 0.5);
-				c.takeDamage(c.getMaxHP() * 0.5);
+				if(!b.isAlive() && !c.isAlive()) {
+					a.takeDamage(a.getMaxHP() * 0.5);
+				}else {
+					b.takeDamage(b.getMaxHP() * 0.5);
+					c.takeDamage(c.getMaxHP() * 0.5);
+				}
 			}
 			if(randomY == 3) {
-				c.takeDamage(c.getMaxHP() * 0.5);
-				a.takeDamage(a.getMaxHP() * 0.5);
+				if(!a.isAlive() && !c.isAlive()) {
+					b.takeDamage(b.getMaxHP() * 0.5);
+				}else {
+					a.takeDamage(a.getMaxHP() * 0.5);
+					c.takeDamage(c.getMaxHP() * 0.5);
+				}
 			}
 		}
 		if(randomX == 3) {
@@ -4025,9 +4103,9 @@ public class GameSim {
 		if(p.inRange(c)) {
 			range3 = "Yes";
 		}
-		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
-		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ".");
-		System.out.println("3: " + c.getName() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ".");
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ".");
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ".");
 		System.out.println("Where do you want to send the Goblins: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
@@ -4234,8 +4312,8 @@ public class GameSim {
 		Effect MaxProtect = new Effect("protect", 0.2, 1);
 		e.add(MaxPower);
 		e.add(MaxProtect);
-		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ".");
-		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ".");
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ".");
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ".");
 		System.out.println("Who do you want to give guidance to: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
@@ -4254,9 +4332,9 @@ public class GameSim {
 	
 	public static void MaxUltimate(Player p, Player a, Player b, Player c) {
 		Scanner input = new Scanner(System.in);
-		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
-		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
-		System.out.println("3: " + c.getName() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
 		System.out.print("Who do you want to send the Failed Experiement to: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
@@ -5038,9 +5116,9 @@ public class GameSim {
 			answer = "s";
 			output = "Scissors";
 		}
-		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
-		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
-		System.out.println("3: " + c.getName() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
 		System.out.print("Who do you want to play Rocco Paper Scissors with: ");
 		String targetResponse = input.next();
 		System.out.println();
@@ -5251,9 +5329,9 @@ public class GameSim {
 	
 	public static void ThunderUltimate(Player p, Player a, Player b, Player c) {
 		Scanner input = new Scanner(System.in);
-		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
-		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
-		System.out.println("3: " + c.getName() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
 		System.out.print("Who do you want to trap in the Energy Cage: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
@@ -5338,7 +5416,7 @@ public class GameSim {
 		cover.add(c);
 		cover.add(c2);
 		cover.add(c3);
-		//p.setCooldown(3);
+		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}

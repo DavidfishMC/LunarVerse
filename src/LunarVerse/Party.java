@@ -71,7 +71,6 @@ public class Party {
 	
 	public void checkDown() {
 		if(!roster[0].isAlive()) {
-			System.out.println("here");
 			roster[0].passTurn(roster[1]);
 		}else if(!roster[0].isAlive() && !roster[1].isAlive()) {
 			roster[0].passTurn(roster[2]);
@@ -101,13 +100,13 @@ public class Party {
 			if(p.inRange(roster[i])) {
 				range = "Yes";
 			}
-			System.out.println(i+1 + ": " + roster[i].getName() +". Health: " + roster[i].getHealth() + "/" + roster[i].getMaxHP() + ". Location: " + roster[i].getLoc() + ". In Range: " + range + ". Cover: " + roster[i].getCover());
+			System.out.println(i+1 + ": " + roster[i].getSkin() +". Health: " + roster[i].getHealth() + "/" + roster[i].getMaxHP() + ". Location: " + roster[i].getLoc() + ". In Range: " + range + ". Cover: " + roster[i].getCover());
 		}
 	}
 	
 	public void showRoster() {
 		for(int i = 0; i < 3; i++) {
-			System.out.println(i+1 + ": " + roster[i].getName() +". Health: " + roster[i].getHealth() + "/" + roster[i].getMaxHP() + ". Location: " + roster[i].getLoc() + ". Cover: " + roster[i].getCover());
+			System.out.println(i+1 + ": " + roster[i].getSkin() +". Health: " + roster[i].getHealth() + "/" + roster[i].getMaxHP() + ". Location: " + roster[i].getLoc() + ". Cover: " + roster[i].getCover());
 		}
 	}
 	

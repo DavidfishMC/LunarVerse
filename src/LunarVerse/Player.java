@@ -56,6 +56,7 @@ public class Player {
 	int ultCharge;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
 	public static final String reset = "\u001B[0m";
+	static final String bold = "\u001b[1m";
 	
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -875,26 +876,26 @@ public class Player {
 	}
 	
 	public String toString() {
-		String weapon = "Not Used " + "\u001b[38;5;" + 197 + "m" +"❎"+reset;
-		String ability = "Ready " + "\u001b[38;5;" + 10 + "m" +"✅"+reset;
+		String weapon = "Not Used " + bold + "\u001b[38;5;" + 197 + "m" +"❎"+reset;
+		String ability = "Ready " + bold + "\u001b[38;5;" + 10 + "m" +"✅"+reset;
 		String move = String.valueOf(movement);
-		String healthshow = "Health " + "\u001b[38;5;" + 196 + "m" +"❤️"+reset+": ";
+		String healthshow = "Health " + bold + "\u001b[38;5;" + 196 + "m" +"❤️"+reset+": ";
 		String damageshow = ", Damage " + "\u001b[38;5;" + 124 + "m" +"⚔️"+reset + ": ";
 		String covershow = ", Cover: ";
-		String ultimate = ". Ultimate " + "\u001b[38;5;" + 189 + "m" +"🪩"+reset + ": ";
+		String ultimate = ". Ultimate " + bold + "\u001b[38;5;" + 189 + "m" +"🪩"+reset + ": ";
 		String dash = ", Dashes " + "\u001b[38;5;" + 248 + "m" +"💨"+reset + ": ";
-		String moveshow = ", Movement " + "\u001b[38;5;" + 81 + "m" +"👟"+reset + ": ";
-		String jump = ", Jumps " + "\u001b[38;5;" + 241 + "m" +"🦿"+reset + ": ";
-		String loc = "Location " + "\u001b[38;5;" + 130 + "m" +"🗺️"+reset + ": ";
+		String moveshow = ", Movement " + bold + "\u001b[38;5;" + 81 + "m" +"👟"+reset + ": ";
+		String jump = ", Jumps " + bold + "\u001b[38;5;" + 241 + "m" +"🦿"+reset + ": ";
+		String loc = "Location " + bold + "\u001b[38;5;" + 130 + "m" +"🗺️"+reset + ": ";
 		if(attacked) {
 			weapon = "Used ✅";
 			weapon = "Used " + "\u001b[38;5;" + 10 + "m" +"✅"+reset;
 		}
 		if(cooldown > 0) {
-			ability = "On Cooldown " + "\u001b[38;5;" + 220 + "m" +"🕒"+reset+ "(" + cooldown + ")";
+			ability = "On Cooldown " + bold + "\u001b[38;5;" + 220 + "m" +"🕒"+reset+ "(" + cooldown + ")";
 		}
 		if(freezed == true) {
-			weapon = "Freezed " + "\u001b[38;5;" + 87 + "m" +"❄️"+reset;
+			weapon = "Freezed " + bold + "\u001b[38;5;" + 87 + "m" +"❄️"+reset;
 		}
 		if(dazed == true) {
 			ability = "Dazed " + "\u001b[38;5;" + 175 + "m" +"🌀"+reset;
@@ -903,19 +904,19 @@ public class Player {
 			move = "Paralyzed";
 		}
 		if(health <= (maxHealth * 0.35)) {
-			healthshow = "Health " + "\u001b[38;5;" + 196 + "m" +"💔"+reset+": ";
+			healthshow = "Health " + bold + "\u001b[38;5;" + 196 + "m" +"💔"+reset+": ";
 		}
 		if(damage < ogDamage) {
 			damageshow = ", Damage " + "\u001b[38;5;" + 220 + "m" +"😞"+reset+": ";
 		}
 		if(damage > ogDamage) {
-			damageshow = ", Damage " + "\u001b[38;5;" + 9 + "m" +"💪"+reset+": ";
+			damageshow = ", Damage " + bold + "\u001b[38;5;" + 9 + "m" +"💪"+reset+": ";
 		}
 		if(cover.equals("Full")) {
 			covershow = ", Cover 🛡️: ";
 		}
 		if(cover.equals("Partial")) {
-			healthshow = ", Cover " + "\u001b[38;5;" + 243 + "m" +"🪨"+reset+": ";
+			covershow = ", Cover " + bold + "\u001b[38;5;" + 243 + "m" +"🪨"+reset+": ";
 		}
 		if(orbCount == ultCharge) {
 			ultimate = ". Ultimate " + "\u001b[38;5;" + 221 + "m" +"✨"+reset+": ";
@@ -1037,7 +1038,7 @@ public class Player {
 				return ("\"If I see you, you're dead.\"");
 			}
 			if(randomNum == 2) {
-				return ("\"This bow packs quite a punch.\"");
+				return ("\"Peek me, I dare you.\"");
 			}
 			if(randomNum == 3) {
 				return ("\"Don't doubt my aim if you want me to go easy on you!\"");
