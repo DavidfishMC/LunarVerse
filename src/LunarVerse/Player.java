@@ -39,7 +39,9 @@ public class Player {
 	boolean counter = false;
 	boolean freezed = false;
 	boolean refined = false;
+	boolean fortify = false;
 	boolean ultActive = false;
+	boolean mend = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -54,9 +56,11 @@ public class Player {
 	int ogMovement;
 	int orbCount = 0;
 	int ultCharge;
+	double totalDamage = 0;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
 	public static final String reset = "\u001B[0m";
 	static final String bold = "\u001b[1m";
+	int cNum = 0;
 	
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -74,6 +78,10 @@ public class Player {
 		ogName = name;
 		ogRange = r;
 		nameSkin = name;
+	}
+	
+	public void setC(int c) {
+		cNum = c;
 	}
 	
 	public void setAttacked() {
@@ -153,6 +161,15 @@ public class Player {
 	public boolean inRange(Location l, double r) {
 		double d = curLoc.distanceTo(l);
 		if(r >= d) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public boolean inRange(Location l) {
+		double d = curLoc.distanceTo(l);
+		if(range >= d) {
 			return true;
 		}else {
 			return false;
@@ -282,8 +299,16 @@ public class Player {
 		health = d;
 	}
 	
+	public void increaseMaxHP(double d) {
+		maxHealth = maxHealth + d;
+		health = health + d;
+	}
+	
 	public void knockbacked() {
 		if(!isAlive()) {
+			return;
+		}
+		if(fortify) {
 			return;
 		}
 		int randomX = (int)(Math.random() * (5 - (-5) + 1)) + -5;
@@ -357,7 +382,7 @@ public class Player {
 		}
 		double protect2 = protect;
 		if(protect <= 0) {
-			protect2 = 0.001;
+			protect2 = 0;
 		}
 		d = d * protect2;
 		d = Math.round(d * 10.0) / 10.0;
@@ -384,6 +409,10 @@ public class Player {
 		return cover;
 	}
 	
+	public int skinC() {
+		return cNum;
+	}
+	
 	public void attack(Player p) {
 		if(!p.isAlive()) {
 			return;
@@ -405,6 +434,23 @@ public class Player {
 			}
 			if(p.isReflecting()) {
 				takeDamage((damage + randomNum + c) * 0.5);
+				totalDamage = totalDamage + (damage + randomNum + c) * 0.5;
+				if(mend) {
+					for(int i = 0; i < effects.size(); i++) {
+						if(effects.get(i).getName().equals("mend")) {
+							heal((damage + randomNum + c) * 0.5, effects.get(i).getIncrease());
+						}
+					}
+				}
+			}else {
+				totalDamage = totalDamage + (damage + randomNum + c);
+				if(mend) {
+					for(int i = 0; i < effects.size(); i++) {
+						if(effects.get(i).getName().equals("mend")) {
+							heal((damage + randomNum + c), effects.get(i).getIncrease());
+						}
+					}
+				}
 			}
 			attacked = true;
 			return;
@@ -417,9 +463,24 @@ public class Player {
 		if(p.getCover().equals("Partial")) {
 			if(name.equals("Thunder")) {
 				p.takeDamage((damage * 0.5) + randomNum + c);
+				if(mend) {
+					for(int i = 0; i < effects.size(); i++) {
+						if(effects.get(i).getName().equals("mend")) {
+							heal((damage * 0.5) + randomNum + c, effects.get(i).getIncrease());
+						}
+					}
+				}
 				attacked = true;
 				if(p.isReflecting()) {
 					takeDamage((damage + randomNum + c) * 0.5);
+					totalDamage = totalDamage + (damage + randomNum + c) * 0.5;
+					if(mend) {
+						for(int i = 0; i < effects.size(); i++) {
+							if(effects.get(i).getName().equals("mend")) {
+								heal((damage + randomNum + c) * 0.5, effects.get(i).getIncrease());
+							}
+						}
+					}
 				}
 				if(p.getName().equals("Thunder") && p.isCountering()) {
 					takeDamage(p.getDamage() * 1.25);
@@ -427,6 +488,9 @@ public class Player {
 				return;
 			}else {
 				double rand = Math.random();
+				if(name.equals("Archer")) {
+					rand = 1;
+				}
 				if(rand <= 0.5) {
 					System.out.println("Attacked was Covered!");
 					attacked = true;
@@ -438,7 +502,15 @@ public class Player {
 			takeDamage((damage + randomNum + c) * 0.5);
 		}
 		p.takeDamage(damage + randomNum + c);
+		totalDamage = totalDamage + (damage + randomNum + c);
 		attacked = true;
+		if(mend) {
+			for(int i = 0; i < effects.size(); i++) {
+				if(effects.get(i).getName().equals("mend")) {
+					heal((damage + randomNum + c), effects.get(i).getIncrease());
+				}
+			}
+		}
 		if(p.getName().equals("Thunder") && p.isCountering()) {
 			takeDamage(p.getDamage() * 1.25);
 		}
@@ -447,9 +519,14 @@ public class Player {
 		}
 	}
 	
+	public double getTotalDPS() {
+		return totalDamage;
+	}
+	
 	public boolean isCountering() {
 		return counter;
 	}
+	
 	
 	public boolean isDazed() {
 		return dazed;
@@ -465,7 +542,7 @@ public class Player {
 		}
 		for(int j = 0; j < e.size(); j++) {
 			if(refined) {
-				if(e.get(j).getName().equals("ignite") || e.get(j).getName().equals("weak") || e.get(j).getName().equals("freeze") || e.get(j).getName().equals("vulnerable") || e.get(j).getName().equals("paralyze") || e.get(j).getName().equals("daze") || e.get(j).getName().equals("blind") || e.get(j).getName().equals("stun")) {
+				if(e.get(j).getName().equals("ignite") || e.get(j).getName().equals("weak") || e.get(j).getName().equals("freeze") || e.get(j).getName().equals("vulnerable") || e.get(j).getName().equals("paralyze") || e.get(j).getName().equals("daze") || e.get(j).getName().equals("blind") || e.get(j).getName().equals("stun") || e.get(j).getName().equals("poison")) {
 					e.remove(e.get(j));
 					j--;
 				}
@@ -474,8 +551,10 @@ public class Player {
 		for(int i = 0; i < e.size(); i++) {
 			if(e.get(i).getName().equals("ignite") && ignite) {
 				for(int j = 0; j < effects.size(); j++) {
-					if(effects.get(i).getName().equals("ignite")) {
-						effects.remove(effects.get(i));
+					if(effects.get(j).getName().equals("ignite")) {
+						effects.remove(effects.get(j));
+						j--;
+						ignite = false;
 					}
 				}
 			}
@@ -486,8 +565,10 @@ public class Player {
 			
 			if(e.get(i).getName().equals("daze") && dazed) {
 				for(int j = 0; j < effects.size(); j++) {
-					if(effects.get(i).getName().equals("daze")) {
-						effects.remove(effects.get(i));
+					if(effects.get(j).getName().equals("daze")) {
+						effects.remove(effects.get(j));
+						j--;
+						dazed = false;
 					}
 				}
 			}
@@ -498,8 +579,10 @@ public class Player {
 			
 			if(e.get(i).getName().equals("stun") && stunned) {
 				for(int j = 0; j < effects.size(); j++) {
-					if(effects.get(i).getName().equals("stun")) {
-						effects.remove(effects.get(i));
+					if(effects.get(j).getName().equals("stun")) {
+						effects.remove(effects.get(j));
+						j--;
+						stunned = false;
 					}
 				}
 			}
@@ -509,8 +592,10 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("paralyze") && paralyzed) {
 				for(int j = 0; j < effects.size(); j++) {
-					if(effects.get(i).getName().equals("paralyze")) {
-						effects.remove(effects.get(i));
+					if(effects.get(j).getName().equals("paralyze")) {
+						effects.remove(effects.get(j));
+						j--;
+						paralyzed = false;
 					}
 				}
 			}
@@ -520,8 +605,10 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("reflection") && reflection) {
 				for(int j = 0; j < effects.size(); j++) {
-					if(effects.get(i).getName().equals("reflection")) {
-						effects.remove(effects.get(i));
+					if(effects.get(j).getName().equals("reflection")) {
+						effects.remove(effects.get(j));
+						j--;
+						reflection = false;
 					}
 				}
 			}
@@ -531,8 +618,10 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("freeze") && freezed) {
 				for(int j = 0; j < effects.size(); j++) {
-					if(effects.get(i).getName().equals("freeze")) {
-						effects.remove(effects.get(i));
+					if(effects.get(j).getName().equals("freeze")) {
+						effects.remove(effects.get(j));
+						j--;
+						freezed = false;
 					}
 				}
 			}
@@ -542,8 +631,10 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("refine") && refined) {
 				for(int j = 0; j < effects.size(); j++) {
-					if(effects.get(i).getName().equals("refine")) {
-						effects.remove(effects.get(i));
+					if(effects.get(j).getName().equals("refine")) {
+						effects.remove(effects.get(j));
+						j--;
+						refined = false;
 					}
 				}
 			}
@@ -553,14 +644,42 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("counter") && counter) {
 				for(int j = 0; j < effects.size(); j++) {
-					if(effects.get(i).getName().equals("counter")) {
-						effects.remove(effects.get(i));
+					if(effects.get(j).getName().equals("counter")) {
+						effects.remove(effects.get(j));
+						j--;
+						counter = false;
 					}
 				}
 			}
 			if(e.get(i).getName().equals("counter") && !counter) {
 				counter = true;
 				System.out.println(nameSkin + " is now countering.");
+			}
+			if(e.get(i).getName().equals("mend") && mend) {
+				for(int j = 0; j < effects.size(); j++) {
+					if(effects.get(j).getName().equals("mend")) {
+						effects.remove(effects.get(j));
+						j--;
+						mend = false;
+					}
+				}
+			}
+			if(e.get(i).getName().equals("mend") && !mend) {
+				mend = true;
+				System.out.println(nameSkin + " is now mending.");
+			}
+			if(e.get(i).getName().equals("fortify") && fortify) {
+				for(int j = 0; j < effects.size(); j++) {
+					if(effects.get(j).getName().equals("fortify")) {
+						effects.remove(effects.get(j));
+						j--;
+						fortify = false;
+					}
+				}
+			}
+			if(e.get(i).getName().equals("fortify") && !fortify) {
+				fortify = true;
+				System.out.println(nameSkin + " is fortified.");
 			}
 			effects.add(e.get(i));
 		}
@@ -601,6 +720,10 @@ public class Player {
 			if(e.getName().equals("poison") && !e.isUsed()) {
 				absorb = absorb - e.getIncrease();
 				System.out.println(nameSkin + " has been poisoned.");
+			}
+			if(e.getName().equals("sight") && !e.isUsed()) {
+				range = range + (ogRange * e.getIncrease());
+				System.out.println(nameSkin + " is now sightseeing.");
 			}
 			e.used();
 		}
@@ -679,6 +802,21 @@ public class Player {
 				if(e.getName().equals("counter")) {
 					counter = false;
 					System.out.println(nameSkin + " is no longer countering.");
+					i--;
+				}
+				if(e.getName().equals("mend")) {
+					mend = false;
+					System.out.println(nameSkin + " is no longer mending.");
+					i--;
+				}
+				if(e.getName().equals("fortify")) {
+					fortify = false;
+					System.out.println(nameSkin + " is no longer fortified.");
+					i--;
+				}
+				if(e.getName().equals("sight")) {
+					range = range - (ogRange * e.getIncrease());
+					System.out.println(nameSkin + " is no longer sightseeing.");
 					i--;
 				}
 				effects.remove(e);
@@ -830,6 +968,12 @@ public class Player {
 		}	
 	}
 	
+	public void increaseHP(double d) {
+		if(isAlive()) {
+			health = health + d;
+		}
+	}
+	
 	public void heal(double d, double i) {
 		if(!isAlive()) {
 			
@@ -876,23 +1020,23 @@ public class Player {
 	}
 	
 	public String toString() {
-		String weapon = "Not Used " + bold + "\u001b[38;5;" + 197 + "m" +"❎"+reset;
-		String ability = "Ready " + bold + "\u001b[38;5;" + 10 + "m" +"✅"+reset;
+		String weapon = "Not Used " + "\u001b[38;5;" + 197 + "m" +"❎"+reset;
+		String ability = "Ready " +"\u001b[38;5;" + 10 + "m" +"✅"+reset;
 		String move = String.valueOf(movement);
-		String healthshow = "Health " + bold + "\u001b[38;5;" + 196 + "m" +"❤️"+reset+": ";
+		String healthshow = "Health " + bold + "\u001b[38;5;" + 196 + "m" +"❤️"+reset;
 		String damageshow = ", Damage " + "\u001b[38;5;" + 124 + "m" +"⚔️"+reset + ": ";
 		String covershow = ", Cover: ";
 		String ultimate = ". Ultimate " + bold + "\u001b[38;5;" + 189 + "m" +"🪩"+reset + ": ";
 		String dash = ", Dashes " + "\u001b[38;5;" + 248 + "m" +"💨"+reset + ": ";
-		String moveshow = ", Movement " + bold + "\u001b[38;5;" + 81 + "m" +"👟"+reset + ": ";
+		String moveshow = ", Movement " + "\u001b[38;5;" + 81 + "m" +"👟"+reset + ": ";
 		String jump = ", Jumps " + bold + "\u001b[38;5;" + 241 + "m" +"🦿"+reset + ": ";
-		String loc = "Location " + bold + "\u001b[38;5;" + 130 + "m" +"🗺️"+reset + ": ";
+		String loc = "Location " + "\u001b[38;5;" + 130 + "m" +"🗺️"+reset + ": ";
+		String weaponShow = "Weapon";
 		if(attacked) {
-			weapon = "Used ✅";
 			weapon = "Used " + "\u001b[38;5;" + 10 + "m" +"✅"+reset;
 		}
 		if(cooldown > 0) {
-			ability = "On Cooldown " + bold + "\u001b[38;5;" + 220 + "m" +"🕒"+reset+ "(" + cooldown + ")";
+			ability = "On Cooldown " +  "\u001b[38;5;" + 220 + "m" +"🕒"+reset+ "(" + cooldown + ")";
 		}
 		if(freezed == true) {
 			weapon = "Freezed " + bold + "\u001b[38;5;" + 87 + "m" +"❄️"+reset;
@@ -904,7 +1048,7 @@ public class Player {
 			move = "Paralyzed";
 		}
 		if(health <= (maxHealth * 0.35)) {
-			healthshow = "Health " + bold + "\u001b[38;5;" + 196 + "m" +"💔"+reset+": ";
+			healthshow = "\u001b[38;5;" + 196 + "m" +"💔"+reset;
 		}
 		if(damage < ogDamage) {
 			damageshow = ", Damage " + "\u001b[38;5;" + 220 + "m" +"😞"+reset+": ";
@@ -914,6 +1058,7 @@ public class Player {
 		}
 		if(cover.equals("Full")) {
 			covershow = ", Cover 🛡️: ";
+			covershow = ", Cover " + "\u001b[38;5;" + 21 + "m" +"🛡️"+reset+": ";
 		}
 		if(cover.equals("Partial")) {
 			covershow = ", Cover " + bold + "\u001b[38;5;" + 243 + "m" +"🪨"+reset+": ";
@@ -922,11 +1067,78 @@ public class Player {
 			ultimate = ". Ultimate " + "\u001b[38;5;" + 221 + "m" +"✨"+reset+": ";
 		}
 		health = Math.round(health * 10.0) / 10.0;
-		return (healthshow + health + "/" + maxHealth + damageshow + damage +  covershow + cover + "\n" +"Weapon: " + weapon + ". Ability: " + ability + ultimate + orbCount + "/" + ultCharge + "\n" + loc + curLoc + moveshow + move + dash + dashes + jump + jumps);
+		maxHealth = Math.round(maxHealth * 10.0) / 10.0;
+		if(health <= (maxHealth * 0.35)) {
+			if(protect < 1) {
+				healthshow = "Health " +"\u001b[38;5;" + 247 + "m" +"💔"+reset;
+			}
+			if(protect > 1) {
+				healthshow = "Health " +"\u001b[38;5;" + 213 + "m" +"💔"+reset;
+			}
+		}else {
+			if(protect < 1) {
+				healthshow = "Health " +bold+"\u001b[38;5;" + 247 + "m" +"❤️"+reset;
+			}
+			if(protect > 1) {
+				healthshow = "Health " +bold+"\u001b[38;5;" + 213 + "m" +"❤️"+reset;
+			}
+		}
+		if(counter || reflection || (range < ogRange) || (sights > 0) || (range > ogRange)) {
+			weaponShow = weaponShow + " ";
+		}
+		if(counter || reflection) {
+			weaponShow = weaponShow +"\u001b[38;5;" + 196 + "m" +"🥊"+reset;
+		}
+		if(range > ogRange) {
+			weaponShow = weaponShow +"\u001b[38;5;" + 49 + "m" +"👀"+reset;
+		}
+		if(range < ogRange) {
+			weaponShow = weaponShow +"\u001b[38;5;" + 62 + "m" +"😴"+reset;
+		}
+		if(sights > 0) {
+			weaponShow = weaponShow +"\u001b[38;5;" + 88 + "m" +"🔭"+reset;
+		}
+		if(fortify) {
+			moveshow = ", Movement " + "\u001b[38;5;" + 52 + "m" +"🪵"+reset + ": ";
+		}
+		if(mend) {
+			healthshow = healthshow + bold+"\u001b[38;5;" + 51 + "m" +"🩹"+reset;
+		}
+		if(refined) {
+			healthshow = healthshow + "\u001b[38;5;" + 220 + "m" +"😇"+reset;
+		}
+		if(ignite) {
+			healthshow = healthshow + bold+"\u001b[38;5;" + 220 + "m" +"🔥"+reset;
+		}
+		if(absorb < 1) {
+			healthshow = healthshow + bold+"\u001b[38;5;" + 46 + "m" +"💧"+reset;
+		}
+		
+		healthshow = healthshow + ": ";
+		weaponShow = weaponShow + ": ";
+		
+		return (healthshow + health + "/" + maxHealth + damageshow + damage +  covershow + cover + "\n" +weaponShow + weapon + ". Ability: " + ability + ultimate + orbCount + "/" + ultCharge + "\n" + loc + curLoc + moveshow + move + dash + dashes + jump + jumps);
 	}
 	
-	public String effects() {
-		return ("Dazed: " + dazed + ", Freezed: " + freezed + ", Ignited: " + ignite + ", Paralyzed: " + paralyzed + ", Stunned: " + stunned);
+	public String showHP() {
+		String healthshow = ". Health " + bold + "\u001b[38;5;" + 196 + "m" +"❤️"+reset+": ";
+		if(health <= (maxHealth * 0.35)) {
+			healthshow = ". Health " + "\u001b[38;5;" + 196 + "m" +"💔"+reset+": ";
+			if(protect < 1) {
+				healthshow = ". Health " +"\u001b[38;5;" + 247 + "m" +"💔"+reset+": ";
+			}
+			if(protect > 1) {
+				healthshow = ". Health " +"\u001b[38;5;" + 213 + "m" +"💔"+reset+": ";
+			}
+		}else {
+			if(protect < 1) {
+				healthshow = ". Health " +bold+"\u001b[38;5;" + 247 + "m" +"❤️"+reset+": ";
+			}
+			if(protect > 1) {
+				healthshow = ". Health " +bold+"\u001b[38;5;" + 213 + "m" +"❤️"+reset+": ";
+			}
+		}
+		return healthshow;
 	}
 	
 	public double getRange() {
@@ -1203,6 +1415,116 @@ public class Player {
 					System.out.println(e);
 				}
 				return ("\033[3m🎵 I said right foot creep, ooh, I'm walking with that heater 🎵\033[0m");
+			}
+		}
+		if(name.equals("Liam")) {
+			if(randomNum == 1) {
+				return ("\"Your honor, my client is innocent!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"The jury is here to defend us!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Objection!\"");
+			}
+		}
+		if(name.equals("Axol")) {
+			if(randomNum == 1) {
+				return ("\"Go help them out little fellas.\"");
+			}
+			if(randomNum == 2) {
+				return ("\"The healing power of friendship is here.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Aren't they so cute?\"");
+			}
+		}
+		if(name.equals("Katrina")) {
+			if(randomNum == 1) {
+				return ("\"Woomy!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"I'm with you.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"What's up?\"");
+			}
+		}
+		if(name.equals("Midnite")) {
+			if(randomNum == 1) {
+				return ("\"Boo!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Ghost power isn't anything to mess with.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"I'll become your greatest fear.\"");
+			}
+		}
+		if(name.equals("Xara")) {
+			if(randomNum == 1) {
+				return ("\"Cyber Security protocols in place.\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Stay back, I'll show them what they're messing with.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Never cross the line between an admin.\"");
+			}
+		}
+		if(name.equals("Kithara")) {
+			if(randomNum == 1) {
+				return ("\"Wonder Shield activated!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"I'll show them what bulletproof means.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Try breaking through this!\"");
+			}
+		}
+		if(name.equals("Anjelika")) {
+			if(randomNum == 1) {
+				return ("\"Angelic Ray spreading out.\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Not so pure is it?\"");
+			}
+			if(randomNum == 3) {
+				return ("\"The more evil they are, the more pain they will feel.\"");
+			}
+		}
+		if(name.equals("Archer")) {
+			if(randomNum == 1) {
+				return ("\"Don't let them out of your sights!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Carrots for the win!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Out range them. Out gun them.\"");
+			}
+		}
+		if(name.equals("Tom")) {
+			if(randomNum == 1) {
+				return ("\"Your mistake for messing with me!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Microbot protection enhanced.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"I control these bots. You're doomed.\"");
+			}
+		}
+		if(name.equals("Dimentio")) {
+			if(randomNum == 1) {
+				return ("\"To the Shadow Realm with you!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Feel free to appeal your ban with a moderator!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Not in my server you don't!\"");
 			}
 		}
 		return "";

@@ -50,7 +50,9 @@ public class Party {
 			roster[i].resetDashes();
 			roster[i].resetJumps();
 			roster[i].resetCover();
-			roster[i].resetRange();
+			if(roster[i].getName().equals("Sammi")) {
+				roster[i].resetRange();
+			}
 		}
 		turn = true;
 		for(int i = 0; i < 3; i++) {
@@ -100,13 +102,13 @@ public class Party {
 			if(p.inRange(roster[i])) {
 				range = "Yes";
 			}
-			System.out.println(i+1 + ": " + roster[i].getSkin() +". Health: " + roster[i].getHealth() + "/" + roster[i].getMaxHP() + ". Location: " + roster[i].getLoc() + ". In Range: " + range + ". Cover: " + roster[i].getCover());
+			System.out.println(i+1 + ": " + roster[i].getSkin() +roster[i].showHP() + roster[i].getHealth() + "/" + roster[i].getMaxHP() + ". Location: " + roster[i].getLoc() + ". In Range: " + range + ". Cover: " + roster[i].getCover());
 		}
 	}
 	
 	public void showRoster() {
 		for(int i = 0; i < 3; i++) {
-			System.out.println(i+1 + ": " + roster[i].getSkin() +". Health: " + roster[i].getHealth() + "/" + roster[i].getMaxHP() + ". Location: " + roster[i].getLoc() + ". Cover: " + roster[i].getCover());
+			System.out.println(i+1 + ": " + roster[i].getSkin() +roster[i].showHP() + roster[i].getHealth() + "/" + roster[i].getMaxHP() + ". Location: " + roster[i].getLoc() + ". Cover: " + roster[i].getCover());
 		}
 	}
 	

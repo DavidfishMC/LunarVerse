@@ -21,6 +21,8 @@ public class Battlefield {
 	ArrayList<Player> players = new ArrayList<Player>();
 	String name;
 	static final String reset = "\u001B[0m";
+	static final String color = "\u001b[38;5;";
+	static final String bold = "\u001b[1m";
 
 	public Battlefield(String nameIn, Player aIn, Player bIn, Player cIn, Player dIn, Player eIn, Player fIn) {
 		a = aIn;
@@ -53,7 +55,7 @@ public class Battlefield {
 		}
 	}
 	
-	public void printField(Player a, Player b, Player c, Player d, Player e, Player f, ArrayList<Orb> orbLoc, ArrayList<Cover> coverLoc) {
+	public void printField(Player a, Player b, Player c, Player d, Player e, Player f, ArrayList<Orb> orbLoc, ArrayList<Cover> coverLoc, Player s, Player e1, Player e2, Player e3) {
 		one = a.getLoc();
 		two = b.getLoc();
 		three = c.getLoc();
@@ -65,76 +67,116 @@ public class Battlefield {
 				field[i][j] = " ";
 			}
 		}
+
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(s.inRange(l)) {
+					field[j][i] = "∙";
+				}
+			}
+		}
+		
+		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e1.inRange(l) && e1.hasSights() && !e1.isStunned()) {
+					field[i][j] = color + 196 + "m" + "∙" + reset;
+				}
+			}
+		}
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e2.inRange(l) && e2.hasSights() && !e2.isStunned()) {
+					field[i][j] = color + 196 + "m" + "∙" + reset;
+				}
+			}
+		}
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e3.inRange(l) && e3.hasSights() && !e3.isStunned()) {
+					field[i][j] = color + 196 + "m" + "∙" + reset;
+				}
+			}
+		}
+		
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
 				for(Orb o: orbLoc) {
 					if(i == o.getLoc().getY() && j == o.getLoc().getX()) {
-						field[i][j] = "O";
+						field[i][j] = bold + "\u001b[38;5;" + 189 + "m" + "🪩" + reset;
+						//field[i][j] = "O";
 					}
 				}
 				for(Cover w: coverLoc) {
 					if(i == w.getLoc().getY() && j == w.getLoc().getX()) {
 						if(w.getName().equals("Full")) {
-							field[i][j] = "F";
+							field[i][j] = "\u001b[38;5;" + 21 + "m" + "🛡️" + reset;
+							//field[i][j] = "F";
 						}
 						if(w.getName().equals("Partial")) {
-							field[i][j] = "P";
+							field[i][j] = bold + "\u001b[38;5;" + 243 + "m" + "🪨" + reset;
+							//field[i][j] = "P";
 						}
 					}
 				}
 				for(Tile t: tiles) {
 					if(i == t.getLoc().getY() && j == t.getLoc().getX()) {
 						if(t.getName().equals("Rift")) {
-							field[i][j] = "R";
+							field[i][j] = bold + color + 117+ "m"+"🍥" + reset;
 						}
 					}
 				}
 				if(i == one.getY() && j == one.getX()) {
 					if(!a.isAlive()) {
-						field[i][j] = "D";
+						field[i][j] = "💀";
 					}else {
-						field[i][j] = "1";
+						field[i][j] = bold + color + a.skinC() + "m" + a.getName().substring(0,1) + reset;
 					}
 				}
 				if(i == two.getY() && j == two.getX()) {
 					if(!b.isAlive()) {
-						field[i][j] = "D";
+						field[i][j] = "💀";
 					}else {
-						field[i][j] = "2";
+						field[i][j] = bold + color + b.skinC() + "m" + b.getName().substring(0,1) + reset;
 					}
 				}
 				if(i == three.getY() && j == three.getX()) {
 					if(!c.isAlive()) {
-						field[i][j] = "D";
+						field[i][j] = "💀";
 					}else {
-						field[i][j] = "3";
+						field[i][j] = bold + color + c.skinC() + "m" + c.getName().substring(0,1) + reset;
 					}
 				}
 				if(i == four.getY() && j == four.getX()) {
 					if(!d.isAlive()) {
-						field[i][j] = "D";
+						field[i][j] = "💀";
 					}else {
-						field[i][j] = "4";
+						field[i][j] = bold + color + d.skinC() + "m" + d.getName().substring(0,1) + reset;
 					}
 				}
 				if(i == five.getY() && j == five.getX()) {
 					if(!e.isAlive()) {
-						field[i][j] = "D";
+						field[i][j] = "💀";
 					}else {
-						field[i][j] = "5";
+						field[i][j] = bold + color + e.skinC() + "m" + e.getName().substring(0,1) + reset;
 					}
 				}
 				if(i == six.getY() && j == six.getX()) {
 					if(!f.isAlive()) {
-						field[i][j] = "D";
+						field[i][j] = "💀";
 					}else {
-						field[i][j] = "6";
+						field[i][j] = bold + color + f.skinC() + "m" + f.getName().substring(0,1) + reset;
 					}
 				}
 				
 			}
 			
 		}
+		
 		for(int i = 0; i < 42; i ++) {
 			System.out.print(i + " ");
 			if(i < 10) {
@@ -145,6 +187,7 @@ public class Battlefield {
 			}
 			System.out.println();
 		}
+		/*
 		//Print the x axis.
 		System.out.print("   ");
 		
@@ -163,8 +206,9 @@ public class Battlefield {
 		}
 		System.out.print("0 1");
 		System.out.println();
+		*/
 		System.out.println();
-		
+	
 	}
 	
 	public void checkTiles() {
@@ -175,7 +219,7 @@ public class Battlefield {
 						int x = (int)(Math.random() * (41 - 0 + 1)) + 0;
 						int y = (int)(Math.random() * (41 - 0 + 1)) + 0;
 						p.getLoc().set(x, y);
-						System.out.println(p.getName() + " rifted to " + p.getLoc() + ".");
+						System.out.println(p.getSkin() + " rifted to " + p.getLoc() + ".");
 						System.out.println();
 					}
 				}
