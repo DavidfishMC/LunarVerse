@@ -79,9 +79,9 @@ public class GameSim {
 			String temp7 = input.next();
 			p6 = CharacterSelection(p6, temp7, false, 33, 36);
 		}else {
-			p1 = new Player(2650, 175, true, "Evil", 35, 35, 15, 100, 0);
-			p3 = new Player(1000, 325, false, "Midnite", 30, 40, 10, 100, 0);
-			p5 = new Player(4850, 575, false, "Rocco", 40, 40, 6, 500, 0);
+			p1 = new Player(10, 175, true, "Alex", 35, 35, 15, 100, 0);
+			p3 = new Player(1110, 325, false, "Orion", 30, 40, 10, 100, 0);
+			p5 = new Player(1110, 575, false, "Rocco", 40, 40, 6, 500, 0);
 			
 			p2 = new Player(1000, 225, false, "Bolo", 40, 40, 9, 100, 0);
 			p4 = new Player(1000, 100, false, "Rocco", 40, 38, 10, 100, 0);
@@ -779,6 +779,16 @@ public class GameSim {
 							}
 						}
 					}
+					if(!p1.isAlive()) {
+						p1.endTurn();
+						if(party1.teamDown()) {
+							System.out.println("Team B Wins!");
+							game = false;
+							//p1.image().close();
+						}else {
+							party1.nextPlayer();
+						}
+					}
 				}
 				
 				while(p3.getTurn()) {
@@ -1428,6 +1438,16 @@ public class GameSim {
 									}
 								}
 							}
+						}
+					}
+					if(!p3.isAlive()) {
+						p3.endTurn();
+						if(party1.teamDown()) {
+							System.out.println("Team B Wins!");
+							game = false;
+							//p1.image().close();
+						}else {
+							party1.nextPlayer();
 						}
 					}
 				}
@@ -2081,8 +2101,17 @@ public class GameSim {
 							}
 						}
 					}
+					if(!p5.isAlive()) {
+						p5.endTurn();
+						if(party1.teamDown()) {
+							System.out.println("Team B Wins!");
+							game = false;
+							//p1.image().close();
+						}else {
+							party1.nextPlayer();
+						}
+					}
 				}
-				
 			}
 			
 			while(party2.getTurn()) {
@@ -2746,6 +2775,16 @@ public class GameSim {
 							}
 						}
 					}
+					if(!p2.isAlive()) {
+						p2.endTurn();
+						if(party2.teamDown()) {
+							System.out.println("Team A Wins!");
+							game = false;
+							//p1.image().close();
+						}else {
+							party2.nextPlayer();
+						}
+					}
 				}
 				
 				while(p4.getTurn()) {
@@ -3395,6 +3434,16 @@ public class GameSim {
 									}
 								}
 							}
+						}
+					}
+					if(!p4.isAlive()) {
+						p4.endTurn();
+						if(party2.teamDown()) {
+							System.out.println("Team A Wins!");
+							game = false;
+							//p1.image().close();
+						}else {
+							party2.nextPlayer();
 						}
 					}
 				}
@@ -4048,8 +4097,17 @@ public class GameSim {
 							}
 						}
 					}
+					if(!p6.isAlive()) {
+						p6.endTurn();
+						if(party2.teamDown()) {
+							System.out.println("Team A Wins!");
+							game = false;
+							//p1.image().close();
+						}else {
+							party2.nextPlayer();
+						}
+					}
 				}
-				
 			}
 		}
 		input.close();
@@ -4079,7 +4137,7 @@ public class GameSim {
 			  name = bold + color + 147 + "m" + "Lun" + color + 87 + "m" + "ar" + reset;
 			  p.skin(name);
 			  p.setC(147);
-			  p.setImage("lunar.png");
+			  //p.setImage("lunar.png");
 		    break;
 		  case "Finley":
 			  p = new Player(3325, 275, start, name, x, y, 8, 9, 6);
@@ -4094,7 +4152,7 @@ public class GameSim {
 			  p.setC(200);
 		    break;
 		  case "Solar":
-			  p = new Player(2800, 175, start, name, x, y, 10, 10, 5);
+			  p = new Player(2800, 175, start, name, x, y, 10, 10, 6);
 			  name = bold + color + 220 + "m" + "S" + color + 221 + "m" + "o"  + color + 222 + "m" + "l" + color + 212 + "m" + "a" + color + 213 + "m" + "r" + reset;
 			  p.skin(name);
 			  p.setC(220);
@@ -4436,7 +4494,7 @@ public class GameSim {
 			System.out.println("No more movement left!");
 			System.out.println();
 		}else {
-			
+			b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 			while(move) {
 				System.out.print("Which way do you want to move: ");
 				String moveResponse = input.next();
@@ -4516,6 +4574,9 @@ public class GameSim {
 					System.out.println("Out of movement.");
 					move = false;
 					System.out.println();
+				}
+				if(!p.isAlive()) {
+					move = false;
 				}
 			}
 		}
@@ -5511,7 +5572,8 @@ public class GameSim {
 	}
 	
 	public static void ZeroUltimate(Player p) {
-		p.setSights(10);
+		p.resetUlt();
+		p.setSights(6);
 		System.out.println("\"Walk near me, and I'll /smite you.\"");
 		System.out.println();
 	}

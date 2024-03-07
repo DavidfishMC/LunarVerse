@@ -30,6 +30,18 @@ public class Party {
 		return roster;
 	}
 	
+	public void nextPlayer() {
+		if((!roster[0].isAlive() || roster[0].isStunned()) && (roster[1].isAlive() && !roster[1].isStunned())) {
+			roster[1].setTurn();
+		}else if(!roster[0].isAlive() && roster[1].isStunned()) {
+			roster[2].setTurn();
+		}else if((!roster[0].isAlive() && !roster[1].isAlive()) || ((roster[0].isStunned() && roster[1].isStunned()))) {
+			roster[2].setTurn();
+		}else {
+			roster[0].setTurn();
+		}
+	}
+	
 	public void setTurn() {
 		try {
 			String audio = "passturnedit.wav";
@@ -60,11 +72,11 @@ public class Party {
 				roster[i].takeDamage(175);
 			}
 		}
-		if(!roster[0].isAlive() || roster[0].isStunned()) {
+		if((!roster[0].isAlive() || roster[0].isStunned()) && (roster[1].isAlive() && !roster[1].isStunned())) {
 			roster[1].setTurn();
 		}else if(!roster[0].isAlive() && roster[1].isStunned()) {
 			roster[2].setTurn();
-		}else if(!roster[0].isAlive() && !roster[1].isAlive() || (roster[0].isStunned() && roster[1].isStunned())) {
+		}else if((!roster[0].isAlive() && !roster[1].isAlive()) || ((roster[0].isStunned() && roster[1].isStunned()))) {
 			roster[2].setTurn();
 		}else {
 			roster[0].setTurn();

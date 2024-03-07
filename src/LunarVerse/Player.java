@@ -312,8 +312,10 @@ public class Player {
 	}
 	
 	public void increaseMaxHP(double d) {
-		maxHealth = maxHealth + d;
-		health = health + d;
+		if(isAlive()) {
+			maxHealth = maxHealth + d;
+			health = health + d;
+		}
 	}
 	
 	public void knockbacked() {
@@ -739,7 +741,7 @@ public class Player {
 		for(int i = 0; i < effects.size(); i++) {
 			Effect e = effects.get(i);
 			e.reduceTurns();
-			if(e.getTurns() == 0) {
+			if(e.getTurns() <= 0) {
 				if(e.getName().equals("power")) {
 					damage = damage - (ogDamage * e.getIncrease());
 					System.out.println(nameSkin + " is no longer powered.");
@@ -844,7 +846,7 @@ public class Player {
 			System.out.println(p.getSkin() + " is stunned! Cannot switch.");
 			return;
 		}
-		if(!p.isAlive()) {
+		if(!p.isAlive() && (!p.getName().equals("Alex") || !p.ultActive())) {
 			System.out.println();
 			System.out.println(p.getSkin() + " is downed! Cannot switch.");
 		}else {
@@ -866,6 +868,7 @@ public class Player {
 				resetUlt();
 				System.out.println("\"Ha, missed me?\"");
 				System.out.println();
+				turn = true;
 			}
 			for(int i = 0; i < effects.size(); i++) {
 				effects.get(i).setTurns(1);
