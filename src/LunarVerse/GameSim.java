@@ -20,6 +20,7 @@ public class GameSim {
 	static final String reset = "\u001B[0m";
 	static final String color = "\u001b[38;5;";
 	static final String bold = "\u001b[1m";
+	static Battlefield b;
 
 	public static void main(String[] args) {
 		/*
@@ -58,9 +59,11 @@ public class GameSim {
 			System.out.print("Character Selection 1: ");
 			String temp2 = input.next();
 			p1 = CharacterSelection(p1, temp2, true, 5, 5);
+			//p1.image().open();
 			System.out.print("Character Selection 2: ");
 			String temp3 = input.next();
 			p3 = CharacterSelection(p3, temp3, false, 5, 8);
+			//p1.image().close();
 			System.out.print("Character Selection 3: ");
 			String temp4 = input.next();
 			p5 = CharacterSelection(p5, temp4, false, 8, 5);
@@ -76,16 +79,16 @@ public class GameSim {
 			String temp7 = input.next();
 			p6 = CharacterSelection(p6, temp7, false, 33, 36);
 		}else {
-			p1 = new Player(2650, 175, true, "Solar", 40, 40, 15, 100, 0);
+			p1 = new Player(2650, 175, true, "Evil", 35, 35, 15, 100, 0);
 			p3 = new Player(1000, 325, false, "Midnite", 30, 40, 10, 100, 0);
 			p5 = new Player(4850, 575, false, "Rocco", 40, 40, 6, 500, 0);
 			
-			p2 = new Player(1000, 225, false, "Cherry", 40, 40, 9, 100, 0);
+			p2 = new Player(1000, 225, false, "Bolo", 40, 40, 9, 100, 0);
 			p4 = new Player(1000, 100, false, "Rocco", 40, 38, 10, 100, 0);
 			p6 = new Player(1000, 200, false, "Solar", 38, 40, 10, 100, 1);
 
 		}
-		Battlefield b = new Battlefield("Galactical Laboratories", p1, p3, p5, p2, p4, p6);
+		b = new Battlefield("Galactical Laboratories", p1, p3, p5, p2, p4, p6);
 		Party party1 = new Party(true, p1, p3, p5);
 		Party party2 = new Party(false, p2, p4, p6);
 		System.out.println();
@@ -108,6 +111,7 @@ public class GameSim {
 					SpawnCover();
 				}
 				while(p1.getTurn() && !p1.isStunned()) {
+					//p1.image().open();
 					System.out.println("Turn: " + turns2);
 					System.out.println("Team A's Turn (Go " + p1.getSkin() + "!)");
 					System.out.println(p1);
@@ -127,10 +131,12 @@ public class GameSim {
 						}
 						if(switchResponse.equals("2")) {
 							p1.passTurn(p3);
+							//p1.image().close();
 							System.out.println();
 						}
 						if(switchResponse.equals("3")) {
 							p1.passTurn(p5);
+							//p1.image().close();
 							System.out.println();
 						}
 					}
@@ -143,6 +149,7 @@ public class GameSim {
 								System.out.println("Team A Wins!");
 								party1.passTurn(party2);
 								game = false;
+								//p1.image().close();
 							}else {
 								party1.passTurn(party2);
 								party1.reduceTeamEffects();
@@ -151,6 +158,7 @@ public class GameSim {
 								SpawnOrbs();
 								SpawnCover();
 								b.checkTiles();
+								//p1.image().close();
 							}
 						}
 					}
@@ -174,7 +182,7 @@ public class GameSim {
 						CheckProfile(p1, party2);
 					}
 					if(response.equals("m")) {
-						Movement(p1, p2, p4, p6);
+						Movement(p1, p2, p4, p6, p3, p5);
 					}
 					if(response.equals("o")) {
 						ShowOrbs(p1);
@@ -193,6 +201,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p1.getName().equals("Evil")) {
+								EvilUltimate(p1, p2, p4, p6);
+							}
+							if(p1.getName().equals("Grizz")) {
+								GrizzUltimate(p1);
+							}
 							if(p1.getName().equals("Dimentio")) {
 								DimentioUltimate(p1);
 							}
@@ -423,6 +437,12 @@ public class GameSim {
 							if(p1.getName().equals("Dimentio")) {
 								DimentioAbility(p1, p2, p4 ,p6);
 							}
+							if(p1.getName().equals("Grizz")) {
+								GrizzAbility(p1, p3, p5);
+							}
+							if(p1.getName().equals("Evil")) {
+								EvilAbility(p1);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -540,6 +560,12 @@ public class GameSim {
 											if(p1.getName().equals("Dimentio")) {
 												DimentioAttack(p1, p2);
 											}
+											if(p1.getName().equals("Grizz")) {
+												GrizzAttack(p1, p2, p4, p6);
+											}
+											if(p1.getName().equals("Evil")) {
+												EvilAttack(p1, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -636,6 +662,12 @@ public class GameSim {
 											}
 											if(p1.getName().equals("Dimentio")) {
 												DimentioAttack(p1, p4);
+											}
+											if(p1.getName().equals("Grizz")) {
+												GrizzAttack(p1, p4, p2, p6);
+											}
+											if(p1.getName().equals("Evil")) {
+												EvilAttack(p1, p4, p2, p6);
 											}
 										}
 									}
@@ -735,6 +767,12 @@ public class GameSim {
 											if(p1.getName().equals("Dimentio")) {
 												DimentioAttack(p1, p6);
 											}
+											if(p1.getName().equals("Grizz")) {
+												GrizzAttack(p1, p6, p4, p2);
+											}
+											if(p1.getName().equals("Evil")) {
+												EvilAttack(p1, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -810,6 +848,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p3.getName().equals("Evil")) {
+								EvilUltimate(p3, p2, p4, p6);
+							}
+							if(p3.getName().equals("Grizz")) {
+								GrizzUltimate(p3);
+							}
 							if(p3.getName().equals("Dimentio")) {
 								DimentioUltimate(p3);
 							}
@@ -922,7 +966,7 @@ public class GameSim {
 						}
 					}
 					if(response.equals("m")) {
-						Movement(p3, p2, p4, p6);
+						Movement(p3, p2, p4, p6, p1, p5);
 					}
 					if(response.equals("a") && !p3.onCooldown()) {
 						if(p3.isDazed()) {
@@ -1043,6 +1087,12 @@ public class GameSim {
 							if(p3.getName().equals("Dimentio")) {
 								DimentioAbility(p3, p2, p4 ,p6);
 							}
+							if(p3.getName().equals("Grizz")) {
+								GrizzAbility(p3, p1, p5);
+							}
+							if(p3.getName().equals("Evil")) {
+								EvilAbility(p3);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -1160,6 +1210,12 @@ public class GameSim {
 											if(p3.getName().equals("Dimentio")) {
 												DimentioAttack(p3, p2);
 											}
+											if(p3.getName().equals("Grizz")) {
+												GrizzAttack(p3, p2, p4, p6);
+											}
+											if(p3.getName().equals("Evil")) {
+												EvilAttack(p3, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1257,6 +1313,12 @@ public class GameSim {
 											}
 											if(p3.getName().equals("Dimentio")) {
 												DimentioAttack(p3, p4);
+											}
+											if(p3.getName().equals("Grizz")) {
+												GrizzAttack(p3, p4, p2, p6);
+											}
+											if(p3.getName().equals("Evil")) {
+												EvilAttack(p3, p4, p2, p6);
 											}
 										}
 									}
@@ -1356,6 +1418,12 @@ public class GameSim {
 											if(p3.getName().equals("Dimentio")) {
 												DimentioAttack(p3, p6);
 											}
+											if(p3.getName().equals("Grizz")) {
+												GrizzAttack(p3, p6, p4, p2);
+											}
+											if(p3.getName().equals("Evil")) {
+												EvilAttack(p3, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -1415,7 +1483,7 @@ public class GameSim {
 						CheckProfile(p5, party2);
 					}
 					if(response.equals("m")) {
-						Movement(p5, p2, p4, p6);
+						Movement(p5, p2, p4, p6, p1, p3);
 					}
 					if(response.equals("o")) {
 						ShowOrbs(p5);
@@ -1434,6 +1502,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p5.getName().equals("Evil")) {
+								EvilUltimate(p5, p2, p4, p6);
+							}
+							if(p5.getName().equals("Grizz")) {
+								GrizzUltimate(p5);
+							}
 							if(p5.getName().equals("Dimentio")) {
 								DimentioUltimate(p5);
 							}
@@ -1664,6 +1738,12 @@ public class GameSim {
 							if(p5.getName().equals("Dimentio")) {
 								DimentioAbility(p5, p2, p4 ,p6);
 							}
+							if(p5.getName().equals("Grizz")) {
+								GrizzAbility(p5, p3, p1);
+							}
+							if(p5.getName().equals("Evil")) {
+								EvilAbility(p5);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -1781,6 +1861,12 @@ public class GameSim {
 											if(p5.getName().equals("Dimentio")) {
 												DimentioAttack(p5, p2);
 											}
+											if(p5.getName().equals("Grizz")) {
+												GrizzAttack(p5, p2, p4, p6);
+											}
+											if(p5.getName().equals("Evil")) {
+												EvilAttack(p5, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1878,6 +1964,12 @@ public class GameSim {
 											}
 											if(p5.getName().equals("Dimentio")) {
 												DimentioAttack(p5, p4);
+											}
+											if(p5.getName().equals("Grizz")) {
+												GrizzAttack(p5, p4, p2, p6);
+											}
+											if(p5.getName().equals("Evil")) {
+												EvilAttack(p5, p4, p2, p6);
 											}
 										}
 									}
@@ -1977,6 +2069,12 @@ public class GameSim {
 											if(p5.getName().equals("Dimentio")) {
 												DimentioAttack(p5, p6);
 											}
+											if(p5.getName().equals("Grizz")) {
+												GrizzAttack(p5, p6, p4, p2);
+											}
+											if(p5.getName().equals("Evil")) {
+												EvilAttack(p5, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -2050,7 +2148,7 @@ public class GameSim {
 						CheckProfile(p2, party1);
 					}
 					if(response.equals("m")) {
-						Movement(p2, p1, p3, p5);
+						Movement(p2, p1, p3, p5, p4, p6);
 					}
 					if(response.equals("o")) {
 						ShowOrbs(p2);
@@ -2069,6 +2167,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p2.getName().equals("Evil")) {
+								EvilUltimate(p2, p1, p3, p5);
+							}
+							if(p2.getName().equals("Grizz")) {
+								GrizzUltimate(p2);
+							}
 							if(p2.getName().equals("Dimentio")) {
 								DimentioUltimate(p2);
 							}
@@ -2299,6 +2403,12 @@ public class GameSim {
 							if(p2.getName().equals("Dimentio")) {
 								DimentioAbility(p2, p1, p3 ,p5);
 							}
+							if(p2.getName().equals("Grizz")) {
+								GrizzAbility(p2, p4, p6);
+							}
+							if(p2.getName().equals("Evil")) {
+								EvilAbility(p2);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -2416,6 +2526,12 @@ public class GameSim {
 											if(p2.getName().equals("Dimentio")) {
 												DimentioAttack(p2, p1);
 											}
+											if(p2.getName().equals("Grizz")) {
+												GrizzAttack(p2, p1, p3, p5);
+											}
+											if(p2.getName().equals("Evil")) {
+												EvilAttack(p2, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2513,6 +2629,12 @@ public class GameSim {
 											}
 											if(p2.getName().equals("Dimentio")) {
 												DimentioAttack(p2, p3);
+											}
+											if(p2.getName().equals("Grizz")) {
+												GrizzAttack(p2, p3, p1, p5);
+											}
+											if(p2.getName().equals("Evil")) {
+												EvilAttack(p2, p3, p1, p5);
 											}
 										}
 									}
@@ -2612,6 +2734,12 @@ public class GameSim {
 											if(p2.getName().equals("Dimentio")) {
 												DimentioAttack(p2, p5);
 											}
+											if(p2.getName().equals("Grizz")) {
+												GrizzAttack(p2, p5, p3, p1);
+											}
+											if(p2.getName().equals("Evil")) {
+												EvilAttack(p2, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -2671,7 +2799,7 @@ public class GameSim {
 						CheckProfile(p4, party1);
 					}
 					if(response.equals("m")) {
-						Movement(p4, p1, p3, p5);
+						Movement(p4, p1, p3, p5, p2, p6);
 					}
 					if(response.equals("o")) {
 						ShowOrbs(p4);
@@ -2690,6 +2818,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p4.getName().equals("Evil")) {
+								EvilUltimate(p4, p1, p3, p5);
+							}
+							if(p4.getName().equals("Grizz")) {
+								GrizzUltimate(p4);
+							}
 							if(p4.getName().equals("Dimentio")) {
 								DimentioUltimate(p4);
 							}
@@ -2920,6 +3054,12 @@ public class GameSim {
 							if(p4.getName().equals("Dimentio")) {
 								DimentioAbility(p4, p1, p3 ,p5);
 							}
+							if(p4.getName().equals("Grizz")) {
+								GrizzAbility(p4, p2, p6);
+							}
+							if(p4.getName().equals("Evil")) {
+								EvilAbility(p4);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -3037,6 +3177,12 @@ public class GameSim {
 											if(p4.getName().equals("Dimentio")) {
 												DimentioAttack(p4, p1);
 											}
+											if(p4.getName().equals("Grizz")) {
+												GrizzAttack(p4, p1, p3, p5);
+											}
+											if(p4.getName().equals("Evil")) {
+												EvilAttack(p4, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -3134,6 +3280,12 @@ public class GameSim {
 											}
 											if(p4.getName().equals("Dimentio")) {
 												DimentioAttack(p4, p3);
+											}
+											if(p4.getName().equals("Grizz")) {
+												GrizzAttack(p4, p3, p1, p5);
+											}
+											if(p4.getName().equals("Evil")) {
+												EvilAttack(p4, p3, p1, p5);
 											}
 										}
 									}
@@ -3233,6 +3385,12 @@ public class GameSim {
 											if(p4.getName().equals("Dimentio")) {
 												DimentioAttack(p4, p5);
 											}
+											if(p4.getName().equals("Grizz")) {
+												GrizzAttack(p4, p5, p3, p1);
+											}
+											if(p4.getName().equals("Evil")) {
+												EvilAttack(p4, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -3292,7 +3450,7 @@ public class GameSim {
 						CheckProfile(p6, party1);
 					}
 					if(response.equals("m")) {
-						Movement(p6, p1, p3, p5);
+						Movement(p6, p1, p3, p5, p2, p4);
 					}
 					if(response.equals("o")) {
 						ShowOrbs(p6);
@@ -3311,6 +3469,12 @@ public class GameSim {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p6.getName().equals("Evil")) {
+								EvilUltimate(p6, p1, p3, p5);
+							}
+							if(p6.getName().equals("Grizz")) {
+								GrizzUltimate(p6);
+							}
 							if(p6.getName().equals("Dimentio")) {
 								DimentioUltimate(p6);
 							}
@@ -3541,6 +3705,12 @@ public class GameSim {
 							if(p6.getName().equals("Dimentio")) {
 								DimentioAbility(p6, p1, p3 ,p5);
 							}
+							if(p6.getName().equals("Grizz")) {
+								GrizzAbility(p6, p4, p2);
+							}
+							if(p6.getName().equals("Evil")) {
+								EvilAbility(p6);
+							}
 						}
 					}
 					if(response.equals("w")) {
@@ -3658,6 +3828,12 @@ public class GameSim {
 											if(p6.getName().equals("Dimentio")) {
 												DimentioAttack(p6, p1);
 											}
+											if(p6.getName().equals("Grizz")) {
+												GrizzAttack(p6, p1, p3, p5);
+											}
+											if(p6.getName().equals("Evil")) {
+												EvilAttack(p6, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -3755,6 +3931,12 @@ public class GameSim {
 											}
 											if(p6.getName().equals("Dimentio")) {
 												DimentioAttack(p6, p3);
+											}
+											if(p6.getName().equals("Grizz")) {
+												GrizzAttack(p6, p3, p1, p5);
+											}
+											if(p6.getName().equals("Evil")) {
+												EvilAttack(p6, p3, p1, p5);
 											}
 										}
 									}
@@ -3854,6 +4036,12 @@ public class GameSim {
 											if(p6.getName().equals("Dimentio")) {
 												DimentioAttack(p6, p5);
 											}
+											if(p6.getName().equals("Grizz")) {
+												GrizzAttack(p6, p5, p3, p1);
+											}
+											if(p6.getName().equals("Evil")) {
+												EvilAttack(p6, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -3884,12 +4072,14 @@ public class GameSim {
 	}
 	
 	public static Player CharacterSelection(Player p, String name, boolean start, int x, int y) {
+		//p.setImage("backupdancer.png");
 		switch (name) {
 		  case "Lunar":
 			  p = new Player(2700, 225, start, name, x, y, 10, 10, 5);
 			  name = bold + color + 147 + "m" + "Lun" + color + 87 + "m" + "ar" + reset;
 			  p.skin(name);
 			  p.setC(147);
+			  p.setImage("lunar.png");
 		    break;
 		  case "Finley":
 			  p = new Player(3325, 275, start, name, x, y, 8, 9, 6);
@@ -4065,6 +4255,18 @@ public class GameSim {
 			  p.skin(name);
 			  p.setC(202);
 		    break;
+		  case "Grizz":
+			  p = new Player(4200, 200, start, name, x, y, 10, 10, 8);
+			  name = bold + color + 88 + "m" + "M" + color + 58 + "m" + "r"  + color + 59 + "m" + "." + reset  + bold + color + 53 + "m" + "G" + color + 54 + "m" + "r" + color + 55 + "m" + "i" + color + 91 + "m" + "z" + color + 91 + "m" + "z" + reset;
+			  p.skin(name);
+			  p.setC(88);
+		    break;
+		  case "Evil":
+			  p = new Player(2700, 275, start, name, x, y, 13, 8, 7);
+			  name = bold + color + 196 + "m" + "E" + color + 197 + "m" + "v"  + color + 198 + "m" + "i" + color + 199 + "m" + "l" + reset + " " + bold + color + 199 + "m" + "L" + color + 147 + "m" + "un" + color + 87 + "m" + "ar" + reset;
+			  p.skin(name);
+			  p.setC(196);
+		    break;
 		  case "Burt":
 			  p = new Player(2800, 250, start, name, x, y, 10, 11, 6);
 			  name = bold + color + 21 + "m" + "Burt" + reset;
@@ -4215,108 +4417,107 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void Movement(Player p, Player a, Player b, Player c) {
+	public static void Movement(Player p, Player a, Player z, Player c, Player d, Player e) {
 		if(p.isParalyzed()) {
 			System.out.println("Cannot move while paralyzed!");
 			System.out.println();
 			return;
 		}
-		ArrayList<Effect> e = new ArrayList<Effect>();
+		String s = "";
+		boolean move = true;
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
 		Effect ZeroIgnite = new Effect("ignite", 0, 1);
 		Effect ZeroDaze = new Effect("daze", 0, 1);
-		e.add(ZeroDaze);
-		e.add(ZeroIgnite);
+		e1.add(ZeroDaze);
+		e1.add(ZeroIgnite);
 		double rand = Math.random();
 		Scanner input = new Scanner(System.in);
 		if(p.getMovement() == 0) {
 			System.out.println("No more movement left!");
 			System.out.println();
 		}else {
-			System.out.print("Where do you want to move to: ");
-			String moveResponse = input.next();
-			String[] arr = moveResponse.split(",", 0);
-			int x = 0;
-			int y = 0;
-			try {
-				x = Integer.parseInt(arr[0]);
-				y = Integer.parseInt(arr[1]);
-			}catch (Exception ex){
-				System.out.println("Enter a new location to move to with the format 'x,y'.");
+			
+			while(move) {
+				System.out.print("Which way do you want to move: ");
+				String moveResponse = input.next();
+				switch (moveResponse) {
+				  case "l":
+					  p.move(p.getLoc().getX() - 1, p.getLoc().getY());
+					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
+				    break;
+				  case "r":
+					  p.move(p.getLoc().getX() + 1, p.getLoc().getY());
+					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
+				    break;
+				  case "u":
+					  p.move(p.getLoc().getX(), p.getLoc().getY() - 1);
+					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
+				    break;
+				  case "d":
+					  p.move(p.getLoc().getX(), p.getLoc().getY() + 1);
+					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
+				    break;
+				  case "c":
+					  System.out.println("Movement completed.");
+					  move = false;
+				    break;
+				}
+				if(a.hasSights() && a.inRange(p) && !a.isStunned()) {
+					p.takeDamage(a.getDamage() * 0.9);
+					a.useSight();
+					if(a.getName().equals("Zero") && a.inRange(p, 4) && rand <= 0.1) {
+						p.addEffects(e1);
+						p.applyEffects();
+					}
+				}
+				if(z.hasSights() && z.inRange(p) && !z.isStunned()) {
+					p.takeDamage(z.getDamage() * 0.9);
+					z.useSight();
+					if(z.getName().equals("Zero") && z.inRange(p, 4) && rand <= 0.1) {
+						p.addEffects(e1);
+						p.applyEffects();
+					}
+				}
+				if(c.hasSights() && c.inRange(p) && !c.isStunned()) {
+					p.takeDamage(c.getDamage() * 0.9);
+					c.useSight();
+					if(c.getName().equals("Zero") && c.inRange(p, 4) && rand <= 0.1) {
+						p.addEffects(e1);
+						p.applyEffects();
+					}
+				}
+				for(int i = 0; i < orbs.size(); i++) {
+					if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
+						p.getOrb();
+						orbs.remove(i);
+						System.out.println(p.getName() + " has gotten an orb.");
+					}
+				}
+				for(int i = 0; i < cover.size(); i++) {
+					if(p.getLoc().eqLoc(cover.get(i).getLoc())) {
+						if(cover.get(i).getName().equals("Full")) {
+							p.setCover("Full");
+							break;
+						}
+						if(cover.get(i).getName().equals("Partial")) {
+							p.setCover("Partial");
+							break;
+						}
+					}else {
+						p.resetCover();
+					}
+				}
 				System.out.println();
-				return;
-			}
-			if(a.hasSights() && a.inRange(p) && !a.isStunned()) {
-				p.takeDamage(a.getDamage() * 0.9);
-				a.useSight();
-				if(a.getName().equals("Zero") && a.inRange(p, 4) && rand <= 0.1) {
-					p.addEffects(e);
-					p.applyEffects();
+				if(p.getMovement() == 0) {
+					System.out.println("Out of movement.");
+					move = false;
+					System.out.println();
 				}
 			}
-			if(b.hasSights() && b.inRange(p) && !b.isStunned()) {
-				p.takeDamage(b.getDamage() * 0.9);
-				b.useSight();
-				if(b.getName().equals("Zero") && b.inRange(p, 4) && rand <= 0.1) {
-					p.addEffects(e);
-					p.applyEffects();
-				}
-			}
-			if(c.hasSights() && c.inRange(p) && !c.isStunned()) {
-				p.takeDamage(c.getDamage() * 0.9);
-				c.useSight();
-				if(c.getName().equals("Zero") && c.inRange(p, 4) && rand <= 0.1) {
-					p.addEffects(e);
-					p.applyEffects();
-				}
-			}
-			p.move(x, y);
-			if(a.hasSights() && a.inRange(p) && !a.isStunned()) {
-				p.takeDamage(a.getDamage() * 0.9);
-				a.useSight();
-				if(a.getName().equals("Zero") && a.inRange(p, 4) && rand <= 0.1) {
-					p.addEffects(e);
-					p.applyEffects();
-				}
-			}
-			if(b.hasSights() && b.inRange(p) && !b.isStunned()) {
-				p.takeDamage(b.getDamage() * 0.9);
-				b.useSight();
-				if(b.getName().equals("Zero") && b.inRange(p, 4) && rand <= 0.1) {
-					p.addEffects(e);
-					p.applyEffects();
-				}
-			}
-			if(c.hasSights() && c.inRange(p) && !c.isStunned()) {
-				p.takeDamage(c.getDamage() * 0.9);
-				c.useSight();
-				if(c.getName().equals("Zero") && c.inRange(p, 4) && rand <= 0.1) {
-					p.addEffects(e);
-					p.applyEffects();
-				}
-			}
-			for(int i = 0; i < orbs.size(); i++) {
-				if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
-					p.getOrb();
-					orbs.remove(i);
-					System.out.println(p.getName() + " has gotten an orb.");
-				}
-			}
-			for(int i = 0; i < cover.size(); i++) {
-				if(p.getLoc().eqLoc(cover.get(i).getLoc())) {
-					if(cover.get(i).getName().equals("Full")) {
-						p.setCover("Full");
-						break;
-					}
-					if(cover.get(i).getName().equals("Partial")) {
-						p.setCover("Partial");
-						break;
-					}
-				}else {
-					p.resetCover();
-				}
-			}
-			System.out.println("Relocated to " + p.getLoc() + ".");
-			System.out.println();
 		}
 	}
 	
@@ -7273,6 +7474,119 @@ public class GameSim {
 		p.addEffects(e);
 		p.applyEffects();
 		System.out.println("\"I'm now the most powerful virus in the digital world!\"");
+		System.out.println();
+	}
+	
+	public static void GrizzAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		if(a.inRange(b, 3)) {
+			b.takeDamage(p.getDamage() / 2);
+		}
+		if(a.inRange(c, 3)) {
+			c.takeDamage(p.getDamage() / 2);
+		}
+		System.out.println();
+	}
+	
+	public static void GrizzAbility(Player p, Player a, Player b) {
+		p.increaseMovement(5);
+		a.increaseMovement(5);
+		b.increaseMovement(5);
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect MidnitePower = new Effect("power", 0.2, 2);
+		Effect MidnitePower2 = new Effect("power", 0.2, 2);
+		Effect MidnitePower3 = new Effect("power", 0.2, 2);
+		e1.add(MidnitePower);
+		e2.add(MidnitePower2);
+		e3.add(MidnitePower3);
+		p.addEffects(e1);
+		a.addEffects(e2);
+		b.addEffects(e3);
+		p.applyEffects();
+		a.applyEffects();
+		b.applyEffects();
+		if(p.getHealth() < (p.getMaxHP() * 0.5)) {
+			p.heal(0.2);
+		}
+		if(a.getHealth() < (a.getMaxHP() * 0.5)) {
+			a.heal(0.2);
+		}
+		if(a.getHealth() < (a.getMaxHP() * 0.5)) {
+			a.heal(0.2);
+		}
+		p.setCooldown(4);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void GrizzUltimate(Player p) {
+		p.setUlt();
+		p.increaseMaxHP(p.getMaxHP() * 0.35);
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect DimentioProtect = new Effect("power", 0.3, 100);
+		e.add(DimentioProtect);
+		p.addEffects(e);
+		p.applyEffects();
+		System.out.println("\"This is a growth industry!\"");
+		System.out.println();
+	}
+	
+	public static void EvilAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		double rand = Math.random();
+		if(rand <= 0.15) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect BurtParalyze = new Effect("paralyze", 0, 1);
+			Effect EvilIgnite = new Effect("ignite", 0, 1);
+			e.add(BurtParalyze);
+			e.add(EvilIgnite);
+			a.addEffects(e);
+			a.applyEffects();
+		}
+		if(a.inRange(b, 3)) {
+			b.knockbacked();
+		}
+		if(a.inRange(c, 3)) {
+			c.knockbacked();
+		}
+		System.out.println();
+	}
+	
+	public static void EvilAbility(Player p) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect DimentioProtect = new Effect("protect", 0.6, 2);
+		e.add(DimentioProtect);
+		p.addEffects(e);
+		p.applyEffects();
+		p.setSights(3);
+		p.setCooldown(4);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void EvilUltimate(Player p, Player a, Player b, Player c) {
+		a.takeDamage(a.getMaxHP() * 0.20);
+		b.takeDamage(a.getMaxHP() * 0.20);
+		c.takeDamage(a.getMaxHP() * 0.20);
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect SolarIgnite = new Effect("ignite", 0, 3);
+		e.add(SolarIgnite);
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		Effect SolarIgnite2 = new Effect("ignite", 0, 3);
+		e2.add(SolarIgnite2);
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect SolarIgnite3 = new Effect("ignite", 0, 3);
+		e3.add(SolarIgnite3);
+		a.addEffects(e);
+		b.addEffects(e2);
+		c.addEffects(e3);
+		a.applyEffects();
+		b.applyEffects();
+		c.applyEffects();
+		p.resetUlt();
+		System.out.println("\"The Roche Limit approaches, and so will your fates!\"");
 		System.out.println();
 	}
 	

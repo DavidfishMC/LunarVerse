@@ -61,6 +61,7 @@ public class Player {
 	public static final String reset = "\u001B[0m";
 	static final String bold = "\u001b[1m";
 	int cNum = 0;
+	Example image;
 	
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -78,6 +79,17 @@ public class Player {
 		ogName = name;
 		ogRange = r;
 		nameSkin = name;
+	}
+	
+	public void setImage(String name) {
+		try {
+			image = new Example(name);
+		} catch (IOException e1) {
+		}
+	}
+	
+	public Example image() {
+		return image;
 	}
 	
 	public void setC(int c) {
@@ -335,15 +347,9 @@ public class Player {
 	}
 	
 	public void move(int x, int y) {
-		int d = Math.abs(x - curLoc.getX()) + Math.abs(y - curLoc.getY());
-		if(d > movement) {
-			System.out.println("Too far to move!");
-			System.out.println();
-		}else {
-			curLoc.moveIn(x, y);
-			movement = movement - d; 
-			System.out.println();
-		}
+		curLoc.set(x, y);
+		movement = movement - 1; 
+		System.out.println();
 	}
 	
 	public void getOrb() {
@@ -951,6 +957,13 @@ public class Player {
 		movement = movement + i;
 	}
 	
+	public void decreaseMovement(int i) {
+		movement = movement - i;
+		if(movement < 0) {
+			movement = 0;
+		}
+	}
+	
 	public void heal(double d) {
 		if(!isAlive()) {
 			
@@ -1525,6 +1538,28 @@ public class Player {
 			}
 			if(randomNum == 3) {
 				return ("\"Not in my server you don't!\"");
+			}
+		}
+		if(name.equals("Grizz")) {
+			if(randomNum == 1) {
+				return ("\"Do your job!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"You're not clocking out that easily.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Overtime is mandatory today!\"");
+			}
+		}
+		if(name.equals("Evil")) {
+			if(randomNum == 1) {
+				return ("\"The brigade is here!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Happiness must be taken. I will take mine right now!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Bots, fire at them!\"");
 			}
 		}
 		return "";

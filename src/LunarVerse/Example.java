@@ -17,21 +17,24 @@ import javax.swing.JLabel;
 public class Example {
 
 	JFrame frame=new JFrame();
-    public Example() throws IOException
+    public Example(String name) throws IOException
     {
-        BufferedImage img=ImageIO.read(new File("backupdancer.png"));
+        BufferedImage img=ImageIO.read(new File(name));
         ImageIcon icon=new ImageIcon(img);
         frame.setLayout(new FlowLayout());
-        frame.setSize(200,300);
+        frame.setSize(375,550);
         JLabel lbl=new JLabel();
         lbl.setIcon(icon);
         frame.add(lbl);
-        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
     public void close() {
     	frame.setVisible(false);
+    }
+    
+    public void open() {
+    	frame.setVisible(true);
     }
     
 }
