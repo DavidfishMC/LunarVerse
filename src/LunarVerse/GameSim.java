@@ -20,7 +20,7 @@ public class GameSim {
 	static final String reset = "\u001B[0m";
 	static final String color = "\u001b[38;5;";
 	static final String bold = "\u001b[1m";
-	static Battlefield b;
+	public static Battlefield b;
 
 	public static void main(String[] args) {
 		/*
@@ -31,12 +31,17 @@ public class GameSim {
 		*/
 		try {
 			String audio = "battleedit.wav";
-			audioPlayer = new Music(audio, true);
+			audioPlayer = new Music(audio, false);
 			audioPlayer.play();
 			audioPlayer.pause();
 		}catch (Exception e) {
 			System.out.println(e);
 		}
+		boolean play = true;
+		boolean play2 = true;
+		boolean play3 = true;
+		boolean play4 = true;
+		String tD;
 		int turns = 0;
 		//HP, Damage, Turn, Name, X, Y, Range, Movement, Ult
 		Player p1 = new Player(2650, 175, true, "Clara", 40, 40, 30, 100, 0);
@@ -79,16 +84,16 @@ public class GameSim {
 			String temp7 = input.next();
 			p6 = CharacterSelection(p6, temp7, false, 33, 36);
 		}else {
-			p1 = new Player(10, 175, true, "Alex", 35, 35, 15, 100, 0);
-			p3 = new Player(1110, 325, false, "Orion", 30, 40, 10, 100, 0);
-			p5 = new Player(1110, 575, false, "Rocco", 40, 40, 6, 500, 0);
+			p1 = new Player(10000, 175, true, "Clara", 40, 40, 15, 100, 0);
+			p3 = new Player(10000, 325, false, "Louis", 40, 40, 10, 100, 0);
+			p5 = new Player(10000, 575, false, "Kithara", 40, 40, 6, 500, 0);
 			
-			p2 = new Player(1000, 225, false, "Bolo", 40, 40, 9, 100, 0);
-			p4 = new Player(1000, 100, false, "Rocco", 40, 38, 10, 100, 0);
-			p6 = new Player(1000, 200, false, "Solar", 38, 40, 10, 100, 1);
+			p2 = new Player(1, 225, false, "Bolo", 37, 37, 9, 100, 0);
+			p4 = new Player(1, 100, false, "Rocco", 37, 37, 10, 100, 0);
+			p6 = new Player(10000, 200, false, "Kailani", 40, 40, 10, 100, 1);
 
 		}
-		b = new Battlefield("Galactical Laboratories", p1, p3, p5, p2, p4, p6);
+		b = new Battlefield("Alterna Outlands", p1, p3, p5, p2, p4, p6);
 		Party party1 = new Party(true, p1, p3, p5);
 		Party party2 = new Party(false, p2, p4, p6);
 		System.out.println();
@@ -98,9 +103,32 @@ public class GameSim {
 			if(turns % 2 == 0) {
 				turns2++;
 			}
+			if(turns2 >= 15) {
+				tD = bold + color + 88 + "m" + String.valueOf(turns2) + reset;
+			}else if(turns2 >= 8) {
+				tD = bold + color + 196 + "m" + String.valueOf(turns2) + reset;
+			}else if (turns2 >= 4) {
+				tD = bold +  color + 214 + "m" + String.valueOf(turns2) + reset;
+			}else {
+				tD = bold +  color + 46 + "m" + String.valueOf(turns2) + reset;
+			}
 			while(party1.getTurn()) {
 				if(party1.teamDown()) {
 					break;
+				}
+				if(party1.oneLeft() && play) {
+					try {
+						audioPlayer.stop();
+						String audio = "dramaticedit.wav";
+						audioPlayer = new Music(audio, false);
+						audioPlayer.play();
+						String audio2 = "lastplayer.wav";
+						Music audioPlayer = new Music(audio2, false);
+						audioPlayer.play();
+						play = false;
+					}catch (Exception e) {
+						System.out.println(e);
+					}
 				}
 				if((p1.isStunned() || !p1.isAlive()) && (p3.isStunned() || !p3.isAlive()) && (p5.isStunned() || !p5.isAlive())) {
 					party1.passTurn(party2);
@@ -112,7 +140,7 @@ public class GameSim {
 				}
 				while(p1.getTurn() && !p1.isStunned()) {
 					//p1.image().open();
-					System.out.println("Turn: " + turns2);
+					System.out.println("Turn: " + tD);
 					System.out.println("Team A's Turn (Go " + p1.getSkin() + "!)");
 					System.out.println(p1);
 					System.out.print("What would " + p1.getName() + " like to do: ");
@@ -194,13 +222,23 @@ public class GameSim {
 						Dash(p1, p2, p4, p6);
 					}
 					if(response.equals("j")) {
-						Jump(p1, p3, p5);
+						Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+						Jump(p1, p3, p5, l);
 					}
 					if(response.equals("u")) {
 						if(!p1.ultReady() || p1.ultActive()) {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p1.getName().equals("Julian")) {
+								JulianUltimate(p1, p2, p4, p6, p3, p5);
+							}
+							if(p1.getName().equals("Airic")) {
+								AiricUltimate(p1, p2, p4, p6);
+							}
+							if(p1.getName().equals("Mason")) {
+								MasonUltimate(p1, p2, p4, p6, p3, p5);
+							}
 							if(p1.getName().equals("Evil")) {
 								EvilUltimate(p1, p2, p4, p6);
 							}
@@ -211,12 +249,8 @@ public class GameSim {
 								DimentioUltimate(p1);
 							}
 							if(p1.getName().equals("Tom")) {
-								System.out.print("Where do you want to deploy the Microbot Tunnel: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								TomUltimate(p1, p2, p4, p6, x, y);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								TomUltimate(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Archer")) {
 								ArcherUltimate(p1, p2, p4, p6);
@@ -273,12 +307,8 @@ public class GameSim {
 								AlexUltimate(p1);
 							}
 							if(p1.getName().equals("Louis")) {
-								System.out.print("Where do you want to send the Guardian to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								LouisUltimate(p1, p2, p4, p6, x, y);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								LouisUltimate(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Via")) {
 								ViaUltimate(p1, p2, p4 ,p6);
@@ -330,12 +360,8 @@ public class GameSim {
 								SolarAbility(p1);
 							}
 							if(p1.getName().equals("Mack")) {
-								System.out.print("Where do you want to move to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								MackAbility(p1, p2, p4, p6, x, y);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								MackAbility(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Cherry")) {
 								CherryAbility(p1, p2, p4, p6);
@@ -362,12 +388,8 @@ public class GameSim {
 								EliAbility(p1, p3, p5);
 							}
 							if(p1.getName().equals("Via")) {
-								System.out.print("Where do you want to send Arro: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								ViaAbility(p1, p2, p4, p6, x, y);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								ViaAbility(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Louis")) {
 								LouisAbility(p1, p2, p4 ,p6);
@@ -379,12 +401,8 @@ public class GameSim {
 								OrionAbility(p1, p3, p5);
 							}
 							if(p1.getName().equals("Kailani")) {
-								System.out.print("Where do you want to riptide to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								KailaniAbility(p1, p2, p4, p6, x, y);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								KailaniAbility(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Ashley")) {
 								AshleyAbility(p1, p2, p4, p6, p3, p5);
@@ -442,6 +460,17 @@ public class GameSim {
 							}
 							if(p1.getName().equals("Evil")) {
 								EvilAbility(p1);
+							}
+							if(p1.getName().equals("Mason")) {
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								MasonAbility(p1, p2, p4, p6, l);
+							}
+							if(p1.getName().equals("Airic")) {
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								AiricAbility(p1, p3, p5, l);
+							}
+							if(p1.getName().equals("Julian")) {
+								JulianAbility(p1);
 							}
 						}
 					}
@@ -566,6 +595,15 @@ public class GameSim {
 											if(p1.getName().equals("Evil")) {
 												EvilAttack(p1, p2, p4, p6);
 											}
+											if(p1.getName().equals("Mason")) {
+												MasonAttack(p1, p2);
+											}
+											if(p1.getName().equals("Airic")) {
+												AiricAttack(p1, p2);
+											}
+											if(p1.getName().equals("Julian")) {
+												JulianAttack(p1, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -668,6 +706,15 @@ public class GameSim {
 											}
 											if(p1.getName().equals("Evil")) {
 												EvilAttack(p1, p4, p2, p6);
+											}
+											if(p1.getName().equals("Mason")) {
+												MasonAttack(p1, p4);
+											}
+											if(p1.getName().equals("Airic")) {
+												AiricAttack(p1, p4);
+											}
+											if(p1.getName().equals("Julian")) {
+												JulianAttack(p1, p4, p2, p6);
 											}
 										}
 									}
@@ -773,6 +820,15 @@ public class GameSim {
 											if(p1.getName().equals("Evil")) {
 												EvilAttack(p1, p6, p4, p2);
 											}
+											if(p1.getName().equals("Mason")) {
+												MasonAttack(p1, p6);
+											}
+											if(p1.getName().equals("Airic")) {
+												AiricAttack(p1, p6);
+											}
+											if(p1.getName().equals("Julian")) {
+												JulianAttack(p1, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -792,7 +848,7 @@ public class GameSim {
 				}
 				
 				while(p3.getTurn()) {
-					System.out.println("Turn: " + turns2);
+					System.out.println("Turn: " + tD);
 					System.out.println("Team A's Turn (Go " + p3.getSkin() + "!)");
 					System.out.println(p3);
 					System.out.print("What would " + p3.getName() + " like to do: ");
@@ -851,13 +907,23 @@ public class GameSim {
 						Dash(p3, p2, p4, p6);
 					}
 					if(response.equals("j")) {
-						Jump(p3, p1, p5);
+						Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+						Jump(p3, p1, p5, l);
 					}
 					if(response.equals("u")) {
 						if(!p3.ultReady() || p3.ultActive()) {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p3.getName().equals("Julian")) {
+								JulianUltimate(p3, p2, p4, p6, p1, p5);
+							}
+							if(p3.getName().equals("Airic")) {
+								AiricUltimate(p3, p2, p4, p6);
+							}
+							if(p3.getName().equals("Mason")) {
+								MasonUltimate(p3, p2, p4, p6, p1, p5);
+							}
 							if(p3.getName().equals("Evil")) {
 								EvilUltimate(p3, p2, p4, p6);
 							}
@@ -868,12 +934,8 @@ public class GameSim {
 								DimentioUltimate(p3);
 							}
 							if(p3.getName().equals("Tom")) {
-								System.out.print("Where do you want to deploy the Microbot Tunnel: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								TomUltimate(p3, p2, p4, p6, x, y);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								TomUltimate(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Archer")) {
 								ArcherUltimate(p3, p2, p4, p6);
@@ -930,12 +992,8 @@ public class GameSim {
 								AlexUltimate(p3);
 							}
 							if(p3.getName().equals("Louis")) {
-								System.out.print("Where do you want to send the Guardian to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								LouisUltimate(p3, p2, p4, p6, x, y);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								LouisUltimate(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Via")) {
 								ViaUltimate(p3, p2, p4 ,p6);
@@ -990,12 +1048,8 @@ public class GameSim {
 								SolarAbility(p3);
 							}
 							if(p3.getName().equals("Mack")) {
-								System.out.print("Where do you want to move to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								MackAbility(p3, p2, p4, p6, x, y);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								MackAbility(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Cherry")) {
 								CherryAbility(p3, p2, p4, p6);
@@ -1022,12 +1076,8 @@ public class GameSim {
 								EliAbility(p3, p1, p5);
 							}
 							if(p3.getName().equals("Via")) {
-								System.out.print("Where do you want to send Arro: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								ViaAbility(p3, p2, p4, p6, x, y);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								ViaAbility(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Louis")) {
 								LouisAbility(p3, p2, p4 ,p6);
@@ -1039,12 +1089,8 @@ public class GameSim {
 								OrionAbility(p3, p1, p5);
 							}
 							if(p3.getName().equals("Kailani")) {
-								System.out.print("Where do you want to riptide to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								KailaniAbility(p3, p2, p4, p6, x, y);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								KailaniAbility(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Ashley")) {
 								AshleyAbility(p3, p2, p4, p6, p1, p5);
@@ -1102,6 +1148,17 @@ public class GameSim {
 							}
 							if(p3.getName().equals("Evil")) {
 								EvilAbility(p3);
+							}
+							if(p3.getName().equals("Mason")) {
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								MasonAbility(p3, p2, p4, p6, l);
+							}
+							if(p3.getName().equals("Airic")) {
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								AiricAbility(p3, p1, p5, l);
+							}
+							if(p3.getName().equals("Julian")) {
+								JulianAbility(p3);
 							}
 						}
 					}
@@ -1226,6 +1283,15 @@ public class GameSim {
 											if(p3.getName().equals("Evil")) {
 												EvilAttack(p3, p2, p4, p6);
 											}
+											if(p3.getName().equals("Mason")) {
+												MasonAttack(p3, p2);
+											}
+											if(p3.getName().equals("Airic")) {
+												AiricAttack(p3, p2);
+											}
+											if(p3.getName().equals("Julian")) {
+												JulianAttack(p3, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1329,6 +1395,15 @@ public class GameSim {
 											}
 											if(p3.getName().equals("Evil")) {
 												EvilAttack(p3, p4, p2, p6);
+											}
+											if(p3.getName().equals("Mason")) {
+												MasonAttack(p3, p4);
+											}
+											if(p3.getName().equals("Airic")) {
+												AiricAttack(p3, p4);
+											}
+											if(p3.getName().equals("Julian")) {
+												JulianAttack(p3, p4, p2, p6);
 											}
 										}
 									}
@@ -1434,6 +1509,15 @@ public class GameSim {
 											if(p3.getName().equals("Evil")) {
 												EvilAttack(p3, p6, p4, p2);
 											}
+											if(p3.getName().equals("Mason")) {
+												MasonAttack(p3, p6);
+											}
+											if(p3.getName().equals("Airic")) {
+												AiricAttack(p3, p6);
+											}
+											if(p3.getName().equals("Julian")) {
+												JulianAttack(p3, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -1453,7 +1537,7 @@ public class GameSim {
 				}
 				
 				while(p5.getTurn()) {
-					System.out.println("Turn: " + turns2);
+					System.out.println("Turn: " + tD);
 					System.out.println("Team A's Turn (Go " + p5.getSkin() + "!)");
 					System.out.println(p5);
 					System.out.print("What would " + p5.getName() + " like to do: ");
@@ -1515,13 +1599,23 @@ public class GameSim {
 						Dash(p5, p2, p4, p6);
 					}
 					if(response.equals("j")) {
-						Jump(p5, p3, p1);
+						Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+						Jump(p5, p3, p1, l);
 					}
 					if(response.equals("u")) {
 						if(!p5.ultReady() || p5.ultActive()) {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p5.getName().equals("Julian")) {
+								JulianUltimate(p5, p2, p4, p6, p3, p1);
+							}
+							if(p5.getName().equals("Airic")) {
+								AiricUltimate(p5, p2, p4, p6);
+							}
+							if(p5.getName().equals("Mason")) {
+								MasonUltimate(p5, p2, p4, p6, p3, p1);
+							}
 							if(p5.getName().equals("Evil")) {
 								EvilUltimate(p5, p2, p4, p6);
 							}
@@ -1532,12 +1626,8 @@ public class GameSim {
 								DimentioUltimate(p5);
 							}
 							if(p5.getName().equals("Tom")) {
-								System.out.print("Where do you want to deploy the Microbot Tunnel: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								TomUltimate(p5, p2, p4, p6, x, y);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								TomUltimate(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Archer")) {
 								ArcherUltimate(p5, p2, p4, p6);
@@ -1594,12 +1684,8 @@ public class GameSim {
 								AlexUltimate(p5);
 							}
 							if(p5.getName().equals("Louis")) {
-								System.out.print("Where do you want to send the Guardian to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								LouisUltimate(p5, p2, p4, p6, x, y);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								LouisUltimate(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Via")) {
 								ViaUltimate(p5, p2, p4 ,p6);
@@ -1651,12 +1737,8 @@ public class GameSim {
 								SolarAbility(p5);
 							}
 							if(p5.getName().equals("Mack")) {
-								System.out.print("Where do you want to move to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								MackAbility(p5, p2, p4, p6, x, y);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								MackAbility(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Cherry")) {
 								CherryAbility(p5, p2, p4, p6);
@@ -1683,12 +1765,8 @@ public class GameSim {
 								EliAbility(p5, p3, p1);
 							}
 							if(p5.getName().equals("Via")) {
-								System.out.print("Where do you want to send Arro: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								ViaAbility(p5, p2, p4, p6, x, y);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								ViaAbility(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Louis")) {
 								LouisAbility(p5, p2, p4 ,p6);
@@ -1700,12 +1778,8 @@ public class GameSim {
 								OrionAbility(p5, p3, p1);
 							}
 							if(p5.getName().equals("Kailani")) {
-								System.out.print("Where do you want to riptide to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								KailaniAbility(p5, p2, p4, p6, x, y);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								KailaniAbility(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Ashley")) {
 								AshleyAbility(p5, p2, p4, p6, p3, p1);
@@ -1763,6 +1837,17 @@ public class GameSim {
 							}
 							if(p5.getName().equals("Evil")) {
 								EvilAbility(p5);
+							}
+							if(p5.getName().equals("Mason")) {
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								MasonAbility(p5, p2, p4, p6, l);
+							}
+							if(p5.getName().equals("Airic")) {
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								AiricAbility(p5, p3, p1, l);
+							}
+							if(p5.getName().equals("Julian")) {
+								JulianAbility(p5);
 							}
 						}
 					}
@@ -1887,6 +1972,15 @@ public class GameSim {
 											if(p5.getName().equals("Evil")) {
 												EvilAttack(p5, p2, p4, p6);
 											}
+											if(p5.getName().equals("Mason")) {
+												MasonAttack(p5, p2);
+											}
+											if(p5.getName().equals("Airic")) {
+												AiricAttack(p5, p2);
+											}
+											if(p5.getName().equals("Julian")) {
+												JulianAttack(p5, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1990,6 +2084,15 @@ public class GameSim {
 											}
 											if(p5.getName().equals("Evil")) {
 												EvilAttack(p5, p4, p2, p6);
+											}
+											if(p5.getName().equals("Mason")) {
+												MasonAttack(p5, p4);
+											}
+											if(p5.getName().equals("Airic")) {
+												AiricAttack(p5, p4);
+											}
+											if(p5.getName().equals("Julian")) {
+												JulianAttack(p5, p4, p2, p6);
 											}
 										}
 									}
@@ -2095,6 +2198,15 @@ public class GameSim {
 											if(p5.getName().equals("Evil")) {
 												EvilAttack(p5, p6, p4, p2);
 											}
+											if(p5.getName().equals("Mason")) {
+												MasonAttack(p5, p6);
+											}
+											if(p5.getName().equals("Airic")) {
+												AiricAttack(p5, p6);
+											}
+											if(p5.getName().equals("Julian")) {
+												JulianAttack(p5, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -2113,10 +2225,63 @@ public class GameSim {
 					}
 				}
 			}
-			
+			if(turns >= 5 && play3) {
+				try {
+					audioPlayer.stop();
+					String audio = "orbtime.wav";
+					audioPlayer = new Music(audio, false);
+					audioPlayer.play();
+					play3 = false;
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+			if(turns >= 15 && play2) {
+				try {
+					audioPlayer.stop();
+					String audio = "overtime.wav";
+					audioPlayer = new Music(audio, false);
+					audioPlayer.play();
+					String audio2 = "overtimeline.wav";
+					Music audioPlayer = new Music(audio2, false);
+					audioPlayer.play();
+					play2 = false;
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+			if(turns >= 29 && play4) {
+				try {
+					b.endGame();
+					audioPlayer.stop();
+					String audio = "endgame.wav";
+					audioPlayer = new Music(audio, false);
+					audioPlayer.play();
+					String audio2 = "endgameline.wav";
+					Music audioPlayer = new Music(audio2, false);
+					audioPlayer.play();
+					play4 = false;
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
 			while(party2.getTurn()) {
 				if(party2.teamDown()) {
 					break;
+				}
+				if(party2.oneLeft() && play) {
+					try {
+						audioPlayer.stop();
+						String audio = "dramaticedit.wav";
+						audioPlayer = new Music(audio, false);
+						audioPlayer.play();
+						String audio2 = "lastplayer.wav";
+						Music audioPlayer = new Music(audio2, false);
+						audioPlayer.play();
+						play = false;
+					}catch (Exception e) {
+						System.out.println(e);
+					}
 				}
 				if((p2.isStunned() || !p2.isAlive()) && (p4.isStunned() || !p4.isAlive()) && (p6.isStunned() || !p6.isAlive())) {
 					party2.passTurn(party1);
@@ -2127,7 +2292,7 @@ public class GameSim {
 					SpawnCover();
 				}
 				while(p2.getTurn()) {
-					System.out.println("Turn: " + turns2);
+					System.out.println("Turn: " + tD);
 					System.out.println("Team B's Turn (Go " + p2.getSkin() + "!)");
 					System.out.println(p2);
 					System.out.print("What would " + p2.getName() + " like to do: ");
@@ -2189,13 +2354,23 @@ public class GameSim {
 						Dash(p2, p1, p3, p5);
 					}
 					if(response.equals("j")) {
-						Jump(p2, p4, p6);
+						Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+						Jump(p2, p4, p6, l);
 					}
 					if(response.equals("u")) {
 						if(!p2.ultReady() || p2.ultActive()) {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p2.getName().equals("Julian")) {
+								JulianUltimate(p2, p1, p3, p5, p4, p6);
+							}
+							if(p2.getName().equals("Airic")) {
+								AiricUltimate(p2, p1, p3, p5);
+							}
+							if(p2.getName().equals("Mason")) {
+								MasonUltimate(p2, p1, p3, p5, p4, p6);
+							}
 							if(p2.getName().equals("Evil")) {
 								EvilUltimate(p2, p1, p3, p5);
 							}
@@ -2206,12 +2381,8 @@ public class GameSim {
 								DimentioUltimate(p2);
 							}
 							if(p2.getName().equals("Tom")) {
-								System.out.print("Where do you want to deploy the Microbot Tunnel: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								TomUltimate(p2, p1, p3, p5, x, y);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								TomUltimate(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Archer")) {
 								ArcherUltimate(p2, p1, p3, p5);
@@ -2268,12 +2439,8 @@ public class GameSim {
 								AlexUltimate(p2);
 							}
 							if(p2.getName().equals("Louis")) {
-								System.out.print("Where do you want to send the Guardian to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								LouisUltimate(p2, p1, p3, p5, x, y);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								LouisUltimate(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Via")) {
 								ViaUltimate(p2, p1, p3 ,p5);
@@ -2325,12 +2492,8 @@ public class GameSim {
 								SolarAbility(p2);
 							}
 							if(p2.getName().equals("Mack")) {
-								System.out.print("Where do you want to move to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								MackAbility(p2, p1, p3, p5, x, y);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								MackAbility(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Cherry")) {
 								CherryAbility(p2, p1, p3, p5);
@@ -2357,12 +2520,8 @@ public class GameSim {
 								EliAbility(p2, p4, p6);
 							}
 							if(p2.getName().equals("Via")) {
-								System.out.print("Where do you want to send Arro: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								ViaAbility(p2, p1, p3, p5, x, y);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								ViaAbility(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Louis")) {
 								LouisAbility(p2, p1, p3 ,p5);
@@ -2374,12 +2533,8 @@ public class GameSim {
 								OrionAbility(p2, p4, p6);
 							}
 							if(p2.getName().equals("Kailani")) {
-								System.out.print("Where do you want to riptide to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								KailaniAbility(p2, p1, p3, p5, x, y);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								KailaniAbility(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Ashley")) {
 								AshleyAbility(p2, p1, p3, p5, p4, p6);
@@ -2437,6 +2592,17 @@ public class GameSim {
 							}
 							if(p2.getName().equals("Evil")) {
 								EvilAbility(p2);
+							}
+							if(p2.getName().equals("Mason")) {
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								MasonAbility(p2, p1, p3, p5, l);
+							}
+							if(p2.getName().equals("Airic")) {
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								AiricAbility(p2, p4, p6, l);
+							}
+							if(p2.getName().equals("Julian")) {
+								JulianAbility(p2);
 							}
 						}
 					}
@@ -2561,6 +2727,12 @@ public class GameSim {
 											if(p2.getName().equals("Evil")) {
 												EvilAttack(p2, p1, p3, p5);
 											}
+											if(p2.getName().equals("Mason")) {
+												MasonAttack(p2, p1);
+											}
+											if(p2.getName().equals("Airic")) {
+												AiricAttack(p2, p1);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2664,6 +2836,15 @@ public class GameSim {
 											}
 											if(p2.getName().equals("Evil")) {
 												EvilAttack(p2, p3, p1, p5);
+											}
+											if(p2.getName().equals("Mason")) {
+												MasonAttack(p2, p3);
+											}
+											if(p2.getName().equals("Airic")) {
+												AiricAttack(p2, p3);
+											}
+											if(p2.getName().equals("Julian")) {
+												JulianAttack(p2, p1, p3, p5);
 											}
 										}
 									}
@@ -2769,6 +2950,15 @@ public class GameSim {
 											if(p2.getName().equals("Evil")) {
 												EvilAttack(p2, p5, p3, p1);
 											}
+											if(p2.getName().equals("Mason")) {
+												MasonAttack(p2, p5);
+											}
+											if(p2.getName().equals("Airic")) {
+												AiricAttack(p2, p5);
+											}
+											if(p2.getName().equals("Julian")) {
+												JulianAttack(p2, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -2788,7 +2978,7 @@ public class GameSim {
 				}
 				
 				while(p4.getTurn()) {
-					System.out.println("Turn: " + turns2);
+					System.out.println("Turn: " + tD);
 					System.out.println("Team B's Turn (Go " + p4.getSkin() + "!)");
 					System.out.println(p4);
 					System.out.print("What would " + p4.getName() + " like to do: ");
@@ -2850,13 +3040,23 @@ public class GameSim {
 						Dash(p4, p1, p3, p5);
 					}
 					if(response.equals("j")) {
-						Jump(p4, p2, p6);
+						Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+						Jump(p4, p2, p6, l);
 					}
 					if(response.equals("u")) {
 						if(!p4.ultReady() || p4.ultActive()) {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p4.getName().equals("Julian")) {
+								JulianUltimate(p4, p1, p3, p5, p2, p6);
+							}
+							if(p4.getName().equals("Airic")) {
+								AiricUltimate(p4, p1, p3, p5);
+							}
+							if(p4.getName().equals("Mason")) {
+								MasonUltimate(p4, p1, p3, p5, p2, p6);
+							}
 							if(p4.getName().equals("Evil")) {
 								EvilUltimate(p4, p1, p3, p5);
 							}
@@ -2867,12 +3067,8 @@ public class GameSim {
 								DimentioUltimate(p4);
 							}
 							if(p4.getName().equals("Tom")) {
-								System.out.print("Where do you want to deploy the Microbot Tunnel: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								TomUltimate(p4, p1, p3, p5, x, y);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								TomUltimate(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Archer")) {
 								ArcherUltimate(p4, p1, p3, p5);
@@ -2929,12 +3125,8 @@ public class GameSim {
 								AlexUltimate(p4);
 							}
 							if(p4.getName().equals("Louis")) {
-								System.out.print("Where do you want to send the Guardian to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								LouisUltimate(p4, p1, p3, p5, x, y);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								LouisUltimate(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Via")) {
 								ViaUltimate(p4, p1, p3 ,p5);
@@ -2986,12 +3178,8 @@ public class GameSim {
 								SolarAbility(p4);
 							}
 							if(p4.getName().equals("Mack")) {
-								System.out.print("Where do you want to move to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								MackAbility(p4, p1, p3, p5, x, y);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								MackAbility(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Cherry")) {
 								CherryAbility(p4, p1, p3, p5);
@@ -3027,20 +3215,12 @@ public class GameSim {
 								OrionAbility(p4, p2, p6);
 							}
 							if(p4.getName().equals("Via")) {
-								System.out.print("Where do you want to send Arro: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								ViaAbility(p4, p1, p3, p5, x, y);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								ViaAbility(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Kailani")) {
-								System.out.print("Where do you want to riptide to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								KailaniAbility(p4, p1, p3, p5, x, y);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								KailaniAbility(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Ashley")) {
 								AshleyAbility(p4, p1, p3, p5, p2, p6);
@@ -3098,6 +3278,17 @@ public class GameSim {
 							}
 							if(p4.getName().equals("Evil")) {
 								EvilAbility(p4);
+							}
+							if(p4.getName().equals("Mason")) {
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								MasonAbility(p4, p1, p3, p5, l);
+							}
+							if(p4.getName().equals("Airic")) {
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								AiricAbility(p4, p2, p6, l);
+							}
+							if(p4.getName().equals("Julian")) {
+								JulianAbility(p4);
 							}
 						}
 					}
@@ -3222,6 +3413,15 @@ public class GameSim {
 											if(p4.getName().equals("Evil")) {
 												EvilAttack(p4, p1, p3, p5);
 											}
+											if(p4.getName().equals("Mason")) {
+												MasonAttack(p4, p1);
+											}
+											if(p4.getName().equals("Airic")) {
+												AiricAttack(p4, p1);
+											}
+											if(p4.getName().equals("Julian")) {
+												JulianAttack(p4, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -3325,6 +3525,15 @@ public class GameSim {
 											}
 											if(p4.getName().equals("Evil")) {
 												EvilAttack(p4, p3, p1, p5);
+											}
+											if(p4.getName().equals("Mason")) {
+												MasonAttack(p4, p3);
+											}
+											if(p4.getName().equals("Airic")) {
+												AiricAttack(p4, p3);
+											}
+											if(p4.getName().equals("Julian")) {
+												JulianAttack(p4, p3, p1, p5);
 											}
 										}
 									}
@@ -3430,6 +3639,15 @@ public class GameSim {
 											if(p4.getName().equals("Evil")) {
 												EvilAttack(p4, p5, p3, p1);
 											}
+											if(p4.getName().equals("Mason")) {
+												MasonAttack(p4, p5);
+											}
+											if(p4.getName().equals("Airic")) {
+												AiricAttack(p4, p5);
+											}
+											if(p4.getName().equals("Julian")) {
+												JulianAttack(p4, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -3449,7 +3667,7 @@ public class GameSim {
 				}
 				
 				while(p6.getTurn()) {
-					System.out.println("Turn: " + turns2);
+					System.out.println("Turn: " + tD);
 					System.out.println("Team B's Turn (Go " + p6.getSkin() + "!)");
 					System.out.println(p6);
 					System.out.print("What would " + p6.getName() + " like to do: ");
@@ -3511,13 +3729,23 @@ public class GameSim {
 						Dash(p6, p1, p3, p5);
 					}
 					if(response.equals("j")) {
-						Jump(p6, p4, p2);
+						Location l = SetCursor(p6, p1, p3, p5, p2, p4);
+						Jump(p6, p4, p2, l);
 					}
 					if(response.equals("u")) {
 						if(!p6.ultReady() || p6.ultActive()) {
 							System.out.println("My ultimate cannot be used!");
 							System.out.println();
 						}else {
+							if(p6.getName().equals("Julian")) {
+								JulianUltimate(p6, p1, p3, p5, p2, p4);
+							}
+							if(p6.getName().equals("Airic")) {
+								AiricUltimate(p6, p1, p3, p5);
+							}
+							if(p6.getName().equals("Mason")) {
+								MasonUltimate(p6, p1, p3, p5, p4, p2);
+							}
 							if(p6.getName().equals("Evil")) {
 								EvilUltimate(p6, p1, p3, p5);
 							}
@@ -3528,12 +3756,8 @@ public class GameSim {
 								DimentioUltimate(p6);
 							}
 							if(p6.getName().equals("Tom")) {
-								System.out.print("Where do you want to deploy the Microbot Tunnel: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								TomUltimate(p6, p1, p3, p5, x, y);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								TomUltimate(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Archer")) {
 								ArcherUltimate(p6, p1, p3, p5);
@@ -3590,12 +3814,8 @@ public class GameSim {
 								AlexUltimate(p6);
 							}
 							if(p6.getName().equals("Louis")) {
-								System.out.print("Where do you want to send the Guardian to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								LouisUltimate(p6, p1, p3, p5, x, y);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								LouisUltimate(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Via")) {
 								ViaUltimate(p6, p1, p3 ,p5);
@@ -3647,12 +3867,8 @@ public class GameSim {
 								SolarAbility(p6);
 							}
 							if(p6.getName().equals("Mack")) {
-								System.out.print("Where do you want to move to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								MackAbility(p6, p1, p3, p5, x, y);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								MackAbility(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Cherry")) {
 								CherryAbility(p6, p1, p3, p5);
@@ -3679,12 +3895,8 @@ public class GameSim {
 								EliAbility(p6, p4, p2);
 							}
 							if(p6.getName().equals("Via")) {
-								System.out.print("Where do you want to send Arro: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								ViaAbility(p6, p1, p3, p5, x, y);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								ViaAbility(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Louis")) {
 								LouisAbility(p6, p1, p3 ,p5);
@@ -3696,12 +3908,8 @@ public class GameSim {
 								OrionAbility(p6, p4, p2);
 							}
 							if(p6.getName().equals("Kailani")) {
-								System.out.print("Where do you want to riptide to: ");
-								String moveResponse = input.next();
-								String[] arr = moveResponse.split(",", 0);
-								int x = Integer.parseInt(arr[0]);
-								int y = Integer.parseInt(arr[1]);
-								KailaniAbility(p6, p1, p3, p5, x, y);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								KailaniAbility(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Ashley")) {
 								AshleyAbility(p6, p1, p3, p5, p2, p4);
@@ -3759,6 +3967,17 @@ public class GameSim {
 							}
 							if(p6.getName().equals("Evil")) {
 								EvilAbility(p6);
+							}
+							if(p6.getName().equals("Mason")) {
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								MasonAbility(p6, p1, p3, p5, l);
+							}
+							if(p6.getName().equals("Airic")) {
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								AiricAbility(p6, p4, p2, l);
+							}
+							if(p6.getName().equals("Julian")) {
+								JulianAbility(p6);
 							}
 						}
 					}
@@ -3883,6 +4102,15 @@ public class GameSim {
 											if(p6.getName().equals("Evil")) {
 												EvilAttack(p6, p1, p3, p5);
 											}
+											if(p6.getName().equals("Mason")) {
+												MasonAttack(p6, p1);
+											}
+											if(p6.getName().equals("Airic")) {
+												AiricAttack(p6, p1);
+											}
+											if(p6.getName().equals("Julian")) {
+												JulianAttack(p6, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -3986,6 +4214,15 @@ public class GameSim {
 											}
 											if(p6.getName().equals("Evil")) {
 												EvilAttack(p6, p3, p1, p5);
+											}
+											if(p6.getName().equals("Mason")) {
+												MasonAttack(p6, p3);
+											}
+											if(p6.getName().equals("Airic")) {
+												AiricAttack(p6, p3);
+											}
+											if(p6.getName().equals("Julian")) {
+												JulianAttack(p6, p3, p1, p5);
 											}
 										}
 									}
@@ -4091,6 +4328,15 @@ public class GameSim {
 											if(p6.getName().equals("Evil")) {
 												EvilAttack(p6, p5, p3, p1);
 											}
+											if(p6.getName().equals("Mason")) {
+												MasonAttack(p6, p5);
+											}
+											if(p6.getName().equals("Airic")) {
+												AiricAttack(p6, p5);
+											}
+											if(p6.getName().equals("Julian")) {
+												JulianAttack(p6, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -4133,7 +4379,7 @@ public class GameSim {
 		//p.setImage("backupdancer.png");
 		switch (name) {
 		  case "Lunar":
-			  p = new Player(2700, 225, start, name, x, y, 10, 10, 5);
+			  p = new Player(2750, 250, start, name, x, y, 10, 10, 5);
 			  name = bold + color + 147 + "m" + "Lun" + color + 87 + "m" + "ar" + reset;
 			  p.skin(name);
 			  p.setC(147);
@@ -4170,7 +4416,7 @@ public class GameSim {
 			  p.setC(41);
 		    break;
 		  case "Zero":
-			  p = new Player(2625, 250, start, name, x, y, 10, 12, 6);
+			  p = new Player(2625, 225, start, name, x, y, 10, 12, 6);
 			  name = bold + color + 196 + "m" + "Z" + color + 243 + "m" + "er" + color + 196 + "m" + "o" + reset;
 			  p.skin(name);
 			  p.setC(196);
@@ -4206,7 +4452,7 @@ public class GameSim {
 			  p.setC(196);
 		    break;
 		  case "Louis":
-			  p = new Player(2650, 225, start, name, x, y, 9, 10, 6);
+			  p = new Player(2750, 225, start, name, x, y, 9, 10, 6);
 			  name = bold + color + 226 + "m" + "Lo" + color + 141 + "m" + "uis" + reset;
 			  p.skin(name);
 			  p.setC(226);
@@ -4230,13 +4476,13 @@ public class GameSim {
 			  p.setC(101);
 		    break;
 		  case "Bedrock":
-			  p = new Player(4600, 575, start, name, x, y, 7, 7, 6);
+			  p = new Player(4350, 400, start, name, x, y, 6, 7, 6);
 			  name = bold + color + 240 + "m" + "B" + color + 241 + "m" + "e"  + color + 242 + "m" + "d" + color + 243 + "m" + "r" + color + 245 + "m" + "o" + color + 246 + "m" + "c" + color + 247 + "m" + "k" + reset;
 			  p.skin(name);
 			  p.setC(240);
 		    break;
 		  case "Rocco":
-			  p = new Player(2725, 200, start, name, x, y, 10, 10, 5);
+			  p = new Player(2725, 200, start, name, x, y, 10, 10, 6);
 			  name = bold + color + 65 + "m" + "R" + color + 66 + "m" + "o"  + color + 67 + "m" + "c" + color + 68 + "m" + "c" + color + 69 + "m" + "o" + reset;
 			  p.skin(name);
 			  p.setC(65);
@@ -4248,7 +4494,7 @@ public class GameSim {
 			  p.setC(160);
 		    break;
 		  case "Clara":
-			  p = new Player(2850, 350, start, name, x, y, 10, 10, 6);
+			  p = new Player(2850, 300, start, name, x, y, 10, 10, 6);
 			  name = bold + color + 219 + "m" + "C" + color + 218 + "m" + "l"  + color + 217 + "m" + "a" + color + 216 + "m" + "r" + color + 215 + "m" + "a" + reset;
 			  p.skin(name);
 			  p.setC(219);
@@ -4266,7 +4512,7 @@ public class GameSim {
 			  p.setC(196);
 		    break;
 		  case "Axol":
-			  p = new Player(3050, 225, start, name, x, y, 13, 9, 6);
+			  p = new Player(2650, 175, start, name, x, y, 10, 10, 6);
 			  name = bold + color + 222 + "m" + "A" + color + 223 + "m" + "x"  + color + 224 + "m" + "o" + color + 225 + "m" + "l" + reset;
 			  p.skin(name);
 			  p.setC(222);
@@ -4278,7 +4524,7 @@ public class GameSim {
 			  p.setC(32);
 		    break;
 		  case "Midnite":
-			  p = new Player(2900, 225, start, name, x, y, 12, 10, 6);
+			  p = new Player(2900, 275, start, name, x, y, 12, 10, 6);
 			  name = bold + color + 21 + "m" + "M" + color + 20 + "m" + "i"  + color + 39 + "m" + "d" + color + 75 + "m" + "n" + color + 111 + "m" + "i" + color + 183 + "m" + "t" + color + 247 + "m" + "e" + reset;
 			  p.skin(name);
 			  p.setC(21);
@@ -4290,13 +4536,13 @@ public class GameSim {
 			  p.setC(129);
 		    break;
 		  case "Kithara":
-			  p = new Player(3850, 225, start, name, x, y, 10, 10, 6);
+			  p = new Player(4150, 225, start, name, x, y, 10, 10, 6);
 			  name = bold + color + 93 + "m" + "K" + color + 92 + "m" + "i"  + color + 99 + "m" + "t" + color + 98 + "m" + "h" + color + 105 + "m" + "a" + color + 104 + "m" + "r" + color + 103 + "m" + "a" + reset;
 			  p.skin(name);
 			  p.setC(93);
 		    break;
 		  case "Archer":
-			  p = new Player(2600, 150, start, name, x, y, 15, 8, 6);
+			  p = new Player(2700, 175, start, name, x, y, 15, 8, 6);
 			  name = bold + color + 76 + "m" + "A" + color + 77 + "m" + "r"  + color + 70 + "m" + "c" + color + 71 + "m" + "h" + color + 58 + "m" + "e" + color + 59 + "m" + "r" + reset;
 			  p.skin(name);
 			  p.setC(76);
@@ -4325,11 +4571,29 @@ public class GameSim {
 			  p.skin(name);
 			  p.setC(196);
 		    break;
+		  case "Mason":
+			  p = new Player(2850, 275, start, name, x, y, 11, 10, 6);
+			  name = bold + color + 129 + "m" + "M" + color + 128 + "m" + "a"  + color + 93 + "m" + "s" + color + 92 + "m" + "o" + color + 91 + "m" + "n" + reset;
+			  p.skin(name);
+			  p.setC(129);
+		    break;
 		  case "Burt":
 			  p = new Player(2800, 250, start, name, x, y, 10, 11, 6);
 			  name = bold + color + 21 + "m" + "Burt" + reset;
 			  p.skin(name);
 			  p.setC(21);
+		    break;
+		  case "Airic":
+			  p = new Player(2750, 250, start, name, x, y, 10, 10, 6);
+			  name = bold + color + 19 + "m" + "Air" + color + 250 + "m" + "ic" + reset;
+			  p.skin(name);
+			  p.setC(19);
+		    break;
+		  case "Julian":
+			  p = new Player(2800, 200, start, name, x, y, 10, 8, 7);
+			  name = bold + color + 214 + "m" + "J" + color + 159 + "m" + "u"  + color + 214 + "m" + "l" + color + 159 + "m" + "i" + color + 214 + "m" + "a" + color + 159 + "m" + "n" + reset;
+			  p.skin(name);
+			  p.setC(214);
 		    break;
 		  case "Bolo":
 			  p = new Player(3050, 225, start, name, x, y, 13, 9, 6);
@@ -4338,7 +4602,7 @@ public class GameSim {
 			  p.setC(47);
 		    break;
 		  case "Anjelika":
-			  p = new Player(3600, 250, start, name, x, y, 10, 10, 6);
+			  p = new Player(3900, 250, start, name, x, y, 10, 10, 6);
 			  name = bold + color + 214 + "m" + "A" + color + 214 + "m" + "n"  + color + 215 + "m" + "j" + color + 215 + "m" + "e" + color + 216 + "m" + "l" + color + 216 + "m" + "i" + color + 217 + "m" + "k"+ color + 217 + "m" + "a" + reset;
 			  p.skin(name);
 			  p.setC(214);
@@ -4380,7 +4644,7 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void Jump(Player p, Player a, Player b) {
+	public static void Jump(Player p, Player a, Player b, Location l) {
 		if(!p.canJump()) {
 			System.out.println("No more jumps left!");
 			System.out.println();
@@ -4392,13 +4656,13 @@ public class GameSim {
 			return;
 		}
 		Scanner input = new Scanner(System.in);
-		System.out.print("Where do you want to jump to: ");
-		String moveResponse = input.next();
-		String[] arr = moveResponse.split(",", 0);
-		int x = Integer.parseInt(arr[0]);
-		int y = Integer.parseInt(arr[1]);
-		Location l = new Location(x, y);
-		if(!p.inReach(l, 5)) {
+
+		if(!p.inReach(l, 6)) {
+			System.out.println("Can't jump there!");
+			System.out.println();
+			return;
+		}
+		if(GameSim.b.hasTrench(l.getX(), l.getY())) {
 			System.out.println("Can't jump there!");
 			System.out.println();
 			return;
@@ -4409,7 +4673,7 @@ public class GameSim {
 				System.out.println();
 				return;
 			}else {
-				p.getLoc().set(x, y);
+				p.getLoc().set(l.getX(), l.getY());
 				p.useJump();
 			}
 		}else if(p.getLoc().eqLoc(b.getLoc()) && p.canJump()) {
@@ -4418,7 +4682,7 @@ public class GameSim {
 				System.out.println();
 				return;
 			}else {
-				p.getLoc().set(x, y);
+				p.getLoc().set(l.getX(), l.getY());
 				p.useJump();
 			}
 		}
@@ -4443,6 +4707,13 @@ public class GameSim {
 				System.out.println(p.getName() + " has gotten an orb.");
 			}
 		}
+		try {
+			String audio = "jump.wav";
+			Music victoryPlayer = new Music(audio, false); 
+			victoryPlayer.play();
+		}catch (Exception e) {
+			System.out.println(e);
+		}
 		System.out.println("Jumped to " + p.getLoc() + ".");
 		System.out.println();
 	}
@@ -4453,24 +4724,45 @@ public class GameSim {
 			System.out.println();
 			return;
 		}
-		double damage = 75;
+		double damage = 100;
 		if(p.getName().equals("Clara") && p.usedAbility()) {
-			damage = 150;
+			damage = 175;
 		}
 		if (p.getName().equals("Clara") && p.ultActive()) {
-			damage = 225;
+			damage = 250;
 		}
-		if(p.getLoc().eqLoc(a.getLoc()) && p.canDash()) {
+		if(p.getLoc().eqLoc(a.getLoc()) && p.canDash() && a.isAlive()) {
 			a.takeDamage(damage);
 			p.useDash();
+			try {
+				String audio = "dash.wav";
+				Music victoryPlayer = new Music(audio, false); 
+				victoryPlayer.play();
+			}catch (Exception e) {
+				System.out.println(e);
+			}
 		}
-		if(p.getLoc().eqLoc(b.getLoc()) && p.canDash()) {
+		if(p.getLoc().eqLoc(b.getLoc()) && p.canDash() && b.isAlive()) {
 			b.takeDamage(damage);
 			p.useDash();
+			try {
+				String audio = "dash.wav";
+				Music victoryPlayer = new Music(audio, false); 
+				victoryPlayer.play();
+			}catch (Exception e) {
+				System.out.println(e);
+			}
 		}
-		if(p.getLoc().eqLoc(c.getLoc()) && p.canDash()) {
+		if(p.getLoc().eqLoc(c.getLoc()) && p.canDash() && c.isAlive()) {
 			c.takeDamage(damage);
 			p.useDash();
+			try {
+				String audio = "dash.wav";
+				Music victoryPlayer = new Music(audio, false); 
+				victoryPlayer.play();
+			}catch (Exception e) {
+				System.out.println(e);
+			}
 		}
 		System.out.println();
 	}
@@ -4499,25 +4791,53 @@ public class GameSim {
 				System.out.print("Which way do you want to move: ");
 				String moveResponse = input.next();
 				switch (moveResponse) {
-				  case "l":
+				  case "a":
+					  if(b.hasTrench(p.getLoc().getX() - 1, p.getLoc().getY())) {
+						  System.out.println("Cannot move onto a Trench tile!");
+						  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+						  break;
+					  }
 					  p.move(p.getLoc().getX() - 1, p.getLoc().getY());
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
 				    break;
-				  case "r":
+				  case "d":
+					  if(b.hasTrench(p.getLoc().getX() + 1, p.getLoc().getY())) {
+						  System.out.println("Cannot move onto a Trench tile!");
+						  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+						  break;
+					  }
 					  p.move(p.getLoc().getX() + 1, p.getLoc().getY());
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
 				    break;
-				  case "u":
+				  case "w":
+					  if(b.hasTrench(p.getLoc().getX(), p.getLoc().getY() - 1)) {
+						  System.out.println("Cannot move onto a Trench tile!");
+						  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+						  break;
+					  }
 					  p.move(p.getLoc().getX(), p.getLoc().getY() - 1);
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
 				    break;
-				  case "d":
+				  case "s":
+					  if(b.hasTrench(p.getLoc().getX(), p.getLoc().getY() + 1)) {
+						  System.out.println("Cannot move onto a Trench tile!");
+						  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+						  break;
+					  }
 					  p.move(p.getLoc().getX(), p.getLoc().getY() + 1);
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
+				    break;
+				  case "r":
+					  Dash(p, a, z, c);
+				    break;
+				  case "j":
+					  Location l = SetCursor(p, a, z, c, d, e);
+					  Jump(p, d, e, l);
+					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 				    break;
 				  case "c":
 					  System.out.println("Movement completed.");
@@ -4582,11 +4902,60 @@ public class GameSim {
 		}
 	}
 	
+	public static Location SetCursor(Player p, Player a, Player z, Player c, Player d, Player e) {
+		Scanner input = new Scanner(System.in);
+		boolean move = true;
+		Location l = new Location(p.getLoc().getX(), p.getLoc().getY());
+		b.setCursor(l);
+		while(move) {
+			b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+			System.out.print("Select a point on the battlefield with the cursor: ");
+			String moveResponse = input.next();
+			switch (moveResponse) {
+			  case "a":
+				  l.adjust(-1, 0);
+				  b.moveCursor(l);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "d":
+				  l.adjust(1, 0);
+				  b.moveCursor(l);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "w":
+				  l.adjust(0, -1);
+				  b.moveCursor(l);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "s":
+				  l.adjust(0, 1);
+				  b.moveCursor(l);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "c":
+				  System.out.println("Cursor set to " + l + ".");
+				  move = false;
+			    break;
+			}
+			System.out.println();
+		}
+		b.removeCursor();
+		return l;
+	}
+	
 	public static void SpawnOrbs() {
 		int d = 2;
 		int e = 0;
 		if(turns2 >= 8) {
 			e = 2;
+		}
+		if(turns2 >= 15) {
+			e = 6;
+			d = 0;
 		}
 		if(turns2 >= 3) {
 			orbs.clear();
@@ -4618,6 +4987,10 @@ public class GameSim {
 		if(turns2 >= 8) {
 			d1 = 1;
 			d2 = 2;
+		}
+		if(turns2 >= 15) {
+			d1 = 0;
+			d2 = 0;
 		}
 		cover.clear();
 		for(int i = 0; i < d1; i++) {
@@ -4727,7 +5100,7 @@ public class GameSim {
 	
 	public static void SolarAbility(Player p) {
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SolarProtect = new Effect("protect", 0.5, 2);
+		Effect SolarProtect = new Effect("protect", 0.5, 3);
 		e.add(SolarProtect);
 		p.addEffects(e);
 		p.applyEffects();
@@ -4815,8 +5188,13 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void MackAbility(Player p, Player a, Player b, Player c, int x, int y) {
-		p.getLoc().set(x, y);
+	public static void MackAbility(Player p, Player a, Player b, Player c, Location l) {
+		if(GameSim.b.hasTrench(l.getX(), l.getY())) {
+			System.out.println("Can't go there!");
+			System.out.println();
+			return;
+		}
+		p.getLoc().set(l.getX(), l.getY());
 		for(int i = 0; i < cover.size(); i++) {
 			if(p.getLoc().eqLoc(cover.get(i).getLoc())) {
 				if(cover.get(i).getName().equals("Full")) {
@@ -5539,7 +5917,7 @@ public class GameSim {
 			totalAttacks++;
 		}
 		for(int i = 0; i < totalAttacks; i++) {
-			p.heal(p.getDamage(), 0.05);
+			p.heal(0.03);
 		}
 		System.out.println();
 	}
@@ -5557,9 +5935,9 @@ public class GameSim {
 		p.cleanse();
 		a.cleanse();
 		b.cleanse();
-		p.heal(0.1);
-		a.heal(0.1);
-		b.heal(0.1);
+		p.heal(0.15);
+		a.heal(0.15);
+		b.heal(0.15);
 		p.addEffects(e);
 		p.applyEffects();
 		a.addEffects(e2);
@@ -5647,7 +6025,7 @@ public class GameSim {
 		Scanner input = new Scanner(System.in);
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		Effect MaxPower = new Effect("power", 0.3, 1);
-		Effect MaxProtect = new Effect("protect", 0.2, 1);
+		Effect MaxProtect = new Effect("protect", 0.2, 2);
 		e.add(MaxPower);
 		e.add(MaxProtect);
 		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
@@ -5825,10 +6203,14 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void ViaAbility(Player p, Player a, Player b, Player c, int x, int y) {
-		Location l = new Location(x, y);
+	public static void ViaAbility(Player p, Player a, Player b, Player c, Location l) {
+		if(GameSim.b.hasTrench(l.getX(), l.getY())) {
+			System.out.println("Can't send Arro there!");
+			System.out.println();
+			return;
+		}
 		if(a.inRange(l, 10) && a.isAlive()) {
-			a.getLoc().set(x, y);
+			a.getLoc().set(l.getX(), l.getY());
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
 			e.add(ViaVulnerable);
@@ -5837,7 +6219,7 @@ public class GameSim {
 			a.resetCover();
 		}
 		if(b.inRange(l, 10) && b.isAlive()) {
-			b.getLoc().set(x, y);
+			b.getLoc().set(l.getX(), l.getY());
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
 			e.add(ViaVulnerable);
@@ -5846,7 +6228,7 @@ public class GameSim {
 			b.resetCover();
 		}
 		if(c.inRange(l, 10) && c.isAlive()) {
-			c.getLoc().set(x, y);
+			c.getLoc().set(l.getX(), l.getY());
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
 			e.add(ViaVulnerable);
@@ -5867,9 +6249,9 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ViaParalyze = new Effect("paralyze", 0, 3);
-		Effect ViaParalyze2 = new Effect("paralyze", 0, 3);
-		Effect ViaParalyze3 = new Effect("paralyze", 0, 3);
+		Effect ViaParalyze = new Effect("paralyze", 0, 2);
+		Effect ViaParalyze2 = new Effect("paralyze", 0, 2);
+		Effect ViaParalyze3 = new Effect("paralyze", 0, 2);
 		Effect ViaDaze = new Effect("daze", 0, 2);
 		Effect ViaDaze2 = new Effect("daze", 0, 2);
 		Effect ViaDaze3 = new Effect("daze", 0, 2);
@@ -5942,8 +6324,7 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void LouisUltimate(Player p, Player a, Player b, Player c, int x, int y) {
-		Location l = new Location(x, y);
+	public static void LouisUltimate(Player p, Player a, Player b, Player c, Location l) {
 		if(a.inRange(l, 10)) {
 			a.takeDamage(600);
 			a.knockbacked();
@@ -5956,7 +6337,7 @@ public class GameSim {
 			c.takeDamage(600);
 			c.knockbacked();
 		}
-		p.setSights(4);
+		p.setSights(3);
 		p.resetUlt();
 		System.out.println("\"Ohhh Guardiannnn!\"");
 		System.out.println();
@@ -6114,9 +6495,13 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void KailaniAbility(Player p, Player a, Player b, Player c, int x, int y) {
-		Location l = new Location(x, y);
+	public static void KailaniAbility(Player p, Player a, Player b, Player c, Location l) {
 		if(!p.inReach(l, 15)) {
+			System.out.println("Can't riptide there!");
+			System.out.println();
+			return;
+		}
+		if(GameSim.b.hasTrench(l.getX(), l.getY())) {
 			System.out.println("Can't riptide there!");
 			System.out.println();
 			return;
@@ -6133,7 +6518,7 @@ public class GameSim {
 			c.takeDamage(c.getMaxHP() * 0.1);
 			c.knockbacked();
 		}
-		p.getLoc().set(x, y);
+		p.getLoc().set(l.getX(), l.getY());
 		for(int i = 0; i < orbs.size(); i++) {
 			if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
 				p.getOrb();
@@ -6302,7 +6687,7 @@ public class GameSim {
 				a.applyEffects();
 			}
 		}else if(p.inRange(a)){
-			a.takeDamage(225);
+			a.takeDamage(175);
 			a.knockbacked();
 			double rand = Math.random();
 			if(rand <= 0.1) {
@@ -6320,7 +6705,7 @@ public class GameSim {
 				b.applyEffects();
 			}
 		}else if(p.inRange(b)) {
-			b.takeDamage(225);
+			b.takeDamage(175);
 			b.knockbacked();
 			double rand = Math.random();
 			if(rand <= 0.1) {
@@ -6337,7 +6722,7 @@ public class GameSim {
 				c.applyEffects();
 			}
 		}else if(p.inRange(c)) {
-			c.takeDamage(225);
+			c.takeDamage(175);
 			c.knockbacked();
 			double rand = Math.random();
 			if(rand <= 0.1) {
@@ -6619,8 +7004,8 @@ public class GameSim {
 	}
 	
 	public static void ClaraAbility(Player p) {
-		p.increaseMovement(10);
-		p.addDashes(2);
+		p.increaseMovement(7);
+		p.addDashes(1);
 		p.addJumps(2);
 		p.setCooldown(2);
 		System.out.println(p.voiceline());
@@ -6629,12 +7014,12 @@ public class GameSim {
 	
 	public static void ClaraUltimate(Player p) {
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect ClaraProtect = new Effect("protect", 0.6, 2);
+		Effect ClaraProtect = new Effect("power", 0.45, 1);
 		e.add(ClaraProtect);
 		p.addEffects(e);
 		p.applyEffects();
-		p.increaseMovement(20);
-		p.addDashes(4);
+		p.increaseMovement(14);
+		p.addDashes(2);
 		p.addJumps(4);
 		p.setUlt();
 		p.resetUlt();
@@ -7192,12 +7577,12 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LiamProtect = new Effect("protect", 0.8, 2);
-		Effect LiamProtect2 = new Effect("protect", 1, 2);
-		Effect LiamProtect3 = new Effect("protect", 1, 2);
-		e.add(LiamProtect);
-		e2.add(LiamProtect2);
-		e3.add(LiamProtect3);
+		Effect KitharaProtect = new Effect("protect", 0.8, 2);
+		Effect KitharaProtect2 = new Effect("protect", 1, 2);
+		Effect KitharaProtect3 = new Effect("protect", 1, 2);
+		e.add(KitharaProtect);
+		e2.add(KitharaProtect2);
+		e3.add(KitharaProtect3);
 		p.addEffects(e);
 		p.applyEffects();
 		a.addEffects(e2);
@@ -7442,8 +7827,7 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void TomUltimate(Player p, Player a, Player b, Player c, int x, int y) {
-		Location l = new Location(x, y);
+	public static void TomUltimate(Player p, Player a, Player b, Player c, Location l) {
 		if(a.inRange(l, 7)) {
 			a.takeDamage(a.getMaxHP() * 0.3);
 		}
@@ -7598,7 +7982,7 @@ public class GameSim {
 	public static void EvilAttack(Player p, Player a, Player b, Player c) {
 		p.attack(a);
 		double rand = Math.random();
-		if(rand <= 0.15) {
+		if(rand <= 0.1) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect BurtParalyze = new Effect("paralyze", 0, 1);
 			Effect EvilIgnite = new Effect("ignite", 0, 1);
@@ -7649,6 +8033,266 @@ public class GameSim {
 		c.applyEffects();
 		p.resetUlt();
 		System.out.println("\"The Roche Limit approaches, and so will your fates!\"");
+		System.out.println();
+	}
+	
+	public static void MasonAttack(Player p, Player a) {
+		p.attack(a);
+		if(p.inRange(a, 4)) {
+			p.heal(0.15);
+		}
+		System.out.println();
+	}
+	
+	public static void MasonAbility(Player p, Player a, Player b, Player c, Location l) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect CherryWeaken = new Effect("daze", 0, 2);
+		Effect CherryWeaken2 = new Effect("daze", 0, 2);
+		Effect CherryWeaken3 = new Effect("daze", 0, 2);
+		e.add(CherryWeaken);
+		e2.add(CherryWeaken2);
+		e3.add(CherryWeaken3);
+
+		if(a.inRange(l, 8)) {
+			a.takeDamage(350);
+			a.addEffects(e);
+			a.applyEffects();
+		}
+		if(b.inRange(l, 8)) {
+			b.takeDamage(350);
+			b.addEffects(e2);
+			b.applyEffects();
+		}
+		if(c.inRange(l, 8)) {
+			c.takeDamage(350);
+			c.addEffects(e3);
+			c.applyEffects();
+		}
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void MasonUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
+		if(a.inRange(p, 15)) {
+			a.takeDamage(a.getMaxHP() * 0.15);
+			a.knockbacked();
+		}
+		if(b.inRange(p, 15)) {
+			b.takeDamage(b.getMaxHP() * 0.15);
+			b.knockbacked();
+		}
+		if(c.inRange(p, 15)) {
+			c.takeDamage(c.getMaxHP() * 0.15);
+			c.knockbacked();
+		}
+		if(d.inRange(p, 15)) {
+			ArrayList<Effect> e1 = new ArrayList<Effect>();
+			Effect SolarProtect = new Effect("protect", 0.1, 3);
+			e1.add(SolarProtect);
+			d.addEffects(e1);
+			d.applyEffects();
+		}
+		if(e.inRange(p, 15)) {
+			ArrayList<Effect> e1 = new ArrayList<Effect>();
+			Effect SolarProtect = new Effect("protect", 0.1, 3);
+			e1.add(SolarProtect);
+			e.addEffects(e1);
+			e.applyEffects();
+		}
+		p.resetUlt();
+		System.out.println("\"Tech Terror in the house!\"");
+		System.out.println();
+	}
+	
+	public static void AiricAttack(Player p, Player a) {
+		p.attack(a);
+		double rand = Math.random();
+		if(rand <= 0.08) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect BurtParalyze = new Effect("paralyze", 0, 1);
+			Effect AiricDaze = new Effect("daze", 0, 1);
+			e.add(BurtParalyze);
+			e.add(AiricDaze);
+			a.addEffects(e);
+			a.applyEffects();
+		}
+		System.out.println();
+	}
+	
+	public static void AiricAbility(Player p, Player a, Player b, Location l) {
+		Scanner input = new Scanner(System.in);
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect MaxPower = new Effect("power", 0.25, 1);
+		e.add(MaxPower);
+		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
+		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
+		System.out.print("Who do you want to transport: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			a.getLoc().set(l.getX(), l.getY());
+			for(int i = 0; i < orbs.size(); i++) {
+				if(a.getLoc().eqLoc(orbs.get(i).getLoc()) && !a.ultReady()) {
+					a.getOrb();
+					orbs.remove(i);
+					System.out.println(a.getName() + " has gotten an orb.");
+				}
+			}
+			for(int i = 0; i < cover.size(); i++) {
+				if(a.getLoc().eqLoc(cover.get(i).getLoc())) {
+					if(cover.get(i).getName().equals("Full")) {
+						a.setCover("Full");
+					}
+					if(cover.get(i).getName().equals("Partial")) {
+						a.setCover("Partial");
+					}
+				}
+			}
+			a.addEffects(e);
+			a.applyEffects();
+			p.setCooldown(4);
+		}
+		if(targetResponse.equals("2")) {
+			b.getLoc().set(l.getX(), l.getY());
+			for(int i = 0; i < orbs.size(); i++) {
+				if(b.getLoc().eqLoc(orbs.get(i).getLoc()) && !b.ultReady()) {
+					b.getOrb();
+					orbs.remove(i);
+					System.out.println(b.getName() + " has gotten an orb.");
+				}
+			}
+			for(int i = 0; i < cover.size(); i++) {
+				if(b.getLoc().eqLoc(cover.get(i).getLoc())) {
+					if(cover.get(i).getName().equals("Full")) {
+						b.setCover("Full");
+					}
+					if(cover.get(i).getName().equals("Partial")) {
+						b.setCover("Partial");
+					}
+				}
+			}
+			b.addEffects(e);
+			b.applyEffects();
+			p.setCooldown(4);
+		}
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void AiricUltimate(Player p, Player a, Player b, Player c) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		Effect AiricProtect = new Effect("protect", 0.5, 2);
+		Effect AiricVulnerable = new Effect("vulnerable", 0.1, 1);
+		e.add(AiricProtect);
+		e2.add(AiricVulnerable);
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: " + a.getName() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getName() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getName() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.print("Who do you want to turn the tables on: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			p.heal(0.2);
+			Location l1 = new Location(p.getLoc().getX(), p.getLoc().getY());
+			Location l2 = new Location(a.getLoc().getX(), a.getLoc().getY());
+			p.getLoc().set(l2.getX(), l2.getY());
+			a.getLoc().set(l1.getX(), l1.getY());
+			p.addEffects(e);
+			p.applyEffects();
+			a.addEffects(e2);
+			a.applyEffects();
+			p.resetUlt();
+		}
+		if(targetResponse.equals("2")) {
+			p.heal(0.2);
+			Location l1 = new Location(p.getLoc().getX(), p.getLoc().getY());
+			Location l2 = new Location(b.getLoc().getX(), b.getLoc().getY());
+			p.getLoc().set(l2.getX(), l2.getY());
+			b.getLoc().set(l1.getX(), l1.getY());
+			p.addEffects(e);
+			p.applyEffects();
+			b.addEffects(e2);
+			b.applyEffects();
+			p.resetUlt();
+		}
+		if(targetResponse.equals("3")) {
+			p.heal(0.2);
+			Location l1 = new Location(p.getLoc().getX(), p.getLoc().getY());
+			Location l2 = new Location(c.getLoc().getX(), c.getLoc().getY());
+			p.getLoc().set(l2.getX(), l2.getY());
+			c.getLoc().set(l1.getX(), l1.getY());
+			p.addEffects(e);
+			p.applyEffects();
+			c.addEffects(e2);
+			c.applyEffects();
+			p.resetUlt();
+		}
+		System.out.println();
+		System.out.println("\"Get over here!\"");
+		System.out.println();
+	}
+	
+	public static void JulianAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		double rand = Math.random();
+		if(rand <= 0.1) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect EvilIgnite = new Effect("ignite", 0, 1);
+			e.add(EvilIgnite);
+			a.addEffects(e);
+			a.applyEffects();
+		}
+		if(a.inRange(b, 3)) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect EvilIgnite = new Effect("ignite", 0, 1);
+			e.add(EvilIgnite);
+			b.addEffects(e);
+			b.applyEffects();
+		}
+		if(a.inRange(c, 3)) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect EvilIgnite = new Effect("ignite", 0, 1);
+			e.add(EvilIgnite);
+			c.addEffects(e);
+			c.applyEffects();
+		}
+		System.out.println();
+	}
+	
+	public static void JulianAbility(Player p) {
+		p.increaseMovement(7);
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect SolarProtect = new Effect("protect", 0.8, 2);
+		e.add(SolarProtect);
+		p.addEffects(e);
+		p.applyEffects();
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void JulianUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
+		try {
+			String audio = "karma.wav";
+			Music victoryPlayer = new Music(audio, false); 
+			victoryPlayer.play();
+		}catch (Exception e1) {
+			System.out.println(e1);
+		}
+		p.heal(0.25);
+		d.heal(0.25);
+		e.heal(0.25);
+		a.takeDamage(450);
+		a.knockbacked();
+		b.takeDamage(450);
+		b.knockbacked();
+		c.takeDamage(450);
+		c.knockbacked();
+		p.resetUlt();
+		System.out.println("\033[3m🎵 I hope you get everything you deserve, Karma's a bitch, I heard! 🎵\033[0m");
 		System.out.println();
 	}
 	

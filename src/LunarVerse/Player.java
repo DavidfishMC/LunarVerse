@@ -330,20 +330,25 @@ public class Player {
 		curLoc.adjust(randomX, randomY);
 		if(curLoc.getX() > 41) {
 			curLoc.setX(41);
-			takeDamage(100);
+			takeDamage(200);
 		}
 		if(curLoc.getX() < 0) {
 			curLoc.setX(0);
-			takeDamage(100);
+			takeDamage(200);
 		}
 		if(curLoc.getY() > 41) {
 			curLoc.setY(41);
-			takeDamage(100);
+			takeDamage(200);
 		}
 		if(curLoc.getY() < 0) {
 			curLoc.setY(0);
-			takeDamage(100);
+			takeDamage(200);
 		}
+		if(GameSim.b.hasTrench(curLoc.getX(), curLoc.getY())) {
+			takeDamage(150);
+			this.knockbacked();
+		}
+		
 		resetCover();
 		System.out.println(nameSkin + " has been knocked back.");
 	}
@@ -388,11 +393,14 @@ public class Player {
 		if(!isAlive()) {
 			return;
 		}
-		double protect2 = protect;
-		if(protect <= 0) {
-			protect2 = 0;
+		for(int i = 0; i < effects.size(); i++) {
+			if(effects.get(i).getName().equals("protect")) {
+				d = d * (1 - effects.get(i).getIncrease());
+			}
+			if(effects.get(i).getName().equals("vulnerable")) {
+				d = d + (d * effects.get(i).getIncrease());
+			}
 		}
-		d = d * protect2;
 		d = Math.round(d * 10.0) / 10.0;
 		health = health - d;
 		if(health < 0) {
@@ -400,6 +408,13 @@ public class Player {
 		}
 		System.out.println(nameSkin + " has taken " + d + " damage.");
 		if(health == 0) {
+			try {
+				String audio = "downed.wav";
+				Music victoryPlayer = new Music(audio, false); 
+				victoryPlayer.play();
+			}catch (Exception e) {
+				System.out.println(e);
+			}
 			alive = false;
 			System.out.println(nameSkin + " is downed!");
 		}
@@ -908,50 +923,58 @@ public class Player {
 			Effect e = effects.get(i);
 			if(e.getName().equals("vulnerable")) {
 				protect = protect - e.getIncrease();
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer vulnerable.");
 				i--;
 			}
 			if(e.getName().equals("weak")) {
 				damage = damage + (ogDamage * e.getIncrease());
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer weakened.");
 				i--;
 			}
 			if(e.getName().equals("ignite")) {
 				ignite = false;
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer ignited.");
 				i--;
 			}
 			if(e.getName().equals("daze")) {
 				dazed = false;
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer dazed.");
 				i--;
 			}
 			if(e.getName().equals("stun")) {
 				stunned = false;
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer stunned.");
 				i--;
 			}
 			if(e.getName().equals("paralyze")) {
 				paralyzed = false;
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer paralyzed.");
 				i--;
 			}
 			if(e.getName().equals("freeze")) {
 				freezed = false;
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer freezed.");
 				i--;
 			}
 			if(e.getName().equals("blind")) {
 				range = range + (ogRange * e.getIncrease());
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer blind.");
 				i--;
 			}
 			if(e.getName().equals("poison")) {
 				absorb = absorb + e.getIncrease();
+				effects.remove(e);
 				System.out.println(nameSkin + " is no longer poisoned.");
 				i--;
 			}
-			effects.remove(e);
 		}
 		System.out.println(nameSkin + " has been cleansed.");
 	}
@@ -995,7 +1018,7 @@ public class Player {
 			
 		}else {
 			double absorb2 = absorb;
-			if(protect <= 0) {
+			if(absorb2 <= 0) {
 				absorb2 = 0.001;
 			}
 			double e = (d * i) * absorb2;
@@ -1563,6 +1586,39 @@ public class Player {
 			}
 			if(randomNum == 3) {
 				return ("\"Bots, fire at them!\"");
+			}
+		}
+		if(name.equals("Mason")) {
+			if(randomNum == 1) {
+				return ("\"Delivery for you!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Disable them, then strike!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Same day shipping for this package!\"");
+			}
+		}
+		if(name.equals("Airic")) {
+			if(randomNum == 1) {
+				return ("\"Need a lift?\"");
+			}
+			if(randomNum == 2) {
+				return ("\"They'll never see you coming!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Don't lose a limb out there!\"");
+			}
+		}
+		if(name.equals("Julian")) {
+			if(randomNum == 1) {
+				return ("\"I still got it in me!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Prioritize obsidian first!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"I'm gonna break their bed, protect the base.\"");
 			}
 		}
 		return "";

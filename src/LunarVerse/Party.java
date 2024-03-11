@@ -30,6 +30,20 @@ public class Party {
 		return roster;
 	}
 	
+	public boolean oneLeft() {
+		int num = 0;
+		for(int i = 0; i < 3; i++) {
+			if(roster[i].isAlive()) {
+				num++;
+			}
+		}
+		if(num == 1) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
 	public void nextPlayer() {
 		if((!roster[0].isAlive() || roster[0].isStunned()) && (roster[1].isAlive() && !roster[1].isStunned())) {
 			roster[1].setTurn();
