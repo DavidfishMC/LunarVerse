@@ -73,6 +73,12 @@ public class Party {
 			if(roster[i].getName().equals("Lunar") && roster[i].ultActive()) {
 				roster[i].ultDown();
 			}
+			if(roster[i].getName().equals("Jesse") && roster[i].ultActive()) {
+				roster[i].ultDown();
+			}
+			if(roster[i].getName().equals("Gates") && roster[i].ultActive()) {
+				roster[i].ultDown();
+			}
 			roster[i].resetDashes();
 			roster[i].resetJumps();
 			roster[i].resetCover();

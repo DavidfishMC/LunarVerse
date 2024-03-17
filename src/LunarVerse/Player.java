@@ -28,8 +28,19 @@ public class Player {
 	String ogName;
 	String nameSkin;
 	String cover = "None";
+	int turndead = 0;
+	int weaponuse = 0;
+	int abilityuse = 0;
+	int ultuse = 0;
+	int dashed = 0;
+	int jumped = 0;
+	double healingIn = 0;
+	double damageIn = 0;
 	boolean turn;
+	boolean reduce = false;
 	boolean alive = true;
+	boolean weary = false;
+	boolean shield = false;
 	boolean attacked = false;
 	boolean ignite = false;
 	boolean dazed = false;
@@ -104,6 +115,10 @@ public class Player {
 		cover = "None";
 	}
 	
+	public void setReduce() {
+		reduce = true;
+	}
+	
 	public void setCover(String s) {
 		cover = s;
 	}
@@ -121,6 +136,7 @@ public class Player {
 	}
 	
 	public void useJump() {
+		jumped++;
 		jumps--;
 	}
 	
@@ -141,11 +157,17 @@ public class Player {
 	}
 	
 	public void useDash() {
+		dashed++;
 		dashes--;
 	}
 	
 	public boolean canDash() {
 		return dashes > 0;
+	}
+	
+	public void setShield() {
+		System.out.println(nameSkin + " is now shielded.");
+		shield = true;
 	}
 	
 	public boolean inReach(Location l) {
@@ -212,6 +234,8 @@ public class Player {
 		ultActive = true;
 		if(name.equals("Lunar")) {
 			ultCharge = 2;
+		}else {
+			ultuse++;
 		}
 	}
 	
@@ -272,6 +296,9 @@ public class Player {
 	
 	public void resetMovement() {
 		movement = ogMovement;
+		if(weary) {
+			movement = movement - 5;
+		}
 	}
 	
 	public int getOrbCount() {
@@ -283,11 +310,16 @@ public class Player {
 	}
 	
 	public boolean ultReady() {
-		return orbCount == ultCharge;
+		return orbCount >= ultCharge;
 	}
 	
 	public void resetUlt() {
+		ultuse++;
 		orbCount = 0;
+	}
+	
+	public void removeOrb() {
+		orbCount--;
 	}
 	
 	public void resetRange() {
@@ -297,7 +329,7 @@ public class Player {
 	public void setRange(int i) {
 		range = i;
 	}
-	
+
 	public void increaseDPS(double d) {
 		damage = damage + (ogDamage * d);
 	}
@@ -393,6 +425,11 @@ public class Player {
 		if(!isAlive()) {
 			return;
 		}
+		if(shield) {
+			System.out.println("Shield broken!");
+			shield = false;
+			return;
+		}
 		for(int i = 0; i < effects.size(); i++) {
 			if(effects.get(i).getName().equals("protect")) {
 				d = d * (1 - effects.get(i).getIncrease());
@@ -407,6 +444,7 @@ public class Player {
 			health = 0;
 		}
 		System.out.println(nameSkin + " has taken " + d + " damage.");
+		damageIn = damageIn + d;
 		if(health == 0) {
 			try {
 				String audio = "downed.wav";
@@ -417,6 +455,7 @@ public class Player {
 			}
 			alive = false;
 			System.out.println(nameSkin + " is downed!");
+			turndead = GameSim.turns2;
 		}
 	}
 	
@@ -442,6 +481,9 @@ public class Player {
 		}
 		double c = 0;
 		int randomNum = (int)(Math.random() * (10 - (-10) + 1)) + -10;
+		if(damage <= 0) {
+			randomNum = 0;
+		}
 		double rand2 = Math.random();
 		if(rand2 <= 0.1) {
 			c = damage * 0.3;
@@ -476,11 +518,13 @@ public class Player {
 				}
 			}
 			attacked = true;
+			weaponuse++;
 			return;
 		}
 		if(p.getCover().equals("Full")) {
 			System.out.println("Attacked was Covered!");
 			attacked = true;
+			weaponuse++;
 			return;
 		}
 		if(p.getCover().equals("Partial")) {
@@ -508,6 +552,7 @@ public class Player {
 				if(p.getName().equals("Thunder") && p.isCountering()) {
 					takeDamage(p.getDamage() * 1.25);
 				}
+				weaponuse++;
 				return;
 			}else {
 				double rand = Math.random();
@@ -517,6 +562,7 @@ public class Player {
 				if(rand <= 0.5) {
 					System.out.println("Attacked was Covered!");
 					attacked = true;
+					weaponuse++;
 					return;
 				}
 			}
@@ -540,6 +586,7 @@ public class Player {
 		if(c > 0) {
 			System.out.println("Critical shot!");
 		}
+		weaponuse++;
 	}
 	
 	public double getTotalDPS() {
@@ -704,6 +751,19 @@ public class Player {
 				fortify = true;
 				System.out.println(nameSkin + " is fortified.");
 			}
+			if(e.get(i).getName().equals("weary") && weary) {
+				for(int j = 0; j < effects.size(); j++) {
+					if(effects.get(j).getName().equals("weary")) {
+						effects.remove(effects.get(j));
+						j--;
+						weary = false;
+					}
+				}
+			}
+			if(e.get(i).getName().equals("weary") && !weary) {
+				weary = true;
+				System.out.println(nameSkin + " is now weary.");
+			}
 			effects.add(e.get(i));
 		}
 	}
@@ -842,6 +902,11 @@ public class Player {
 					System.out.println(nameSkin + " is no longer sightseeing.");
 					i--;
 				}
+				if(e.getName().equals("weary")) {
+					weary = false;
+					System.out.println(nameSkin + " is no longer weary.");
+					i--;
+				}
 				effects.remove(e);
 			}
 		}
@@ -892,6 +957,20 @@ public class Player {
 		}else {
 			turn = true;
 		}
+	}
+	
+	public boolean revive() {
+		if(isAlive()) {
+			System.out.println("Target is not downed!");
+			System.out.println();
+			return false;
+		}
+		turndead = 0;
+		health = health + (maxHealth * 0.35);
+		alive = true;
+		attacked = false;
+		resetCooldown();
+		return true;
 	}
 	
 	public void endTurn() {
@@ -975,6 +1054,12 @@ public class Player {
 				System.out.println(nameSkin + " is no longer poisoned.");
 				i--;
 			}
+			if(e.getName().equals("weary")) {
+				weary = false;
+				effects.remove(e);
+				System.out.println(nameSkin + " is no longer weary.");
+				i--;
+			}
 		}
 		System.out.println(nameSkin + " has been cleansed.");
 	}
@@ -1000,6 +1085,7 @@ public class Player {
 			}
 			double e = (maxHealth * d) * absorb2;
 			health = health + e;
+			healingIn = healingIn + e;
 			System.out.println(nameSkin + " has healed for " + e);
 			if(health > maxHealth) {
 				health = maxHealth;
@@ -1023,6 +1109,7 @@ public class Player {
 			}
 			double e = (d * i) * absorb2;
 			health = health + e;
+			healingIn = healingIn + e;
 			System.out.println(nameSkin + " has healed for " + e);
 			if(health > maxHealth) {
 				health = maxHealth;
@@ -1031,6 +1118,11 @@ public class Player {
 	}
 	
 	public void setCooldown(int i) {
+		if(reduce) {
+			reduce = false;
+			i--;
+		}
+		abilityuse++;
 		cooldown = i;
 	}
 	
@@ -1114,12 +1206,18 @@ public class Player {
 			if(protect > 1) {
 				healthshow = "Health " +"\u001b[38;5;" + 213 + "m" +"💔"+reset;
 			}
+			if(shield) {
+				healthshow = "Health " +"\u001b[38;5;" + 51 + "m" +"💔"+reset;
+			}
 		}else {
 			if(protect < 1) {
 				healthshow = "Health " +bold+"\u001b[38;5;" + 247 + "m" +"❤️"+reset;
 			}
 			if(protect > 1) {
 				healthshow = "Health " +bold+"\u001b[38;5;" + 213 + "m" +"❤️"+reset;
+			}
+			if(shield) {
+				healthshow = "Health " +bold+"\u001b[38;5;" + 51 + "m" +"❤️"+reset;
 			}
 		}
 		if(counter || reflection || (range < ogRange) || (sights > 0) || (range > ogRange)) {
@@ -1169,12 +1267,18 @@ public class Player {
 			if(protect > 1) {
 				healthshow = ". Health " +"\u001b[38;5;" + 213 + "m" +"💔"+reset+": ";
 			}
+			if(shield) {
+				healthshow = ". Health " +"\u001b[38;5;" + 51 + "m" +"💔"+reset+": ";
+			}
 		}else {
 			if(protect < 1) {
 				healthshow = ". Health " +bold+"\u001b[38;5;" + 247 + "m" +"❤️"+reset+": ";
 			}
 			if(protect > 1) {
 				healthshow = ". Health " +bold+"\u001b[38;5;" + 213 + "m" +"❤️"+reset+": ";
+			}
+			if(shield) {
+				healthshow = ". Health " +bold+"\u001b[38;5;" + 51 + "m" +"❤️"+reset+": ";
 			}
 		}
 		return healthshow;
@@ -1621,7 +1725,182 @@ public class Player {
 				return ("\"I'm gonna break their bed, protect the base.\"");
 			}
 		}
+		if(name.equals("Gash")) {
+			if(randomNum == 1) {
+				return ("\"Laser precision guards are up.\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Initating contigency plan protocols.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Stay close if you want to be hurt less out there!\"");
+			}
+		}
+		if(name.equals("Mayhem")) {
+			if(randomNum == 1) {
+				return ("\"You stand no chance now!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"I developed this stuff myself!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Target neutralized, almost.\"");
+			}
+		}
+		if(name.equals("Gates")) {
+			if(randomNum == 1) {
+				return ("\"Enough hiding, you can take on anything.\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Hope they waste something big on that.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Big or small, it can absorb it all!\"");
+			}
+		}
+		if(name.equals("Audrey")) {
+			if(randomNum == 1) {
+				return ("\"Not so tough anymore!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Wonder what they feel like now.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Maybe we should go easy on them now yeah? Kidding!\"");
+			}
+		}
+		if(name.equals("Ayson")) {
+			if(randomNum == 1) {
+				return ("\"We outnumber you all!\"" +" "+ "\"Extra bodies on the field!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Teamwork really does-.\"" +" " +"\"Less talking more punching!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"I'll go for the left if you take the right.\"" +" "+ "\"You talking to our team or me?\"");
+			}
+		}
+		if(name.equals("Chloe")) {
+			if(randomNum == 1) {
+				return ("\"Calling in the royal guard.\"");
+			}
+			if(randomNum == 2) {
+				return ("\"I hope they trained enough for this.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"They'll treat you nicely. Otherwise, I'll have a word with them.\"");
+			}
+		}
+		if(name.equals("Hopper")) {
+			if(randomNum == 1) {
+				return ("\"Never back down never what?!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Never surrender!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"The warriors of justice would be ashamed if we backed down.\"");
+			}
+		}
+		if(name.equals("Redgar")) {
+			if(randomNum == 1) {
+				return ("\"Bought this off some guy on the Metaverse, hope it works!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Cleansing core is out!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"We'll be free from that toxic envrionment now.\"");
+			}
+		}
+		if(name.equals("Radar")) {
+			if(randomNum == 1) {
+				return ("\"Can't keep up huh?\"");
+			}
+			if(randomNum == 2) {
+				return ("\"They're moving at snail's space now!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"You'll never get me alive!\"");
+			}
+		}
+		if(name.equals("Oona")) {
+			if(randomNum == 1) {
+				return ("\"You're legally blind now!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Strike while they're distracted!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Too much VR is bad for your eyes!\"");
+			}
+		}
+		if(name.equals("Augie")) {
+			if(randomNum == 1) {
+				return ("\"No excuse for not hitting your shots!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"I see treasure! Wait that's just the enemy.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Shoot your shot now!\"");
+			}
+		}
+		if(name.equals("Ruby")) {
+			if(randomNum == 1) {
+				return ("\"Changing up the map!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"This should switch things up.\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Editing our world as we speak.\"");
+			}
+		}
+		if(name.equals("Norman")) {
+			if(randomNum == 1) {
+				return ("\"Toxins going up!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Get bamboozled!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"No healing for you!\"");
+			}
+		}
+		if(name.equals("Jesse")) {
+			if(randomNum == 1) {
+				return ("\"Burn!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Am I too hot for you?\"");
+			}
+			if(randomNum == 3) {
+				return ("\"I will engulf you in flames!\"");
+			}
+		}
+		if(name.equals("Chief")) {
+			if(randomNum == 1) {
+				return ("\"Together, they will fall!\"");
+			}
+			if(randomNum == 2) {
+				return ("\"Let's tank you guys up!\"");
+			}
+			if(randomNum == 3) {
+				return ("\"Stand back, I will handle this.\"");
+			}
+		}
 		return "";
+	}
+	
+	public String stats() {
+		String dead = "";
+		if(isAlive()) {
+			dead = "Alive";
+		}else {
+			dead = "Downed on turn " + turndead;
+		}
+		return (nameSkin + "'s Statistics:" + "\n" + "Ended: " + dead + "\n" + "Weapon Used: " + weaponuse + "\n" + "Ability Used: " + abilityuse + "\n" + "Ultimate Used: " + ultuse + "\n" + "Times Dashed: " + dashed + "\n" +  "Times Jumped: " + jumped + "\n" + "Healing Received: " + healingIn + "\n" + "Damage Received: " + damageIn);
 	}
 	
 

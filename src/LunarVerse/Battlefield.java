@@ -124,6 +124,25 @@ public class Battlefield {
 				}
 			}
 		}
+		
+		if(name.equals("Merge Castle")) {
+			for(int i = 17; i < 25; i++) {
+				Tile t = new Tile("Firepower", new Location(i, 4));
+				tiles.add(t);
+			}
+			for(int i = 17; i < 25; i++) {
+				Tile t = new Tile("Firepower", new Location(i, 37));
+				tiles.add(t);
+			}
+			for(int i = 17; i < 25; i++) {
+				Tile t = new Tile("Firepower", new Location(4, i));
+				tiles.add(t);
+			}
+			for(int i = 17; i < 25; i++) {
+				Tile t = new Tile("Firepower", new Location(37, i));
+				tiles.add(t);
+			}
+		}
 	}
 	
 	public void setCursor(Location l) {
@@ -156,6 +175,17 @@ public class Battlefield {
 				Location l = new Location(i, j);
 				if(s.inRange(l)) {
 					field[j][i] = "∙";
+					//field[j][i]= "\u001B[41m" + " " + reset;
+				}
+			}
+		}
+		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(s.inReach(l)) {
+					field[j][i] = "∙";
+					field[j][i] = color + 34 + "m" + "∙" + reset;
 				}
 			}
 		}
@@ -200,6 +230,9 @@ public class Battlefield {
 						}
 						if(t.getName().equals("Space")) {
 							field[i][j] = "^";
+						}
+						if(t.getName().equals("Firepower")) {
+							field[i][j] = bold + color + 202+ "m"+"," + reset;
 						}
 					}
 				}
@@ -247,19 +280,34 @@ public class Battlefield {
 				}
 				for(Orb o: orbLoc) {
 					if(i == o.getLoc().getY() && j == o.getLoc().getX()) {
-						field[i][j] = bold + "\u001b[38;5;" + 189 + "m" + "🪩" + reset;
+						if(s.inReach(o.getLoc())) {
+							field[i][j] = bold + "\u001b[38;5;" + 46 + "m" + "🪩" + reset;
+						}else {
+							field[i][j] = bold + "\u001b[38;5;" + 189 + "m" + "🪩" + reset;
+						}
 						//field[i][j] = "O";
 					}
 				}
 				for(Cover w: coverLoc) {
 					if(i == w.getLoc().getY() && j == w.getLoc().getX()) {
-						if(w.getName().equals("Full")) {
-							field[i][j] = "\u001b[38;5;" + 21 + "m" + "🛡️" + reset;
-							//field[i][j] = "F";
-						}
-						if(w.getName().equals("Partial")) {
-							field[i][j] = bold + "\u001b[38;5;" + 243 + "m" + "🪨" + reset;
-							//field[i][j] = "P";
+						if(s.inReach(w.getLoc())) {
+							if(w.getName().equals("Full")) {
+								field[i][j] = "\u001b[38;5;" + 46 + "m" + "🛡️" + reset;
+								//field[i][j] = "F";
+							}
+							if(w.getName().equals("Partial")) {
+								field[i][j] = bold + "\u001b[38;5;" + 46 + "m" + "🪨" + reset;
+								//field[i][j] = "P";
+							}
+						}else {
+							if(w.getName().equals("Full")) {
+								field[i][j] = "\u001b[38;5;" + 21 + "m" + "🛡️" + reset;
+								//field[i][j] = "F";
+							}
+							if(w.getName().equals("Partial")) {
+								field[i][j] = bold + "\u001b[38;5;" + 243 + "m" + "🪨" + reset;
+								//field[i][j] = "P";
+							}
 						}
 					}
 				}
@@ -275,7 +323,7 @@ public class Battlefield {
 				System.out.print(" ");
 			}
 			for(int j = 0; j < 42; j++) {
-				System.out.print(field[i][j] + " ");
+				System.out.print(field[i][j] = "\u001B[41m" + "  ");
 			}
 			System.out.println();
 		}
@@ -300,6 +348,17 @@ public class Battlefield {
 		System.out.println();
 		*/
 		System.out.println();
+	}
+	
+	public void addTile(String s, Location l) {
+		for(int i = 0; i < tiles.size(); i++) {
+			if(tiles.get(i).getLoc().eqLoc(l)) {
+				tiles.remove(i);
+				i--;
+			}
+		}
+		Tile t = new Tile(s, l);
+		tiles.add(t);
 	}
 	
 	public void endGame() {
@@ -352,6 +411,21 @@ public class Battlefield {
 					}
 					if(t.getName().equals("Space")) {
 						p.takeDamage(p.getMaxHP() * 0.1);
+						System.out.println();
+					}
+					if(t.getName().equals("Trench")) {
+						p.takeDamage(150);
+						p.knockbacked();
+						System.out.println();
+					}
+					if(t.getName().equals("Firepower")) {
+						ArrayList<Effect> e = new ArrayList<Effect>();
+						Effect Fire = new Effect("ignite", 0, 1);
+						Effect Fire2 = new Effect("power", 0.05, 1);
+						e.add(Fire);
+						e.add(Fire2);
+						p.addEffects(e);
+						p.applyEffects();
 						System.out.println();
 					}
 				}
