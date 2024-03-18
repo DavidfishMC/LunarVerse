@@ -1900,6 +1900,8 @@ public class Player {
 		}else {
 			dead = "Downed on turn " + turndead;
 		}
+		damageIn = Math.round(damageIn * 10.0) / 10.0;
+		healingIn = Math.round(healingIn * 10.0) / 10.0;
 		return (nameSkin + "'s Statistics:" + "\n" + "Ended: " + dead + "\n" + "Weapon Used: " + weaponuse + "\n" + "Ability Used: " + abilityuse + "\n" + "Ultimate Used: " + ultuse + "\n" + "Times Dashed: " + dashed + "\n" +  "Times Jumped: " + jumped + "\n" + "Healing Received: " + healingIn + "\n" + "Damage Received: " + damageIn);
 	}
 	

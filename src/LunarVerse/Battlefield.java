@@ -18,11 +18,15 @@ public class Battlefield {
 	Player e;
 	Player f;
 	String[][] field = new String[42][42];
+	int[][] foreground = new int[42][42];
+	int[][] background = new int[42][42];
 	ArrayList<Tile> tiles = new ArrayList<Tile>();
 	ArrayList<Player> players = new ArrayList<Player>();
 	String name;
 	static final String reset = "\u001B[0m";
 	static final String color = "\u001b[38;5;";
+	static final String back = "\u001b[48;5;";
+	static final String clear = "\u001b[22m";
 	static final String bold = "\u001b[1m";
 
 	public Battlefield(String nameIn, Player aIn, Player bIn, Player cIn, Player dIn, Player eIn, Player fIn) {
@@ -39,11 +43,7 @@ public class Battlefield {
 		players.add(e);
 		players.add(f);
 		name = nameIn;
-		for(int i = 0; i < 42; i++) {
-			for(int j = 0; j < 42; j++){
-				field[i][j] = "∙";
-			}
-		}
+		
 		if(name.equals("Galactical Laboratories")) {
 			Tile t = new Tile("Rift", new Location(9,9));
 			Tile t2 = new Tile("Rift", new Location(32,9));
@@ -167,34 +167,18 @@ public class Battlefield {
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
 				field[i][j] = " ";
+				foreground[i][j] = 0;
+				background[i][j] = 999;
 			}
 		}
 
-		for(int i = 0; i < 42; i++) {
-			for(int j = 0; j < 42; j++){
-				Location l = new Location(i, j);
-				if(s.inRange(l)) {
-					field[j][i] = "∙";
-					//field[j][i]= "\u001B[41m" + " " + reset;
-				}
-			}
-		}
-		
-		for(int i = 0; i < 42; i++) {
-			for(int j = 0; j < 42; j++){
-				Location l = new Location(i, j);
-				if(s.inReach(l)) {
-					field[j][i] = "∙";
-					field[j][i] = color + 34 + "m" + "∙" + reset;
-				}
-			}
-		}
 		
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
 				Location l = new Location(i, j);
 				if(e1.inRange(l) && e1.hasSights() && !e1.isStunned()) {
-					field[j][i] = color + 196 + "m" + "∙" + reset;
+					field[j][i] = "∙";
+					foreground[j][i] = 196;
 				}
 			}
 		}
@@ -202,7 +186,8 @@ public class Battlefield {
 			for(int j = 0; j < 42; j++){
 				Location l = new Location(i, j);
 				if(e2.inRange(l) && e2.hasSights() && !e2.isStunned()) {
-					field[j][i] = color + 196 + "m" + "∙" + reset;
+					field[j][i] = "∙";
+					foreground[j][i] = 196;
 				}
 			}
 		}
@@ -210,7 +195,8 @@ public class Battlefield {
 			for(int j = 0; j < 42; j++){
 				Location l = new Location(i, j);
 				if(e3.inRange(l) && e3.hasSights() && !e3.isStunned()) {
-					field[j][i] = color + 196 + "m" + "∙" + reset;
+					field[j][i] = "∙";
+					foreground[j][i] = 196;
 				}
 			}
 		}
@@ -223,7 +209,8 @@ public class Battlefield {
 				for(Tile t: tiles) {
 					if(i == t.getLoc().getY() && j == t.getLoc().getX()) {
 						if(t.getName().equals("Rift")) {
-							field[i][j] = bold + color + 117+ "m"+"🍥" + reset;
+							field[i][j] = "🍥";
+							foreground[i][j] = 117;
 						}
 						if(t.getName().equals("Trench")) {
 							field[i][j] = "*" ;
@@ -232,7 +219,35 @@ public class Battlefield {
 							field[i][j] = "^";
 						}
 						if(t.getName().equals("Firepower")) {
-							field[i][j] = bold + color + 202+ "m"+"," + reset;
+							field[i][j] = ",";
+							foreground[i][j] = 202;
+						}
+					}
+				}
+				for(Orb o: orbLoc) {
+					if(i == o.getLoc().getY() && j == o.getLoc().getX()) {
+						//field[i][j] = bold + "\u001b[38;5;" + 189 + "m" + "🪩" + reset;
+						//field[i][j] = "🪩";
+						background[i][j] = 225;
+						foreground[i][j] = 0;
+						field[i][j] = "O";
+					}
+				}
+				for(Cover w: coverLoc) {
+					if(i == w.getLoc().getY() && j == w.getLoc().getX()) {
+						if(w.getName().equals("Full")) {
+							//field[i][j] = "\u001b[38;5;" + 46 + "m" + "🛡️" + reset;
+							field[i][j] = "F";
+							//field[i][j] = "🛡️";
+							foreground[i][j] = 0;
+							background[i][j] = 226;
+						}
+						if(w.getName().equals("Partial")) {
+							//field[i][j] = bold + "\u001b[38;5;" + 46 + "m" + "🪨" + reset;
+							field[i][j] = "P";
+							//field[i][j] = "🪨";
+							foreground[i][j] = 0;
+							background[i][j] = 195;
 						}
 					}
 				}
@@ -240,75 +255,54 @@ public class Battlefield {
 					if(!a.isAlive()) {
 						field[i][j] = "💀";
 					}else {
-						field[i][j] = bold + color + a.skinC() + "m" + a.getName().substring(0,1) + reset;
+						field[i][j] = bold + a.getName().substring(0,1) + clear;
+						foreground[i][j] = a.skinC();
+						//background[i][j] = 255;
 					}
 				}
 				if(i == two.getY() && j == two.getX()) {
 					if(!b.isAlive()) {
 						field[i][j] = "💀";
 					}else {
-						field[i][j] = bold + color + b.skinC() + "m" + b.getName().substring(0,1) + reset;
+						field[i][j] = bold + b.getName().substring(0,1) + clear;
+						foreground[i][j] = b.skinC();
+						//background[i][j] = 255;
 					}
 				}
 				if(i == three.getY() && j == three.getX()) {
 					if(!c.isAlive()) {
 						field[i][j] = "💀";
 					}else {
-						field[i][j] = bold + color + c.skinC() + "m" + c.getName().substring(0,1) + reset;
+						field[i][j] = bold + c.getName().substring(0,1) + clear;
+						foreground[i][j] = c.skinC();
+						//background[i][j] = 255;
 					}
 				}
 				if(i == four.getY() && j == four.getX()) {
 					if(!d.isAlive()) {
 						field[i][j] = "💀";
 					}else {
-						field[i][j] = bold + color + d.skinC() + "m" + d.getName().substring(0,1) + reset;
+						field[i][j] = bold + d.getName().substring(0,1) + clear;
+						foreground[i][j] = d.skinC();
+						//background[i][j] = 255;
 					}
 				}
 				if(i == five.getY() && j == five.getX()) {
 					if(!e.isAlive()) {
 						field[i][j] = "💀";
 					}else {
-						field[i][j] = bold + color + e.skinC() + "m" + e.getName().substring(0,1) + reset;
+						field[i][j] = bold + e.getName().substring(0,1) + clear;
+						foreground[i][j] = e.skinC();
+						//background[i][j] = 255;
 					}
 				}
 				if(i == six.getY() && j == six.getX()) {
 					if(!f.isAlive()) {
 						field[i][j] = "💀";
 					}else {
-						field[i][j] = bold + color + f.skinC() + "m" + f.getName().substring(0,1) + reset;
-					}
-				}
-				for(Orb o: orbLoc) {
-					if(i == o.getLoc().getY() && j == o.getLoc().getX()) {
-						if(s.inReach(o.getLoc())) {
-							field[i][j] = bold + "\u001b[38;5;" + 46 + "m" + "🪩" + reset;
-						}else {
-							field[i][j] = bold + "\u001b[38;5;" + 189 + "m" + "🪩" + reset;
-						}
-						//field[i][j] = "O";
-					}
-				}
-				for(Cover w: coverLoc) {
-					if(i == w.getLoc().getY() && j == w.getLoc().getX()) {
-						if(s.inReach(w.getLoc())) {
-							if(w.getName().equals("Full")) {
-								field[i][j] = "\u001b[38;5;" + 46 + "m" + "🛡️" + reset;
-								//field[i][j] = "F";
-							}
-							if(w.getName().equals("Partial")) {
-								field[i][j] = bold + "\u001b[38;5;" + 46 + "m" + "🪨" + reset;
-								//field[i][j] = "P";
-							}
-						}else {
-							if(w.getName().equals("Full")) {
-								field[i][j] = "\u001b[38;5;" + 21 + "m" + "🛡️" + reset;
-								//field[i][j] = "F";
-							}
-							if(w.getName().equals("Partial")) {
-								field[i][j] = bold + "\u001b[38;5;" + 243 + "m" + "🪨" + reset;
-								//field[i][j] = "P";
-							}
-						}
+						field[i][j] = bold + f.getName().substring(0,1) + clear;
+						foreground[i][j] = f.skinC();
+						//background[i][j] = 255;
 					}
 				}
 				
@@ -316,16 +310,53 @@ public class Battlefield {
 			}
 			
 		}
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(s.inRange(l)) {
+					//field[j][i] = "∙";
+					//field[j][i]= "\u001B[41m" + " " + reset;
+					background[j][i] = 255;
+				}
+			}
+		}
+		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(s.inReach(l)) {
+					if(!l.eqLoc(s.getLoc())) {
+						background[j][i] = 254;
+					}
+				}
+			}
+		}
 		
 		for(int i = 0; i < 42; i ++) {
 			System.out.print(i + " ");
 			if(i < 10) {
 				System.out.print(" ");
 			}
+			int prev = 0;
+			int prevBack = 999;
 			for(int j = 0; j < 42; j++) {
-				System.out.print(field[i][j] = "\u001B[41m" + "  ");
+				if(foreground[i][j] != prev) {
+					System.out.print(color + foreground[i][j] + "m");
+					prev = foreground[i][j];
+				}
+				if(background[i][j] != prevBack) {
+					if(background[i][j] == 999) {
+						System.out.print(reset);
+						System.out.print(color + foreground[i][j] + "m");
+						prevBack = background[i][j];
+					}else {
+						System.out.print(back + background[i][j] + "m");
+						prevBack = background[i][j];
+					}
+				}
+				System.out.print(field[i][j] + " ");
 			}
-			System.out.println();
+			System.out.println(reset);
 		}
 		/*
 		//Print the x axis.
