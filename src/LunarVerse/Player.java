@@ -1818,7 +1818,7 @@ public class Player {
 				return ("\"Can't keep up huh?\"");
 			}
 			if(randomNum == 2) {
-				return ("\"They're moving at snail's space now!\"");
+				return ("\"They're moving at snail's pace now!\"");
 			}
 			if(randomNum == 3) {
 				return ("\"You'll never get me alive!\"");

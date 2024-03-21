@@ -84,16 +84,16 @@ public class GameSim {
 			String temp7 = input.next();
 			p6 = CharacterSelection(p6, temp7, false, 33, 36);
 		}else {
-			p1 = new Player(1000, 175, true, "Gates", 40, 40, 10, 100, 0);
-			p3 = new Player(1, 325, false, "Midnite", 40, 40, 10, 100, 1);
-			p5 = new Player(1000, 575, false, "Cherry", 40, 40, 6, 500, 1);
+			p1 = new Player(1000, 175, true, "Mayhem", 40, 40, 10, 100, 0);
+			p3 = new Player(0, 325, false, "Midnite", 40, 40, 10, 100, 1);
+			p5 = new Player(0, 575, false, "Cherry", 40, 40, 6, 500, 1);
 			
-			p2 = new Player(10000, 225, false, "Evil", 37, 37, 9, 100, 1);
+			p2 = new Player(10000, 225, false, "Bolo", 37, 37, 9, 100, 1);
 			p4 = new Player(10000, 100, false, "Rocco", 37, 37, 10, 100, 1);
 			p6 = new Player(10000, 200, false, "Kailani", 40, 40, 10, 100, 1);
 
 		}
-		b = new Battlefield("Galactical Laboratories", p1, p3, p5, p2, p4, p6);
+		b = new Battlefield("Merge Castle", p1, p3, p5, p2, p4, p6);
 		Party party1 = new Party(true, p1, p3, p5);
 		Party party2 = new Party(false, p2, p4, p6);
 		System.out.println();
@@ -5848,7 +5848,7 @@ public class GameSim {
 			  p.setC(129);
 		    break;
 		  case "Kithara":
-			  p = new Player(3950, 225, start, name, x, y, 10, 10, 6);
+			  p = new Player(3850, 225, start, name, x, y, 10, 10, 7);
 			  name = bold + color + 93 + "m" + "K" + color + 92 + "m" + "i"  + color + 99 + "m" + "t" + color + 98 + "m" + "h" + color + 105 + "m" + "a" + color + 104 + "m" + "r" + color + 103 + "m" + "a" + reset;
 			  p.skin(name);
 			  p.setC(93);
@@ -5908,7 +5908,7 @@ public class GameSim {
 			  p.setC(214);
 		    break;
 		  case "Gash":
-			  p = new Player(3950, 175, start, name, x, y, 10, 10, 5);
+			  p = new Player(3950, 200, start, name, x, y, 10, 10, 5);
 			  name = bold + color + 130 + "m" + "G" + color + 131 + "m" + "a" + color + 166 + "m" + "s" + color + 167 + "m" + "h" + reset;
 			  p.skin(name);
 			  p.setC(130);
@@ -5956,7 +5956,7 @@ public class GameSim {
 			  p.setC(33);
 		    break;
 		  case "Radar":
-			  p = new Player(2800, 200, start, name, x, y, 10, 10, 4);
+			  p = new Player(2800, 200, start, name, x, y, 10, 10, 3);
 			  name = bold + color + 147 + "m" + "R" + color + 146 + "m" + "a"  + color +145 + "m" + "d" + color + 144 + "m" + "a" + color + 143 + "m" + "r" + reset;
 			  p.skin(name);
 			  p.setC(147);
@@ -5992,7 +5992,7 @@ public class GameSim {
 			  p.setC(160);
 		    break;
 		  case "Chief":
-			  p = new Player(4400, 200, start, name, x, y, 8, 8, 6);
+			  p = new Player(4400, 175, start, name, x, y, 8, 8, 6);
 			  name = bold + color + 69 + "m" + "C" + color + 68 + "m" + "h"  + color + 63 + "m" + "i" + color + 62 + "m" + "e" + color + 61 + "m" + "f" + reset;
 			  p.skin(name);
 			  p.setC(69);
@@ -6177,6 +6177,7 @@ public class GameSim {
 		}
 		String s = "";
 		boolean move = true;
+		boolean hasMoved = false;
 		ArrayList<Effect> e1 = new ArrayList<Effect>();
 		Effect ZeroIgnite = new Effect("ignite", 0, 1);
 		Effect ZeroDaze = new Effect("daze", 0, 1);
@@ -6200,6 +6201,7 @@ public class GameSim {
 						  break;
 					  }
 					  p.move(p.getLoc().getX() - 1, p.getLoc().getY());
+					  hasMoved = true;
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
 				    break;
@@ -6210,6 +6212,7 @@ public class GameSim {
 						  break;
 					  }
 					  p.move(p.getLoc().getX() + 1, p.getLoc().getY());
+					  hasMoved = true;
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
 				    break;
@@ -6220,6 +6223,7 @@ public class GameSim {
 						  break;
 					  }
 					  p.move(p.getLoc().getX(), p.getLoc().getY() - 1);
+					  hasMoved = true;
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
 				    break;
@@ -6230,6 +6234,7 @@ public class GameSim {
 						  break;
 					  }
 					  p.move(p.getLoc().getX(), p.getLoc().getY() + 1);
+					  hasMoved = true;
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
 				    break;
@@ -6246,31 +6251,34 @@ public class GameSim {
 				    break;
 				  case "c":
 					  System.out.println("Movement completed.");
+					  hasMoved = false;
 					  move = false;
 				    break;
 				}
-				if(a.hasSights() && a.inRange(p) && !a.isStunned()) {
-					p.takeDamage(a.getDamage() * 0.9);
-					a.useSight();
-					if(a.getName().equals("Zero") && a.inRange(p, 4) && rand <= 0.1) {
-						p.addEffects(e1);
-						p.applyEffects();
+				if(hasMoved) {
+					if(a.hasSights() && a.inRange(p) && !a.isStunned()) {
+						p.takeDamage(a.getDamage() * 0.9);
+						a.useSight();
+						if(a.getName().equals("Zero") && a.inRange(p, 4) && rand <= 0.1) {
+							p.addEffects(e1);
+							p.applyEffects();
+						}
 					}
-				}
-				if(z.hasSights() && z.inRange(p) && !z.isStunned()) {
-					p.takeDamage(z.getDamage() * 0.9);
-					z.useSight();
-					if(z.getName().equals("Zero") && z.inRange(p, 4) && rand <= 0.1) {
-						p.addEffects(e1);
-						p.applyEffects();
+					if(z.hasSights() && z.inRange(p) && !z.isStunned()) {
+						p.takeDamage(z.getDamage() * 0.9);
+						z.useSight();
+						if(z.getName().equals("Zero") && z.inRange(p, 4) && rand <= 0.1) {
+							p.addEffects(e1);
+							p.applyEffects();
+						}
 					}
-				}
-				if(c.hasSights() && c.inRange(p) && !c.isStunned()) {
-					p.takeDamage(c.getDamage() * 0.9);
-					c.useSight();
-					if(c.getName().equals("Zero") && c.inRange(p, 4) && rand <= 0.1) {
-						p.addEffects(e1);
-						p.applyEffects();
+					if(c.hasSights() && c.inRange(p) && !c.isStunned()) {
+						p.takeDamage(c.getDamage() * 0.9);
+						c.useSight();
+						if(c.getName().equals("Zero") && c.inRange(p, 4) && rand <= 0.1) {
+							p.addEffects(e1);
+							p.applyEffects();
+						}
 					}
 				}
 				for(int i = 0; i < orbs.size(); i++) {
@@ -7113,67 +7121,67 @@ public class GameSim {
 			if(randomY == 1) {
 				if(!a.isAlive()) {
 					if(b.isAlive()) {
-						b.takeDamage(b.getMaxHP() * 0.5);
+						b.takeDamage(b.getMaxHP() * 0.35);
 					}else {
-						c.takeDamage(c.getMaxHP() * 0.5);
+						c.takeDamage(c.getMaxHP() * 0.35);
 					}
 				}else {
-					a.takeDamage(a.getMaxHP() * 0.5);
+					a.takeDamage(a.getMaxHP() * 0.35);
 				}
 			}
 			if(randomY == 2) {
 				if(!b.isAlive()) {
 					if(c.isAlive()) {
-						c.takeDamage(c.getMaxHP() * 0.5);
+						c.takeDamage(c.getMaxHP() * 0.35);
 					}else {
-						a.takeDamage(a.getMaxHP() * 0.5);
+						a.takeDamage(a.getMaxHP() * 0.35);
 					}
 				}else {
-					b.takeDamage(b.getMaxHP() * 0.5);
+					b.takeDamage(b.getMaxHP() * 0.35);
 				}
 			}
 			if(randomY == 3) {
 				if(!c.isAlive()) {
 					if(a.isAlive()) {
-						a.takeDamage(a.getMaxHP() * 0.5);
+						a.takeDamage(a.getMaxHP() * 0.35);
 					}else {
-						b.takeDamage(b.getMaxHP() * 0.5);
+						b.takeDamage(b.getMaxHP() * 0.35);
 					}
 				}else {
-					c.takeDamage(c.getMaxHP() * 0.5);
+					c.takeDamage(c.getMaxHP() * 0.35);
 				}
 			}
 		}
 		if(randomX == 2) {
 			if(randomY == 1) {
 				if(!a.isAlive() && !b.isAlive()) {
-					c.takeDamage(c.getMaxHP() * 0.5);
+					c.takeDamage(c.getMaxHP() * 0.35);
 				}else {
-					a.takeDamage(a.getMaxHP() * 0.5);
-					b.takeDamage(b.getMaxHP() * 0.5);
+					a.takeDamage(a.getMaxHP() * 0.35);
+					b.takeDamage(b.getMaxHP() * 0.35);
 				}
 			}
 			if(randomY == 2) {
 				if(!b.isAlive() && !c.isAlive()) {
-					a.takeDamage(a.getMaxHP() * 0.5);
+					a.takeDamage(a.getMaxHP() * 0.35);
 				}else {
-					b.takeDamage(b.getMaxHP() * 0.5);
-					c.takeDamage(c.getMaxHP() * 0.5);
+					b.takeDamage(b.getMaxHP() * 0.35);
+					c.takeDamage(c.getMaxHP() * 0.35);
 				}
 			}
 			if(randomY == 3) {
 				if(!a.isAlive() && !c.isAlive()) {
-					b.takeDamage(b.getMaxHP() * 0.5);
+					b.takeDamage(b.getMaxHP() * 0.35);
 				}else {
-					a.takeDamage(a.getMaxHP() * 0.5);
-					c.takeDamage(c.getMaxHP() * 0.5);
+					a.takeDamage(a.getMaxHP() * 0.35);
+					c.takeDamage(c.getMaxHP() * 0.35);
 				}
 			}
 		}
 		if(randomX == 3) {
-			a.takeDamage(a.getMaxHP() * 0.5);
-			b.takeDamage(b.getMaxHP() * 0.5);
-			c.takeDamage(c.getMaxHP() * 0.5);
+			a.takeDamage(a.getMaxHP() * 0.35);
+			b.takeDamage(b.getMaxHP() * 0.35);
+			c.takeDamage(c.getMaxHP() * 0.35);
 		}
 		p.resetUlt();
 		System.out.println("\"You'll truely want to hope I miss this time!\"");
@@ -9000,7 +9008,7 @@ public class GameSim {
 		a.applyEffects();
 		b.addEffects(e3);
 		b.applyEffects();
-		p.setCooldown(4);
+		p.setCooldown(5);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -9749,6 +9757,11 @@ public class GameSim {
 			b.addEffects(e);
 			b.applyEffects();	
 		}
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect GashProtect = new Effect("protect", 0.35, 3);
+		e.add(GashProtect);
+		p.addEffects(e);
+		p.applyEffects();
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -9763,25 +9776,25 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			if(a.getHealth() < (a.getMaxHP() * 0.5)) {
-				a.takeDamage(1200);
+				a.takeDamage(1500);
 			}else {
-				a.takeDamage(600);
+				a.takeDamage(750);
 			}
 			p.resetUlt();
 		}
 		if(targetResponse.equals("2")) {
 			if(b.getHealth() < (b.getMaxHP() * 0.5)) {
-				b.takeDamage(1200);
+				b.takeDamage(1500);
 			}else {
-				b.takeDamage(600);
+				b.takeDamage(750);
 			}
 			p.resetUlt();
 		}
 		if(targetResponse.equals("3")) {
 			if(c.getHealth() < (c.getMaxHP() * 0.5)) {
-				c.takeDamage(1200);
+				c.takeDamage(1500);
 			}else {
-				c.takeDamage(600);
+				c.takeDamage(750);
 			}
 			p.resetUlt();
 		}
@@ -10171,9 +10184,9 @@ public class GameSim {
 	}
 	
 	public static void ChloeAbility(Player p, Player a, Player b) {
-		p.heal(0.1);
-		a.heal(0.1);
-		b.heal(0.1);
+		p.heal(0.2);
+		a.heal(0.2);
+		b.heal(0.2);
 		ArrayList<Effect> e1 = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
@@ -10207,9 +10220,9 @@ public class GameSim {
 		Effect ChloeProtect = new Effect("protect", 0.6, 3);
 		Effect ChloeProtect2 = new Effect("protect", 0.6, 3);
 		Effect ChloeProtect3 = new Effect("protect", 0.6, 3);
-		Effect ChloePower = new Effect("power", 0.2, 2);
-		Effect ChloePower2 = new Effect("power", 0.2, 2);
-		Effect ChloePower3 = new Effect("power", 0.2, 2);
+		Effect ChloePower = new Effect("power", 0.4, 2);
+		Effect ChloePower2 = new Effect("power", 0.4, 2);
+		Effect ChloePower3 = new Effect("power", 0.4, 2);
 		e.add(ChloeProtect);
 		e.add(ChloePower2);
 		e2.add(ChloeProtect2);
@@ -10375,6 +10388,18 @@ public class GameSim {
 	public static void RadarUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
 		Scanner input = new Scanner(System.in);
 		int totalOrbs = 0;
+		if(!d.isAlive() && !e.isAlive()) {
+			ArrayList<Effect> e1 = new ArrayList<Effect>();
+			Effect HopperProtect = new Effect("power", 0.6, 1);
+			e1.add(HopperProtect);
+			p.addEffects(e1);
+			p.applyEffects();
+			p.increaseMovement(10);
+			System.out.println("\"All me? It's showtime!\"");
+			System.out.println();
+			p.resetUlt();
+			return;
+		}
 		if(a.getOrbCount() > 0) {
 			a.removeOrb();
 			totalOrbs++;
@@ -10778,11 +10803,14 @@ public class GameSim {
 			}
 		}
 		a.knockbacked();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect OrionDaze = new Effect("daze", 0, 1);
-		e.add(OrionDaze);
-		a.addEffects(e);
-		a.applyEffects();
+		double rand = Math.random();
+		if(rand <= 0.025) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect OrionDaze = new Effect("daze", 0, 1);
+			e.add(OrionDaze);
+			a.addEffects(e);
+			a.applyEffects();
+		}
 		System.out.println();
 	}
 	
@@ -10844,11 +10872,11 @@ public class GameSim {
 		if(p.getHealth() < (p.getMaxHP() * 0.25)) {
 			p.heal(0.5);
 		}
-		if(a.getHealth() < (a.getMaxHP() * 0.25)) {
-			a.heal(0.5);
+		if(d.getHealth() < (d.getMaxHP() * 0.25)) {
+			d.heal(0.5);
 		}
-		if(a.getHealth() < (a.getMaxHP() * 0.25)) {
-			a.heal(0.5);
+		if(e.getHealth() < (e.getMaxHP() * 0.25)) {
+			e.heal(0.5);
 		}
 		p.resetUlt();
 		System.out.println("\"Hammer down!\"");
