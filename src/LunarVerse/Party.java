@@ -57,6 +57,30 @@ public class Party {
 	}
 	
 	public void setTurn() {
+		int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+		int randomNum2 = (int)(Math.random() * (2 - 1 + 1)) + 1;
+		if(randomNum == 1) {
+			if(randomNum2 == 1 && !oneLeft()) {
+				roster[0].teamChat(this);
+			}else {
+				roster[0].chat();
+			}
+			
+		}
+		if(randomNum == 2) {
+			if(randomNum2 == 1 && !oneLeft()) {
+				roster[1].teamChat(this);
+			}else {
+				roster[1].chat();
+			}
+		}
+		if(randomNum == 3) {
+			if(randomNum2 == 1 && !oneLeft()) {
+				roster[2].teamChat(this);
+			}else {
+				roster[2].chat();
+			}
+		}
 		try {
 			String audio = "passturnedit.wav";
 			Music victoryPlayer = new Music(audio, false); 
@@ -70,7 +94,7 @@ public class Party {
 				roster[i].setSights(0);
 			}
 			roster[i].resetName();
-			if(roster[i].getName().equals("Lunar") && roster[i].ultActive()) {
+			if(roster[i].getName().equals("Lunar") && roster[i].lunarUlt()) {
 				roster[i].ultDown();
 			}
 			if(roster[i].getName().equals("Jesse") && roster[i].ultActive()) {
@@ -90,6 +114,9 @@ public class Party {
 		for(int i = 0; i < 3; i++) {
 			if(roster[i].isIgnite()) {
 				roster[i].takeDamage(175);
+				if(teamDown()) {
+					GameSim.game = false;
+				}
 			}
 		}
 		if((!roster[0].isAlive() || roster[0].isStunned()) && (roster[1].isAlive() && !roster[1].isStunned())) {
@@ -158,6 +185,15 @@ public class Party {
 			}
 		}
 		return true;
+	}
+	
+	public ArrayList<Player> partyNames(Player used){
+		ArrayList<Player> names = new ArrayList<Player>();
+		names.add(roster[0]);
+		names.add(roster[1]);
+		names.add(roster[2]);
+		names.remove(used);
+		return names;
 	}
 	
 }

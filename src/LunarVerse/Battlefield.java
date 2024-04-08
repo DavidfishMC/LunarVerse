@@ -143,6 +143,47 @@ public class Battlefield {
 				tiles.add(t);
 			}
 		}
+		
+		if(name.equals("Nexus Village")) {
+			Tile t = new Tile("Tower", new Location(20,14));
+			Tile t2 = new Tile("Tower", new Location(21,14));
+			Tile t3 = new Tile("Tower", new Location(20,27));
+			Tile t4 = new Tile("Tower", new Location(21,27));
+			tiles.add(t);
+			tiles.add(t2);
+			tiles.add(t3);
+			tiles.add(t4);
+		}
+		
+		if(name.equals("Novafuel Industries")) {
+			Tile t = new Tile("Bounce", new Location(17,17));
+			Tile t2 = new Tile("Bounce", new Location(24,17));
+			Tile t3 = new Tile("Bounce", new Location(17,24));
+			Tile t4 = new Tile("Bounce", new Location(24,24));
+			tiles.add(t);
+			tiles.add(t2);
+			tiles.add(t3);
+			tiles.add(t4);
+		}
+		
+		if(name.equals("Timed Ruins")) {
+			for(int i = 16; i < 26; i++) {
+				Tile t = new Tile("Time", new Location(i, 16));
+				tiles.add(t);
+			}
+			for(int i = 16; i < 26; i++) {
+				Tile t = new Tile("Time", new Location(i, 25));
+				tiles.add(t);
+			}
+			for(int i = 16; i < 26; i++) {
+				Tile t = new Tile("Time", new Location(16, i));
+				tiles.add(t);
+			}
+			for(int i = 16; i < 26; i++) {
+				Tile t = new Tile("Time", new Location(25, i));
+				tiles.add(t);
+			}
+		}
 	}
 	
 	public void setCursor(Location l) {
@@ -202,14 +243,42 @@ public class Battlefield {
 		}
 		if(cursor != null && cursor.getX() < 42 && cursor.getY() < 42) {
 			field[cursor.getY()][cursor.getX()] = "✦";
+			//for(int i = 0; i < 42; i++) {
+			//	for(int j = 0; j < 42; j++){
+			//		Location l = new Location(i, j);
+			//		if(cursor.inRange(l, s.getRange())) {
+			//			background[j][i] = 255;
+			//		}
+			//	}
+			//}
+		}
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(s.inRange(l)) {
+					//field[j][i] = "∙";
+					//field[j][i]= "\u001B[41m" + " " + reset;
+					background[j][i] = 255;
+				}
+			}
 		}
 		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(s.inReach(l)) {
+					if(!l.eqLoc(s.getLoc())) {
+						background[j][i] = 254;
+					}
+				}
+			}
+		}
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
 				for(Tile t: tiles) {
 					if(i == t.getLoc().getY() && j == t.getLoc().getX()) {
 						if(t.getName().equals("Rift")) {
-							field[i][j] = "🍥";
+							field[i][j] = "@";
 							foreground[i][j] = 117;
 						}
 						if(t.getName().equals("Trench")) {
@@ -221,6 +290,18 @@ public class Battlefield {
 						if(t.getName().equals("Firepower")) {
 							field[i][j] = ",";
 							foreground[i][j] = 202;
+						}
+						if(t.getName().equals("Tower")) {
+							field[i][j] = "#";
+							foreground[i][j] = 40;
+						}
+						if(t.getName().equals("Bounce")) {
+							field[i][j] = "%";
+							foreground[i][j] = 98;
+						}
+						if(t.getName().equals("Time")) {
+							field[i][j] = "$";
+							foreground[i][j] = 30;
 						}
 					}
 				}
@@ -310,27 +391,7 @@ public class Battlefield {
 			}
 			
 		}
-		for(int i = 0; i < 42; i++) {
-			for(int j = 0; j < 42; j++){
-				Location l = new Location(i, j);
-				if(s.inRange(l)) {
-					//field[j][i] = "∙";
-					//field[j][i]= "\u001B[41m" + " " + reset;
-					background[j][i] = 255;
-				}
-			}
-		}
 		
-		for(int i = 0; i < 42; i++) {
-			for(int j = 0; j < 42; j++){
-				Location l = new Location(i, j);
-				if(s.inReach(l)) {
-					if(!l.eqLoc(s.getLoc())) {
-						background[j][i] = 254;
-					}
-				}
-			}
-		}
 		
 		for(int i = 0; i < 42; i ++) {
 			System.out.print(i + " ");
@@ -429,6 +490,33 @@ public class Battlefield {
 		return false;
 	}
 	
+	public boolean hasTower(int x, int y) {
+		for(Tile t: tiles) {
+			if(t.getLoc().eqLoc(new Location(x,y)) && t.getName().equals("Tower")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean hasTime(int x, int y) {
+		for(Tile t: tiles) {
+			if(t.getLoc().eqLoc(new Location(x,y)) && t.getName().equals("Time")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean hasBounce(int x, int y) {
+		for(Tile t: tiles) {
+			if(t.getLoc().eqLoc(new Location(x,y)) && t.getName().equals("Bounce")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void checkTiles() {
 		for(Player p: players) {
 			for(Tile t: tiles) {
@@ -446,7 +534,7 @@ public class Battlefield {
 					}
 					if(t.getName().equals("Trench")) {
 						p.takeDamage(150);
-						p.knockbacked();
+						p.knockbacked(p.getLoc());
 						System.out.println();
 					}
 					if(t.getName().equals("Firepower")) {

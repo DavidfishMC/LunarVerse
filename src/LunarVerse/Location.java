@@ -40,7 +40,19 @@ public class Location {
 	
 	public double distanceTo(Location l) {
 		return Point2D.distance(x, y, l.getX(), l.getY());
-		
+	}
+	
+	public int distance(Location l) {
+		return Math.abs(x - l.getX()) + Math.abs(y - l.getY());
+	}
+	
+	public boolean inRange(Location l, double r) {
+		double d = distanceTo(l);
+		if(r >= d) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 	
 	public boolean eqLoc(Location l) {

@@ -28,15 +28,21 @@ public class Player {
 	String ogName;
 	String nameSkin;
 	String cover = "None";
+	String charm = "";
 	int turndead = 0;
 	int weaponuse = 0;
 	int abilityuse = 0;
 	int ultuse = 0;
 	int dashed = 0;
 	int jumped = 0;
+	int totalMovement = 0;
+	double damageOutput = 0;
+	double healingOutput = 0;
 	double healingIn = 0;
 	double damageIn = 0;
 	boolean turn;
+	boolean lunarUlt = false;
+	boolean tower = false;
 	boolean reduce = false;
 	boolean alive = true;
 	boolean weary = false;
@@ -90,12 +96,56 @@ public class Player {
 		ogName = name;
 		ogRange = r;
 		nameSkin = name;
+		if(GameSim.mode.equals("Comet")) {
+			this.damage = damage + 100;
+			ogDamage = damage + 100;
+			range = r + 2;
+			movement = m + 5;
+			ogMovement = m + 5;
+			ultCharge = u - 2;
+			ogRange = r + 2;
+		}
 	}
 	
 	public void setImage(String name) {
 		try {
 			image = new Example(name);
 		} catch (IOException e1) {
+		}
+	}
+	
+	public void setCharm(String s) {
+		charm = s;
+		if(charm.equals("Armadillo")) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect DimentioProtect = new Effect("protect", 0.05, 100);
+			e.add(DimentioProtect);
+			addEffects(e);
+			applyEffects();
+		}
+		if(charm.equals("Axolotl")) {
+			maxHealth = maxHealth + 300;
+			health = health + 300;
+		}
+		if(charm.equals("Bunny")) {
+			jumps = 2;
+		}
+		if(charm.equals("Cheetah")) {
+			movement = movement + 3;
+		}
+		if(charm.equals("Dragonfly")) {
+			ultCharge--;
+		}
+		if(charm.equals("Falcon")) {
+			range = range + 2;
+			ogRange = ogRange + 2;
+		}
+		if(charm.equals("Rhino")) {
+			dashes = 2;
+		}
+		if(charm.equals("Tiger")) {
+			damage = damage + 75;
+			ogDamage = ogDamage + 75;
 		}
 	}
 	
@@ -125,6 +175,9 @@ public class Player {
 	
 	public void resetJumps() {
 		jumps = 1;
+		if(charm.equals("Bunny")) {
+			jumps++;
+		}
 	}
 	
 	public void addJumps(int i) {
@@ -154,6 +207,16 @@ public class Player {
 	
 	public void resetDashes() {
 		dashes = 1;
+		if(charm.equals("Rhino")) {
+			dashes++;
+		}
+	}
+	
+	public void reduceMovement(int i) {
+		movement = movement - i;
+		if(movement < 0) {
+			movement = 0;
+		}
 	}
 	
 	public void useDash() {
@@ -239,14 +302,29 @@ public class Player {
 		}
 	}
 	
+	public void setLunarUlt() {
+		lunarUlt = true;
+		if(name.equals("Lunar")) {
+			ultCharge = 2;
+		}else {
+			ultuse++;
+		}
+	}
+	
+	public boolean lunarUlt() {
+		return lunarUlt;
+	}
+	
 	public boolean ultActive() {
 		return ultActive;
 	}
 	
 	public void ultDown() {
 		ultActive = false;
+		lunarUlt = false;
 		if(name.equals("Lunar")) {
 			ultCharge = 5;
+			orbCount = 0;
 		}
 	}
 	
@@ -299,6 +377,9 @@ public class Player {
 		if(weary) {
 			movement = movement - 5;
 		}
+		if(charm.equals("Cheetah")) {
+			movement = movement + 3;
+		}
 	}
 	
 	public int getOrbCount() {
@@ -350,16 +431,36 @@ public class Player {
 		}
 	}
 	
-	public void knockbacked() {
-		if(!isAlive()) {
+	public void knockbacked(Location l) {
+ 		if(!isAlive()) {
 			return;
 		}
 		if(fortify) {
 			return;
 		}
-		int randomX = (int)(Math.random() * (5 - (-5) + 1)) + -5;
-		int randomY = (int)(Math.random() * (5 - (-5) + 1)) + -5;
-		curLoc.adjust(randomX, randomY);
+		int h = 1;
+		int v = 1;
+		int randomX = (int)(Math.random() * (4 - 1 + 1)) + 1;
+		int randomY = (int)(Math.random() * (4 - 1 + 1)) + 1;
+		if(l.getX() > curLoc.getX()) {
+			h = -1;
+		}
+		if(l.getY() > curLoc.getY()) {
+			v = -1;
+		}
+		if(l.getX() == curLoc.getX()) {
+			h = 0;
+		}
+		if(l.getY() == curLoc.getY()) {
+			v = 0;
+		}
+		randomX = randomX * h;
+		randomY = randomY * v;
+		if(l.eqLoc(curLoc)) {
+			this.randomKnockback();
+		}else {
+			curLoc.adjust(randomX, randomY);
+		}
 		if(curLoc.getX() > 41) {
 			curLoc.setX(41);
 			takeDamage(200);
@@ -378,17 +479,49 @@ public class Player {
 		}
 		if(GameSim.b.hasTrench(curLoc.getX(), curLoc.getY())) {
 			takeDamage(150);
-			this.knockbacked();
+			this.randomKnockback();
 		}
-		
 		resetCover();
 		System.out.println(nameSkin + " has been knocked back.");
+	}
+	
+	public void randomKnockback() {
+		int randomX = (int)(Math.random() * (5 - (-5) + 1)) + (-5);
+		int randomY = (int)(Math.random() * (5 - (-5) + 1)) + (-5);
+		curLoc.adjust(randomX, randomY);
+		if(GameSim.b.hasTrench(curLoc.getX(), curLoc.getY())) {
+			takeDamage(150);
+			this.randomKnockback();
+		}
+	}
+	
+	public void setTower() {
+		if(!tower) {
+			tower = true;
+			range = range + 3;
+		}
+	}
+	
+	public void removeTower() {
+		if(tower) {
+			tower = false;
+			range = range - 3;
+		}
+	}
+	
+	public boolean isFortified() {
+		return fortify;
 	}
 	
 	public void move(int x, int y) {
 		curLoc.set(x, y);
 		movement = movement - 1; 
+		totalMovement++;
 		System.out.println();
+	}
+	
+	public void increaseTotalMovement(int i) {
+		totalMovement = totalMovement + i;
 	}
 	
 	public void getOrb() {
@@ -456,6 +589,9 @@ public class Player {
 			alive = false;
 			System.out.println(nameSkin + " is downed!");
 			turndead = GameSim.turns2;
+			if(name.equals("Alex") && ultActive) {
+				reviveAlex();
+			}
 		}
 	}
 	
@@ -494,11 +630,14 @@ public class Player {
 		}
 		if(name.equals("Sammi") && range > 100) {
 			p.takeDamage(damage + randomNum + c);
+			addDamage(damage + randomNum + c);
 			if(p.getName().equals("Thunder") && p.isCountering()) {
 				takeDamage(p.getDamage() * 1.25);
+				p.addDamage(p.getDamage() * 1.25);
 			}
 			if(p.isReflecting()) {
 				takeDamage((damage + randomNum + c) * 0.5);
+				p.addDamage((damage + randomNum + c) * 0.5);
 				totalDamage = totalDamage + (damage + randomNum + c) * 0.5;
 				if(mend) {
 					for(int i = 0; i < effects.size(); i++) {
@@ -530,6 +669,7 @@ public class Player {
 		if(p.getCover().equals("Partial")) {
 			if(name.equals("Thunder")) {
 				p.takeDamage((damage * 0.5) + randomNum + c);
+				addDamage((damage * 0.5) + randomNum + c);
 				if(mend) {
 					for(int i = 0; i < effects.size(); i++) {
 						if(effects.get(i).getName().equals("mend")) {
@@ -540,6 +680,7 @@ public class Player {
 				attacked = true;
 				if(p.isReflecting()) {
 					takeDamage((damage + randomNum + c) * 0.5);
+					p.addDamage((damage + randomNum + c) * 0.5);
 					totalDamage = totalDamage + (damage + randomNum + c) * 0.5;
 					if(mend) {
 						for(int i = 0; i < effects.size(); i++) {
@@ -551,12 +692,13 @@ public class Player {
 				}
 				if(p.getName().equals("Thunder") && p.isCountering()) {
 					takeDamage(p.getDamage() * 1.25);
+					p.addDamage(p.getDamage() * 1.25);
 				}
 				weaponuse++;
 				return;
 			}else {
 				double rand = Math.random();
-				if(name.equals("Archer")) {
+				if(name.equals("Archer") || tower) {
 					rand = 1;
 				}
 				if(rand <= 0.5) {
@@ -569,8 +711,10 @@ public class Player {
 		}
 		if(p.isReflecting()) {
 			takeDamage((damage + randomNum + c) * 0.5);
+			p.addDamage((damage + randomNum + c) * 0.5);
 		}
 		p.takeDamage(damage + randomNum + c);
+		addDamage(damage + randomNum + c);
 		totalDamage = totalDamage + (damage + randomNum + c);
 		attacked = true;
 		if(mend) {
@@ -582,6 +726,7 @@ public class Player {
 		}
 		if(p.getName().equals("Thunder") && p.isCountering()) {
 			takeDamage(p.getDamage() * 1.25);
+			p.addDamage(p.getDamage() * 1.25);
 		}
 		if(c > 0) {
 			System.out.println("Critical shot!");
@@ -959,6 +1104,19 @@ public class Player {
 		}
 	}
 	
+	public void reviveAlex() {
+		health = maxHealth * 0.75;
+		ultActive = false;
+		resetUlt();
+		System.out.println("\"Ha, missed me?\"");
+		System.out.println();
+		turn = true;
+		for(int i = 0; i < effects.size(); i++) {
+			effects.get(i).setTurns(1);
+		}
+		reduceEffects();
+	}
+	
 	public boolean revive() {
 		if(isAlive()) {
 			System.out.println("Target is not downed!");
@@ -1080,7 +1238,7 @@ public class Player {
 			
 		}else {
 			double absorb2 = absorb;
-			if(protect <= 0) {
+			if(absorb <= 0) {
 				absorb2 = 0.001;
 			}
 			double e = (maxHealth * d) * absorb2;
@@ -1095,7 +1253,16 @@ public class Player {
 	
 	public void increaseHP(double d) {
 		if(isAlive()) {
-			health = health + d;
+			double absorb2 = absorb;
+			if(absorb <= 0) {
+				absorb2 = 0.001;
+			}
+			double e = d * absorb2;
+			health = health + e;
+			System.out.println(nameSkin + " has healed for " + e);
+			if(health > maxHealth) {
+				health = maxHealth;
+			}
 		}
 	}
 	
@@ -1123,6 +1290,15 @@ public class Player {
 			i--;
 		}
 		abilityuse++;
+		if(GameSim.mode.equals("Comet")) {
+			i--;
+		}
+		if(charm.equals("Starfish")) {
+			i--;
+		}
+		if(i < 0) {
+			i = 0;
+		}
 		cooldown = i;
 	}
 	
@@ -1150,6 +1326,30 @@ public class Player {
 		}
 	}
 	
+	public void addDamage(double d) {
+		damageOutput = damageOutput + d;
+	}
+	
+	public void addHealing(double d) {
+		healingOutput = healingOutput + d;
+	}
+	
+	public double totalDamage() {
+		return damageOutput;
+	}
+	
+	public double totalHealing() {
+		return healingOutput;
+	}
+	
+	public int totalMovement() {
+		return totalMovement;
+	}
+	
+	public double totalTank() {
+		return damageIn;
+	}
+	
 	public String toString() {
 		String weapon = "Not Used " + "\u001b[38;5;" + 197 + "m" +"❎"+reset;
 		String ability = "Ready " +"\u001b[38;5;" + 10 + "m" +"✅"+reset;
@@ -1163,6 +1363,10 @@ public class Player {
 		String jump = ", Jumps " + bold + "\u001b[38;5;" + 241 + "m" +"🦿"+reset + ": ";
 		String loc = "Location " + "\u001b[38;5;" + 130 + "m" +"🗺️"+reset + ": ";
 		String weaponShow = "Weapon";
+		String charms = "";
+		if(GameSim.mode.equals("Charm")) {
+			charms = ". Charm: " + charm;
+		}
 		if(attacked) {
 			weapon = "Used " + "\u001b[38;5;" + 10 + "m" +"✅"+reset;
 		}
@@ -1254,7 +1458,7 @@ public class Player {
 		healthshow = healthshow + ": ";
 		weaponShow = weaponShow + ": ";
 		
-		return (healthshow + health + "/" + maxHealth + damageshow + damage +  covershow + cover + "\n" +weaponShow + weapon + ". Ability: " + ability + ultimate + orbCount + "/" + ultCharge + "\n" + loc + curLoc + moveshow + move + dash + dashes + jump + jumps);
+		return (healthshow + health + "/" + maxHealth + damageshow + damage +  covershow + cover + charms + "\n" +weaponShow + weapon + ". Ability: " + ability + ultimate + orbCount + "/" + ultCharge + "\n" + loc + curLoc + moveshow + move + dash + dashes + jump + jumps);
 	}
 	
 	public String showHP() {
@@ -1289,15 +1493,6 @@ public class Player {
 	}
 	
 	public String voiceline() {
-		/*
-		try {
-			String audio = "hello.wav";
-			Music audioPlayer = new Music(audio); 
-			audioPlayer.play();
-		}catch (Exception e) {
-			System.out.println(e);
-		}
-		*/
 		int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
 		if(name.equals("Lunar")) {
 			if(randomNum == 1) {
@@ -1893,6 +2088,854 @@ public class Player {
 		return "";
 	}
 	
+	public void chat() {
+		System.out.println();
+		if(name.equals("Lunar")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Alright, let's do this guys!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I've seen all of them fight before, we're better then them.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Let's not make this too long, I want to make a new creation later.\"");
+			    break;
+			}
+		}
+		if(name.equals("Aidan")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Let's get this victory royale!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"They are no match for my building skills!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Once we kill them all, then we can emote.\"");
+			    break;
+			}
+		}
+		if(name.equals("Alex")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"I'll reel them in for us.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I can't wait to show off my totem!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Another day of fighting, nothing new for me.\"");
+			    break;
+			}
+		}
+		if(name.equals("Clara")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Time to get this party started!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Don't worry if you can't keep up. I'll be moving fast.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"I'm gonna run circles around them.\"");
+			    break;
+			}
+		}
+		if(name.equals("Zero")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Can we make this quick?\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"They'll regret going against a virus.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"If you need a cheat, just let me know.\"");
+			    break;
+			}
+		}
+		if(name.equals("Kithara")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"They will regret challenging the Dead Lilac.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I will make them feel the Wonder Power.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"I'm known as bulletproof for a reason.\"");
+			    break;
+			}
+		}
+		if(name.equals("Hopper")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Nobody goes up against the crusaders and survives.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"We're all warriors now. I will lead the charge.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"No hestiation, charge forwards!\"");
+			    break;
+			}
+		}
+		if(name.equals("Thunder")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"I will talk to them, with my fists!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Here comes the Thunder!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"We beat them, we go home. All in a day's work.\"");
+			    break;
+			}
+		}
+		if(name.equals("Solar")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Here to shine the light!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Kick their butts? You got it!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"They are going to leave in flames.\"");
+			    break;
+			}
+		}
+		if(name.equals("Kailani")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"I'll shred through these guys, just watch me.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"They don't know that I've got my eyes on them already.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Don't mind the waves that come in.\"");
+			    break;
+			}
+		}
+		if(name.equals("Dimentio")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"No worries, professional admin here.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"The metaverse was so much better under my rule.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"If you have any questions on anything let me know. Otherwise leave me alone.\"");
+			    break;
+			}
+		}
+		if(name.equals("Tom")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"With Lunar's bots here, we will be safe.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"They will not get past us!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"I will not let them take it away from us.\"");
+			    break;
+			}
+		}
+		if(name.equals("Finley")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"I will dig their grave, just watch.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Being a jock is not easy that's for sure.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Can't wait to flex my skateboard tricks on them.\"");
+			    break;
+			}
+		}
+		if(name.equals("Max")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Let's just outsmart them.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Rift power is no joke!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"I wish I could just send them away.\"");
+			    break;
+			}
+		}
+		if(name.equals("Midnite")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"I will spook them out of here!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Ugh, I just put my makeup on.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Being a ghost is so tiring.\"");
+			    break;
+			}
+		}
+		if(name.equals("Chief")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Protect our turf!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I could use a coffee break after this.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"I've seen enough. They are threats.\"");
+			    break;
+			}
+		}
+		if(name.equals("Cherry")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Time to show off my mech!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Anyone want a cherry?\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"If you need a heal let me know!\"");
+			    break;
+			}
+		}
+	}
+	
+	public void teamChat(Party p) {
+		System.out.println();
+		String name1 = p.partyNames(this).get(0).getName();
+		String name2 = p.partyNames(this).get(1).getName();
+		String name3 = "";
+		int cur = -1;
+		String responseName = null;
+		int randomNum = (int)(Math.random() * (2 - 1 + 1)) + 1;
+		if(randomNum == 1 && p.partyNames(this).get(0).isAlive()) {
+			name3 = name1;
+			cur = 0;
+			responseName = p.partyNames(this).get(0).getSkin();
+		}else if (randomNum == 2 && p.partyNames(this).get(1).isAlive()){
+			name3 = name2;
+			cur = 1;
+			responseName = p.partyNames(this).get(1).getSkin();
+		}
+		if(name.equals("Lunar")) {
+			switch (name3) {
+			case "Solar":
+					System.out.println(nameSkin + ": " + "\"Solar, light them up!\"");
+			    break;
+			case "Evil":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I still don't know what made you so corrupt Evil Lunar.\"");
+					System.out.println(responseName + ": " + "\"You just haven't understood the true meaning of power yet.\"");
+				}
+			    break;
+			case "Dylan":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Dylan, we should run a game of DND after this yeah?\"");
+					System.out.println(responseName + ": " + "\"For sure for sure.\"");
+				}
+			    break;
+			case "Cherry":
+				System.out.println(nameSkin + ": " + "\"I need to show you my latest invention Cherry. I think you'd like it.\"");
+			    break;
+			case "Finley":
+				System.out.println(nameSkin + ": " + "\"Finley, show them no mercy.\"");
+			    break;
+			case "Kailani":
+				System.out.println(nameSkin + ": " + "\"Kailani, don't wait for us! You're too fast.\"");
+			    break;
+			case "Rocco":
+				System.out.println(nameSkin + ": " + "\"Rocco, let's see some craziness out there today.\"");
+			    break;
+			}
+		}
+		if(name.equals("Aidan")) {
+			switch (name3) {
+			case "Julian":
+					System.out.println(nameSkin + ": " + "\"Julian, this is just like band practice!\"");
+			    break;
+			case "Airic":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Roblox fruits here? I like your thinking.\"");
+					System.out.println(responseName + ": " + "\"Thanks, we'll get you one too one day.\"");
+				}
+			    break;
+			case "Dylan":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Dylan, want to try using one of my guns?\"");
+					System.out.println(responseName + ": " + "\"We can play Fortnite after the fight Aidan.\"");
+				}
+			    break;
+			case "Liam":
+				System.out.println(nameSkin + ": " + "\"Liam, you're a criminal laywer huh? So badass.\"");
+			    break;
+			case "Mason":
+				System.out.println(nameSkin + ": " + "\"Mason, show them what you got.\"");
+			    break;
+			}
+		}
+		if(name.equals("Alex")) {
+			switch (name3) {
+			case "Solar":
+					System.out.println(nameSkin + ": " + "\"Solar pop off girl!\"");
+			    break;
+			case "Lunar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Lunar, good to be fighting with you again!\"");
+					System.out.println(responseName + ": " + "\"I've missed it too! Just like when we first met.\"");
+				}
+			    break;
+			case "Dylan":
+					System.out.println(nameSkin + ": " + "\"Dylan, I find those DND games quite interesting. Teach me one day!\"");
+			    break;
+			case "Sammi":
+				System.out.println(nameSkin + ": " + "\"Sammi! My favorite scientist. We won't lose with her.\"");
+			    break;
+			case "Finley":
+				System.out.println(nameSkin + ": " + "\"Finley, how are things with Axol? You know.\"");
+			    break;
+			case "Via":
+				System.out.println(nameSkin + ": " + "\"Via I must join your pirate crew one day. Sailing the seas is awesome!\"");
+			    break;
+			case "Zero":
+				System.out.println(nameSkin + ": " + "\"You may have tried to destroy our world Zero, but it's good to have you here.\"");
+			    break;
+			}
+		}
+		if(name.equals("Clara")) {
+			switch (name3) {
+			case "Solar":
+					if(p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Solar, teach me how to use fire power!\"");
+						System.out.println(responseName + ": " + "\"Haha, only if you teach me about the Darkmess.\"");
+					}
+			    break;
+			case "Liam":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Liam, I hope your lawyer career is doing good still.\"");
+					System.out.println(responseName + ": " + "\"As good as ever.\"");
+				}
+			    break;
+			case "Midnite":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Midnite, let's show them how we do things around here.\"");
+					System.out.println(responseName + ": " + "\"They'll be so spooked!\"");
+				}
+			    break;
+			case "Bedrock":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Bedrock, are you going to crush them as always?\"");
+					System.out.println(responseName + ": " + "\"...!\"");
+				}
+			    break;
+			case "Mayhem":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"See Mayhem, we're better as a team!\"");
+					System.out.println(responseName + ": " + "\"Perhaps, but I still miss Alterna.\"");
+				}
+			    break;
+			case "Ashley":
+				System.out.println(nameSkin + ": " + "\"Let's see that spark power Ashley!\"");
+			    break;
+			case "Audrey":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"So Audrey, how strong is Wonder Power?\"");
+					System.out.println(responseName + ": " + "\"Picture those sparks of yours, multiplied by infinity.\"");
+				}
+			    break;
+			}
+		}
+		if(name.equals("Zero")) {
+			switch (name3) {
+			case "Lunar":
+					if(p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Lunar, why have you dragged me along?\"");
+						System.out.println(responseName + ": " + "\"We could use your power Zero. Like cheats? That's insane to have!\"");
+					}
+			    break;
+			case "Alex":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I suppose this doesn't make up for the part of your base I destroyed?\"");
+					System.out.println(responseName + ": " + "\"Get a kill or two, and them we will see.\"");
+				}
+			    break;
+			case "Dimentio":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"You're quite resistant Dimentio. Even I can't get through.\"");
+					System.out.println(responseName + ": " + "\"What can I say, I have a one of a kind firewall!\"");
+				}
+			    break;
+			case "Rocco":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I got put with you, really?\"");
+					System.out.println(responseName + ": " + "\"I feel the exact same way.\"");
+				}
+			    break;
+			case "Hopper":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Hopper, you really are one of the best assistants I had.\"");
+					System.out.println(responseName + ": " + "\"I don't bow down to anyone, especially not you.\"");
+				}
+			    break;
+			case "Axol":
+				System.out.println(nameSkin + ": " + "\"Axol, use those Axolotls wisely. I won't be able to bring them back.\"");
+			    break;
+			case "Xara":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"What else do you know about me Xara?\"");
+					System.out.println(responseName + ": " + "\"You have quite the personality Zero I will say that.\"");
+				}
+			    break;
+			}
+		}
+		if(name.equals("Kithara")) {
+			switch (name3) {
+			case "Thunder":
+					System.out.println(nameSkin + ": " + "\"Thunder, take them out!\"");
+			    break;
+			case "Audrey":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Sorry about our past Audrey. I hope you can forgive me.\"");
+					System.out.println(responseName + ": " + "\"You're always my friend Kithara! Let's have them taste our Wonder Power.\"");
+				}
+			    break;
+			case "Louis":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Louis, what do you see now? For being a douche.\"");
+					System.out.println(responseName + ": " + "\"I see the monster I have created now.\"");
+				}
+			    break;
+			case "Cherry":
+				System.out.println(nameSkin + ": " + "\"Cherry, let's weaken them together.\"");
+			    break;
+			case "Sammi":
+				System.out.println(nameSkin + ": " + "\"Sammi, I can spice up your lab with my power if you want.\"");
+			    break;
+			case "Gates":
+				System.out.println(nameSkin + ": " + "\"Dr. Gates, thanks for letting me use the Wonder Power.\"");
+			    break;
+			case "Anjelika":
+				System.out.println(nameSkin + ": " + "\"Anjelika, let's see that power put in the work!\"");
+			    break;
+			}
+		}
+		if(name.equals("Hopper")) {
+			switch (name3) {
+			case "Lunar":
+					if(p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Lunar, thank you for saving the AI world.\"");
+						System.out.println(responseName + ": " + "\"Of course! That's what heroes do right?\"");
+					}
+			    break;
+			case "Alex":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Alex, your base is quite spectacular.\"");
+					System.out.println(responseName + ": " + "\"Thank you! You're base is uh, something.\"");
+				}
+			    break;
+			case "Dimentio":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"An admin huh? I've never seen one before.\"");
+					System.out.println(responseName + ": " + "\"Hopper! Your base was a nice spot for my prison!\"");
+				}
+			    break;
+			case "Rocco":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Brother, with me!\"");
+					System.out.println(responseName + ": " + "\"Right by your side Hopper!\"");
+				}
+			    break;
+			case "Zero":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I look down on you Zero.\"");
+					System.out.println(responseName + ": " + "\"You were more fun when working for me anyways.\"");
+				}
+			    break;
+			case "Kailani":
+				System.out.println(nameSkin + ": " + "\"Kailani, turn the tides for us!\"");
+			    break;
+			case "Via":
+				System.out.println(nameSkin + ": " + "\"Via, bring the boom!\"");
+			    break;
+			}
+		}
+		if(name.equals("Thunder")) {
+			switch (name3) {
+			case "Solar":
+					if(p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Solar! No hard feelings of course yeah?\"");
+						System.out.println(responseName + ": " + "\"It was a good rivalry I'll say that.\"");
+					}
+			    break;
+			case "Orion":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Hey bro, whoever gets the least amount of kills has to pay for dinner tonight!\"");
+					System.out.println(responseName + ": " + "\"So be it. I like my steak medium rare by the way.\"");
+				}
+			    break;
+			case "Grizz":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Good to see the old boss on the field!\"");
+					System.out.println(responseName + ": " + "\"You were my best assassin Thunder. I will see you in action now.\"");
+				}
+			    break;
+			case "Radar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Look who decided to show up.\"");
+					System.out.println(responseName + ": " + "\"You do your thing, and I will do mine.\"");
+				}
+			    break;
+			case "Zero":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Zero, can you fix my gear after? I think there's a problem with my armor.\"");
+					System.out.println(responseName + ": " + "\"I'm a virus not a mechanic. Cherry would know more.\"");
+				}
+			    break;
+			case "Max":
+				System.out.println(nameSkin + ": " + "\"Max, don't hold back on those rifts!\"");
+			    break;
+			case "Bedrock":
+				System.out.println(nameSkin + ": " + "\"Bedrock, let's crush some skulls!\"");
+			    break;
+			}
+		}
+		if(name.equals("Solar")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Let's go Lunar!\"");
+			    break;
+			case "Sammi":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Sammi! I'm so happy to be on your team.\"");
+					System.out.println(responseName + ": " + "\"I'm working with the goat, what else can I say.\"");
+				}
+			    break;
+			case "Max":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Max, I think there's a problem with my systems.\"");
+					System.out.println(responseName + ": " + "\"There's a sugar pile in there. Did you eat something sweet last night?\"");
+				}
+			    break;
+			case "Cherry":
+				System.out.println(nameSkin + ": " + "\"Cherry, spread that love!\"");
+			    break;
+			case "Clara":
+				System.out.println(nameSkin + ": " + "\"Clara, our sparks and flames together will take them out!\"");
+			    break;
+			case "Orion":
+				System.out.println(nameSkin + ": " + "\"Orion, watch our backs!\"");
+			    break;
+			case "Jesse":
+				System.out.println(nameSkin + ": " + "\"Jesse, double burn them with me!\"");
+			    break;
+			}
+		}
+		if(name.equals("Kailani")) {
+			switch (name3) {
+			case "Via":
+					if(p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Via, I'll speed up the tides for your ship. Then you can strike!\"");
+						System.out.println(responseName + ": " + "\"I like that idea!\"");
+					}
+			    break;
+			case "Axol":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Axol! When is your date!?\"");
+					System.out.println(responseName + ": " + "\"Date? I don't know what you're talking about.\"");
+				}
+			    break;
+			case "Alex":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Let's show off our gear Alex!\"");
+					System.out.println(responseName + ": " + "\"My stuff compared to your tridents is not a fair comparison.\"");
+				}
+			    break;
+			case "Rocco":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"How's your brother doing Rocco?\"");
+					System.out.println(responseName + ": " + "\"Doing good. I hope uh Shelly and Sheldon are doing good too.\"");
+				}
+			    break;
+			case "Zero":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I'm still upset you tried to destroy our world, but I forgive you!\"");
+					System.out.println(responseName + ": " + "\"Thank you. That... means a lot.\"");
+				}
+			    break;
+			case "Augie":
+				System.out.println(nameSkin + ": " + "\"Augie, let's see those boating skills!\"");
+			    break;
+			case "Dimentio":
+				System.out.println(nameSkin + ": " + "\"Keep the Cybug stuff away from me Dimentio!\"");
+			    break;
+			}
+		}
+		if(name.equals("Dimentio")) {
+			switch (name3) {
+			case "Xara":
+					if(p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Xara, just like the good old days right?\"");
+						System.out.println(responseName + ": " + "\"You locked me in jail for so long, don't think I forgot about that!\"");
+					}
+			    break;
+			case "Zero":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"A virus on our team? Don't try anything.\"");
+					System.out.println(responseName + ": " + "\"I could say the same for you.\"");
+				}
+			    break;
+			case "Radar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Radar, that was a sneaky plan we had indeed.\"");
+					System.out.println(responseName + ": " + "\"Sure was.\"");
+				}
+			    break;
+			case "Lunar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"You had such great potential as a teammate Lunar.\"");
+					System.out.println(responseName + ": " + "\"No chance. After this fight, we aren't working together.\"");
+				}
+			    break;
+			case "Oona":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I might need some repairs Oona!\"");
+					System.out.println(responseName + ": " + "\"Alright, when we are in the lab again sure.\"");
+				}
+			    break;
+			case "Evil":
+				System.out.println(nameSkin + ": " + "\"Swarm them with bots Evil Lunar!\"");
+			    break;
+			case "Axol":
+				System.out.println(nameSkin + ": " + "\"I ran a scan, fun relationship you have Axol.\"");
+			    break;
+			}
+		}
+		if(name.equals("Tom")) {
+			switch (name3) {
+			case "Gates":
+					if(p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Dr. Gates, I believe we are now even.\"");
+						System.out.println(responseName + ": " + "\"I accept that.\"");
+					}
+			    break;
+			case "Audrey":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Sweetie, stay safe out there.\"");
+					System.out.println(responseName + ": " + "\"It's ok dad, I got the Wonder Power on my side.\"");
+				}
+			    break;
+			case "Lunar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I am sorry for taking your bots Lunar.\"");
+					System.out.println(responseName + ": " + "\"It's ok Tom. The past is behind us. I'm still a huge fan!\"");
+				}
+			    break;
+			case "Gash":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"You're a good employee Gash.\"");
+					System.out.println(responseName + ": " + "\"Thank you sir. Just doing my job.\"");
+				}
+			    break;
+			case "Redgar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Redgar, you are quite the learner.\"");
+					System.out.println(responseName + ": " + "\"Being alongside you guys is so cool! I will do my best.\"");
+				}
+			    break;
+			case "Finley":
+				System.out.println(nameSkin + ": " + "\"Finley, deliver those punches!\"");
+			    break;
+			case "Midnite":
+				System.out.println(nameSkin + ": " + "\"Midnite, let's show off our ghost power!\"");
+			    break;
+			}
+		}
+		if(name.equals("Finley")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Show me what you got nerd boy.\"");
+			    break;
+			case "Axol":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Axol! So happy to see you!\"");
+					System.out.println(responseName + ": " + "\"I saved some extra axolotls just for you.\"");
+				}
+			    break;
+			case "Mack":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"What is the secret to your build Mack?\"");
+					System.out.println(responseName + ": " + "\"Leg day 3 times a week.\"");
+				}
+			    break;
+			case "Ayson":
+				System.out.println(nameSkin + ": " + "\"Grayson and Jayson huh? The whole crew is back together!\"");
+			    break;
+			case "Bedrock":
+				System.out.println(nameSkin + ": " + "\"Bedrock, let's punch them to hell!\"");
+			    break;
+			case "Liam":
+				System.out.println(nameSkin + ": " + "\"Liam, blow them up!\"");
+			    break;
+			case "Cherry":
+				System.out.println(nameSkin + ": " + "\"Cherry, let's see that mech in action!\"");
+			    break;
+			}
+		}
+		if(name.equals("Max")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"So proud of you Lunar and always will be!\"");
+			    break;
+			case "Solar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Solar, let's see those new upgrades in action!\"");
+					System.out.println(responseName + ": " + "\"I'm gonna show off soon just wait!\"");
+				}
+			    break;
+			case "Gates":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I've read many of your papers Dr. Gates. It's all very fascinating.\"");
+					System.out.println(responseName + ": " + "\"You are quite the scientist yourself!\"");
+				}
+			    break;
+			case "Orion":
+				System.out.println(nameSkin + ": " + "\"Orion, beat them back!\"");
+			    break;
+			case "Eli":
+				System.out.println(nameSkin + ": " + "\"Is little buddy here with us Eli? He would win us this battle!\"");
+			    break;
+			case "Evil":
+				System.out.println(nameSkin + ": " + "\"If you have to be evil, then unleash the fury at them.\"");
+			    break;
+			case "Mason":
+				System.out.println(nameSkin + ": " + "\"Impressive technology Mason.\"");
+			    break;
+			}
+		}
+		if(name.equals("Midnite")) {
+			switch (name3) {
+			case "Clara":
+					System.out.println(nameSkin + ": " + "\"Show them who's boss Clara!\"");
+			    break;
+			case "Mayhem":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Mayhem, that was a nasty plan you had us doing.\"");
+					System.out.println(responseName + ": " + "\"Whatever must be done will be done.\"");
+				}
+			    break;
+			case "Tom":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"So Tom, how were you able to replicate ghost power.\"");
+					System.out.println(responseName + ": " + "\"I've made some extreme breakthroughs after retiring my TV show!\"");
+				}
+			    break;
+			case "Bedrock":
+				System.out.println(nameSkin + ": " + "\"No holding back Bedrock!\"");
+			    break;
+			case "Ashley":
+				System.out.println(nameSkin + ": " + "\"Keep us running Ashley!\"");
+			    break;
+			case "Radar":
+				System.out.println(nameSkin + ": " + "\"See if you can keep up with a ghost Radar!\"");
+			    break;
+			case "Xara":
+				System.out.println(nameSkin + ": " + "\"Give me a tour of the metaverse one day Xara!\"");
+			    break;
+			}
+		}
+		if(name.equals("Chief")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Lunar, our hero!\"");
+			    break;
+			case "Norman":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Norman! How is that new research going along?\"");
+					System.out.println(responseName + ": " + "\"Pretty good! Testing will begin soon.\"");
+				}
+			    break;
+			case "Archer":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Archer, keep an eye on them, and us!\"");
+					System.out.println(responseName + ": " + "\"Don't worry Chief. You can count on me.\"");
+				}
+			    break;
+			case "Zero":
+				System.out.println(nameSkin + ": " + "\"Show me if Archer was right to bring you back, Zero.\"");
+			    break;
+			case "Axol":
+				System.out.println(nameSkin + ": " + "\"Let's see those axolotls Axol!\"");
+			    break;
+			case "Ruby":
+				System.out.println(nameSkin + ": " + "\"Ruby, with us!\"");
+			    break;
+			case "Mack":
+				System.out.println(nameSkin + ": " + "\"Mack, hunt them out.\"");
+			    break;
+			}
+		}
+		if(name.equals("Cherry")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Lunar, time to pop off!\"");
+			    break;
+			case "Finley":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Finley! Good to see you here.\"");
+					System.out.println(responseName + ": " + "\"It's been a while. Let's take them out!\"");
+				}
+			    break;
+			case "Solar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Solar I'm so intrigued by your design! \"");
+					System.out.println(responseName + ": " + "\"Thanks! I can give you a rundown one day.\"");
+				}
+			    break;
+			case "Audrey":
+				System.out.println(nameSkin + ": " + "\"Audrey, I need some of that wonder power one day!\"");
+			    break;
+			case "Thunder":
+				System.out.println(nameSkin + ": " + "\"Run them over Thunder!\"");
+			    break;
+			case "Gash":
+				System.out.println(nameSkin + ": " + "\"Gash, guard us!\"");
+			    break;
+			case "Aidan":
+				System.out.println(nameSkin + ": " + "\"Aidan, let's see that cover!\"");
+			    break;
+			}
+		}
+	}
+	
 	public String stats() {
 		String dead = "";
 		if(isAlive()) {
@@ -1902,7 +2945,8 @@ public class Player {
 		}
 		damageIn = Math.round(damageIn * 10.0) / 10.0;
 		healingIn = Math.round(healingIn * 10.0) / 10.0;
-		return (nameSkin + "'s Statistics:" + "\n" + "Ended: " + dead + "\n" + "Weapon Used: " + weaponuse + "\n" + "Ability Used: " + abilityuse + "\n" + "Ultimate Used: " + ultuse + "\n" + "Times Dashed: " + dashed + "\n" +  "Times Jumped: " + jumped + "\n" + "Healing Received: " + healingIn + "\n" + "Damage Received: " + damageIn);
+		damageOutput = Math.round(damageOutput * 10.0) / 10.0;
+		return (nameSkin + "'s Statistics:" + "\n" + "Ended: " + dead + "\n" + "Weapons Used: " + weaponuse + "\n" + "Abilities Used: " + abilityuse + "\n" + "Ultimates Used: " + ultuse + "\n" + "Times Dashed: " + dashed + "\n" +  "Times Jumped: " + jumped + "\n" +  "Total Movement: " + totalMovement + "\n" + "Healing Output: " + healingOutput + "\n" + "Healing Received: " + healingIn + "\n" + "Damage Output: " + damageOutput + "\n" + "Damage Received: " + damageIn);
 	}
 	
 
