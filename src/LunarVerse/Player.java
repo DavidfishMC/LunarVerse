@@ -2373,6 +2373,20 @@ public class Player {
 			    break;
 			}
 		}
+		if(name.equals("Xara")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Let's see them out.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"This is what admin abuse really looks like.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Shut them down.\"");
+			    break;
+			}
+		}
 	}
 	
 	public void teamChat(Party p) {
@@ -3069,6 +3083,37 @@ public class Player {
 			    break;
 			case "Katrina":
 				System.out.println(nameSkin + ": " + "\"Katrina please come save me.\"");
+			    break;
+			}
+		}
+		if(name.equals("Xara")) {
+			switch (name3) {
+			case "Rocco":
+					System.out.println(nameSkin + ": " + "\"You're one crazy dude Rocco.\"");
+			    break;
+			case "Dimentio":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"We had some good times before didn't we?\"");
+					System.out.println(responseName + ": " + "\"I suppose we once did.\"");
+				}
+			    break;
+			case "Oona":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"How do you like my thinking Oona?\"");
+					System.out.println(responseName + ": " + "\"You turned out great!\"");
+				}
+			    break;
+			case "Zero":
+				System.out.println(nameSkin + ": " + "\"Zero, hack them.\"");
+			    break;
+			case "Solar":
+				System.out.println(nameSkin + ": " + "\"Solar, with me!\"");
+			    break;
+			case "Max":
+				System.out.println(nameSkin + ": " + "\"Max, let's see those rifts!\"");
+			    break;
+			case "Ruby":
+				System.out.println(nameSkin + ": " + "\"Ruby, bring my world here!\"");
 			    break;
 			}
 		}
