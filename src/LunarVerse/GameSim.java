@@ -126,7 +126,7 @@ public class GameSim {
 			}
 
 		}else {
-			p1 = new Player(250, 175, true, "Augie", 40, 40, 12, 100, 0);
+			p1 = new Player(10, 175, true, "Redgar", 20, 20, 12, 100, 0);
 			p3 = new Player(10, 325, false, "Rocco", 40, 40, 10, 10, 0);
 			p5 = new Player(100, 575, false, "Liam", 40, 40, 6, 500, 0);
 			
@@ -135,23 +135,23 @@ public class GameSim {
 			p6 = new Player(10000, 100, false, "Kailani", 40, 40, 10, 100, 0);
 
 		}
-		b = new Battlefield("Timed Ruins", p1, p3, p5, p2, p4, p6);
+		b = new Battlefield("Velocity Ville", p1, p3, p5, p2, p4, p6);
 		Party party1 = new Party(true, p1, p3, p5);
 		Party party2 = new Party(false, p2, p4, p6);
 		Player players[] = {p1, p2, p3, p4, p5, p6};
 		System.out.println();
 		game = true;
-		audioPlayer.play();
+		//audioPlayer.play();
 		while(game) {
 			if(turns % 2 == 0) {
 				turns2++;
 			}
 			if(turns2 >= 10) {
-				tD = bold + color + 88 + "m" + String.valueOf(turns2) + reset;
-			}else if(turns2 >= 5) {
 				tD = bold + color + 196 + "m" + String.valueOf(turns2) + reset;
+			}else if(turns2 >= 5) {
+				tD = bold + color + 214 + "m" + String.valueOf(turns2) + reset;
 			}else if (turns2 >= 1) {
-				tD = bold +  color + 214 + "m" + String.valueOf(turns2) + reset;
+				tD = bold +  color + 46 + "m" + String.valueOf(turns2) + reset;
 			}else {
 				tD = bold +  color + 46 + "m" + String.valueOf(turns2) + reset;
 			}			
@@ -267,7 +267,7 @@ public class GameSim {
 						Dash(p1, p2, p4, p6);
 					}
 					if(response.equals("j")) {
-						Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+						Location l = SetCursor(p1, p2, p4, p6, p3, p5, p1.getRange());
 						Jump(p1, p3, p5, l);
 					}
 					if(response.equals("u")) {
@@ -337,7 +337,7 @@ public class GameSim {
 								DimentioUltimate(p1);
 							}
 							if(p1.getName().equals("Tom")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 7);
 								TomUltimate(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Archer")) {
@@ -395,7 +395,7 @@ public class GameSim {
 								AlexUltimate(p1);
 							}
 							if(p1.getName().equals("Louis")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 10);
 								LouisUltimate(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Via")) {
@@ -452,7 +452,7 @@ public class GameSim {
 								SolarAbility(p1);
 							}
 							if(p1.getName().equals("Mack")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, p1.getRange());
 								MackAbility(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Cherry")) {
@@ -480,7 +480,7 @@ public class GameSim {
 								EliAbility(p1, p3, p5);
 							}
 							if(p1.getName().equals("Via")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 10);
 								ViaAbility(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Louis")) {
@@ -493,7 +493,7 @@ public class GameSim {
 								OrionAbility(p1, p3, p5);
 							}
 							if(p1.getName().equals("Kailani")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 5);
 								KailaniAbility(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Ashley")) {
@@ -554,11 +554,11 @@ public class GameSim {
 								EvilAbility(p1);
 							}
 							if(p1.getName().equals("Mason")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 5);
 								MasonAbility(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Airic")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
 								AiricAbility(p1, p3, p5, l);
 							}
 							if(p1.getName().equals("Julian")) {
@@ -598,7 +598,7 @@ public class GameSim {
 								AugieAbility(p1, p3, p5);
 							}
 							if(p1.getName().equals("Ruby")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
 								RubyAbility(p1, l);
 							}
 							if(p1.getName().equals("Norman")) {
@@ -618,7 +618,7 @@ public class GameSim {
 							System.out.println();
 						}else {
 							if(p1.hasAttacked()) {
-								System.out.println(p1.getName() + " has already attacked this turn!");
+								System.out.println(p1.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
 								if(p1.getName().equals("Jesse")) {
@@ -759,7 +759,7 @@ public class GameSim {
 												MayhemAttack(p1, p2);
 											}
 											if(p1.getName().equals("Gates")) {
-												Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+												Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
 												GatesAttack(p1, p2, l);
 											}
 											if(p1.getName().equals("Ayson")) {
@@ -912,7 +912,7 @@ public class GameSim {
 												MayhemAttack(p1, p4);
 											}
 											if(p1.getName().equals("Gates")) {
-												Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+												Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
 												GatesAttack(p1, p4, l);
 											}
 											if(p1.getName().equals("Ayson")) {
@@ -1066,7 +1066,7 @@ public class GameSim {
 												MayhemAttack(p1, p6);
 											}
 											if(p1.getName().equals("Gates")) {
-												Location l = SetCursor(p1, p2, p4, p6, p3, p5);
+												Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
 												GatesAttack(p1, p6, l);
 											}
 											if(p1.getName().equals("Ayson")) {
@@ -1179,7 +1179,7 @@ public class GameSim {
 						Dash(p3, p2, p4, p6);
 					}
 					if(response.equals("j")) {
-						Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+						Location l = SetCursor(p3, p2, p4, p6, p1, p5, p3.getRange());
 						Jump(p3, p1, p5, l);
 					}
 					if(response.equals("u")) {
@@ -1249,7 +1249,7 @@ public class GameSim {
 								DimentioUltimate(p3);
 							}
 							if(p3.getName().equals("Tom")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 7);
 								TomUltimate(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Archer")) {
@@ -1307,7 +1307,7 @@ public class GameSim {
 								AlexUltimate(p3);
 							}
 							if(p3.getName().equals("Louis")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 10);
 								LouisUltimate(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Via")) {
@@ -1367,7 +1367,7 @@ public class GameSim {
 								SolarAbility(p3);
 							}
 							if(p3.getName().equals("Mack")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, p3.getRange());
 								MackAbility(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Cherry")) {
@@ -1395,7 +1395,7 @@ public class GameSim {
 								EliAbility(p3, p1, p5);
 							}
 							if(p3.getName().equals("Via")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 10);
 								ViaAbility(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Louis")) {
@@ -1408,7 +1408,7 @@ public class GameSim {
 								OrionAbility(p3, p1, p5);
 							}
 							if(p3.getName().equals("Kailani")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 5);
 								KailaniAbility(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Ashley")) {
@@ -1469,11 +1469,11 @@ public class GameSim {
 								EvilAbility(p3);
 							}
 							if(p3.getName().equals("Mason")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 5);
 								MasonAbility(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Airic")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 0);
 								AiricAbility(p3, p1, p5, l);
 							}
 							if(p3.getName().equals("Julian")) {
@@ -1513,7 +1513,7 @@ public class GameSim {
 								AugieAbility(p3, p1, p5);
 							}
 							if(p3.getName().equals("Ruby")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 0);
 								RubyAbility(p3, l);
 							}
 							if(p3.getName().equals("Norman")) {
@@ -1533,7 +1533,7 @@ public class GameSim {
 							System.out.println();
 						}else {
 							if(p3.hasAttacked()) {
-								System.out.println(p3.getName() + " has already attacked this turn!");
+								System.out.println(p3.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
 								if(p3.getName().equals("Jesse")) {
@@ -1674,7 +1674,7 @@ public class GameSim {
 												MayhemAttack(p3, p2);
 											}
 											if(p3.getName().equals("Gates")) {
-												Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+												Location l = SetCursor(p3, p2, p4, p6, p1, p5, 0);
 												GatesAttack(p3, p2, l);
 											}
 											if(p3.getName().equals("Ayson")) {
@@ -1828,7 +1828,7 @@ public class GameSim {
 												MayhemAttack(p3, p4);
 											}
 											if(p3.getName().equals("Gates")) {
-												Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+												Location l = SetCursor(p3, p2, p4, p6, p1, p5, 0);
 												GatesAttack(p3, p4, l);
 											}
 											if(p3.getName().equals("Ayson")) {
@@ -1982,7 +1982,7 @@ public class GameSim {
 												MayhemAttack(p3, p6);
 											}
 											if(p3.getName().equals("Gates")) {
-												Location l = SetCursor(p3, p2, p4, p6, p1, p5);
+												Location l = SetCursor(p3, p2, p4, p6, p1, p5, 0);
 												GatesAttack(p3, p6, l);
 											}
 											if(p3.getName().equals("Ayson")) {
@@ -2098,7 +2098,7 @@ public class GameSim {
 						Dash(p5, p2, p4, p6);
 					}
 					if(response.equals("j")) {
-						Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+						Location l = SetCursor(p5, p2, p4, p6, p3, p1, p5.getRange());
 						Jump(p5, p3, p1, l);
 					}
 					if(response.equals("u")) {
@@ -2168,7 +2168,7 @@ public class GameSim {
 								DimentioUltimate(p5);
 							}
 							if(p5.getName().equals("Tom")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 7);
 								TomUltimate(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Archer")) {
@@ -2226,7 +2226,7 @@ public class GameSim {
 								AlexUltimate(p5);
 							}
 							if(p5.getName().equals("Louis")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 10);
 								LouisUltimate(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Via")) {
@@ -2283,7 +2283,7 @@ public class GameSim {
 								SolarAbility(p5);
 							}
 							if(p5.getName().equals("Mack")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, p5.getRange());
 								MackAbility(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Cherry")) {
@@ -2311,7 +2311,7 @@ public class GameSim {
 								EliAbility(p5, p3, p1);
 							}
 							if(p5.getName().equals("Via")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 10);
 								ViaAbility(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Louis")) {
@@ -2324,7 +2324,7 @@ public class GameSim {
 								OrionAbility(p5, p3, p1);
 							}
 							if(p5.getName().equals("Kailani")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 5);
 								KailaniAbility(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Ashley")) {
@@ -2385,11 +2385,11 @@ public class GameSim {
 								EvilAbility(p5);
 							}
 							if(p5.getName().equals("Mason")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 5);
 								MasonAbility(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Airic")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 0);
 								AiricAbility(p5, p3, p1, l);
 							}
 							if(p5.getName().equals("Julian")) {
@@ -2429,7 +2429,7 @@ public class GameSim {
 								AugieAbility(p5, p3, p1);
 							}
 							if(p5.getName().equals("Ruby")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 0);
 								RubyAbility(p5, l);
 							}
 							if(p5.getName().equals("Norman")) {
@@ -2449,7 +2449,7 @@ public class GameSim {
 							System.out.println();
 						}else {
 							if(p5.hasAttacked()) {
-								System.out.println(p5.getName() + " has already attacked this turn!");
+								System.out.println(p5.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
 								if(p5.getName().equals("Jesse")) {
@@ -2590,7 +2590,7 @@ public class GameSim {
 												MayhemAttack(p5, p2);
 											}
 											if(p5.getName().equals("Gates")) {
-												Location l = SetCursor(p5, p2, p4, p6, p1, p3);
+												Location l = SetCursor(p5, p2, p4, p6, p1, p3, 0);
 												GatesAttack(p5, p2, l);
 											}
 											if(p5.getName().equals("Ayson")) {
@@ -2744,7 +2744,7 @@ public class GameSim {
 												MayhemAttack(p5, p4);
 											}
 											if(p5.getName().equals("Gates")) {
-												Location l = SetCursor(p5, p2, p4, p6, p1, p3);
+												Location l = SetCursor(p5, p2, p4, p6, p1, p3, 0);
 												GatesAttack(p5, p4, l);
 											}
 											if(p5.getName().equals("Ayson")) {
@@ -2898,7 +2898,7 @@ public class GameSim {
 												MayhemAttack(p5, p6);
 											}
 											if(p5.getName().equals("Gates")) {
-												Location l = SetCursor(p5, p2, p4, p6, p1, p3);
+												Location l = SetCursor(p5, p2, p4, p6, p1, p3, 0);
 												GatesAttack(p5, p6, l);
 											}
 											if(p5.getName().equals("Ayson")) {
@@ -3080,7 +3080,7 @@ public class GameSim {
 						Dash(p2, p1, p3, p5);
 					}
 					if(response.equals("j")) {
-						Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+						Location l = SetCursor(p2, p1, p3, p5, p4, p6, p2.getRange());
 						Jump(p2, p4, p6, l);
 					}
 					if(response.equals("u")) {
@@ -3150,7 +3150,7 @@ public class GameSim {
 								DimentioUltimate(p2);
 							}
 							if(p2.getName().equals("Tom")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 7);
 								TomUltimate(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Archer")) {
@@ -3208,7 +3208,7 @@ public class GameSim {
 								AlexUltimate(p2);
 							}
 							if(p2.getName().equals("Louis")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 10);
 								LouisUltimate(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Via")) {
@@ -3265,7 +3265,7 @@ public class GameSim {
 								SolarAbility(p2);
 							}
 							if(p2.getName().equals("Mack")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, p2.getRange());
 								MackAbility(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Cherry")) {
@@ -3293,7 +3293,7 @@ public class GameSim {
 								EliAbility(p2, p4, p6);
 							}
 							if(p2.getName().equals("Via")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 10);
 								ViaAbility(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Louis")) {
@@ -3306,7 +3306,7 @@ public class GameSim {
 								OrionAbility(p2, p4, p6);
 							}
 							if(p2.getName().equals("Kailani")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 5);
 								KailaniAbility(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Ashley")) {
@@ -3367,11 +3367,11 @@ public class GameSim {
 								EvilAbility(p2);
 							}
 							if(p2.getName().equals("Mason")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 5);
 								MasonAbility(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Airic")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 0);
 								AiricAbility(p2, p4, p6, l);
 							}
 							if(p2.getName().equals("Julian")) {
@@ -3411,7 +3411,7 @@ public class GameSim {
 								AugieAbility(p2, p4, p6);
 							}
 							if(p2.getName().equals("Ruby")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 0);
 								RubyAbility(p2, l);
 							}
 							if(p2.getName().equals("Norman")) {
@@ -3431,7 +3431,7 @@ public class GameSim {
 							System.out.println();
 						}else {
 							if(p2.hasAttacked()) {
-								System.out.println(p2.getName() + " has already attacked this turn!");
+								System.out.println(p2.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
 								if(p2.getName().equals("Jesse")) {
@@ -3572,7 +3572,7 @@ public class GameSim {
 												MayhemAttack(p2, p1);
 											}
 											if(p2.getName().equals("Gates")) {
-												Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+												Location l = SetCursor(p2, p1, p3, p5, p4, p6, 0);
 												GatesAttack(p2, p1, l);
 											}
 											if(p2.getName().equals("Ayson")) {
@@ -3726,7 +3726,7 @@ public class GameSim {
 												MayhemAttack(p2, p3);
 											}
 											if(p2.getName().equals("Gates")) {
-												Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+												Location l = SetCursor(p2, p1, p3, p5, p4, p6, 0);
 												GatesAttack(p2, p3, l);
 											}
 											if(p2.getName().equals("Ayson")) {
@@ -3880,7 +3880,7 @@ public class GameSim {
 												MayhemAttack(p2, p5);
 											}
 											if(p2.getName().equals("Gates")) {
-												Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+												Location l = SetCursor(p2, p1, p3, p5, p4, p6, 0);
 												GatesAttack(p2, p5, l);
 											}
 											if(p2.getName().equals("Ayson")) {
@@ -3996,7 +3996,7 @@ public class GameSim {
 						Dash(p4, p1, p3, p5);
 					}
 					if(response.equals("j")) {
-						Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+						Location l = SetCursor(p4, p1, p3, p5, p2, p6, p4.getRange());
 						Jump(p4, p2, p6, l);
 					}
 					if(response.equals("u")) {
@@ -4066,7 +4066,7 @@ public class GameSim {
 								DimentioUltimate(p4);
 							}
 							if(p4.getName().equals("Tom")) {
-								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6, 7);
 								TomUltimate(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Archer")) {
@@ -4124,7 +4124,7 @@ public class GameSim {
 								AlexUltimate(p4);
 							}
 							if(p4.getName().equals("Louis")) {
-								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6, 10);
 								LouisUltimate(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Via")) {
@@ -4181,7 +4181,7 @@ public class GameSim {
 								SolarAbility(p4);
 							}
 							if(p4.getName().equals("Mack")) {
-								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6, p4.getRange());
 								MackAbility(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Cherry")) {
@@ -4218,11 +4218,11 @@ public class GameSim {
 								OrionAbility(p4, p2, p6);
 							}
 							if(p4.getName().equals("Via")) {
-								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6, 10);
 								ViaAbility(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Kailani")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 5);
 								KailaniAbility(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Ashley")) {
@@ -4283,11 +4283,11 @@ public class GameSim {
 								EvilAbility(p4);
 							}
 							if(p4.getName().equals("Mason")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 5);
 								MasonAbility(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Airic")) {
-								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6, 0);
 								AiricAbility(p4, p2, p6, l);
 							}
 							if(p4.getName().equals("Julian")) {
@@ -4327,7 +4327,7 @@ public class GameSim {
 								AugieAbility(p4, p2, p6);
 							}
 							if(p4.getName().equals("Ruby")) {
-								Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6, 0);
 								RubyAbility(p4, l);
 							}
 							if(p4.getName().equals("Norman")) {
@@ -4347,7 +4347,7 @@ public class GameSim {
 							System.out.println();
 						}else {
 							if(p4.hasAttacked()) {
-								System.out.println(p4.getName() + " has already attacked this turn!");
+								System.out.println(p4.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
 								if(p4.getName().equals("Jesse")) {
@@ -4488,7 +4488,7 @@ public class GameSim {
 												MayhemAttack(p4, p1);
 											}
 											if(p4.getName().equals("Gates")) {
-												Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+												Location l = SetCursor(p4, p1, p3, p5, p2, p6, 0);
 												GatesAttack(p4, p1, l);
 											}
 											if(p4.getName().equals("Ayson")) {
@@ -4642,7 +4642,7 @@ public class GameSim {
 												MayhemAttack(p4, p3);
 											}
 											if(p4.getName().equals("Gates")) {
-												Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+												Location l = SetCursor(p4, p1, p3, p5, p2, p6, 0);
 												GatesAttack(p4, p3, l);
 											}
 											if(p4.getName().equals("Ayson")) {
@@ -4796,7 +4796,7 @@ public class GameSim {
 												MayhemAttack(p4, p5);
 											}
 											if(p4.getName().equals("Gates")) {
-												Location l = SetCursor(p4, p1, p3, p5, p2, p6);
+												Location l = SetCursor(p4, p1, p3, p5, p2, p6, 0);
 												GatesAttack(p4, p5, l);
 											}
 											if(p4.getName().equals("Ayson")) {
@@ -4912,7 +4912,7 @@ public class GameSim {
 						Dash(p6, p1, p3, p5);
 					}
 					if(response.equals("j")) {
-						Location l = SetCursor(p6, p1, p3, p5, p2, p4);
+						Location l = SetCursor(p6, p1, p3, p5, p2, p4, p6.getRange());
 						Jump(p6, p4, p2, l);
 					}
 					if(response.equals("u")) {
@@ -4982,7 +4982,7 @@ public class GameSim {
 								DimentioUltimate(p6);
 							}
 							if(p6.getName().equals("Tom")) {
-								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2, 7);
 								TomUltimate(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Archer")) {
@@ -5040,7 +5040,7 @@ public class GameSim {
 								AlexUltimate(p6);
 							}
 							if(p6.getName().equals("Louis")) {
-								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2, 10);
 								LouisUltimate(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Via")) {
@@ -5097,7 +5097,7 @@ public class GameSim {
 								SolarAbility(p6);
 							}
 							if(p6.getName().equals("Mack")) {
-								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2, p6.getRange());
 								MackAbility(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Cherry")) {
@@ -5125,7 +5125,7 @@ public class GameSim {
 								EliAbility(p6, p4, p2);
 							}
 							if(p6.getName().equals("Via")) {
-								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2, 10);
 								ViaAbility(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Louis")) {
@@ -5138,7 +5138,7 @@ public class GameSim {
 								OrionAbility(p6, p4, p2);
 							}
 							if(p6.getName().equals("Kailani")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 5);
 								KailaniAbility(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Ashley")) {
@@ -5199,11 +5199,11 @@ public class GameSim {
 								EvilAbility(p6);
 							}
 							if(p6.getName().equals("Mason")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 5);
 								MasonAbility(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Airic")) {
-								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2, 0);
 								AiricAbility(p6, p4, p2, l);
 							}
 							if(p6.getName().equals("Julian")) {
@@ -5243,7 +5243,7 @@ public class GameSim {
 								AugieAbility(p6, p4, p2);
 							}
 							if(p6.getName().equals("Ruby")) {
-								Location l = SetCursor(p6, p1, p3, p5, p4, p2);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2, 0);
 								RubyAbility(p6, l);
 							}
 							if(p6.getName().equals("Norman")) {
@@ -5263,7 +5263,7 @@ public class GameSim {
 							System.out.println();
 						}else {
 							if(p6.hasAttacked()) {
-								System.out.println(p6.getName() + " has already attacked this turn!");
+								System.out.println(p6.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
 								if(p6.getName().equals("Jesse")) {
@@ -5404,7 +5404,7 @@ public class GameSim {
 												MayhemAttack(p6, p1);
 											}
 											if(p6.getName().equals("Gates")) {
-												Location l = SetCursor(p6, p1, p3, p5, p2, p4);
+												Location l = SetCursor(p6, p1, p3, p5, p2, p4, 0);
 												GatesAttack(p6, p1, l);
 											}
 											if(p6.getName().equals("Ayson")) {
@@ -5558,7 +5558,7 @@ public class GameSim {
 												MayhemAttack(p6, p3);
 											}
 											if(p6.getName().equals("Gates")) {
-												Location l = SetCursor(p6, p1, p3, p5, p2, p4);
+												Location l = SetCursor(p6, p1, p3, p5, p2, p4, 0);
 												GatesAttack(p6, p3, l);
 											}
 											if(p6.getName().equals("Ayson")) {
@@ -5712,7 +5712,7 @@ public class GameSim {
 												MayhemAttack(p6, p5);
 											}
 											if(p6.getName().equals("Gates")) {
-												Location l = SetCursor(p6, p1, p3, p5, p2, p4);
+												Location l = SetCursor(p6, p1, p3, p5, p2, p4, 0);
 												GatesAttack(p6, p5, l);
 											}
 											if(p6.getName().equals("Ayson")) {
@@ -5974,7 +5974,7 @@ public class GameSim {
 			  p.setC(196);
 		    break;
 		  case "Ruby":
-			  p = new Player(2750, 200, start, name, x, y, 10, 10, 5);
+			  p = new Player(2750, 200, start, name, x, y, 10, 10, 4);
 			  name = bold + color + 161 + "m" + "R" + color + 162 + "m" + "u"  + color +163 + "m" + "b" + color + 164 + "m" + "y" + reset;
 			  p.skin(name);
 			  p.setC(161);
@@ -6064,7 +6064,7 @@ public class GameSim {
 			  p.setC(171);
 		    break;
 		  case "Bedrock":
-			  p = new Player(4350, 400, start, name, x, y, 7, 7, 7);
+			  p = new Player(4500, 400, start, name, x, y, 7, 7, 7);
 			  name = bold + color + 240 + "m" + "B" + color + 241 + "m" + "e"  + color + 242 + "m" + "d" + color + 243 + "m" + "r" + color + 245 + "m" + "o" + color + 246 + "m" + "c" + color + 247 + "m" + "k" + reset;
 			  p.skin(name);
 			  p.setC(240);
@@ -6094,7 +6094,7 @@ public class GameSim {
 			  p.setC(147);
 		    break;
 		  case "Oona":
-			  p = new Player(2700, 175, start, name, x, y, 10, 10, 6);
+			  p = new Player(2700, 175, start, name, x, y, 10, 10, 7);
 			  name = bold + color + 202 + "m" + "O" + color + 203 + "m" + "o"  + color +204 + "m" + "n" + color + 205 + "m" + "a" + reset;
 			  p.skin(name);
 			  p.setC(202);
@@ -6178,7 +6178,7 @@ public class GameSim {
 			  p.setC(93);
 		    break;
 		  case "Burt":
-			  p = new Player(2800, 250, start, name, x, y, 10, 11, 6);
+			  p = new Player(2800, 250, start, name, x, y, 10, 11, 5);
 			  name = bold + color + 21 + "m" + "Burt" + reset;
 			  p.skin(name);
 			  p.setC(21);
@@ -6368,6 +6368,27 @@ public class GameSim {
 	}
 	
 	public static void Movement(Player p, Player a, Player z, Player c, Player d, Player e) {
+		for(int i = 0; i < orbs.size(); i++) {
+			if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
+				p.getOrb();
+				orbs.remove(i);
+				System.out.println(p.getSkin() + " has gotten an orb.");
+			}
+		}
+		for(int i = 0; i < cover.size(); i++) {
+			if(p.getLoc().eqLoc(cover.get(i).getLoc())) {
+				if(cover.get(i).getName().equals("Full")) {
+					p.setCover("Full");
+					break;
+				}
+				if(cover.get(i).getName().equals("Partial")) {
+					p.setCover("Partial");
+					break;
+				}
+			}else {
+				p.resetCover();
+			}
+		}
 		if(p.isParalyzed()) {
 			System.out.println("Cannot move while paralyzed!");
 			System.out.println();
@@ -6383,7 +6404,7 @@ public class GameSim {
 		e1.add(ZeroIgnite);
 		double rand = Math.random();
 		Scanner input = new Scanner(System.in);
-		if(p.getMovement() == 0) {
+		if(p.getMovement() <= 0) {
 			System.out.println("No more movement left!");
 			System.out.println();
 		}else {
@@ -6399,6 +6420,9 @@ public class GameSim {
 						  break;
 					  }
 					  p.move(p.getLoc().getX() - 1, p.getLoc().getY());
+						if(b.hasCar(p.getLoc().getX(), p.getLoc().getY())) {
+							p.getLoc().set(p.getLoc().getX() - 3, p.getLoc().getY());
+						}
 					  hasMoved = true;
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
@@ -6410,6 +6434,9 @@ public class GameSim {
 						  break;
 					  }
 					  p.move(p.getLoc().getX() + 1, p.getLoc().getY());
+					  if(b.hasCar(p.getLoc().getX(), p.getLoc().getY())) {
+							p.getLoc().set(p.getLoc().getX() + 3, p.getLoc().getY());
+						}
 					  hasMoved = true;
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
@@ -6421,6 +6448,9 @@ public class GameSim {
 						  break;
 					  }
 					  p.move(p.getLoc().getX(), p.getLoc().getY() - 1);
+					  if(b.hasCar(p.getLoc().getX(), p.getLoc().getY())) {
+							p.getLoc().set(p.getLoc().getX(), p.getLoc().getY() - 3);
+						}
 					  hasMoved = true;
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
@@ -6432,6 +6462,9 @@ public class GameSim {
 						  break;
 					  }
 					  p.move(p.getLoc().getX(), p.getLoc().getY() + 1);
+					  if(b.hasCar(p.getLoc().getX(), p.getLoc().getY())) {
+						  p.getLoc().set(p.getLoc().getX(), p.getLoc().getY() + 3);
+						}
 					  hasMoved = true;
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMovement() + " movement left.");
@@ -6440,7 +6473,7 @@ public class GameSim {
 					  Dash(p, a, z, c);
 				    break;
 				  case "j":
-					  Location l = SetCursor(p, a, z, c, d, e);
+					  Location l = SetCursor(p, a, z, c, d, e, p.getRange());
 					  Jump(p, d, e, l);
 					  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c);
 				    break;
@@ -6494,7 +6527,7 @@ public class GameSim {
 					if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
 						p.getOrb();
 						orbs.remove(i);
-						System.out.println(p.getName() + " has gotten an orb.");
+						System.out.println(p.getSkin() + " has gotten an orb.");
 					}
 				}
 				for(int i = 0; i < cover.size(); i++) {
@@ -6512,7 +6545,7 @@ public class GameSim {
 					}
 				}
 				System.out.println();
-				if(p.getMovement() == 0) {
+				if(p.getMovement() <= 0) {
 					System.out.println("Out of movement.");
 					move = false;
 					System.out.println();
@@ -6524,7 +6557,8 @@ public class GameSim {
 		}
 	}
 	
-	public static Location SetCursor(Player p, Player a, Player z, Player c, Player d, Player e) {
+	public static Location SetCursor(Player p, Player a, Player z, Player c, Player d, Player e, double i) {
+		b.setRange(i);
 		Music victoryPlayer = null;
 		Music victoryPlayer2 = null;
 		try {
@@ -6704,9 +6738,9 @@ public class GameSim {
 	public static void LunarUltimate(Player p, Player a, Player b, Player c) {
 		p.cleanse();
 		Scanner input = new Scanner(System.in);
-		System.out.println("1: " + a.getName() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
-		System.out.println("2: " + b.getName() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
-		System.out.println("3: " + c.getName() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
 		System.out.print("Who do you want to make a copy of: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
@@ -6959,11 +6993,11 @@ public class GameSim {
 			range5 = "Yes";
 		}
 		if(p.ultActive()) {
-			System.out.println("1: " + a.getName() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ". Cover: " + a.getCover());
-			System.out.println("2: " + b.getName() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ". Cover: " + b.getCover());
-			System.out.println("3: " + c.getName() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP() + ". Cover: " + c.getCover());
-			System.out.println("4: " + d.getName() +d.showHP() +  d.getHealth() + "/" + d.getMaxHP() + ". Cover: " + d.getCover());
-			System.out.println("5: " + e.getName() +e.showHP() +  e.getHealth() + "/" + e.getMaxHP() + ". Cover: " + e.getCover());
+			System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ". Cover: " + a.getCover());
+			System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ". Cover: " + b.getCover());
+			System.out.println("3: " + c.getSkin() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP() + ". Cover: " + c.getCover());
+			System.out.println("4: " + d.getSkin() +d.showHP() +  d.getHealth() + "/" + d.getMaxHP() + ". Cover: " + d.getCover());
+			System.out.println("5: " + e.getSkin() +e.showHP() +  e.getHealth() + "/" + e.getMaxHP() + ". Cover: " + e.getCover());
 			for(int i = 0; i < 2; i++) {
 				System.out.print("Who do you want to send a Cherry Missile to: ");
 				String targetResponse = input.next();
@@ -6992,11 +7026,11 @@ public class GameSim {
 				}
 			}
 		}else {
-			System.out.println("1: " + a.getName() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ". Cover: " + a.getCover());
-			System.out.println("2: " + b.getName() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ". Cover: " + b.getCover());
-			System.out.println("3: " + c.getName() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ". Cover: " + c.getCover());
-			System.out.println("4: " + d.getName() +d.showHP() +  d.getHealth() + "/" + d.getMaxHP() + ". In Range: " + range4 + ". Cover: " + d.getCover());
-			System.out.println("5: " + e.getName() +e.showHP() +  e.getHealth() + "/" + e.getMaxHP() + ". In Range: " + range5 + ". Cover: " + e.getCover());
+			System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ". Cover: " + a.getCover());
+			System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ". Cover: " + b.getCover());
+			System.out.println("3: " + c.getSkin() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ". Cover: " + c.getCover());
+			System.out.println("4: " + d.getSkin() +d.showHP() +  d.getHealth() + "/" + d.getMaxHP() + ". In Range: " + range4 + ". Cover: " + d.getCover());
+			System.out.println("5: " + e.getSkin() +e.showHP() +  e.getHealth() + "/" + e.getMaxHP() + ". In Range: " + range5 + ". Cover: " + e.getCover());
 			if(!p.inRange(a) && !p.inRange(b) && !p.inRange(c) && !p.inRange(d) && !p.inRange(e)) {
 				System.out.println();
 				System.out.println("No targets in range!");
@@ -7334,23 +7368,23 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			a.takeDamage(700);
-			b.takeDamage(140);
-			c.takeDamage(140);
-			p.addDamage(980);
+			b.takeDamage(350);
+			c.takeDamage(350);
+			p.addDamage(1400);
 			p.resetUlt();
 		}
 		if(targetResponse.equals("2")) {
 			b.takeDamage(700);
-			a.takeDamage(140);
-			c.takeDamage(140);
-			p.addDamage(980);
+			a.takeDamage(350);
+			c.takeDamage(350);
+			p.addDamage(1400);
 			p.resetUlt();
 		}
 		if(targetResponse.equals("3")) {
 			c.takeDamage(700);
-			b.takeDamage(140);
-			a.takeDamage(140);
-			p.addDamage(980);
+			b.takeDamage(350);
+			a.takeDamage(350);
+			p.addDamage(1400);
 			p.resetUlt();
 		}
 		System.out.println();
@@ -9422,7 +9456,7 @@ public class GameSim {
 		a.applyEffects();
 		b.addEffects(e3);
 		b.applyEffects();
-		p.setCooldown(5);
+		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -9530,10 +9564,10 @@ public class GameSim {
 	public static void AnjelikaUltimate(Player p) {
 		p.cleanse();
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AnjelikaProtect = new Effect("protect", 0.3, 3);
-		Effect AnjelikaRefine = new Effect("refine", 0, 3);
-		Effect AnjelikaPower = new Effect("power", 0.15, 2);
-		Effect AnjelikaHeal = new Effect("heal", 0.1, 2);
+		Effect AnjelikaProtect = new Effect("protect", 0.3, 4);
+		Effect AnjelikaRefine = new Effect("refine", 0, 4);
+		Effect AnjelikaPower = new Effect("power", 0.3, 3);
+		Effect AnjelikaHeal = new Effect("heal", 0.2, 3);
 		p.addHealing(p.getMaxHP() * 0.2);
 		e.add(AnjelikaProtect);
 		e.add(AnjelikaHeal);
@@ -10789,6 +10823,12 @@ public class GameSim {
 		p.cleanse();
 		a.cleanse();
 		b.cleanse();
+		p.heal(0.2);
+		a.heal(0.2);
+		b.heal(0.2);
+		p.addHealing(p.getMaxHP() * 0.2);
+		p.addHealing(a.getMaxHP() * 0.2);
+		p.addHealing(b.getMaxHP() * 0.2);
 		ArrayList<Effect> e1 = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
@@ -10969,15 +11009,15 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeProtect = new Effect("protect", 0.05, 100);
-		Effect ChloeProtect2 = new Effect("protect", 0.05, 100);
-		Effect ChloeProtect3 = new Effect("protect", 0.05, 100);
-		Effect ChloePower = new Effect("power", 0.05, 100);
-		Effect ChloePower2 = new Effect("power", 0.05, 100);
-		Effect ChloePower3 = new Effect("power", 0.05, 100);
-		Effect OonaHeal = new Effect("heal", 0.05, 100);
-		Effect OonaHeal2 = new Effect("heal", 0.05, 100);
-		Effect OonaHeal3 = new Effect("heal", 0.05, 100);
+		Effect ChloeProtect = new Effect("protect", 0.1, 100);
+		Effect ChloeProtect2 = new Effect("protect", 0.1, 100);
+		Effect ChloeProtect3 = new Effect("protect", 0.1, 100);
+		Effect ChloePower = new Effect("power", 0.1, 100);
+		Effect ChloePower2 = new Effect("power", 0.1, 100);
+		Effect ChloePower3 = new Effect("power", 0.1, 100);
+		Effect OonaHeal = new Effect("heal", 0.1, 100);
+		Effect OonaHeal2 = new Effect("heal", 0.1, 100);
+		Effect OonaHeal3 = new Effect("heal", 0.1, 100);
 		e.add(ChloeProtect);
 		e.add(ChloePower2);
 		e.add(OonaHeal);
@@ -10993,6 +11033,7 @@ public class GameSim {
 		a.applyEffects();
 		b.addEffects(e3);
 		b.applyEffects();
+		p.resetUlt();
 		System.out.println("\"Welcome to my World!\"");
 		System.out.println();
 	}
@@ -11122,7 +11163,7 @@ public class GameSim {
 		System.out.print("What tile do you want to make: ");
 		String targetResponse = input.next();
 		b.addTile(targetResponse, l);
-		p.setCooldown(3);
+		p.setCooldown(2);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}

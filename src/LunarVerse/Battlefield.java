@@ -23,6 +23,7 @@ public class Battlefield {
 	ArrayList<Tile> tiles = new ArrayList<Tile>();
 	ArrayList<Player> players = new ArrayList<Player>();
 	String name;
+	double cursorRange = 0;
 	static final String reset = "\u001B[0m";
 	static final String color = "\u001b[38;5;";
 	static final String back = "\u001b[48;5;";
@@ -184,6 +185,57 @@ public class Battlefield {
 				tiles.add(t);
 			}
 		}
+		
+		if(name.equals("Velocity Ville")) {
+			Tile t5 = new Tile("Car", new Location(13,14));
+			Tile t6 = new Tile("Car", new Location(14,13));
+			Tile t7 = new Tile("Car", new Location(15,14));
+			Tile t8 = new Tile("Car", new Location(14,15));
+			Tile t = new Tile("Car", new Location(14,14));
+			
+			Tile t2 = new Tile("Car", new Location(27,14));
+			Tile f = new Tile("Car", new Location(26,14));
+			Tile f1 = new Tile("Car", new Location(14,26));
+			Tile f2 = new Tile("Car", new Location(28,14));
+			Tile f3 = new Tile("Car", new Location(14,28));
+			
+			Tile f4 = new Tile("Car", new Location(13,27));
+			Tile f5 = new Tile("Car", new Location(15,27));
+			
+			Tile f6 = new Tile("Car", new Location(27,13));
+			Tile f7 = new Tile("Car", new Location(27,15));
+			
+			Tile r = new Tile("Car", new Location(26,27));
+			Tile r1 = new Tile("Car", new Location(28,27));
+			
+			Tile r2 = new Tile("Car", new Location(27,26));
+			Tile r3 = new Tile("Car", new Location(27,28));
+			
+			Tile t3 = new Tile("Car", new Location(14,27));
+			
+			Tile t4 = new Tile("Car", new Location(27,27));
+			
+			tiles.add(t);
+			tiles.add(t2);
+			tiles.add(t3);
+			tiles.add(t4);
+			tiles.add(t5);
+			tiles.add(t6);
+			tiles.add(t7);
+			tiles.add(t8);
+			tiles.add(f);
+			tiles.add(f1);
+			tiles.add(f2);
+			tiles.add(f3);
+			tiles.add(f4);
+			tiles.add(f5);
+			tiles.add(f6);
+			tiles.add(f7);
+			tiles.add(r);
+			tiles.add(r1);
+			tiles.add(r2);
+			tiles.add(r3);
+		}
 	}
 	
 	public void setCursor(Location l) {
@@ -241,17 +293,7 @@ public class Battlefield {
 				}
 			}
 		}
-		if(cursor != null && cursor.getX() < 42 && cursor.getY() < 42) {
-			field[cursor.getY()][cursor.getX()] = "✦";
-			//for(int i = 0; i < 42; i++) {
-			//	for(int j = 0; j < 42; j++){
-			//		Location l = new Location(i, j);
-			//		if(cursor.inRange(l, s.getRange())) {
-			//			background[j][i] = 255;
-			//		}
-			//	}
-			//}
-		}
+		
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
 				Location l = new Location(i, j);
@@ -303,6 +345,10 @@ public class Battlefield {
 							field[i][j] = "$";
 							foreground[i][j] = 30;
 						}
+						if(t.getName().equals("Car")) {
+							field[i][j] = "=";
+							foreground[i][j] = 200;
+						}
 					}
 				}
 				for(Orb o: orbLoc) {
@@ -334,7 +380,7 @@ public class Battlefield {
 				}
 				if(i == one.getY() && j == one.getX()) {
 					if(!a.isAlive()) {
-						field[i][j] = "💀";
+						field[i][j] = "-";
 					}else {
 						field[i][j] = bold + a.getName().substring(0,1) + clear;
 						foreground[i][j] = a.skinC();
@@ -343,7 +389,7 @@ public class Battlefield {
 				}
 				if(i == two.getY() && j == two.getX()) {
 					if(!b.isAlive()) {
-						field[i][j] = "💀";
+						field[i][j] = "-";
 					}else {
 						field[i][j] = bold + b.getName().substring(0,1) + clear;
 						foreground[i][j] = b.skinC();
@@ -352,7 +398,7 @@ public class Battlefield {
 				}
 				if(i == three.getY() && j == three.getX()) {
 					if(!c.isAlive()) {
-						field[i][j] = "💀";
+						field[i][j] = "-";
 					}else {
 						field[i][j] = bold + c.getName().substring(0,1) + clear;
 						foreground[i][j] = c.skinC();
@@ -361,7 +407,7 @@ public class Battlefield {
 				}
 				if(i == four.getY() && j == four.getX()) {
 					if(!d.isAlive()) {
-						field[i][j] = "💀";
+						field[i][j] = "-";
 					}else {
 						field[i][j] = bold + d.getName().substring(0,1) + clear;
 						foreground[i][j] = d.skinC();
@@ -370,7 +416,7 @@ public class Battlefield {
 				}
 				if(i == five.getY() && j == five.getX()) {
 					if(!e.isAlive()) {
-						field[i][j] = "💀";
+						field[i][j] = "-";
 					}else {
 						field[i][j] = bold + e.getName().substring(0,1) + clear;
 						foreground[i][j] = e.skinC();
@@ -379,7 +425,7 @@ public class Battlefield {
 				}
 				if(i == six.getY() && j == six.getX()) {
 					if(!f.isAlive()) {
-						field[i][j] = "💀";
+						field[i][j] = "-";
 					}else {
 						field[i][j] = bold + f.getName().substring(0,1) + clear;
 						foreground[i][j] = f.skinC();
@@ -392,7 +438,17 @@ public class Battlefield {
 			
 		}
 		
-		
+		if(cursor != null && cursor.getX() < 42 && cursor.getY() < 42) {
+			field[cursor.getY()][cursor.getX()] = "✦";
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(cursor.inRange(l, cursorRange)) {
+						background[j][i] = 195;
+					}
+				}
+			}
+		}
 		for(int i = 0; i < 42; i ++) {
 			System.out.print(i + " ");
 			if(i < 10) {
@@ -440,6 +496,10 @@ public class Battlefield {
 		System.out.println();
 		*/
 		System.out.println();
+	}
+	
+	public void setRange(double i) {
+		cursorRange = i;
 	}
 	
 	public void addTile(String s, Location l) {
@@ -502,6 +562,15 @@ public class Battlefield {
 	public boolean hasTime(int x, int y) {
 		for(Tile t: tiles) {
 			if(t.getLoc().eqLoc(new Location(x,y)) && t.getName().equals("Time")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean hasCar(int x, int y) {
+		for(Tile t: tiles) {
+			if(t.getLoc().eqLoc(new Location(x,y)) && t.getName().equals("Car")) {
 				return true;
 			}
 		}

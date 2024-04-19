@@ -62,7 +62,7 @@ public class Party {
 		if(randomNum == 1) {
 			if(randomNum2 == 1 && !oneLeft()) {
 				roster[0].teamChat(this);
-			}else {
+			}else if(roster[0].isAlive()){
 				roster[0].chat();
 			}
 			
@@ -70,14 +70,14 @@ public class Party {
 		if(randomNum == 2) {
 			if(randomNum2 == 1 && !oneLeft()) {
 				roster[1].teamChat(this);
-			}else {
+			}else if(roster[1].isAlive()){
 				roster[1].chat();
 			}
 		}
 		if(randomNum == 3) {
 			if(randomNum2 == 1 && !oneLeft()) {
 				roster[2].teamChat(this);
-			}else {
+			}else if(roster[2].isAlive()){
 				roster[2].chat();
 			}
 		}
