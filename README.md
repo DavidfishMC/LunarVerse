@@ -1,1 +1,1 @@
-Game Description: https://bit.ly/LunarVerseGameSummary
+Game Description: bit.ly/LunarVerseWiki
