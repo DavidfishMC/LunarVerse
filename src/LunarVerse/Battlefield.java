@@ -29,6 +29,7 @@ public class Battlefield {
 	static final String back = "\u001b[48;5;";
 	static final String clear = "\u001b[22m";
 	static final String bold = "\u001b[1m";
+	public static boolean endgame = false;
 
 	public Battlefield(String nameIn, Player aIn, Player bIn, Player cIn, Player dIn, Player eIn, Player fIn) {
 		a = aIn;
@@ -315,6 +316,20 @@ public class Battlefield {
 				}
 			}
 		}
+		
+		if(s.getMovement() > s.getRange()){
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(s.inRange(l, s.getRange())) {
+						//field[j][i] = "∙";
+						//field[j][i]= "\u001B[41m" + " " + reset;
+						background[j][i] = 255;
+					}
+				}
+			}
+		}
+		
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
 				for(Tile t: tiles) {
@@ -514,27 +529,28 @@ public class Battlefield {
 	}
 	
 	public void endGame() {
+		endgame = true;
 		tiles.clear();
 		for(int i = 0; i < 42; i++) {
-			for(int j = 0; j < 10; j++) {
+			for(int j = 0; j < 13; j++) {
 				Tile t = new Tile("Space", new Location(i, j));
 				tiles.add(t);
 			}
 		}
 		for(int i = 0; i < 42; i++) {
-			for(int j = 32; j < 42; j++) {
+			for(int j = 29; j < 42; j++) {
 				Tile t = new Tile("Space", new Location(i, j));
 				tiles.add(t);
 			}
 		}
-		for(int i = 0; i < 10; i++) {
-			for(int j = 10; j < 32; j++) {
+		for(int i = 0; i < 13; i++) {
+			for(int j = 13; j < 29; j++) {
 				Tile t = new Tile("Space", new Location(i, j));
 				tiles.add(t);
 			}
 		}
-		for(int i = 32; i < 42; i++) {
-			for(int j = 10; j < 32; j++) {
+		for(int i = 29; i < 42; i++) {
+			for(int j = 13; j < 29; j++) {
 				Tile t = new Tile("Space", new Location(i, j));
 				tiles.add(t);
 			}

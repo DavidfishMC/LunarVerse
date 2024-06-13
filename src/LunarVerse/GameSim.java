@@ -33,7 +33,7 @@ public class GameSim {
 		}
 		*/
 		try {
-			String audio = "rumpus.wav";
+			String audio = "playoffsintro.wav";
 			audioPlayer = new Music(audio, false);
 			audioPlayer.play();
 			audioPlayer.pause();
@@ -98,6 +98,19 @@ public class GameSim {
 			String temp7 = input.next();
 			p6 = CharacterSelection(p6, temp7, false, 33, 36);
 			System.out.println();
+			//p1.changeSkin("Enchantment Chaos");
+			//p3.changeSkin("Enchantment Chaos");
+			//p5.changeSkin("Enchantment Chaos");
+			p2.changeSkin("");
+			p4.changeSkin("");
+			p6.changeSkin("");
+			try {
+				String audio = "matchstart.wav";
+				Music victoryPlayer = new Music(audio, false);
+				victoryPlayer.play();
+			}catch (Exception e) {
+				System.out.println(e);
+			}
 			if(mode.equals("Charm")) {
 				System.out.println(p1.getSkin() + ", pick your charm.");
 				System.out.print("Charm Selection: ");
@@ -126,14 +139,13 @@ public class GameSim {
 			}
 
 		}else {
-			p1 = new Player(10, 175, true, "Redgar", 20, 20, 12, 100, 0);
-			p3 = new Player(10, 325, false, "Rocco", 40, 40, 10, 10, 0);
+			p1 = new Player(10000, 175, true, "Midnite", 40, 40, 10, 20, 0);
+			p3 = new Player(10, 325, false, "Radar", 40, 40, 10, 100, 0);
 			p5 = new Player(100, 575, false, "Liam", 40, 40, 6, 500, 0);
 			
-			p2 = new Player(10000, 225, false, "Midnite", 41, 41, 11, 10, 0);
+			p2 = new Player(10000, 225, false, "Radar", 41, 41, 11, 100, 1);
 			p4 = new Player(10000, 100, false, "Rocco", 37, 37, 10, 100, 0);
 			p6 = new Player(10000, 100, false, "Kailani", 40, 40, 10, 100, 0);
-
 		}
 		b = new Battlefield("Velocity Ville", p1, p3, p5, p2, p4, p6);
 		Party party1 = new Party(true, p1, p3, p5);
@@ -162,7 +174,7 @@ public class GameSim {
 				if(party1.oneLeft() && play) {
 					try {
 						audioPlayer.stop();
-						String audio = "dramaticedit.wav";
+						String audio = "boss.wav";
 						audioPlayer = new Music(audio, false);
 						audioPlayer.play();
 						String audio2 = "lastplayer.wav";
@@ -480,7 +492,7 @@ public class GameSim {
 								EliAbility(p1, p3, p5);
 							}
 							if(p1.getName().equals("Via")) {
-								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 10);
+								Location l = SetCursor(p1, p2, p4, p6, p3, p5, 8);
 								ViaAbility(p1, p2, p4, p6, l);
 							}
 							if(p1.getName().equals("Louis")) {
@@ -1395,7 +1407,7 @@ public class GameSim {
 								EliAbility(p3, p1, p5);
 							}
 							if(p3.getName().equals("Via")) {
-								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 10);
+								Location l = SetCursor(p3, p2, p4, p6, p1, p5, 8);
 								ViaAbility(p3, p2, p4, p6, l);
 							}
 							if(p3.getName().equals("Louis")) {
@@ -2311,7 +2323,7 @@ public class GameSim {
 								EliAbility(p5, p3, p1);
 							}
 							if(p5.getName().equals("Via")) {
-								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 10);
+								Location l = SetCursor(p5, p2, p4, p6, p3, p1, 8);
 								ViaAbility(p5, p2, p4, p6, l);
 							}
 							if(p5.getName().equals("Louis")) {
@@ -2949,21 +2961,11 @@ public class GameSim {
 					}
 				}
 			}
-			if(turns >= 5 && play3) {
-				try {
-					audioPlayer.stop();
-					String audio = "orbtime.wav";
-					audioPlayer = new Music(audio, false);
-					//audioPlayer.play();
-					play3 = false;
-				}catch (Exception e) {
-					System.out.println(e);
-				}
-			}
+			
 			if(turns >= 9 && play2) {
 				try {
 					audioPlayer.stop();
-					String audio = "root.wav";
+					String audio = "scissors.wav";
 					audioPlayer = new Music(audio, false);
 					audioPlayer.play();
 					String audio2 = "overtimeline.wav";
@@ -2978,7 +2980,7 @@ public class GameSim {
 				try {
 					b.endGame();
 					audioPlayer.stop();
-					String audio = "endgame.wav";
+					String audio = "stapler.wav";
 					audioPlayer = new Music(audio, false);
 					audioPlayer.play();
 					String audio2 = "endgameline.wav";
@@ -2996,7 +2998,7 @@ public class GameSim {
 				if(party2.oneLeft() && play) {
 					try {
 						audioPlayer.stop();
-						String audio = "dramaticedit.wav";
+						String audio = "boss.wav";
 						audioPlayer = new Music(audio, false);
 						audioPlayer.play();
 						String audio2 = "lastplayer.wav";
@@ -3293,7 +3295,7 @@ public class GameSim {
 								EliAbility(p2, p4, p6);
 							}
 							if(p2.getName().equals("Via")) {
-								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 10);
+								Location l = SetCursor(p2, p1, p3, p5, p4, p6, 8);
 								ViaAbility(p2, p1, p3, p5, l);
 							}
 							if(p2.getName().equals("Louis")) {
@@ -4218,7 +4220,7 @@ public class GameSim {
 								OrionAbility(p4, p2, p6);
 							}
 							if(p4.getName().equals("Via")) {
-								Location l = SetCursor(p4, p1, p3, p5, p2, p6, 10);
+								Location l = SetCursor(p4, p1, p3, p5, p2, p6, 8);
 								ViaAbility(p4, p1, p3, p5, l);
 							}
 							if(p4.getName().equals("Kailani")) {
@@ -5125,7 +5127,7 @@ public class GameSim {
 								EliAbility(p6, p4, p2);
 							}
 							if(p6.getName().equals("Via")) {
-								Location l = SetCursor(p6, p1, p3, p5, p4, p2, 10);
+								Location l = SetCursor(p6, p1, p3, p5, p4, p2, 8);
 								ViaAbility(p6, p1, p3, p5, l);
 							}
 							if(p6.getName().equals("Louis")) {
@@ -5586,7 +5588,7 @@ public class GameSim {
 												RubyAttack(p6, p3);
 											}
 											if(p6.getName().equals("Norman")) {
-												NormanAttack(p6, p1, p2, p4);
+												NormanAttack(p6, p3, p2, p4);
 											}
 											if(p6.getName().equals("Chief")) {
 												ChiefAttack(p6, p3);
@@ -5740,7 +5742,7 @@ public class GameSim {
 												RubyAttack(p6, p5);
 											}
 											if(p6.getName().equals("Norman")) {
-												NormanAttack(p6, p1, p2, p4);
+												NormanAttack(p6, p5, p2, p4);
 											}
 											if(p6.getName().equals("Chief")) {
 												ChiefAttack(p6, p5);
@@ -5775,6 +5777,9 @@ public class GameSim {
 			String audio = "victoryedit.wav";
 			Music victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
+			//String audio2 = "victoryvoice.wav";
+			//Music victoryPlayer2 = new Music(audio2, false);
+			//victoryPlayer2.play();
 		}catch (Exception e) {
 			System.out.println(e);
 		}
@@ -5877,321 +5882,322 @@ public class GameSim {
 		//p.setImage("backupdancer.png");
 		switch (name) {
 		  case "Lunar":
-			  p = new Player(2750, 250, start, name, x, y, 10, 10, 5);
+			  p = new Player(2350, 250, start, name, x, y, 10, 10, 5);
 			  name = bold + color + 147 + "m" + "Lun" + color + 87 + "m" + "ar" + reset;
+			  name = p.getGradientName("Lunar", "#A4A8DF", "#A89FD5", "#38E8FF");
 			  p.skin(name);
 			  p.setC(147);
 			  //p.setImage("lunar.png");
 		    break;
 		  case "Aidan":
-			  p = new Player(2700, 175, start, name, x, y, 11, 9, 6);
-			  name = bold + color + 209 + "m" + "A" + color + 75 + "m" + "ida" + color + 209 + "m" + "n" + reset;
+			  p = new Player(2300, 175, start, name, x, y, 11, 9, 6);
+			  name = p.getGradientName("Aidan", "#34A0D5", "#F5903D", "#2796CE");
 			  p.skin(name);
 			  p.setC(209);
 		    break;
 		  case "Finley":
-			  p = new Player(3325, 225, start, name, x, y, 9, 9, 6);
-			  name = bold + color + 223 + "m" + "Fin" + color + 196 + "m" + "ley" + reset;
+			  p = new Player(2625, 200, start, name, x, y, 9, 9, 6);
+			  name = p.getGradientName("Finley", "#F2C511", "#FF4747");
 			  p.skin(name);
 			  p.setC(223);
 		    break;
 		  case "Ayson":
-			  p = new Player(3150, 200, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 45 + "m" + "A" + color + 54 + "m" + "y"  + color + 45 + "m" + "s" + color + 54 + "m" + "o" + color + 45 + "m" + "n" + reset + " "  + bold + color + 54 + "m" + "B" + color + 45 + "m" + "r" + color + 54 + "m" + "o" + color + 45 + "m" + "t" + color + 54 + "m" + "h" + color + 45 + "m" + "e" + color + 54 + "m" + "r"+ color + 45 + "m" + "s" + reset;
+			  p = new Player(2750, 200, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Ayson Brothers", "#48C8FE", "#78CDDE", "#8F2D2D");
 			  p.skin(name);
 			  p.setC(45);
 		    break;
 		  case "Alex":
-			  p = new Player(2750, 250, start, name, x, y, 12, 10, 7);
-			  name = bold + color + 196 + "m" + "A" + color + 226 + "m" + "le" + color + 196 + "m" + "x" + reset;
+			  p = new Player(2350, 250, start, name, x, y, 12, 10, 7);
+			  name = p.getGradientName("Alex", "#FF4242", "#FFC524", "#F7C308", "#F92424");
 			  p.skin(name);
 			  p.setC(196);
 		    break;
 		  case "Jesse":
-			  p = new Player(2700, 75, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 160 + "m" + "J" + color + 161 + "m" + "e"  + color +197 + "m" + "s" + color + 214 + "m" + "s" + color + 215 + "m" + "e" + reset;
+			  p = new Player(2300, 75, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Jesse", "#CF0202", "#FF4242", "#FE6410", "#FFC524", "#F7C308");
 			  p.skin(name);
 			  p.setC(160);
 		    break;
 		  case "Chief":
-			  p = new Player(4400, 175, start, name, x, y, 8, 8, 7);
-			  name = bold + color + 69 + "m" + "C" + color + 68 + "m" + "h"  + color + 63 + "m" + "i" + color + 62 + "m" + "e" + color + 61 + "m" + "f" + reset;
+			  p = new Player(3800, 175, start, name, x, y, 8, 8, 7);
+			  name = p.getGradientName("Chief", "#2EA4FF", "#397BFE", "#0544C2");
 			  p.skin(name);
 			  p.setC(69);
 		    break;
 		  case "Norman":
-			  p = new Player(2550, 125, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 46 + "m" + "N" + color + 47 + "m" + "o"  + color + 48 + "m" + "r" + color + 49 + "m" + "m" + color + 50 + "m" + "a" + color + 51 + "m" + "n" + reset;
+			  p = new Player(2150, 125, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Norman", "#4BEA1F", "#39FEA9", "#1FF6F9");
 			  p.skin(name);
 			  p.setC(46);
 		    break;
 		  case "Katrina":
-			  p = new Player(2650, 175, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 32 + "m" + "K" + color + 38 + "m" + "a"  + color + 211 + "m" + "t" + color + 211 + "m" + "r" + color + 211 + "m" + "i" + color + 38 + "m" + "n" + color + 32 + "m" + "a" + reset;
+			  p = new Player(2350, 175, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Katrina", "#1F63EA", "#2C9CF2", "#FE67DD", "#F165EC", "#FD75FF", "#1FB1F9", "#3874FF");
 			  p.skin(name);
 			  p.setC(32);
 		    break;
 		  case "Sammi":
-			  p = new Player(2750, 275, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 160 + "m" + "S" + color + 196 + "m" + "a"  + color + 202 + "m" + "m" + color + 166 + "m" + "m" + color + 208 + "m" + "i" + reset;
+			  p = new Player(2350, 275, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Sammi", "#C20000", "#F75026", "#F26380", "#FB9B41");
 			  p.skin(name);
 			  p.setC(160);
 		    break;
 		  case "Mack":
-			  p = new Player(2900, 250, start, name, x, y, 11, 10, 6);
-			  name = bold + color + 200 + "m" + "Mack" + reset;
+			  p = new Player(2500, 250, start, name, x, y, 11, 10, 6);
+			  name = p.getGradientName("Mack", "#FF24C5", "#FB41F5");
 			  p.skin(name);
 			  p.setC(200);
 		    break;
 		  case "Axol":
-			  p = new Player(2650, 175, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 222 + "m" + "A" + color + 223 + "m" + "x"  + color + 224 + "m" + "o" + color + 225 + "m" + "l" + reset;
+			  p = new Player(2250, 175, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Axol", "#F9B92F", "#CE6D2C", "#A98992");
 			  p.skin(name);
 			  p.setC(222);
 		    break;
 		  case "Via":
-			  p = new Player(2900, 325, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 124 + "m" + "Via" + reset;
+			  p = new Player(2500, 325, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Via", "#A32900", "#A20121");
 			  p.skin(name);
 			  p.setC(124);
 		    break;
 		  case "Hopper":
-			  p = new Player(4200, 175, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 40 + "m" + "H" + color + 34 + "m" + "o"  + color +35 + "m" + "p" + color + 22 + "m" + "p" + color + 238 + "m" + "e"+ color + 239 + "m" + "r" + reset;
+			  p = new Player(3800, 200, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Hopper", "#28D006", "#289F19", "#0D6402");
 			  p.skin(name);
 			  p.setC(40);
 		    break;
 		  case "Kailani":
-			  p = new Player(2750, 225, start, name, x, y, 25, 10, 6);
-			  name = bold + color + 187 + "m" + "Kai" + color + 87 + "m" + "l" + color + 69 + "m" + "ani" + reset;
+			  p = new Player(2350, 275, start, name, x, y, 25, 10, 6);
+			  name = p.getGradientName("Kailani", "#DDC136", "#C4BB5A", "#3BDEDB", "#0876BA");
 			  p.skin(name);
 			  p.setC(187);
 		    break;
 		  case "Zero":
-			  p = new Player(2625, 225, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 196 + "m" + "Z" + color + 243 + "m" + "er" + color + 196 + "m" + "o" + reset;
+			  p = new Player(2325, 225, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Zero", "#F11E1E", "#9E9E9E", "#7F5757");
 			  p.skin(name);
 			  p.setC(196);
 		    break;
 		  case "Ruby":
-			  p = new Player(2750, 200, start, name, x, y, 10, 10, 4);
-			  name = bold + color + 161 + "m" + "R" + color + 162 + "m" + "u"  + color +163 + "m" + "b" + color + 164 + "m" + "y" + reset;
+			  p = new Player(2350, 200, start, name, x, y, 10, 10, 5);
+			  name = p.getGradientName("Ruby", "#F22C2C", "#B120BC", "#C85DD0");
 			  p.skin(name);
 			  p.setC(161);
 		    break;
 		  case "Chloe":
-			  p = new Player(2650, 200, start, name, x, y, 10, 10, 5);
-			  name = bold + color + 136 + "m" + "C" + color + 137 + "m" + "h"  + color + 138 + "m" + "l" + color + 139 + "m" + "o" + color + 140 + "m" + "e" + reset;
+			  p = new Player(2250, 200, start, name, x, y, 10, 10, 5);
+			  name = p.getGradientName("Chloe", "#D17000", "#B97704", "#EC9CEA", "#DB6EE2");
 			  p.skin(name);
 			  p.setC(136);
 		    break;
 		  case "Mason":
-			  p = new Player(2850, 250, start, name, x, y, 11, 10, 7);
-			  name = bold + color + 129 + "m" + "M" + color + 128 + "m" + "a"  + color + 93 + "m" + "s" + color + 92 + "m" + "o" + color + 91 + "m" + "n" + reset;
+			  p = new Player(2450, 250, start, name, x, y, 11, 10, 7);
+			  name = p.getGradientName("Mason", "#D963D5", "#A747F5", "#9718EC", "#330080");
 			  p.skin(name);
 			  p.setC(129);
 		    break;
 		  case "Max":
-			  p = new Player(3000, 50, start, name, x, y, 9, 9, 6);
-			  name = bold + color + 180 + "m" + "Max" + reset;
+			  p = new Player(2600, 25, start, name, x, y, 9, 9, 6);
+			  name = p.getGradientName("Max", "#D28B28", "#EA9E34");
 			  p.skin(name);
 			  p.setC(180);
 		    break;
 		  case "Evil":
-			  p = new Player(2700, 250, start, name, x, y, 11, 8, 7);
-			  name = bold + color + 196 + "m" + "E" + color + 197 + "m" + "v"  + color + 198 + "m" + "i" + color + 199 + "m" + "l" + reset + " " + bold + color + 199 + "m" + "L" + color + 147 + "m" + "un" + color + 87 + "m" + "ar" + reset;
+			  p = new Player(2500, 250, start, name, x, y, 11, 9, 7);
+			  name = p.getGradientName("Evil Lunar", "#F81616", "#A4A8DF", "#A89FD5", "#38E8FF");
 			  p.skin(name);
 			  p.setC(196);
 		    break;
 		  case "Airic":
-			  p = new Player(2750, 250, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 19 + "m" + "Air" + color + 250 + "m" + "ic" + reset;
+			  p = new Player(2350, 250, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Airic", "#473AF2", "#4367F9", "#A3A6F5", "#C2C2C2");
 			  p.skin(name);
 			  p.setC(19);
 		    break;
 		  case "Julian":
-			  p = new Player(2800, 200, start, name, x, y, 10, 8, 7);
-			  name = bold + color + 214 + "m" + "J" + color + 159 + "m" + "u"  + color + 214 + "m" + "l" + color + 159 + "m" + "i" + color + 214 + "m" + "a" + color + 159 + "m" + "n" + reset;
+			  p = new Player(2400, 200, start, name, x, y, 10, 8, 7);
+			  name = p.getGradientName("Julian", "#FF8B1F", "#E89F64", "#74DEEC", "#6DF3EA");
 			  p.skin(name);
 			  p.setC(214);
 		    break;
 		  case "Solar":
-			  p = new Player(2800, 175, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 220 + "m" + "S" + color + 221 + "m" + "o"  + color + 222 + "m" + "l" + color + 212 + "m" + "a" + color + 213 + "m" + "r" + reset;
+			  p = new Player(2400, 175, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Solar", "#E3E625", "#F47CFD");
 			  p.skin(name);
 			  p.setC(220);
 		    break;
 		  case "Eli":
-			  p = new Player(2525, 100, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 39 + "m" + "Eli" + reset;
+			  p = new Player(2225, 150, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Eli", "#51C0F0", "#35A7ED");
 			  p.skin(name);
 			  p.setC(39);
 		    break;
 		  case "Dylan":
-			  p = new Player(2700, 175, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 41 + "m" + "D" + color + 42 + "m" + "y"  + color + 43 + "m" + "l" + color + 44 + "m" + "a" + color + 45 + "m" + "n" + reset;
+			  p = new Player(2400, 200, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Dylan", "#2DDF2A", "#1EC23F", "#3594ED", "#4F8CA1");
 			  p.skin(name);
 			  p.setC(41);
 		    break;
 		  case "Orion":
-			  p = new Player(4325, 225, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 101 + "m" + "O" + color + 102 + "m" + "r"  + color + 103 + "m" + "i" + color + 104 + "m" + "o" + color + 105 + "m" + "n" + reset;
+			  p = new Player(3925, 225, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Orion", "#707070", "#8F84A4", "#7264AA", "#426BAE");
 			  p.skin(name);
 			  p.setC(101);
 		    break;
 		  case "Grizz":
-			  p = new Player(4200, 200, start, name, x, y, 10, 10, 8);
-			  name = bold + color + 88 + "m" + "M" + color + 58 + "m" + "r"  + color + 59 + "m" + "." + reset  + bold + color + 53 + "m" + "G" + color + 54 + "m" + "r" + color + 55 + "m" + "i" + color + 91 + "m" + "z" + color + 91 + "m" + "z" + reset;
+			  p = new Player(3800, 200, start, name, x, y, 10, 10, 8);
+			  name = p.getGradientName("Mr.Grizz", "#9D3F01", "#7E390C", "#471D95", "#741F7A");
 			  p.skin(name);
 			  p.setC(88);
 		    break;
 		  case "Clara":
-			  p = new Player(2850, 300, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 219 + "m" + "C" + color + 218 + "m" + "l"  + color + 217 + "m" + "a" + color + 216 + "m" + "r" + color + 215 + "m" + "a" + reset;
+			  p = new Player(2450, 300, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Clara", "#F584DD", "#CF8AF5", "#F5AA42");
 			  p.skin(name);
 			  p.setC(219);
 		    break;
 		  case "Liam":
-			  p = new Player(2825, 225, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 196 + "m" + "Liam" + reset;
+			  p = new Player(2425, 225, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Liam", "#F53D3D", "#F76526");
 			  p.skin(name);
 			  p.setC(196);
 		    break;
 		  case "Mayhem":
-			  p = new Player(3600, 200, start, name, x, y, 10, 10, 8);
-			  name = bold + color + 171 + "m" + "M" + color + 170 + "m" + "a"  + color + 169 + "m" + "y" + color + 135 + "m" + "h" + color + 134 + "m" + "e" + color + 133 + "m" + "m" + reset;
+			  p = new Player(3600, 225, start, name, x, y, 10, 10, 8);
+			  name = p.getGradientName("Mayhem", "#D748FE", "#B423D1", "#9A21FD");
 			  p.skin(name);
 			  p.setC(171);
 		    break;
 		  case "Bedrock":
-			  p = new Player(4500, 400, start, name, x, y, 7, 7, 7);
-			  name = bold + color + 240 + "m" + "B" + color + 241 + "m" + "e"  + color + 242 + "m" + "d" + color + 243 + "m" + "r" + color + 245 + "m" + "o" + color + 246 + "m" + "c" + color + 247 + "m" + "k" + reset;
+			  p = new Player(4100, 400, start, name, x, y, 7, 7, 8);
+			  name = p.getGradientName("Bedrock", "#525252", "#787878", "#B0B0B0");
 			  p.skin(name);
 			  p.setC(240);
 		    break;
 		  case "Augie":
-			  p = new Player(4050, 150, start, name, x, y, 10, 10, 8);
-			  name = bold + color + 34 + "m" + "C" + color + 70 + "m" + "a"  + color + 71 + "m" + "p" + color + 72 + "m" + "t" + color + 73 + "m" + "a" + color + 74 + "m" + "i" + color + 75 + "m" + "n" + reset + " "  + bold + color + 220 + "m" + "A" + color + 221 + "m" + "u" + color + 196 + "m" + "g" + color + 197 + "m" + "i" + color + 198 + "m" + "e" + reset;
+			  p = new Player(3650, 175, start, name, x, y, 10, 10, 8);
+			  name = p.getGradientName("Captain Augie", "#307DF8", "#51C4F5", "#B5B5B5", "#F0BC2D");
 			  p.skin(name);
 			  p.setC(34);
 		    break;
 		  case "Midnite":
-			  p = new Player(2900, 275, start, name, x, y, 12, 10, 7);
-			  name = bold + color + 21 + "m" + "M" + color + 20 + "m" + "i"  + color + 39 + "m" + "d" + color + 75 + "m" + "n" + color + 111 + "m" + "i" + color + 183 + "m" + "t" + color + 247 + "m" + "e" + reset;
+			  p = new Player(2500, 275, start, name, x, y, 12, 10, 7);
+			  name = p.getGradientName("Midnite", "#011CE4", "#1E88BF1", "#CE92DD", "#B8B7B7");
 			  p.skin(name);
 			  p.setC(21);
 		    break;
 		  case "Ashley":
-			  p = new Player(2550, 200, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 80 + "m" + "A" + color + 81 + "m" + "s"  + color + 87 + "m" + "h" + color + 183 + "m" + "l" + color + 218 + "m" + "e" + color + 225 + "m" + "y" + reset;
+			  p = new Player(2150, 200, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Ashley", "#4ECAB6", "#4AE5E8", "#A296B7", "#F070E5");
 			  p.skin(name);
 			  p.setC(80);
 		    break;
 		  case "Radar":
-			  p = new Player(2800, 200, start, name, x, y, 10, 10, 3);
-			  name = bold + color + 147 + "m" + "R" + color + 146 + "m" + "a"  + color +145 + "m" + "d" + color + 144 + "m" + "a" + color + 143 + "m" + "r" + reset;
+			  p = new Player(2400, 200, start, name, x, y, 10, 10, 3);
+			  name = p.getGradientName("Radar", "#8C79A0", "#AAA1A1", "#59854C");
 			  p.skin(name);
 			  p.setC(147);
 		    break;
 		  case "Oona":
-			  p = new Player(2700, 175, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 202 + "m" + "O" + color + 203 + "m" + "o"  + color +204 + "m" + "n" + color + 205 + "m" + "a" + reset;
+			  p = new Player(2400, 225, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Oona", "#F88A30", "#F54242", "#F755E1");
 			  p.skin(name);
 			  p.setC(202);
 		    break;
 		  case "Dimentio":
-			  p = new Player(3700, 250, start, name, x, y, 10, 10, 8);
-			  name = bold + color + 202 + "m" + "D" + color + 203 + "m" + "i"  + color + 196 + "m" + "m" + color + 197 + "m" + "e" + color + 118 + "m" + "n" + color + 119 + "m" + "t" + color + 76 + "m" + "i" + color + 77 + "m" + "o" + reset;
+			  p = new Player(3500, 250, start, name, x, y, 10, 10, 8);
+			  name = p.getGradientName("Dimentio", "#F54242", "#ED390C", "#30F83E", "#55F785");
 			  p.skin(name);
 			  p.setC(202);
 		    break;
 		  case "Rocco":
-			  p = new Player(2725, 200, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 65 + "m" + "R" + color + 66 + "m" + "o"  + color + 67 + "m" + "c" + color + 68 + "m" + "c" + color + 69 + "m" + "o" + reset;
+			  p = new Player(2325, 200, start, name, x, y, 10, 10, 5);
+			  name = p.getGradientName("Rocco", "#457F15", "#4ADEAD", "#2C7696");
 			  p.skin(name);
 			  p.setC(65);
 		    break;
 		  case "Xara":
-			  p = new Player(3700, 200, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 129 + "m" + "X" + color + 128 + "m" + "a" + color + 209 + "m" + "r" + color + 208 + "m" + "a" + reset;
+			  p = new Player(3500, 200, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Xara", "#F38B2B", "#9345F2");
 			  p.skin(name);
 			  p.setC(129);
 		    break;
 		  case "Thunder":
-			  p = new Player(4250, 300, start, name, x, y, 8, 8, 7);
-			  name = bold + color + 226 + "m" + "Thu" + color + 244 + "m" + "nder" + reset;
+			  p = new Player(3850, 300, start, name, x, y, 9, 9, 7);
+			  name = p.getGradientName("Thunder", "#F1D627", "#E1DC37", "#B0B0B0", "#696969");
 			  p.skin(name);
 			  p.setC(226);
 		    break;
 		  case "Archer":
-			  p = new Player(2700, 175, start, name, x, y, 15, 8, 6);
-			  name = bold + color + 76 + "m" + "A" + color + 77 + "m" + "r"  + color + 70 + "m" + "c" + color + 71 + "m" + "h" + color + 58 + "m" + "e" + color + 59 + "m" + "r" + reset;
+			  p = new Player(2300, 175, start, name, x, y, 15, 8, 6);
+			  name = p.getGradientName("Archer", "#57CF17", "#30C606", "#BC5B01", "#696969");
 			  p.skin(name);
 			  p.setC(76);
 		    break;
 		  case "Tom":
-			  p = new Player(4225, 250, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 196 + "m" + "T" + color + 160 + "m" + "o"  + color + 161 + "m" + "m" + reset + " " + bold + color + 88 + "m" + "P" + color + 89 + "m" + "h" + color + 52 + "m" + "a" + color + 53 + "m" + "n" + reset;
+			  p = new Player(3825, 275, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Tom Phan", "#E01A1A", "#B70606", "#420000");
 			  p.skin(name);
 			  p.setC(196);
 		    break;
 		  case "Gates":
-			  p = new Player(3700, 200, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 44 + "m" + "D" + color + 45 + "m" + "r"  + color + 81 + "m" + "." + reset  + bold + color + 117 + "m" + "G" + color + 116 + "m" + "a" + color + 111 + "m" + "t" + color + 110 + "m" + "e" + color + 109 + "m" + "s" + reset;
+			  p = new Player(3400, 200, start, name, x, y, 10, 10, 5);
+			  name = p.getGradientName("Dr.Gates", "#06B794", "#49E4CA", "#3478A2");
 			  p.skin(name);
 			  p.setC(44);
 		    break;
 		  case "Redgar":
-			  p = new Player(2500, 150, start, name, x, y, 10, 10, 4);
-			  name = bold + color + 33 + "m" + "R" + color + 32 + "m" + "e"  + color +27 + "m" + "d" + color + 26 + "m" + "g" + color + 21 + "m" + "a"+ color + 20 + "m" + "r" + reset;
+			  p = new Player(2200, 150, start, name, x, y, 10, 10, 4);
+			  name = p.getGradientName("Redgar", "#2980B9", "#637FBF", "#45D3D1");
 			  p.skin(name);
 			  p.setC(33);
 		    break;
 		  case "Cherry":
-			  p = new Player(2700, 100, start, name, x, y, 12, 9, 7);
-			  name = bold + color + 196 + "m" + "C" + color + 197 + "m" + "h"  + color + 198 + "m" + "e" + color + 199 + "m" + "r" + color + 200 + "m" + "r" + color + 201 + "m" + "y" + reset;
+			  p = new Player(2300, 100, start, name, x, y, 12, 9, 7);
+			  name = p.getGradientName("Cherry", "#EA98F0", "#F25FA6", "#F72222");
 			  p.skin(name);
 			  p.setC(196);
 		    break;
 		  case "Gash":
-			  p = new Player(3950, 200, start, name, x, y, 10, 10, 5);
-			  name = bold + color + 130 + "m" + "G" + color + 131 + "m" + "a" + color + 166 + "m" + "s" + color + 167 + "m" + "h" + reset;
+			  p = new Player(3400, 200, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Gash", "#B72E01", "#B2552C", "#F72222");
 			  p.skin(name);
 			  p.setC(130);
 		    break;
 		  case "Audrey":
-			  p = new Player(2650, 150, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 111 + "m" + "A" + color + 147 + "m" + "u"  + color + 123 + "m" + "d" + color + 122 + "m" + "r" + color + 221 + "m" + "e" + color + 220 + "m" + "y" + reset;
+			  p = new Player(2250, 150, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Audrey", "#BC9CF7", "#72CBC9", "#40F2CE");
 			  p.skin(name);
 			  p.setC(111);
 		    break;
 		  case "Louis":
-			  p = new Player(2750, 225, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 226 + "m" + "Lo" + color + 141 + "m" + "uis" + reset;
+			  p = new Player(2350, 225, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Louis", "#F0B128", "#F5D7B2", "#A1B0FC", "#9877F3");
 			  p.skin(name);
 			  p.setC(226);
 		    break;
 		  case "Kithara":
-			  p = new Player(3850, 225, start, name, x, y, 10, 10, 7);
-			  name = bold + color + 93 + "m" + "K" + color + 92 + "m" + "i"  + color + 99 + "m" + "t" + color + 98 + "m" + "h" + color + 105 + "m" + "a" + color + 104 + "m" + "r" + color + 103 + "m" + "a" + reset;
+			  p = new Player(3450, 275, start, name, x, y, 10, 10, 7);
+			  name = p.getGradientName("Kithara", "#5C1CF2", "#9877F3", "#3084C5", "#47799E");
 			  p.skin(name);
 			  p.setC(93);
 		    break;
 		  case "Burt":
-			  p = new Player(2800, 250, start, name, x, y, 10, 11, 5);
-			  name = bold + color + 21 + "m" + "Burt" + reset;
+			  p = new Player(2400, 250, start, name, x, y, 10, 11, 5);
+			  name = p.getGradientName("Burt", "#004CFF", "#5093B4");
 			  p.skin(name);
 			  p.setC(21);
 		    break;
 		  case "Bolo":
-			  p = new Player(2900, 225, start, name, x, y, 13, 9, 6);
-			  name = bold + color + 47 + "m" + "Bolo" + reset;
+			  p = new Player(2500, 275, start, name, x, y, 13, 9, 7);
+			  name = p.getGradientName("Bolo", "#00FF1E", "#66B450");
 			  p.skin(name);
 			  p.setC(47);
 		    break;
 		  case "Anjelika":
-			  p = new Player(3900, 250, start, name, x, y, 10, 10, 6);
-			  name = bold + color + 214 + "m" + "A" + color + 214 + "m" + "n"  + color + 215 + "m" + "j" + color + 215 + "m" + "e" + color + 216 + "m" + "l" + color + 216 + "m" + "i" + color + 217 + "m" + "k"+ color + 217 + "m" + "a" + reset;
+			  p = new Player(3500, 250, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Anjelika", "#F0C014", "#E09B06", "#F2975A");
 			  p.skin(name);
 			  p.setC(214);
 		    break;
@@ -6499,7 +6505,7 @@ public class GameSim {
 						p.takeDamage(a.getDamage() * 0.9);
 						a.useSight();
 						a.addDamage(a.getDamage() * 0.9);
-						if(a.getName().equals("Zero") && a.inRange(p, 4) && rand <= 0.1) {
+						if(a.getName().equals("Zero") && a.inRange(p, 10) && rand <= 0.1) {
 							p.addEffects(e1);
 							p.applyEffects();
 						}
@@ -6508,7 +6514,7 @@ public class GameSim {
 						p.takeDamage(z.getDamage() * 0.9);
 						z.useSight();
 						z.addDamage(z.getDamage() * 0.9);
-						if(z.getName().equals("Zero") && z.inRange(p, 4) && rand <= 0.1) {
+						if(z.getName().equals("Zero") && z.inRange(p, 10) && rand <= 0.1) {
 							p.addEffects(e1);
 							p.applyEffects();
 						}
@@ -6517,11 +6523,28 @@ public class GameSim {
 						p.takeDamage(c.getDamage() * 0.9);
 						c.useSight();
 						c.addDamage(c.getDamage() * 0.9);
-						if(c.getName().equals("Zero") && c.inRange(p, 4) && rand <= 0.1) {
+						if(c.getName().equals("Zero") && c.inRange(p, 10) && rand <= 0.1) {
 							p.addEffects(e1);
 							p.applyEffects();
 						}
 					}
+					
+					if (p.getName().equals("Mayhem") && p.ultActive()) {
+						if (p.inRange(a)) {
+							a.takeDamage(a.getMaxHP() * 0.005);
+							p.addDamage(a.getMaxHP() * 0.005);
+						}
+						if (p.inRange(z)) {
+							z.takeDamage(z.getMaxHP() * 0.005);
+							p.addDamage(z.getMaxHP() * 0.005);
+						}
+						if (p.inRange(c)) {
+							c.takeDamage(c.getMaxHP() * 0.005);
+							p.addDamage(c.getMaxHP() * 0.005);
+						}
+					}
+					
+					
 				}
 				for(int i = 0; i < orbs.size(); i++) {
 					if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
@@ -6958,9 +6981,9 @@ public class GameSim {
 	
 	public static void MackUltimate(Player p) {
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MackProtect = new Effect("protect", 0.65, 4);
-		Effect MackPower = new Effect("power", 0.1, 3);
-		p.setSights(4);
+		Effect MackProtect = new Effect("protect", 0.3, 4);
+		Effect MackPower = new Effect("power", 0.4, 3);
+		p.setSights(3);
 		e.add(MackPower);
 		e.add(MackProtect);
 		p.addEffects(e);
@@ -7003,26 +7026,20 @@ public class GameSim {
 				String targetResponse = input.next();
 				if(targetResponse.equals("1")) {
 					p.attack(a);
-					a.takeDamage(100);
-					p.addDamage(100);
 				}
 				if(targetResponse.equals("2")) {
 					p.attack(b);
-					b.takeDamage(100);
-					p.addDamage(100);
 				}
 				if(targetResponse.equals("3")) {
 					p.attack(c);
-					c.takeDamage(100);
-					p.addDamage(100);
 				}
 				if(targetResponse.equals("4")) {
-					d.increaseHP(350);
-					p.addHealing(350);
+					d.increaseHP(400);
+					p.addHealing(400);
 				}
 				if(targetResponse.equals("5")) {
-					e.increaseHP(350);
-					p.addHealing(350);
+					e.increaseHP(400);
+					p.addHealing(400);
 				}
 			}
 		}else {
@@ -7072,8 +7089,8 @@ public class GameSim {
 				}
 				if(targetResponse.equals("4")) {
 					if(p.inRange(d)) {
-						d.increaseHP(175);
-						p.addHealing(175);
+						d.increaseHP(200);
+						p.addHealing(200);
 					}else {
 						i--;
 						System.out.println();
@@ -7083,8 +7100,8 @@ public class GameSim {
 				}
 				if(targetResponse.equals("5")) {
 					if(p.inRange(e)) {
-						e.increaseHP(175);
-						p.addHealing(175);
+						e.increaseHP(200);
+						p.addHealing(200);
 					}else {
 						i--;
 						System.out.println();
@@ -7159,8 +7176,13 @@ public class GameSim {
 	
 	public static void CherryUltimate(Player p) {
 		p.setUlt();
-		p.setMaxHP(3700);
-		System.out.println("\"My engineering mechanics will put you all in a panic!\"");
+		p.setMaxHP(3000);
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect MidnitePower = new Effect("power", 1, 30);
+		e.add(MidnitePower);
+		p.addEffects(e);
+		p.applyEffects();
+		System.out.println("\"We fight on my terms now!\"");
 		System.out.println();
 	}
 	
@@ -7173,13 +7195,13 @@ public class GameSim {
 			p.resetAttack();
 			p.attack(a);
 			double rand = Math.random();
-			if(rand <= 0.6) {
+			if(rand <= 0.20) {
 				a.addEffects(e);
 				a.applyEffects();
 			}
 		}else {
 			double rand = Math.random();
-			if(rand <= 0.1) {
+			if(rand <= 0.05) {
 				a.addEffects(e);
 				a.applyEffects();
 			}
@@ -7193,9 +7215,9 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect FinleyVulnerable = new Effect("vulnerable", 0.1, 2);
-		Effect FinleyVulnerable2 = new Effect("vulnerable", 0.1, 2);
-		Effect FinleyVulnerable3 = new Effect("vulnerable", 0.1, 2);
+		Effect FinleyVulnerable = new Effect("vulnerable", 0.1, 1);
+		Effect FinleyVulnerable2 = new Effect("vulnerable", 0.1, 1);
+		Effect FinleyVulnerable3 = new Effect("vulnerable", 0.1, 1);
 		e.add(FinleyVulnerable);
 		e2.add(FinleyVulnerable2);
 		e3.add(FinleyVulnerable3);
@@ -7205,15 +7227,15 @@ public class GameSim {
 			return;
 		}
 		String range = "No";
-		if(p.inRange(a)) {
+		if(p.inRange(a, 20)) {
 			range = "Yes";
 		}
 		String range2 = "No";
-		if(p.inRange(b)) {
+		if(p.inRange(b, 20)) {
 			range2 = "Yes";
 		}
 		String range3 = "No";
-		if(p.inRange(c)) {
+		if(p.inRange(c, 20)) {
 			range3 = "Yes";
 		}
 		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
@@ -7421,88 +7443,88 @@ public class GameSim {
 			if(randomY == 1) {
 				if(!a.isAlive()) {
 					if(b.isAlive()) {
-						b.takeDamage(b.getMaxHP() * 0.35);
-						p.addDamage(b.getMaxHP() * 0.35);
+						b.takeDamage(b.getMaxHP() * 0.3);
+						p.addDamage(b.getMaxHP() * 0.3);
 					}else {
-						c.takeDamage(c.getMaxHP() * 0.35);
-						p.addDamage(c.getMaxHP() * 0.35);
+						c.takeDamage(c.getMaxHP() * 0.3);
+						p.addDamage(c.getMaxHP() * 0.3);
 					}
 				}else {
-					a.takeDamage(a.getMaxHP() * 0.35);
-					p.addDamage(a.getMaxHP() * 0.35);
+					a.takeDamage(a.getMaxHP() * 0.3);
+					p.addDamage(a.getMaxHP() * 0.3);
 				}
 			}
 			if(randomY == 2) {
 				if(!b.isAlive()) {
 					if(c.isAlive()) {
-						c.takeDamage(c.getMaxHP() * 0.35);
-						p.addDamage(c.getMaxHP() * 0.35);
+						c.takeDamage(c.getMaxHP() * 0.3);
+						p.addDamage(c.getMaxHP() * 0.3);
 					}else {
-						a.takeDamage(a.getMaxHP() * 0.35);
-						p.addDamage(a.getMaxHP() * 0.35);
+						a.takeDamage(a.getMaxHP() * 0.3);
+						p.addDamage(a.getMaxHP() * 0.3);
 					}
 				}else {
-					b.takeDamage(b.getMaxHP() * 0.35);
-					p.addDamage(b.getMaxHP() * 0.35);
+					b.takeDamage(b.getMaxHP() * 0.3);
+					p.addDamage(b.getMaxHP() * 0.3);
 				}
 			}
 			if(randomY == 3) {
 				if(!c.isAlive()) {
 					if(a.isAlive()) {
-						a.takeDamage(a.getMaxHP() * 0.35);
-						p.addDamage(a.getMaxHP() * 0.35);
+						a.takeDamage(a.getMaxHP() * 0.3);
+						p.addDamage(a.getMaxHP() * 0.3);
 					}else {
-						b.takeDamage(b.getMaxHP() * 0.35);
-						p.addDamage(b.getMaxHP() * 0.35);
+						b.takeDamage(b.getMaxHP() * 0.3);
+						p.addDamage(b.getMaxHP() * 0.3);
 					}
 				}else {
-					c.takeDamage(c.getMaxHP() * 0.35);
-					p.addDamage(c.getMaxHP() * 0.35);
+					c.takeDamage(c.getMaxHP() * 0.3);
+					p.addDamage(c.getMaxHP() * 0.3);
 				}
 			}
 		}
 		if(randomX == 2) {
 			if(randomY == 1) {
 				if(!a.isAlive() && !b.isAlive()) {
-					c.takeDamage(c.getMaxHP() * 0.35);
-					p.addDamage(c.getMaxHP() * 0.35);
+					c.takeDamage(c.getMaxHP() * 0.3);
+					p.addDamage(c.getMaxHP() * 0.3);
 				}else {
-					a.takeDamage(a.getMaxHP() * 0.35);
-					p.addDamage(a.getMaxHP() * 0.35);
-					b.takeDamage(b.getMaxHP() * 0.35);
-					p.addDamage(b.getMaxHP() * 0.35);
+					a.takeDamage(a.getMaxHP() * 0.3);
+					p.addDamage(a.getMaxHP() * 0.3);
+					b.takeDamage(b.getMaxHP() * 0.3);
+					p.addDamage(b.getMaxHP() * 0.3);
 				}
 			}
 			if(randomY == 2) {
 				if(!b.isAlive() && !c.isAlive()) {
-					a.takeDamage(a.getMaxHP() * 0.35);
-					p.addDamage(a.getMaxHP() * 0.35);
+					a.takeDamage(a.getMaxHP() * 0.3);
+					p.addDamage(a.getMaxHP() * 0.3);
 				}else {
-					b.takeDamage(b.getMaxHP() * 0.35);
-					p.addDamage(b.getMaxHP() * 0.35);
-					c.takeDamage(c.getMaxHP() * 0.35);
-					p.addDamage(c.getMaxHP() * 0.35);
+					b.takeDamage(b.getMaxHP() * 0.3);
+					p.addDamage(b.getMaxHP() * 0.3);
+					c.takeDamage(c.getMaxHP() * 0.3);
+					p.addDamage(c.getMaxHP() * 0.3);
 				}
 			}
 			if(randomY == 3) {
 				if(!a.isAlive() && !c.isAlive()) {
-					b.takeDamage(b.getMaxHP() * 0.35);
-					p.addDamage(b.getMaxHP() * 0.35);
+					b.takeDamage(b.getMaxHP() * 0.3);
+					p.addDamage(b.getMaxHP() * 0.3);
 				}else {
-					a.takeDamage(a.getMaxHP() * 0.35);
-					p.addDamage(a.getMaxHP() * 0.35);
-					c.takeDamage(c.getMaxHP() * 0.35);
-					p.addDamage(c.getMaxHP() * 0.35);
+					a.takeDamage(a.getMaxHP() * 0.3);
+					p.addDamage(a.getMaxHP() * 0.3);
+					c.takeDamage(c.getMaxHP() * 0.3);
+					p.addDamage(c.getMaxHP() * 0.3);
 				}
 			}
 		}
 		if(randomX == 3) {
-			a.takeDamage(a.getMaxHP() * 0.35);
-			p.addDamage(a.getMaxHP() * 0.35);
-			b.takeDamage(b.getMaxHP() * 0.35);
-			p.addDamage(b.getMaxHP() * 0.35);
-			c.takeDamage(c.getMaxHP() * 0.35);
-			p.addDamage(c.getMaxHP() * 0.35);
+			a.takeDamage(a.getMaxHP() * 0.3);
+			p.addDamage(a.getMaxHP() * 0.3);
+			b.takeDamage(b.getMaxHP() * 0.3);
+			p.addDamage(b.getMaxHP() * 0.3);
+			c.takeDamage(c.getMaxHP() * 0.3);
+			p.addDamage(c.getMaxHP() * 0.3);
 		}
 		p.resetUlt();
 		System.out.println("\"You'll truely want to hope I miss this time!\"");
@@ -7563,8 +7585,8 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			if(p.inRange(a)) {
-				a.takeDamage(250);
-				p.addDamage(250);
+				a.takeDamage(350);
+				p.addDamage(350);
 				a.addEffects(e);
 				a.applyEffects();
 				p.setCooldown(3);
@@ -7576,8 +7598,8 @@ public class GameSim {
 		}
 		if(targetResponse.equals("2")) {
 			if(p.inRange(b)) {
-				b.takeDamage(250);
-				p.addDamage(250);
+				b.takeDamage(350);
+				p.addDamage(350);
 				b.addEffects(e);
 				b.applyEffects();
 				p.setCooldown(3);
@@ -7589,8 +7611,8 @@ public class GameSim {
 		}
 		if(targetResponse.equals("3")) {
 			if(p.inRange(c)) {
-				c.takeDamage(250);
-				p.addDamage(250);
+				c.takeDamage(350);
+				p.addDamage(350);
 				c.addEffects(e);
 				c.applyEffects();
 				p.setCooldown(3);
@@ -7676,9 +7698,9 @@ public class GameSim {
 		p.cleanse();
 		a.cleanse();
 		b.cleanse();
-		p.heal(0.15);
-		a.heal(0.15);
-		b.heal(0.15);
+		p.heal(0.10);
+		a.heal(0.10);
+		b.heal(0.10);
 		p.addHealing(p.getMaxHP() * 0.1);
 		p.addHealing(a.getMaxHP() * 0.1);
 		p.addHealing(b.getMaxHP() * 0.1);
@@ -7779,11 +7801,13 @@ public class GameSim {
 		System.out.println("Who do you want to give guidance to: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
+			a.cleanse();
 			a.addEffects(e);
 			a.applyEffects();
 			p.setCooldown(3);
 		}
 		if(targetResponse.equals("2")) {
+			b.cleanse();
 			b.addEffects(e);
 			b.applyEffects();
 			p.setCooldown(3);
@@ -7968,7 +7992,7 @@ public class GameSim {
 			System.out.println();
 			return;
 		}
-		if(a.inRange(l, 10) && a.isAlive()) {
+		if(a.inRange(l, 8) && a.isAlive()) {
 			a.getLoc().set(l.getX(), l.getY());
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
@@ -7977,7 +8001,7 @@ public class GameSim {
 			a.applyEffects();
 			a.resetCover();
 		}
-		if(b.inRange(l, 10) && b.isAlive()) {
+		if(b.inRange(l, 8) && b.isAlive()) {
 			b.getLoc().set(l.getX(), l.getY());
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
@@ -7986,7 +8010,7 @@ public class GameSim {
 			b.applyEffects();
 			b.resetCover();
 		}
-		if(c.inRange(l, 10) && c.isAlive()) {
+		if(c.inRange(l, 8) && c.isAlive()) {
 			c.getLoc().set(l.getX(), l.getY());
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
@@ -7995,7 +8019,7 @@ public class GameSim {
 			c.applyEffects();
 			c.resetCover();
 		}
-		p.setCooldown(3);
+		p.setCooldown(4);
 		System.out.println();
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -8003,7 +8027,7 @@ public class GameSim {
 	
 	public static void ViaUltimate(Player p, Player a, Player b, Player c) {
 		ArrayList<Effect> d = new ArrayList<Effect>();
-		Effect e4 = new Effect("power", 0.5, 2);
+		Effect e4 = new Effect("power", 0.5, 1);
 		d.add(e4);
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
@@ -8035,8 +8059,8 @@ public class GameSim {
 	
 	public static void LouisAttack(Player p, Player a) {
 		p.attack(a);
-		if(turns2 >= 4) {
-			p.increaseDPS(0.02);
+		if(turns2 >= 5) {
+			p.increaseDPSNum(25);
 		}
 		System.out.println();
 	}
@@ -8058,22 +8082,22 @@ public class GameSim {
 		e.add(LouisVulnerable);
 		e2.add(LouisVulnerable2);
 		e3.add(LouisVulnerable3);
-		if(!a.inRange(p, 12) && !b.inRange(p, 12) && !c.inRange(p, 12)) {
+		if(!a.inRange(p, 10) && !b.inRange(p, 10) && !c.inRange(p, 10)) {
 			System.out.println("No targets in range!");
 			System.out.println();
 			return;
 		}
-		if(a.inRange(l, 12)) {
+		if(a.inRange(l, 10)) {
 			a.addEffects(e);
 			a.applyEffects();
 			a.knockbacked(p.getLoc());
 		}
-		if(b.inRange(l, 12)) {
+		if(b.inRange(l, 10)) {
 			b.addEffects(e2);
 			b.applyEffects();
 			b.knockbacked(p.getLoc());
 		}
-		if(c.inRange(l, 12)) {
+		if(c.inRange(l, 10)) {
 			c.addEffects(e3);
 			c.applyEffects();
 			c.knockbacked(p.getLoc());
@@ -8173,7 +8197,7 @@ public class GameSim {
 	public static void AlexUltimate(Player p) {
 		p.setUlt();
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AlexProtect = new Effect("protect", 0.75, 30);
+		Effect AlexProtect = new Effect("protect", 0.35, 30);
 		e.add(AlexProtect);
 		p.addEffects(e);
 		p.applyEffects();
@@ -8243,12 +8267,18 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect OrionProtect = new Effect("protect", 0.6, 2);
-		Effect OrionProtect2 = new Effect("protect", 0.6, 2);
-		Effect OrionProtect3 = new Effect("protect", 0.6, 2);
+		Effect OrionProtect = new Effect("protect", 0.35, 2);
+		Effect OrionProtect2 = new Effect("protect", 0.35, 2);
+		Effect OrionProtect3 = new Effect("protect", 0.35, 2);
+		Effect OrionPower = new Effect("power", 0.25, 1);
+		Effect OrionPower2 = new Effect("power", 0.25, 1);
+		Effect OrionPower3 = new Effect("power", 0.25, 1);
 		e.add(OrionProtect);
 		e2.add(OrionProtect2);
 		e3.add(OrionProtect3);
+		e.add(OrionPower);
+		e2.add(OrionPower2);
+		e3.add(OrionPower3);
 		p.addEffects(e);
 		p.applyEffects();
 		a.addEffects(e2);
@@ -8274,7 +8304,7 @@ public class GameSim {
 	}
 	
 	public static void KailaniAbility(Player p, Player a, Player b, Player c, Location l) {
-		if(!p.inReach(l, 15)) {
+		if(!p.inReach(l, 25)) {
 			System.out.println("Can't riptide there!");
 			System.out.println();
 			return;
@@ -8377,18 +8407,18 @@ public class GameSim {
 		p.cleanse();
 		d.cleanse();
 		e.cleanse();
-		p.heal(0.2);
-		d.heal(0.2);
-		e.heal(0.2);
-		p.addHealing(p.getMaxHP() * 0.2);
-		p.addHealing(d.getMaxHP() * 0.2);
-		p.addHealing(e.getMaxHP() * 0.2);
+		p.heal(0.15);
+		d.heal(0.15);
+		e.heal(0.15);
+		p.addHealing(p.getMaxHP() * 0.15);
+		p.addHealing(d.getMaxHP() * 0.15);
+		p.addHealing(e.getMaxHP() * 0.15);
 		ArrayList<Effect> f = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("weak", 0.2, 1);
-		Effect CherryWeaken2 = new Effect("weak", 0.2, 1);
-		Effect CherryWeaken3 = new Effect("weak", 0.2, 1);
+		Effect CherryWeaken = new Effect("weak", 0.15, 1);
+		Effect CherryWeaken2 = new Effect("weak", 0.15, 1);
+		Effect CherryWeaken3 = new Effect("weak", 0.15, 1);
 		f.add(CherryWeaken);
 		e2.add(CherryWeaken2);
 		e3.add(CherryWeaken3);
@@ -8422,12 +8452,12 @@ public class GameSim {
 		Effect AshleyBlind = new Effect("blind", 0.1, 2);
 		Effect AshleyBlind2 = new Effect("blind", 0.1, 2);
 		Effect AshleyBlind3 = new Effect("blind", 0.1, 2);
-		p.heal(0.35);
-		d.heal(0.35);
-		e.heal(0.35);
-		p.addHealing(p.getMaxHP() * 0.35);
-		p.addHealing(d.getMaxHP() * 0.35);
-		p.addHealing(e.getMaxHP() * 0.35);
+		p.heal(0.30);
+		d.heal(0.30);
+		e.heal(0.30);
+		p.addHealing(p.getMaxHP() * 0.30);
+		p.addHealing(d.getMaxHP() * 0.30);
+		p.addHealing(e.getMaxHP() * 0.30);
 		e1.add(EliPower);
 		e1.add(AshleyProtect);
 		e5.add(EliPower2);
@@ -8477,16 +8507,16 @@ public class GameSim {
 			p.resetAttack();
 			a.knockbacked(p.getLoc());
 			double rand = Math.random();
-			if(rand <= 0.1) {
+			if(rand <= 0.07) {
 				a.addEffects(e);
 				a.applyEffects();
 			}
 		}else if(p.inRange(a)){
-			a.takeDamage(175);
-			p.addDamage(175);
+			a.takeDamage(150);
+			p.addDamage(150);
 			a.knockbacked(p.getLoc());
 			double rand = Math.random();
-			if(rand <= 0.1) {
+			if(rand <= 0.07) {
 				a.addEffects(e);
 				a.applyEffects();
 			}
@@ -8496,16 +8526,16 @@ public class GameSim {
 			p.resetAttack();
 			b.knockbacked(p.getLoc());
 			double rand = Math.random();
-			if(rand <= 0.1) {
+			if(rand <= 0.07) {
 				b.addEffects(e2);
 				b.applyEffects();
 			}
 		}else if(p.inRange(b)) {
-			b.takeDamage(175);
-			p.addDamage(175);
+			b.takeDamage(150);
+			p.addDamage(150);
 			b.knockbacked(p.getLoc());
 			double rand = Math.random();
-			if(rand <= 0.1) {
+			if(rand <= 0.07) {
 				b.addEffects(e2);
 				b.applyEffects();
 			}
@@ -8514,16 +8544,16 @@ public class GameSim {
 			p.attack(c);
 			c.knockbacked(p.getLoc());
 			double rand = Math.random();
-			if(rand <= 0.1) {
+			if(rand <= 0.07) {
 				c.addEffects(e3);
 				c.applyEffects();
 			}
 		}else if(p.inRange(c)) {
-			c.takeDamage(175);
-			p.addDamage(175);
+			c.takeDamage(150);
+			p.addDamage(150);
 			c.knockbacked(p.getLoc());
 			double rand = Math.random();
-			if(rand <= 0.1) {
+			if(rand <= 0.07) {
 				c.addEffects(e3);
 				c.applyEffects();
 			}
@@ -8533,20 +8563,26 @@ public class GameSim {
 	}
 	
 	public static void BedrockAbility(Player p) {
-		p.heal(0.15);
-		p.addHealing(p.getMaxHP() * 0.15);
+		p.heal(0.10);
+		p.addHealing(p.getMaxHP() * 0.10);
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect BedrockProtect = new Effect("protect", 0.85, 3);
+		Effect BedrockProtect = new Effect("protect", 0.70, 2);
 		e.add(BedrockProtect);
 		p.addEffects(e);
 		p.applyEffects();
-		p.setCooldown(5);
+		p.setCooldown(4);
 		System.out.println("\"...\"");
 		System.out.println();
 	}
 	
 	public static void BedrockUltimate(Player p) {
 		p.setUlt();
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect AlexProtect = new Effect("sight", 1, 30);
+		e.add(AlexProtect);
+		p.addEffects(e);
+		p.applyEffects();
+		p.setMovement(9);
 		System.out.println("\"... ... ...!\"");
 		System.out.println();
 	}
@@ -8555,9 +8591,9 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect RoccoBlind = new Effect("blind", 0.25, 2);
-		Effect RoccoBlind2 = new Effect("blind", 0.25, 2);
-		Effect RoccoBlind3 = new Effect("blind", 0.25, 2);
+		Effect RoccoBlind = new Effect("blind", 0.15, 2);
+		Effect RoccoBlind2 = new Effect("blind", 0.15, 2);
+		Effect RoccoBlind3 = new Effect("blind", 0.15, 2);
 		Effect RoccoIgnite = new Effect("ignite", 0, 1);
 		Effect RoccoIgnite2 = new Effect("ignite", 0, 1);
 		Effect RoccoIgnite3 = new Effect("ignite", 0, 1);
@@ -8770,7 +8806,7 @@ public class GameSim {
 	
 	public static void SammiAbility(Player p) {
 		p.setRange(200);
-		p.setCooldown(3);
+		p.setCooldown(2);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -8778,10 +8814,10 @@ public class GameSim {
 	public static void SammiUltimate(Player p) {
 		p.cleanse();
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SammiPower = new Effect("power", 0.3, 2);
+		Effect SammiPower = new Effect("power", 0.5, 2);
 		Effect SammiProtect = new Effect("protect", 0.3, 2);
-		Effect SammiRegen = new Effect("heal", 0.2, 2);
-		p.addHealing(p.getMaxHP() * 0.4);
+		Effect SammiRegen = new Effect("heal", 0.1, 2);
+		p.addHealing(p.getMaxHP() * 0.2);
 		e.add(SammiRegen);
 		e.add(SammiProtect);
 		e.add(SammiPower);
@@ -8795,7 +8831,7 @@ public class GameSim {
 	public static void ClaraAttack(Player p, Player a) {
 		p.attack(a);
 		double rand = Math.random();
-		if(rand <= 0.35) {
+		if(rand <= 0.15) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect BurtParalyze = new Effect("paralyze", 0, 1);
 			Effect ClaraIgnite = new Effect("ignite", 0, 1);
@@ -8818,7 +8854,7 @@ public class GameSim {
 	
 	public static void ClaraUltimate(Player p) {
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect ClaraProtect = new Effect("power", 0.45, 1);
+		Effect ClaraProtect = new Effect("power", 0.25, 1);
 		e.add(ClaraProtect);
 		p.addEffects(e);
 		p.applyEffects();
@@ -8851,7 +8887,7 @@ public class GameSim {
 		e.add(ThunderCounter);
 		p.addEffects(e);
 		p.applyEffects();
-		p.setCooldown(4);
+		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -9054,9 +9090,9 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LiamProtect = new Effect("protect", 0.25, 2);
-		Effect LiamProtect2 = new Effect("protect", 0.25, 2);
-		Effect LiamProtect3 = new Effect("protect", 0.25, 2);
+		Effect LiamProtect = new Effect("protect", 0.4, 2);
+		Effect LiamProtect2 = new Effect("protect", 0.4, 2);
+		Effect LiamProtect3 = new Effect("protect", 0.4, 2);
 		e.add(LiamProtect);
 		e2.add(LiamProtect2);
 		e3.add(LiamProtect3);
@@ -9076,7 +9112,7 @@ public class GameSim {
 	
 	public static void LiamUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
 		Scanner input = new Scanner(System.in);
-		double randomX = (int)(Math.random() * (1500 - 0 + 1)) + 0;
+		double randomX = (int)(Math.random() * (5000 - 0 + 1)) + 0;
 		System.out.println("\"The court trial is in session!\"");
 		System.out.println();
 		if(a.isAlive()) {
@@ -9261,19 +9297,19 @@ public class GameSim {
 			int d = p.getLoc().distance(a.getLoc());
 			p.increaseTotalMovement(d);
 			p.getLoc().set(a.getLoc().getX(), a.getLoc().getY());
-			a.heal(0.35);
-			p.addHealing(a.getMaxHP() * 0.35);
+			a.heal(0.15);
+			p.addHealing(a.getMaxHP() * 0.15);
 			a.cleanse();
-			p.setCooldown(3);
+			p.setCooldown(2);
 		}
 		if(targetResponse.equals("2")) {
 			int d = p.getLoc().distance(b.getLoc());
 			p.increaseTotalMovement(d);
 			p.getLoc().set(b.getLoc().getX(), b.getLoc().getY());
-			b.heal(0.35);
-			p.addHealing(b.getMaxHP() * 0.35);
+			b.heal(0.15);
+			p.addHealing(b.getMaxHP() * 0.15);
 			b.cleanse();
-			p.setCooldown(3);
+			p.setCooldown(2);
 		}
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -9330,9 +9366,9 @@ public class GameSim {
 		ArrayList<Effect> e1 = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 0.15, 1);
-		Effect MidnitePower2 = new Effect("power", 0.15, 1);
-		Effect MidnitePower3 = new Effect("power", 0.15, 1);
+		Effect MidnitePower = new Effect("power", 0.2, 1);
+		Effect MidnitePower2 = new Effect("power", 0.2, 1);
+		Effect MidnitePower3 = new Effect("power", 0.2, 1);
 		e1.add(MidnitePower);
 		e2.add(MidnitePower2);
 		e3.add(MidnitePower3);
@@ -9342,11 +9378,17 @@ public class GameSim {
 		p.applyEffects();
 		d.applyEffects();
 		e.applyEffects();
-		a.knockbacked(p.getLoc());
+		if(p.inRange(a)) {
+			a.knockbacked(p.getLoc());
+		}
+		if(p.inRange(b)) {
+			b.knockbacked(p.getLoc());
+		}
+		if(p.inRange(c)) {
+			c.knockbacked(p.getLoc());
+		}
 		a.knockbacked(p.getLoc());
 		b.knockbacked(p.getLoc());
-		b.knockbacked(p.getLoc());
-		c.knockbacked(p.getLoc());
 		c.knockbacked(p.getLoc());
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
@@ -9433,7 +9475,7 @@ public class GameSim {
 	public static void KitharaAttack(Player p, Player a) {
 		p.attack(a);
 		double rand = Math.random();
-		if(rand <= 0.03) {
+		if(rand <= 0.08) {
 			a.takeDamage(a.getMaxHP() * 0.10);
 			p.addDamage(a.getMaxHP() * 0.10);
 		}
@@ -9567,8 +9609,8 @@ public class GameSim {
 		Effect AnjelikaProtect = new Effect("protect", 0.3, 4);
 		Effect AnjelikaRefine = new Effect("refine", 0, 4);
 		Effect AnjelikaPower = new Effect("power", 0.3, 3);
-		Effect AnjelikaHeal = new Effect("heal", 0.2, 3);
-		p.addHealing(p.getMaxHP() * 0.2);
+		Effect AnjelikaHeal = new Effect("heal", 0.1, 3);
+		p.addHealing(p.getMaxHP() * 0.3);
 		e.add(AnjelikaProtect);
 		e.add(AnjelikaHeal);
 		e.add(AnjelikaPower);
@@ -9692,7 +9734,7 @@ public class GameSim {
 	
 	public static void TomAbility(Player p) {
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect TomMend = new Effect("mend", 1, 2);
+		Effect TomMend = new Effect("mend", 1.25, 2);
 		Effect TomProtect = new Effect("protect", 0.55, 3);
 		e.add(TomMend);
 		e.add(TomProtect);
@@ -9866,7 +9908,7 @@ public class GameSim {
 		p.increaseMaxHP(p.getMaxHP() * 0.35);
 		p.addHealing(p.getMaxHP() * 0.35);
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect DimentioProtect = new Effect("power", 0.3, 100);
+		Effect DimentioProtect = new Effect("power", 0.4, 100);
 		e.add(DimentioProtect);
 		p.addEffects(e);
 		p.applyEffects();
@@ -9908,12 +9950,12 @@ public class GameSim {
 	}
 	
 	public static void EvilUltimate(Player p, Player a, Player b, Player c) {
-		a.takeDamage(a.getMaxHP() * 0.15);
-		b.takeDamage(b.getMaxHP() * 0.15);
-		c.takeDamage(c.getMaxHP() * 0.15);
-		p.addDamage(a.getMaxHP() * 0.15);
-		p.addDamage(b.getMaxHP() * 0.15);
-		p.addDamage(c.getMaxHP() * 0.15);
+		a.takeDamage(a.getMaxHP() * 0.2);
+		b.takeDamage(b.getMaxHP() * 0.2);
+		c.takeDamage(c.getMaxHP() * 0.2);
+		p.addDamage(a.getMaxHP() * 0.2);
+		p.addDamage(b.getMaxHP() * 0.2);
+		p.addDamage(c.getMaxHP() * 0.2);
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		Effect SolarIgnite = new Effect("ignite", 0, 2);
 		e.add(SolarIgnite);
@@ -10031,6 +10073,34 @@ public class GameSim {
 		Scanner input = new Scanner(System.in);
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		Effect MaxPower = new Effect("power", 0.25, 1);
+		Effect MaxPower2 = new Effect("power", 0.15, 1);
+		if(!a.isAlive() && !b.isAlive()) {
+			e.add(MaxPower2);
+			p.getLoc().set(l.getX(), l.getY());
+			for(int i = 0; i < orbs.size(); i++) {
+				if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
+					p.getOrb();
+					orbs.remove(i);
+					System.out.println(p.getName() + " has gotten an orb.");
+				}
+			}
+			for(int i = 0; i < cover.size(); i++) {
+				if(p.getLoc().eqLoc(cover.get(i).getLoc())) {
+					if(cover.get(i).getName().equals("Full")) {
+						p.setCover("Full");
+					}
+					if(cover.get(i).getName().equals("Partial")) {
+						p.setCover("Partial");
+					}
+				}
+			}
+			p.addEffects(e);
+			p.applyEffects();
+			p.setCooldown(4);
+			System.out.println("\"Oh hell naw I'm outta here.\"");
+			System.out.println();
+			return;
+		}
 		e.add(MaxPower);
 		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
 		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
@@ -10152,12 +10222,13 @@ public class GameSim {
 	public static void JulianAttack(Player p, Player a, Player b, Player c) {
 		p.attack(a);
 		double rand = Math.random();
-		if(rand <= 0.1) {
+		if(rand > -1) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect EvilIgnite = new Effect("ignite", 0, 1);
 			e.add(EvilIgnite);
 			a.addEffects(e);
 			a.applyEffects();
+			p.addDamage(175);
 		}
 		if(a.inRange(b, 3)) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
@@ -10165,6 +10236,8 @@ public class GameSim {
 			e.add(EvilIgnite);
 			b.addEffects(e);
 			b.applyEffects();
+			b.takeDamage(200);
+			p.addDamage(200);
 		}
 		if(a.inRange(c, 3)) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
@@ -10172,6 +10245,8 @@ public class GameSim {
 			e.add(EvilIgnite);
 			c.addEffects(e);
 			c.applyEffects();
+			c.takeDamage(200);
+			p.addDamage(200);
 		}
 		System.out.println();
 	}
@@ -10219,7 +10294,7 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		Effect GashVulnerable = new Effect("vulnerable", 0.05, 1);
-		Effect GashPower = new Effect("power", 0.05, 2);
+		Effect GashPower = new Effect("power", 0.1, 2);
 		e.add(GashPower);
 		e2.add(GashVulnerable);
 		p.addEffects(e);
@@ -10232,32 +10307,32 @@ public class GameSim {
 	public static void GashAbility(Player p, Player a, Player b) {
 		if(p.inRange(a, 3)) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect GashProtect = new Effect("protect", 0.7, 3);
+			Effect GashProtect = new Effect("protect", 0.6, 3);
 			e.add(GashProtect);
 			a.addEffects(e);
 			a.applyEffects();	
 		}else {
 			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect GashProtect = new Effect("protect", 0.35, 3);
+			Effect GashProtect = new Effect("protect", 0.3, 3);
 			e.add(GashProtect);
 			a.addEffects(e);
 			a.applyEffects();	
 		}
 		if(p.inRange(b, 3)) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect GashProtect = new Effect("protect", 0.7, 3);
+			Effect GashProtect = new Effect("protect", 0.6, 3);
 			e.add(GashProtect);
 			b.addEffects(e);
 			b.applyEffects();	
 		}else {
 			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect GashProtect = new Effect("protect", 0.35, 3);
+			Effect GashProtect = new Effect("protect", 0.3, 3);
 			e.add(GashProtect);
 			b.addEffects(e);
 			b.applyEffects();	
 		}
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect GashProtect = new Effect("protect", 0.35, 3);
+		Effect GashProtect = new Effect("protect", 0.3, 3);
 		e.add(GashProtect);
 		p.addEffects(e);
 		p.applyEffects();
@@ -10275,31 +10350,31 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			if(a.getHealth() < (a.getMaxHP() * 0.5)) {
-				a.takeDamage(1500);
-				p.addDamage(1500);
+				a.takeDamage(1200);
+				p.addDamage(1200);
 			}else {
-				a.takeDamage(750);
-				p.addDamage(750);
+				a.takeDamage(600);
+				p.addDamage(600);
 			}
 			p.resetUlt();
 		}
 		if(targetResponse.equals("2")) {
 			if(b.getHealth() < (b.getMaxHP() * 0.5)) {
-				b.takeDamage(1500);
-				p.addDamage(1500);
+				b.takeDamage(1200);
+				p.addDamage(1200);
 			}else {
-				b.takeDamage(750);
-				p.addDamage(750);
+				b.takeDamage(600);
+				p.addDamage(600);
 			}
 			p.resetUlt();
 		}
 		if(targetResponse.equals("3")) {
 			if(c.getHealth() < (c.getMaxHP() * 0.5)) {
-				c.takeDamage(1500);
-				p.addDamage(1500);
+				c.takeDamage(1200);
+				p.addDamage(1200);
 			}else {
-				c.takeDamage(750);
-				p.addDamage(750);
+				c.takeDamage(600);
+				p.addDamage(600);
 			}
 			p.resetUlt();
 		}
@@ -10416,13 +10491,13 @@ public class GameSim {
 			a.setShield();
 			a.addEffects(e);
 			a.applyEffects();
-			p.setCooldown(3);
+			p.setCooldown(2);
 		}
 		if(targetResponse.equals("2")) {
 			b.setShield();
 			b.addEffects(e);
 			b.applyEffects();
-			p.setCooldown(3);
+			p.setCooldown(2);
 		}
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -10471,9 +10546,9 @@ public class GameSim {
 		Effect CherryWeaken = new Effect("weak", 0.5, 1);
 		Effect CherryWeaken2 = new Effect("weak", 0.5, 1);
 		Effect CherryWeaken3 = new Effect("weak", 0.5, 1);
-		Effect AudreyVulnerable = new Effect("vulnerable", 0.2, 1);
-		Effect AudreyVulnerable2 = new Effect("vulnerable", 0.2, 1);
-		Effect AudreyVulnerable3 = new Effect("vulnerable", 0.2, 1);
+		Effect AudreyVulnerable = new Effect("vulnerable", 0.3, 1);
+		Effect AudreyVulnerable2 = new Effect("vulnerable", 0.3, 1);
+		Effect AudreyVulnerable3 = new Effect("vulnerable", 0.3, 1);
 		e.add(CherryWeaken);
 		e2.add(CherryWeaken2);
 		e3.add(CherryWeaken3);
@@ -10497,7 +10572,7 @@ public class GameSim {
 			c.addEffects(e3);
 			c.applyEffects();
 		}
-		p.setCooldown(4);
+		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -10505,7 +10580,7 @@ public class GameSim {
 	public static void AudreyUltimate(Player p, Player a, Player b) {
 		Scanner input = new Scanner(System.in);
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxPower = new Effect("power", 0.5, 1);
+		Effect MaxPower = new Effect("power", 0.75, 1);
 		Effect MaxProtect = new Effect("protect", 0.5, 2);
 		e.add(MaxPower);
 		e.add(MaxProtect);
@@ -10520,6 +10595,13 @@ public class GameSim {
 				p.resetUlt();
 				System.out.println();
 				System.out.println("\"You've still got the fighting spirit!\"");
+			}else {
+				a.heal(0.5);
+				a.addHealing(a.getMaxHP() * 0.5);
+				a.addEffects(e);
+				a.applyEffects();
+				p.resetUlt();
+				System.out.println("\"You're unstoppable now!\"");
 			}
 		}
 		if(targetResponse.equals("2")) {
@@ -10527,7 +10609,15 @@ public class GameSim {
 				p.addHealing(b.getMaxHP() * 0.35);
 				p.resetUlt();
 				System.out.println();
+				p.resetUlt();
 				System.out.println("\"You've still got the fighting spirit!\"");
+			}else {
+				b.heal(0.5);
+				b.addHealing(b.getMaxHP() * 0.5);
+				b.addEffects(e);
+				b.applyEffects();
+				p.resetUlt();
+				System.out.println("\"You're unstoppable now!\"");
 			}
 		}
 		if(targetResponse.equals("3")) {
@@ -10571,6 +10661,13 @@ public class GameSim {
         System.out.println("Accumlated a " + score + " hit combo!");
         p.attack(a);
         a.takeDamage(damage);
+        if(p.hasMend()) {
+			for(int i = 0; i < p.getEffects().size(); i++) {
+				if(p.getEffects().get(i).getName().equals("mend")) {
+					p.heal(damage, p.getEffects().get(i).getIncrease());
+				}
+			}
+		}
         p.addDamage(damage);
         double rand = Math.random();
         if(score > 7) {
@@ -10730,12 +10827,12 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeProtect = new Effect("protect", 0.6, 3);
-		Effect ChloeProtect2 = new Effect("protect", 0.6, 3);
-		Effect ChloeProtect3 = new Effect("protect", 0.6, 3);
-		Effect ChloePower = new Effect("power", 0.4, 2);
-		Effect ChloePower2 = new Effect("power", 0.4, 2);
-		Effect ChloePower3 = new Effect("power", 0.4, 2);
+		Effect ChloeProtect = new Effect("protect", 0.4, 3);
+		Effect ChloeProtect2 = new Effect("protect", 0.4, 3);
+		Effect ChloeProtect3 = new Effect("protect", 0.4, 3);
+		Effect ChloePower = new Effect("power", 0.6, 2);
+		Effect ChloePower2 = new Effect("power", 0.6, 2);
+		Effect ChloePower3 = new Effect("power", 0.6, 2);
 		e.add(ChloeProtect);
 		e.add(ChloePower2);
 		e2.add(ChloeProtect2);
@@ -10946,14 +11043,14 @@ public class GameSim {
 			String targetResponse = input.next();
 			if(targetResponse.equals("1") && d.isAlive()) {
 				if(d.ultReady()) {
-					d.increaseMovement(10);
+					d.increaseMovement(5);
 				}else {
 					d.getOrb();
 				}
 			}
 			if(targetResponse.equals("2") && e.isAlive()) {
 				if(e.ultReady()) {
-					e.increaseMovement(10);
+					e.increaseMovement(5);
 				}else {
 					e.getOrb();
 				}
@@ -11076,8 +11173,7 @@ public class GameSim {
 			System.out.print("Who do you want to fire the cannon on: ");
 			String targetResponse = input.next();
 			if(targetResponse.equals("1")) {
-				a.takeDamage(350);
-				p.addDamage(750);
+				p.addDamage(400);
 				double rand = Math.random();
 				if(rand <= 0.5) {
 					x = 100;
@@ -11096,8 +11192,7 @@ public class GameSim {
 				}
 			}
 			if(targetResponse.equals("2")) {
-				b.takeDamage(350);
-				p.addDamage(750);
+				p.addDamage(400);
 				double rand = Math.random();
 				if(rand <= 0.5) {
 					x = 100;
@@ -11116,8 +11211,7 @@ public class GameSim {
 				}
 			}
 			if(targetResponse.equals("3")) {
-				c.takeDamage(350);
-				p.addDamage(750);
+				p.addDamage(400);
 				double rand = Math.random();
 				if(rand <= 0.5) {
 					x = 100;
@@ -11172,9 +11266,9 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeProtect = new Effect("protect", 1, 3);
-		Effect ChloeProtect2 = new Effect("protect", 1, 3);
-		Effect ChloeProtect3 = new Effect("protect", 1, 3);
+		Effect ChloeProtect = new Effect("protect", 1, 2);
+		Effect ChloeProtect2 = new Effect("protect", 1, 2);
+		Effect ChloeProtect3 = new Effect("protect", 1, 2);
 		e.add(ChloeProtect);
 		e2.add(ChloeProtect2);
 		e3.add(ChloeProtect3);
@@ -11184,9 +11278,9 @@ public class GameSim {
 		a.applyEffects();
 		b.addEffects(e3);
 		b.applyEffects();
-		p.setReduce();
-		a.setReduce();
-		b.setReduce();
+		p.resetCooldown();
+		a.resetCooldown();
+		b.resetCooldown();
 		p.resetUlt();
 		System.out.println("\"Gamemode Creative activated!\"");
 		System.out.println();
@@ -11225,7 +11319,7 @@ public class GameSim {
 		b.applyEffects();
 		c.addEffects(e3);
 		c.applyEffects();
-		p.setCooldown(3);
+		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}

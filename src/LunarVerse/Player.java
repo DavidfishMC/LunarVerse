@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import javax.sound.sampled.AudioFormat;
@@ -113,6 +115,133 @@ public class Player {
 		} catch (IOException e1) {
 		}
 	}
+	
+	public void changeSkin(String type) {
+		String tempName = name;
+		if(name.equals("Evil")) {
+			tempName = "Evil Lunar";
+		}
+		if(name.equals("Grizz")) {
+			tempName = "Mr.Grizz";
+		}
+		if(name.equals("Augie")) {
+			tempName = "Captain Augie";
+		}
+		if(name.equals("Tom")) {
+			tempName = "Tom Phan";
+		}
+		if(name.equals("Gates")) {
+			tempName = "Dr.Gates";
+		}
+		switch(type) {
+			case "Sakura":
+				nameSkin = getGradientName(tempName, "#F9BDEE", "#FFA3F7", "#F58AA4");
+				break;
+			case "Candy":
+				nameSkin = getGradientName(tempName, "#F9BDEE", "#E0B4FD", "#5DFEEB");
+				break;
+			case "Pride":
+				nameSkin = getGradientName(tempName, "#FF7A7A", "#FEA55D", "#ECE16A", "#86F35E", "#49F3F1", "#9C3CFB");
+				break;
+			case "Steampunk":
+				nameSkin = getGradientName(tempName, "#CD7F32", "#BD6705", "#ADADAD", "#49F3E5");
+				break;
+			case "Terra Ground":
+				nameSkin = getGradientName(tempName, "#21E843", "#49F3E5", "#CD7F32");
+				break;
+			case "Hades' Ruins":
+				nameSkin = getGradientName(tempName, "#1BECD7", "#0054AD", "#6E8784");
+				break;
+			case "Lofi":
+				nameSkin = getGradientName(tempName, "#FF7E98", "#FD84BB", "#D183DA", "#9480FD", "#6760FC");
+				break;
+			case "Breeze":
+				nameSkin = getGradientName(tempName, "#BCF0FB", "#58D4F3", "#38F2FF");
+				break;
+			case "Enchantment Chaos":
+				nameSkin = getGradientName(tempName, "#FD1A90", "#A12E8D", "#7E18E6", "#2C10A1", "#1E2367");
+				break;
+			case "Electropop":
+				nameSkin = getGradientName(tempName, "#E1BC78", "#04E7EE", "#5953CD", "#A013C2", "#EF01F5");
+				break;
+			case "Cryo Chamber":
+				nameSkin = getGradientName(tempName, "#0BC5CB", "#00CACD", "#01C4C9", "#55D7D2", "#00367A");
+				break;
+			case "Militia":
+				nameSkin = getGradientName(tempName, "#CCB782", "#938753", "#8E834D", "#4BAC0F", "#504B35");
+				break;
+			default:
+				break;
+		}
+	}
+	
+	public String getFirstColoredCharacter(String text) {
+	    // This pattern matches ANSI escape codes
+	    String ansiEscapeCodePattern = "\u001B\\[[;\\d]*m";
+	   
+	    // Find all ANSI escape codes in the text
+	    Pattern pattern = Pattern.compile(ansiEscapeCodePattern);
+	    Matcher matcher = pattern.matcher(text);
+	    // StringBuilder to hold the escape codes and the first character
+	    StringBuilder firstCharWithCodes = new StringBuilder();
+	    // Find all escape codes before the first visible character
+	    while (matcher.find()) {
+	        firstCharWithCodes.append(matcher.group());
+	        // Check if the next character after the escape code is not another escape code
+	        if (!text.substring(matcher.end()).startsWith("\u001B")) {
+	            // Append the first visible character after the escape codes
+	            firstCharWithCodes.append(text.charAt(matcher.end()));
+	            break;
+	        }
+	    }
+	    // Append the reset code to end the formatting
+	    firstCharWithCodes.append("\u001B[0m");
+	    return firstCharWithCodes.toString();
+	}
+   // Method to convert hex color code to RGB values
+   public int[] hexToRgb(String colorStr) {
+       return new int[]{
+           Integer.valueOf(colorStr.substring(1, 3), 16),
+           Integer.valueOf(colorStr.substring(3, 5), 16),
+           Integer.valueOf(colorStr.substring(5, 7), 16)
+       };
+   }
+   // Method to interpolate between two RGB colors
+   public int[] interpolate(int[] startRgb, int[] endRgb, float fraction) {
+       int r = (int) (startRgb[0] + (endRgb[0] - startRgb[0]) * fraction);
+       int g = (int) (startRgb[1] + (endRgb[1] - startRgb[1]) * fraction);
+       int b = (int) (startRgb[2] + (endRgb[2] - startRgb[2]) * fraction);
+       return new int[]{r, g, b};
+   }
+   // Method to create a gradient name string with bold formatting
+   public String getGradientName(String name, String... hexColors) {
+       StringBuilder coloredName = new StringBuilder();
+       ArrayList<int[]> rgbColors = new ArrayList<>();
+       for (String hex : hexColors) {
+           rgbColors.add(hexToRgb(hex));
+       }
+       // ANSI escape code for bold text
+       String boldCode = "\u001B[1m";
+       // Start the string with the bold code
+       coloredName.append(boldCode);
+       for (int i = 0; i < name.length(); i++) {
+           float fraction = (float) i / (name.length() - 1);
+           int colorIndex = (int) (fraction * (rgbColors.size() - 1));
+           int[] startColor = rgbColors.get(colorIndex);
+           int[] endColor = rgbColors.get(Math.min(colorIndex + 1, rgbColors.size() - 1));
+           float colorFraction = (fraction * (rgbColors.size() - 1)) - colorIndex;
+           int[] rgb = interpolate(startColor, endColor, colorFraction);
+           coloredName.append(getColorCode(rgb[0], rgb[1], rgb[2])).append(name.charAt(i));
+       }
+       // Reset the color and formatting at the end
+       coloredName.append("\u001B[0m");
+       return coloredName.toString();
+   }
+   // Method to get the ANSI color code for RGB values
+   private static String getColorCode(int r, int g, int b) {
+       return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
+   }
+
 	
 	public void setCharm(String s) {
 		charm = s;
@@ -382,6 +511,10 @@ public class Player {
 		}
 	}
 	
+	public void setMovement(int i) {
+		ogMovement = i;
+	}
+	
 	public int getOrbCount() {
 		return orbCount;
 	}
@@ -427,6 +560,9 @@ public class Player {
 	public void increaseMaxHP(double d) {
 		if(isAlive()) {
 			maxHealth = maxHealth + d;
+			if(Battlefield.endgame) {
+				d = d/2;
+			}
 			health = health + d;
 		}
 	}
@@ -463,19 +599,19 @@ public class Player {
 		}
 		if(curLoc.getX() > 41) {
 			curLoc.setX(41);
-			takeDamage(200);
+			takeDamage(100);
 		}
 		if(curLoc.getX() < 0) {
 			curLoc.setX(0);
-			takeDamage(200);
+			takeDamage(100);
 		}
 		if(curLoc.getY() > 41) {
 			curLoc.setY(41);
-			takeDamage(200);
+			takeDamage(100);
 		}
 		if(curLoc.getY() < 0) {
 			curLoc.setY(0);
-			takeDamage(200);
+			takeDamage(100);
 		}
 		if(GameSim.b.hasTrench(curLoc.getX(), curLoc.getY())) {
 			takeDamage(150);
@@ -747,6 +883,14 @@ public class Player {
 		return dazed;
 	}
 	
+	public boolean hasMend() {
+		return mend;
+	}
+	
+	public ArrayList<Effect> getEffects(){
+		return effects;
+	}
+	
 	public void increaseDPSNum(double d) {
 		damage = damage + d;
 	}
@@ -775,7 +919,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("ignite") && !ignite) {
 				ignite = true;
-				System.out.println(nameSkin + " has been ignited.");
+				System.out.println(nameSkin + " has been ignited for " + e.get(i).getTurns() + " turn(s).");
 			}
 			
 			if(e.get(i).getName().equals("daze") && dazed) {
@@ -789,7 +933,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("daze") && !dazed) {
 				dazed = true;
-				System.out.println(nameSkin + " has been dazed.");
+				System.out.println(nameSkin + " has been dazed for " + e.get(i).getTurns() + " turn(s).");
 			}
 			
 			if(e.get(i).getName().equals("stun") && stunned) {
@@ -816,7 +960,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("paralyze") && !paralyzed) {
 				paralyzed = true;
-				System.out.println(nameSkin + " has been paralyzed.");
+				System.out.println(nameSkin + " has been paralyzed for " + e.get(i).getTurns() + " turn(s).");
 			}
 			if(e.get(i).getName().equals("reflection") && reflection) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -829,7 +973,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("reflection") && !reflection) {
 				reflection = true;
-				System.out.println(nameSkin + " is now reflecting.");
+				System.out.println(nameSkin + " is now reflecting for " + e.get(i).getTurns() + " turn(s).");
 			}
 			if(e.get(i).getName().equals("freeze") && freezed) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -842,7 +986,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("freeze") && !freezed) {
 				freezed = true;
-				System.out.println(nameSkin + " has been freezed.");
+				System.out.println(nameSkin + " has been freezed for " + e.get(i).getTurns() + " turn(s).");
 			}
 			if(e.get(i).getName().equals("refine") && refined) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -855,7 +999,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("refine") && !refined) {
 				refined = true;
-				System.out.println(nameSkin + " has been refined.");
+				System.out.println(nameSkin + " has been refined for " + e.get(i).getTurns() + " turn(s).");
 			}
 			if(e.get(i).getName().equals("counter") && counter) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -868,7 +1012,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("counter") && !counter) {
 				counter = true;
-				System.out.println(nameSkin + " is now countering.");
+				System.out.println(nameSkin + " is now countering for " + e.get(i).getTurns() + " turn(s).");
 			}
 			if(e.get(i).getName().equals("mend") && mend) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -881,7 +1025,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("mend") && !mend) {
 				mend = true;
-				System.out.println(nameSkin + " is now mending.");
+				System.out.println(nameSkin + " is now mending by " + e.get(i).getIncrease() * 100 +"% for " + e.get(i).getTurns() + " turn(s).");
 			}
 			if(e.get(i).getName().equals("fortify") && fortify) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -894,7 +1038,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("fortify") && !fortify) {
 				fortify = true;
-				System.out.println(nameSkin + " is fortified.");
+				System.out.println(nameSkin + " is fortified for " + e.get(i).getTurns() + " turn(s).");
 			}
 			if(e.get(i).getName().equals("weary") && weary) {
 				for(int j = 0; j < effects.size(); j++) {
@@ -907,7 +1051,7 @@ public class Player {
 			}
 			if(e.get(i).getName().equals("weary") && !weary) {
 				weary = true;
-				System.out.println(nameSkin + " is now weary.");
+				System.out.println(nameSkin + " is now weary for " + e.get(i).getTurns() + " turn(s).");
 			}
 			effects.add(e.get(i));
 		}
@@ -927,31 +1071,31 @@ public class Player {
 			Effect e = effects.get(i);
 			if(e.getName().equals("power") && !e.isUsed()) {
 				damage = damage + (ogDamage * e.getIncrease());
-				System.out.println(nameSkin + " has been powered.");
+				System.out.println(nameSkin + " has been powered by " + effects.get(i).getIncrease() * 100 +"% for " + effects.get(i).getTurns() + " turn(s).");
 			}
 			if(e.getName().equals("protect") && !e.isUsed()) {
 				protect = protect - e.getIncrease();
-				System.out.println(nameSkin + " has been protected.");
+				System.out.println(nameSkin + " has been protected by " + effects.get(i).getIncrease() * 100 +"% for " + effects.get(i).getTurns() + " turn(s).");
 			}
 			if(e.getName().equals("weak") && !e.isUsed()) {
 				damage = damage - (ogDamage * e.getIncrease());
-				System.out.println(nameSkin + " has been weakened.");
+				System.out.println(nameSkin + " has been weakened by " + effects.get(i).getIncrease() * 100 +"% for " + effects.get(i).getTurns() + " turn(s).");
 			}
 			if(e.getName().equals("vulnerable") && !e.isUsed()) {
 				protect = protect + e.getIncrease();
-				System.out.println(nameSkin + " is now vulnerable.");
+				System.out.println(nameSkin + " is now vulnerable by " + effects.get(i).getIncrease() * 100 +"% for " + effects.get(i).getTurns() + " turn(s).");
 			}
 			if(e.getName().equals("blind") && !e.isUsed()) {
 				range = range - (ogRange * e.getIncrease());
-				System.out.println(nameSkin + " has been blinded.");
+				System.out.println(nameSkin + " has been blinded by " + effects.get(i).getIncrease() * 100 +"% for " + effects.get(i).getTurns() + " turn(s).");
 			}
 			if(e.getName().equals("poison") && !e.isUsed()) {
 				absorb = absorb - e.getIncrease();
-				System.out.println(nameSkin + " has been poisoned.");
+				System.out.println(nameSkin + " has been poisoned by " + effects.get(i).getIncrease() * 100 +"% for " + effects.get(i).getTurns() + " turn(s).");
 			}
 			if(e.getName().equals("sight") && !e.isUsed()) {
 				range = range + (ogRange * e.getIncrease());
-				System.out.println(nameSkin + " is now sightseeing.");
+				System.out.println(nameSkin + " is now sightseeing by " + effects.get(i).getIncrease() * 100 +"% for " + effects.get(i).getTurns() + " turn(s).");
 			}
 			e.used();
 		}
@@ -1105,10 +1249,10 @@ public class Player {
 	}
 	
 	public void reviveAlex() {
-		health = maxHealth * 0.75;
+		health = maxHealth * 0.35;
 		ultActive = false;
 		resetUlt();
-		System.out.println("\"Ha, missed me?\"");
+		System.out.println("\"Back like I never left!\"");
 		System.out.println();
 		turn = true;
 		for(int i = 0; i < effects.size(); i++) {
@@ -1119,8 +1263,6 @@ public class Player {
 	
 	public boolean revive() {
 		if(isAlive()) {
-			System.out.println("Target is not downed!");
-			System.out.println();
 			return false;
 		}
 		turndead = 0;
@@ -1213,6 +1355,7 @@ public class Player {
 				i--;
 			}
 			if(e.getName().equals("weary")) {
+				increaseMovement(5);
 				weary = false;
 				effects.remove(e);
 				System.out.println(nameSkin + " is no longer weary.");
@@ -1242,6 +1385,9 @@ public class Player {
 				absorb2 = 0.001;
 			}
 			double e = (maxHealth * d) * absorb2;
+			if(Battlefield.endgame) {
+				e = e/2;
+			}
 			health = health + e;
 			healingIn = healingIn + e;
 			System.out.println(nameSkin + " has healed for " + e);
@@ -1258,6 +1404,9 @@ public class Player {
 				absorb2 = 0.001;
 			}
 			double e = d * absorb2;
+			if(Battlefield.endgame) {
+				e = e/2;
+			}
 			health = health + e;
 			System.out.println(nameSkin + " has healed for " + e);
 			if(health > maxHealth) {
@@ -1275,6 +1424,9 @@ public class Player {
 				absorb2 = 0.001;
 			}
 			double e = (d * i) * absorb2;
+			if(Battlefield.endgame) {
+				e = e/2;
+			}
 			health = health + e;
 			healingIn = healingIn + e;
 			System.out.println(nameSkin + " has healed for " + e);
@@ -2387,6 +2539,76 @@ public class Player {
 			    break;
 			}
 		}
+		if(name.equals("Julian")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Rock them out of here!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Don't mind the TNT cannon. It's 40% stable.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Do you think they'll wanna hear some of my music?\"");
+			    break;
+			}
+		}
+		if(name.equals("Via")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Arro will get these guys for us!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Does anyone here want to join my pirate crew? Free desserts every week!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"They'll regret messing with the seven seas.\"");
+			    break;
+			}
+		}
+		if(name.equals("Mack")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"I got 3 kill contracts and we aren't leaving until I complete them all.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I got your Macks, I mean backs*.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"They'll never see me coming.\"");
+			    break;
+			}
+		}
+		if(name.equals("Rocco")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Let's give them a good show shall we?\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Rocco Paper Scissors, any option is bad for them.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"When I summon the Warden don't freak out, he won't hurt you guys.\"");
+			    break;
+			}
+		}
+		if(name.equals("Evil")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"No mercy onto these fools!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"World ending collisions and me mix quite well.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"The bot army will take care of them, no worries.\"");
+			    break;
+			}
+		}
 	}
 	
 	public void teamChat(Party p) {
@@ -3114,6 +3336,161 @@ public class Player {
 			    break;
 			case "Ruby":
 				System.out.println(nameSkin + ": " + "\"Ruby, bring my world here!\"");
+			    break;
+			}
+		}
+		if(name.equals("Julian")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Lunar, time to rock out!\"");
+			    break;
+			case "Dylan":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Dylan, how is that bass going?\"");
+					System.out.println(responseName + ": " + "\"Going good! Good until my goblin broke it.\"");
+				}
+			    break;
+			case "Aidan":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Aidan, cover us!\"");
+					System.out.println(responseName + ": " + "\"Got it!\"");
+				}
+			    break;
+			case "Ruby":
+				System.out.println(nameSkin + ": " + "\"Ruby, turn the tides for us!\"");
+			    break;
+			case "Audrey":
+				System.out.println(nameSkin + ": " + "\"If I die Audrey, bring me back!\"");
+			    break;
+			case "Kithara":
+				System.out.println(nameSkin + ": " + "\"Kithara, let's put on a show for these frauds.\"");
+			    break;
+			case "Airic":
+				System.out.println(nameSkin + ": " + "\"Get the last laugh on them Airic!\"");
+			    break;
+			}
+		}
+		if(name.equals("Via")) {
+			switch (name3) {
+			case "Solar":
+					System.out.println(nameSkin + ": " + "\"Solar, blast them out of here girl!\"");
+			    break;
+			case "Sammi":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Sammi, you should visit the ship again some day.\"");
+					System.out.println(responseName + ": " + "\"Of course Via! Right after I fix the mess at my lab.\"");
+				}
+			    break;
+			case "Rocco":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Was your brother ever the type to venture the seas?\"");
+					System.out.println(responseName + ": " + "\"Not when on my ship ha!\"");
+				}
+			    break;
+			case "Ashley":
+				System.out.println(nameSkin + ": " + "\"Ashley, keep us safe.\"");
+			    break;
+			case "Kailani":
+				System.out.println(nameSkin + ": " + "\"Bring the water power Kailani!\"");
+			    break;
+			case "Augie":
+				System.out.println(nameSkin + ": " + "\"Show off that captain spirit Augie!\"");
+			    break;
+			case "Chloe":
+				System.out.println(nameSkin + ": " + "\"Sorry about breaking your kingdom Chloe!\"");
+			    break;
+			}
+		}
+		if(name.equals("Mack")) {
+			switch (name3) {
+			case "Solar":
+					System.out.println(nameSkin + ": " + "\"Solar, with me!\"");
+			    break;
+			case "Sammi":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Sammi! Let's go out after this.\"");
+					System.out.println(responseName + ": " + "\"I would love too!\"");
+				}
+			    break;
+			case "Bolo":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"How you doing Bolo?\"");
+					System.out.println(responseName + ": " + "\"Pretty good, let's get on overwatch after.\"");
+				}
+			    break;
+			case "Gash":
+				System.out.println(nameSkin + ": " + "\"Gash, bring that guard energy!\"");
+			    break;
+			case "Tom":
+				System.out.println(nameSkin + ": " + "\"Hey Tom, I'll forgive ya for what you did if you fix Dalton's doghouse.\"");
+			    break;
+			case "Zero":
+				System.out.println(nameSkin + ": " + "\"Zero, you are one cold guy. I like it.\"");
+			    break;
+			case "Radar":
+				System.out.println(nameSkin + ": " + "\"Let's sneak our way around them Radar.\"");
+			    break;
+			}
+		}
+		if(name.equals("Rocco")) {
+			switch (name3) {
+			case "Zero":
+					System.out.println(nameSkin + ": " + "\"Zero, I suppose I will fight alongside you just this once.\"");
+			    break;
+			case "Hopper":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Mess them up Hopper!\"");
+					System.out.println(responseName + ": " + "\"How about you lend me a hand as well this time. You're quite explosive!\"");
+				}
+			    break;
+			case "Dimentio":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Another virus huh? Surely you must be better then Zero!\"");
+					System.out.println(responseName + ": " + "\"I would say so but my ego must be kept in check.\"");
+				}
+			    break;
+			case "Axol":
+				System.out.println(nameSkin + ": " + "\"Axol, let's use these creatures!\"");
+			    break;
+			case "Kailani":
+				System.out.println(nameSkin + ": " + "\"Dash circles around them Kailani!\"");
+			    break;
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"Glad to see you here Lunar.\"");
+			    break;
+			case "Via":
+				System.out.println(nameSkin + ": " + "\"Via, impressive ship. Not as good as mine though.\"");
+			    break;
+			}
+		}
+		if(name.equals("Evil")) {
+			switch (name3) {
+			case "Mason":
+					System.out.println(nameSkin + ": " + "\"Good to see you again Mason, despite how we ended things.\"");
+			    break;
+			case "Lunar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"I still don't understand how you prevailed.\"");
+					System.out.println(responseName + ": " + "\"The good guys always win Evil Lunar.\"");
+				}
+			    break;
+			case "Ruby":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Ruby, thank you for allowing me to build my army!\"");
+					System.out.println(responseName + ": " + "\"Mojang never granted you access to our factories, but whatever.\"");
+				}
+			    break;
+			case "Max":
+				System.out.println(nameSkin + ": " + "\"Embrace this power Max.\"");
+			    break;
+			case "Chloe":
+				System.out.println(nameSkin + ": " + "\"That was some cute kingdom you had Chloe.\"");
+			    break;
+			case "Oona":
+				System.out.println(nameSkin + ": " + "\"How could you work like this for Mojang, there are far greater powers out there.\"");
+			    break;
+			case "Via":
+				System.out.println(nameSkin + ": " + "\"Via, impressive ship. Not as good as mine though.\"");
 			    break;
 			}
 		}
