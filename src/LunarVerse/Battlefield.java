@@ -306,12 +306,14 @@ public class Battlefield {
 			}
 		}
 		
-		for(int i = 0; i < 42; i++) {
-			for(int j = 0; j < 42; j++){
-				Location l = new Location(i, j);
-				if(s.inReach(l)) {
-					if(!l.eqLoc(s.getLoc())) {
-						background[j][i] = 254;
+		if(!s.isParalyzed()) {
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(s.inReach(l)) {
+						if(!l.eqLoc(s.getLoc())) {
+							background[j][i] = 254;
+						}
 					}
 				}
 			}

@@ -170,6 +170,78 @@ public class Player {
 			case "Militia":
 				nameSkin = getGradientName(tempName, "#CCB782", "#938753", "#8E834D", "#4BAC0F", "#504B35");
 				break;
+			case "Aurora":
+				nameSkin = getGradientName(tempName, "#C3E9D2", "#12B5C8", "#8585C5", "#EE86A7");
+				break;
+			case "Crimson Tide":
+				nameSkin = getGradientName(tempName, "#C6426E", "#642B73");
+				break;
+			case "Duo's Love":
+				nameSkin = getGradientName(tempName, "#FF1476", "#FF819F", "#FF8FFF", "#FFB2D7", "#CBB2FF");
+				break;
+			case "Pastel Plum":
+				nameSkin = getGradientName(tempName, "#C495FE", "#F57AAF", "#C670F5");
+				break;
+			case "Arthur's Honour":
+				nameSkin = getGradientName(tempName, "#A59B8B", "#E1C483", "#E0E2EC", "#8C8C9C", "#513C58");
+				break;
+			case "Night Fang":
+				nameSkin = getGradientName(tempName, "#270AFF", "#5533FF", "#9900FF", "#750C83");
+				break;
+			case "Ironclad":
+				nameSkin = getGradientName(tempName, "#B5B5B5", "#D6D6D6", "#D9995E", "#F4B062");
+				break;
+			case "Wave Rider":
+				nameSkin = getGradientName(tempName, "#DDBEAA", "#E5E3E4", "#BBC6C8", "#6EC4BA", "#50C1C3");
+				break;
+			case "Retrowave":
+				nameSkin = getGradientName(tempName, "#F7C70D", "#F76C05", "#F6110C", "#631799", "#1F30C8");
+				break;
+			case "Flare":
+				nameSkin = getGradientName(tempName, "#FF7024", "#FEBE34", "#FE3434");
+				break;
+			case "Sunset":
+				nameSkin = getGradientName(tempName, "#FFAB15", "#F5723A", "#799AAB", "#22689C", "#524758");
+				break;
+			case "Interstellar":
+				nameSkin = getGradientName(tempName, "#A3FFF5", "#7CB4C8", "#154367", "#5F6670", "#2D2D2F");
+				break;
+			case "Celestial":
+				nameSkin = getGradientName(tempName, "#F29C87", "#F4AF72", "#7D7BC0", "#3559BF");
+				break;
+			case "Fantasy Myth":
+				nameSkin = getGradientName(tempName, "#33FDFF", "#3CCFFF", "#727DFF", "#8E45FF", "#A501FF");
+				break;
+			case "Grotto":
+				nameSkin = getGradientName(tempName, "#71838F", "#84BFC3", "#7F8DBE", "#C7C0BA", "#686A83");
+				break;
+			case "Agent":
+				nameSkin = getGradientName(tempName, "#B4AFAB", "#8797B1", "#4D556A", "#43404F");
+				break;
+			case "Moss":
+				nameSkin = getGradientName(tempName, "#D2D459", "#91B247", "#80A142", "#668D2E");
+				break;
+			case "Mocha":
+				nameSkin = getGradientName(tempName, "#F8E59A", "#DBA75B", "#C3883D", "#5C2F27", "#3A170D");
+				break;
+			case "Royal":
+				nameSkin = getGradientName(tempName, "#FFE5B2", "#FFC0A1", "#4869E1", "#BCD7E3", "#F2F2EB");
+				break;
+			case "Starlight":
+				nameSkin = getGradientName(tempName, "#f7e9b7", "#FFEE88", "#FFE67B", "#D4AF37");
+				break;
+			case "Poseidon":
+				nameSkin = getGradientName(tempName, "#90F8FB", "#00C6CC", "#008D92", "#E5C33B", "#F8E59A");
+				break;
+			case "Tulip Blossom":
+				nameSkin = getGradientName(tempName, "#F9CEEE", "#E0CDFF", "#C1F0FB", "#DCF9A8", "#FFEBAF");
+				break;
+			case "Melon Blast":
+				nameSkin = getGradientName(tempName, "#FF90C8", "#FFACC6", "#FFC7C5", "#A8EB9E", "#49CF8B");
+				break;
+			case "Cheesecake Bliss":
+				nameSkin = getGradientName(tempName, "#F68787", "#FDE488", "#D4973A", "#A16317");
+				break;
 			default:
 				break;
 		}
@@ -599,19 +671,19 @@ public class Player {
 		}
 		if(curLoc.getX() > 41) {
 			curLoc.setX(41);
-			takeDamage(100);
+			takeDamage(200);
 		}
 		if(curLoc.getX() < 0) {
 			curLoc.setX(0);
-			takeDamage(100);
+			takeDamage(200);
 		}
 		if(curLoc.getY() > 41) {
 			curLoc.setY(41);
-			takeDamage(100);
+			takeDamage(200);
 		}
 		if(curLoc.getY() < 0) {
 			curLoc.setY(0);
-			takeDamage(100);
+			takeDamage(200);
 		}
 		if(GameSim.b.hasTrench(curLoc.getX(), curLoc.getY())) {
 			takeDamage(150);
@@ -1770,10 +1842,10 @@ public class Player {
 		}
 		if(name.equals("Eli")) {
 			if(randomNum == 1) {
-				return ("\"Buddies, we need healing!\"");
+				return ("\"Buddies, lend us a hand!\"");
 			}
 			if(randomNum == 2) {
-				return ("\"The sea truly has great power.\"");
+				return ("\"The sea is freaking awesome.\"");
 			}
 			if(randomNum == 3) {
 				return ("\"Feeling refreshed? Good, now attack!\"");
@@ -2179,7 +2251,7 @@ public class Player {
 				return ("\"Strike while they're distracted!\"");
 			}
 			if(randomNum == 3) {
-				return ("\"Too much VR is bad for your eyes!\"");
+				return ("\"They can't see a damn thing. Awesome!\"");
 			}
 		}
 		if(name.equals("Augie")) {
@@ -2606,6 +2678,76 @@ public class Player {
 			    break;
 			case 3:
 				System.out.println(nameSkin + ": " + "\"The bot army will take care of them, no worries.\"");
+			    break;
+			}
+		}
+		if(name.equals("Gash")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Focus fire on one!\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"They won't like it when my Ray of Doom is online.\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Stay close, and I got you.\"");
+			    break;
+			}
+		}
+		if(name.equals("Radar")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Let's run circles around them.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Hope you guys did leg day already!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"They'll never catch up. No way.\"");
+			    break;
+			}
+		}
+		if(name.equals("Dylan")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Let's rob them.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Goblins, do something!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"If I can roll a D20, then we can win this thing.\"");
+			    break;
+			}
+		}
+		if(name.equals("Chloe")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Where are my guards? It's ok, we'll be fine.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I'll power you guys up. Do the heavy hitting for me!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"If you need a refresher I'll send a guard over.\"");
+			    break;
+			}
+		}
+		if(name.equals("Mayhem")) {
+			int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"They have no idea what it's like to put everything on the line.\"");
+			    break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I'll take the hits, then stomp them right after!\"");
+			    break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"If you don't like one of them let me know. I will treat them with some darkmess.\"");
 			    break;
 			}
 		}
@@ -3489,8 +3631,163 @@ public class Player {
 			case "Oona":
 				System.out.println(nameSkin + ": " + "\"How could you work like this for Mojang, there are far greater powers out there.\"");
 			    break;
-			case "Via":
-				System.out.println(nameSkin + ": " + "\"Via, impressive ship. Not as good as mine though.\"");
+			case "Solar":
+				System.out.println(nameSkin + ": " + "\"A sibling huh? I should have an evil sister too.\"");
+			    break;
+			}
+		}
+		if(name.equals("Gash")) {
+			switch (name3) {
+			case "Gates":
+					System.out.println(nameSkin + ": " + "\"I got your back Dr.Gates.\"");
+			    break;
+			case "Audrey":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Hope that space trial wasn't too hard on your side Audrey.\"");
+					System.out.println(responseName + ": " + "\"All good! I got the wonder power on my side.\"");
+				}
+			    break;
+			case "Louis":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Louis, your guardian is quite helpful. What's their name?\"");
+					System.out.println(responseName + ": " + "\"To be fully honest, I don't know!\"");
+				}
+			    break;
+			case "Mack":
+				System.out.println(nameSkin + ": " + "\"Assassinate them for real Mack!\"");
+			    break;
+			case "Cherry":
+				System.out.println(nameSkin + ": " + "\"Let's get that mech online Cherry!\"");
+			    break;
+			case "Katrina":
+				System.out.println(nameSkin + ": " + "\"Slide over if you need some shielding Katrina!\"");
+			    break;
+			case "Airic":
+				System.out.println(nameSkin + ": " + "\"Airic, get us out there quick!\"");
+			    break;
+			}
+		}
+		if(name.equals("Radar")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Chill Lunar. Let me get the orbs.\"");
+			    break;
+			case "Thunder":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"So Thunder, we can forgive and forget right?\"");
+					System.out.println(responseName + ": " + "\"Get my cage ready faster, and we'll be good.\"");
+				}
+			    break;
+			case "Dimentio":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Dimentio, the Cybugs were never meant to enter, that was an honest mistake!\"");
+					System.out.println(responseName + ": " + "\"Whatever. It helped us in the end.\"");
+				}
+			    break;
+			case "Bedrock":
+				System.out.println(nameSkin + ": " + "\"Damn you're pretty slow Bedrock. I can help out.\"");
+			    break;
+			case "Solar":
+				System.out.println(nameSkin + ": " + "\"Light them up Solar!\"");
+			    break;
+			case "Max":
+				System.out.println(nameSkin + ": " + "\"You have some great ideas in the lab Max. Let's see it out there!\"");
+			    break;
+			case "Oona":
+				System.out.println(nameSkin + ": " + "\"The Mojang security could use some work Oona.\"");
+			    break;
+			}
+		}
+		if(name.equals("Dylan")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Alright Lunar, show them out!\"");
+			    break;
+			case "Julian":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Julian, don't hold back.\"");
+					System.out.println(responseName + ": " + "\"They'll never see me coming!\"");
+				}
+			    break;
+			case "Liam":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Liam, you're the best lawyer I've seen.\"");
+					System.out.println(responseName + ": " + "\"That's why I'm criminal.\"");
+				}
+			    break;
+			case "Eli":
+				System.out.println(nameSkin + ": " + "\"Eli, keep us running!\"");
+			    break;
+			case "Grizz":
+				System.out.println(nameSkin + ": " + "\"You're a scary boss even while on the same team Grizz.\"");
+			    break;
+			case "Orion":
+				System.out.println(nameSkin + ": " + "\"Run them over Orion!\"");
+			    break;
+			case "Thunder":
+				System.out.println(nameSkin + ": " + "\"Thunderstruck them Thunder!\"");
+			    break;
+			}
+		}
+		if(name.equals("Chloe")) {
+			switch (name3) {
+			case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Thank you for saving my kingdom Lunar.\"");
+			    break;
+			case "Evil":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"So that was you who stole my file power? How could you!\"");
+					System.out.println(responseName + ": " + "\"Chill, it was needed in better hands anyways.\"");
+				}
+			    break;
+			case "Solar":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Solar, you're one of the fun ones huh?\"");
+					System.out.println(responseName + ": " + "\"That's right!\"");
+				}
+			    break;
+			case "Kailani":
+				System.out.println(nameSkin + ": " + "\"Kailani, send a guard of mine on a riptide too!\"");
+			    break;
+			case "Axol":
+				System.out.println(nameSkin + ": " + "\"Axol, keep our friends here alive.\"");
+			    break;
+			case "Hopper":
+				System.out.println(nameSkin + ": " + "\"I've heard many great stories about you Hopper!\"");
+			    break;
+			case "Louis":
+				System.out.println(nameSkin + ": " + "\"Louis, overwhelm them with our guards!\"");
+			    break;
+			}
+		}
+		if(name.equals("Mayhem")) {
+			switch (name3) {
+			case "Bedrock":
+					System.out.println(nameSkin + ": " + "\"Bedrock, show them what you're made of.\"");
+			    break;
+			case "Clara":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Clara, you were my finest spark hunter. Think about what we could've been.\"");
+					System.out.println(responseName + ": " + "\"I would rather be free instead Mayhem.\"");
+				}
+			    break;
+			case "Midnite":
+				if(p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Out of all the powers you chose to be a ghost.\"");
+					System.out.println(responseName + ": " + "\"It's quite useful, and spooky!\"");
+				}
+			    break;
+			case "Liam":
+				System.out.println(nameSkin + ": " + "\"Liam, show me that you're more then just a lawyer.\"");
+			    break;
+			case "Ashley":
+				System.out.println(nameSkin + ": " + "\"Impressive spark power Ashley. Let's see it.\"");
+			    break;
+			case "Radar":
+				System.out.println(nameSkin + ": " + "\"Help me with that boost Radar, and I will return the favor.\"");
+			    break;
+			case "Grizz":
+				System.out.println(nameSkin + ": " + "\"I won't forgive you for what you did to our planet Grizz.\"");
 			    break;
 			}
 		}
