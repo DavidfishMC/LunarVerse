@@ -30,6 +30,8 @@ public class Battlefield {
 	static final String clear = "\u001b[22m";
 	static final String bold = "\u001b[1m";
 	public static boolean endgame = false;
+	Party trenchParty = null;
+	Location trenchLoc = null;
 
 	public Battlefield(String nameIn, Player aIn, Player bIn, Player cIn, Player dIn, Player eIn, Player fIn) {
 		a = aIn;
@@ -251,7 +253,7 @@ public class Battlefield {
 		cursor = null;
 	}
 	
-	public void printField(Player a, Player b, Player c, Player d, Player e, Player f, ArrayList<Orb> orbLoc, ArrayList<Cover> coverLoc, Player s, Player e1, Player e2, Player e3) {
+	public void printField(Player a, Player b, Player c, Player d, Player e, Player f, ArrayList<Orb> orbLoc, ArrayList<Cover> coverLoc, Player s, Player e1, Player e2, Player e3, ArrayList<Utility> utilityLoc) {
 		one = a.getLoc();
 		two = b.getLoc();
 		three = c.getLoc();
@@ -265,7 +267,44 @@ public class Battlefield {
 				background[i][j] = 999;
 			}
 		}
-
+		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				for(Utility u: utilityLoc) {
+					if(i == u.getLoc().getY() && j == u.getLoc().getX()) {
+						if(u.getName().equals("Explosive")) {
+							field[i][j] = "E";
+							foreground[i][j] = 0;
+							background[i][j] = 196;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(endgame) {
+										if(u.inRange(l, 5) && u.isEnemy(s)) {
+											background[h][k] = 214;
+										}else if(u.inRange(l, 10) && u.isEnemy(s)) {
+											background[h][k] = 220;
+										}
+										if(u.inRange(l, 0) && u.isEnemy(s)) {
+											background[h][k] = 196;
+										}
+									}else {
+										if(u.inRange(l, 8) && u.isEnemy(s)) {
+											background[h][k] = 214;
+										}else if(u.inRange(l, 15) && u.isEnemy(s)) {
+											background[h][k] = 220;
+										}
+										if(u.inRange(l, 0) && u.isEnemy(s)) {
+											background[h][k] = 196;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
@@ -299,20 +338,35 @@ public class Battlefield {
 			for(int j = 0; j < 42; j++){
 				Location l = new Location(i, j);
 				if(s.inRange(l)) {
-					//field[j][i] = "∙";
-					//field[j][i]= "\u001B[41m" + " " + reset;
-					background[j][i] = 255;
+					if(!l.eqLoc(s.getLoc())) {
+						background[j][i] = 255;
+					}
 				}
 			}
 		}
 		
-		if(!s.isParalyzed()) {
+		
+		
+		if(!s.isParalyzed() || !s.drillDashed()) {
 			for(int i = 0; i < 42; i++) {
 				for(int j = 0; j < 42; j++){
 					Location l = new Location(i, j);
 					if(s.inReach(l)) {
 						if(!l.eqLoc(s.getLoc())) {
 							background[j][i] = 254;
+						}
+					}
+				}
+			}
+		}
+		
+		if(s.getPack()) {
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(s.inRange(l, 5)) {
+						if(!l.eqLoc(s.getLoc())) {
+							background[j][i] = 223;
 						}
 					}
 				}
@@ -332,8 +386,108 @@ public class Battlefield {
 			}
 		}
 		
+		int closeRange = -1;
+		int farRange = -1;
+		
+		switch (s.getName()) {
+			case "Aidan":
+				closeRange = 4;
+				farRange = 10;
+				break;
+			default:
+				break;
+		}
+		
+		
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(s.atRange(l, closeRange)) {
+					background[j][i] = 251;
+				}
+				if(s.atRange(l, farRange)) {
+					background[j][i] = 251;
+				}
+			}
+		}
+		
+		
+		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				
+				for(Utility u: utilityLoc) {
+					if(i == u.getLoc().getY() && j == u.getLoc().getX()) {
+						if(u.getName().equals("Swiftwing") && !u.getPickUp()) {
+							field[i][j] = "S";
+							foreground[i][j] = 0;
+							background[i][j] = 213;
+						}
+						if(u.getName().equals("Howler") && !u.getPickUp()) {
+							field[i][j] = "H";
+							foreground[i][j] = 0;
+							background[i][j] = 93;
+						}
+						if(u.getName().equals("Sensor")) {
+							field[i][j] = "S";
+							foreground[i][j] = 0;
+							background[i][j] = 193;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.inRange(l, 5) && u.isEnemy(s)) {
+										background[h][k] = 193;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Sphere")) {
+							field[i][j] = "Y";
+							foreground[i][j] = 0;
+							background[i][j] = 299;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.inRange(l, 8) && u.isEnemy(s)) {
+										background[h][k] = 229;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Wind")) {
+							field[i][j] = "W";
+							foreground[i][j] = 0;
+							background[i][j] = 220;
+						}
+						if(u.getName().equals("Gemstone")) {
+							field[i][j] = "G";
+							foreground[i][j] = 0;
+							background[i][j] = 252;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.inRange(l, 0) && u.isAlly(s) && u.getStone().equals("iron")) {
+										field[i][j] = "I";
+										background[h][k] = 252;
+									}
+									if(u.inRange(l, 4) && u.isAlly(s) && u.getStone().equals("emerald")) {
+										field[i][j] = "E";
+										background[h][k] = 155;
+									}
+									if(u.inRange(l, 6) && u.isAlly(s) && u.getStone().equals("diamond")) {
+										field[i][j] = "D";
+										background[h][k] = 159;
+									}
+									if(u.inRange(l, 8) && u.isAlly(s) && u.getStone().equals("kunzite")) {
+										field[i][j] = "K";
+										background[h][k] = 225;
+									}
+								}
+							}
+						}
+					}
+				}
+				
 				for(Tile t: tiles) {
 					if(i == t.getLoc().getY() && j == t.getLoc().getX()) {
 						if(t.getName().equals("Rift")) {
@@ -395,6 +549,8 @@ public class Battlefield {
 						}
 					}
 				}
+				
+				
 				if(i == one.getY() && j == one.getX()) {
 					if(!a.isAlive()) {
 						field[i][j] = "-";
@@ -638,5 +794,19 @@ public class Battlefield {
 			}
 		}
 	}
+	
+	
+	public void trenchDrill(Location l) {
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l2 = new Location(i, j);
+				if(l2.inRange(l, 3)) {
+					Tile t = new Tile("Trench", new Location(i, j));
+					tiles.add(t);
+				}
+			}
+		}
+	}
+	
 	
 }

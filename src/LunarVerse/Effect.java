@@ -41,5 +41,9 @@ public class Effect {
 		return used;
 	}
 	
+	public void increaseTurns() {
+		turnCount++;
+	}
+	
 
 }
