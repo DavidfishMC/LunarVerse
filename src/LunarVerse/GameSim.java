@@ -35,7 +35,7 @@ public class GameSim {
 		}
 		*/
 		try {
-			String audio = "introtheme.wav";
+			String audio = "jade.wav";
 			audioPlayer = new Music(audio, false);
 			audioPlayer.play();
 			audioPlayer.pause();
@@ -100,12 +100,12 @@ public class GameSim {
 			String temp7 = input.next();
 			p6 = CharacterSelection(p6, temp7, false, 33, 36);
 			System.out.println();
-			p1.changeSkin("Tulip Blosso");
-			p3.changeSkin("Tulip Blossm");
-			p5.changeSkin("Tulip Blosom");
-			p2.changeSkin("Meln Blast");
-			p4.changeSkin("Meln Blast");
-			p6.changeSkin("Meln Blast");
+			p1.changeSkin("Militi");
+			p3.changeSkin("Milita");
+			p5.changeSkin("Miliia");
+			p2.changeSkin("Lofi");
+			p4.changeSkin("Lofi");
+			p6.changeSkin("Lofi");
 			try {
 				String audio = "matchstart.wav";
 				Music victoryPlayer = new Music(audio, false);
@@ -6668,372 +6668,496 @@ public class GameSim {
 			  p.skin(name);
 			  p.setC(147);
 			  //p.setImage("lunar.png");
+			  System.out.println("\"They’ll get a taste of their own medicine soon.\"");
+			  System.out.println();
 		    break;
 		  case "Aidan":
 			  p = new Player(2300, 175, start, name, x, y, 11, 9, 6);
 			  name = p.getGradientName("Aidan", "#34A0D5", "#F5903D", "#2796CE");
 			  p.skin(name);
 			  p.setC(209);
+			  System.out.println("\"I’ll be cranking 90s all day around them.\"");
+			  System.out.println();
 		    break;
 		  case "Finley":
 			  p = new Player(2625, 200, start, name, x, y, 9, 9, 6);
 			  name = p.getGradientName("Finley", "#F2C511", "#FF4747");
 			  p.skin(name);
 			  p.setC(223);
+			  System.out.println("\"That guy, that guy, and that guy. All dead soon.\"");
+			  System.out.println();
 		    break;
 		  case "Ayson":
 			  p = new Player(2650, 200, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Ayson Brothers", "#48C8FE", "#78CDDE", "#8F2D2D");
 			  p.skin(name);
 			  p.setC(45);
+			  System.out.println("\"Let’s show them our real power.\"" + " " + "\"Right with you brother.\"");
+			  System.out.println();
 		    break;
 		  case "Alex":
 			  p = new Player(2350, 250, start, name, x, y, 12, 10, 7);
 			  name = p.getGradientName("Alex", "#FF4242", "#FFC524", "#F7C308", "#F92424");
 			  p.skin(name);
 			  p.setC(196);
+			  System.out.println("\"Time to fish a good catch!\"");
+			  System.out.println();
 		    break;
 		  case "Jesse":
 			  p = new Player(2300, 75, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Jesse", "#CF0202", "#FF4242", "#FE6410", "#FFC524", "#F7C308");
 			  p.skin(name);
 			  p.setC(160);
+			  System.out.println("\"Noone can last long in hell except me.\"");
+			  System.out.println();
 		    break;
 		  case "Chief":
 			  p = new Player(3800, 175, start, name, x, y, 8, 8, 7);
 			  name = p.getGradientName("Chief", "#2EA4FF", "#397BFE", "#0544C2");
 			  p.skin(name);
 			  p.setC(69);
+			  System.out.println("\"As long as we stick together, no one can run us down.\"");
+			  System.out.println();
 		    break;
 		  case "Norman":
 			  p = new Player(2150, 150, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Norman", "#4BEA1F", "#39FEA9", "#1FF6F9");
 			  p.skin(name);
 			  p.setC(46);
+			  System.out.println("\"I can turn sticks into stones, and stones into potential.\"");
+			  System.out.println();
 		    break;
 		  case "Katrina":
 			  p = new Player(2350, 175, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Katrina", "#1F63EA", "#2C9CF2", "#FE67DD", "#F165EC", "#FD75FF", "#1FB1F9", "#3874FF");
 			  p.skin(name);
 			  p.setC(32);
+			  System.out.println("\"As they always say, Woomy!\"");
+			  System.out.println();
 		    break;
 		  case "Sammi":
 			  p = new Player(2350, 275, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Sammi", "#C20000", "#F75026", "#F26380", "#FB9B41");
 			  p.skin(name);
 			  p.setC(160);
+			  System.out.println("\"I just have cracked aim, what can I say?\"");
+			  System.out.println();
 		    break;
 		  case "Mack":
 			  p = new Player(2500, 250, start, name, x, y, 11, 10, 6);
 			  name = p.getGradientName("Mack", "#FF24C5", "#FB41F5");
 			  p.skin(name);
 			  p.setC(200);
+			  System.out.println("\"Alright Dalton, let’s hunt them down!\"");
+			  System.out.println();
 		    break;
 		  case "Axol":
 			  p = new Player(2250, 175, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Axol", "#F9B92F", "#CE6D2C", "#A98992");
 			  p.skin(name);
 			  p.setC(222);
+			  System.out.println("\"Fear my axolotls, but also love them.\"");
+			  System.out.println();
 		    break;
 		  case "Via":
 			  p = new Player(2500, 325, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Via", "#A32900", "#A20121");
 			  p.skin(name);
 			  p.setC(124);
+			  System.out.println("\"Let’s send them to sleep with the fishes.\"");
+			  System.out.println();
 		    break;
 		  case "Hopper":
 			  p = new Player(3800, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Hopper", "#28D006", "#289F19", "#0D6402");
 			  p.skin(name);
 			  p.setC(40);
+			  System.out.println("\"Never back down. Never surrender.\"");
+			  System.out.println();
 		    break;
 		  case "Kailani":
 			  p = new Player(2350, 275, start, name, x, y, 25, 10, 6);
 			  name = p.getGradientName("Kailani", "#DDC136", "#C4BB5A", "#3BDEDB", "#0876BA");
 			  p.skin(name);
 			  p.setC(187);
+			  System.out.println("\"Stand in our way? We’ll wash you over.\"");
+			  System.out.println();
 		    break;
 		  case "Zero":
 			  p = new Player(2325, 225, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Zero", "#F11E1E", "#9E9E9E", "#7F5757");
 			  p.skin(name);
 			  p.setC(196);
+			  System.out.println("\"Walk near me. I dare you.\"");
+			  System.out.println();
 		    break;
 		  case "Ruby":
 			  p = new Player(2350, 200, start, name, x, y, 10, 10, 5);
 			  name = p.getGradientName("Ruby", "#F22C2C", "#B120BC", "#C85DD0");
 			  p.skin(name);
 			  p.setC(161);
+			  System.out.println("\"This is free map control for us!\"");
+			  System.out.println();
 		    break;
 		  case "Chloe":
 			  p = new Player(2250, 200, start, name, x, y, 10, 10, 5);
 			  name = p.getGradientName("Chloe", "#D17000", "#B97704", "#EC9CEA", "#DB6EE2");
 			  p.skin(name);
 			  p.setC(136);
+			  System.out.println("\"Let’s hope the royal guards are on their best performance today.\"");
+			  System.out.println();
 		    break;
 		  case "Mason":
 			  p = new Player(2450, 250, start, name, x, y, 11, 10, 7);
 			  name = p.getGradientName("Mason", "#D963D5", "#A747F5", "#9718EC", "#330080");
 			  p.skin(name);
 			  p.setC(129);
+			  System.out.println("\"They’re gonna be helpless soon enough.\"");
+			  System.out.println();
 		    break;
 		  case "Max":
 			  p = new Player(2600, 25, start, name, x, y, 9, 9, 6);
 			  name = p.getGradientName("Max", "#D28B28", "#EA9E34");
 			  p.skin(name);
 			  p.setC(180);
+			  System.out.println("\"Call on my guidance. We’ll need it.\"");
+			  System.out.println();
 		    break;
 		  case "Evil":
 			  p = new Player(2500, 250, start, name, x, y, 11, 9, 7);
 			  name = p.getGradientName("Evil Lunar", "#F81616", "#A4A8DF", "#A89FD5", "#38E8FF");
 			  p.skin(name);
 			  p.setC(196);
+			  System.out.println("\"The Roche Limit will be their deciding fate.\"");
+			  System.out.println();
 		    break;
 		  case "Airic":
 			  p = new Player(2350, 250, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Airic", "#473AF2", "#4367F9", "#A3A6F5", "#C2C2C2");
 			  p.skin(name);
 			  p.setC(19);
+			  System.out.println("\"Get in. Get out.\"");
+			  System.out.println();
 		    break;
 		  case "Julian":
 			  p = new Player(2400, 200, start, name, x, y, 10, 8, 7);
 			  name = p.getGradientName("Julian", "#FF8B1F", "#E89F64", "#74DEEC", "#6DF3EA");
 			  p.skin(name);
 			  p.setC(214);
+			  System.out.println("\"Karma’s a pain. Don’t they know?\"");
+			  System.out.println();
 		    break;
 		  case "Solar":
 			  p = new Player(2400, 175, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Solar", "#E3E625", "#F47CFD");
 			  p.skin(name);
 			  p.setC(220);
+			  System.out.println("\"Let’s give them a light show!\"");
+			  System.out.println();
 		    break;
 		  case "Eli":
 			  p = new Player(2225, 150, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Eli", "#51C0F0", "#35A7ED");
 			  p.skin(name);
 			  p.setC(39);
+			  System.out.println("\"Buddies for days. Buddies for life!\"");
+			  System.out.println();
 		    break;
 		  case "Dylan":
 			  p = new Player(2400, 200, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Dylan", "#2DDF2A", "#1EC23F", "#3594ED", "#4F8CA1");
 			  p.skin(name);
 			  p.setC(41);
+			  System.out.println("\"Time to roll the die.\"");
+			  System.out.println();
 		    break;
 		  case "Orion":
 			  p = new Player(3925, 225, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Orion", "#707070", "#8F84A4", "#7264AA", "#426BAE");
 			  p.skin(name);
 			  p.setC(101);
+			  System.out.println("\"Push them out of our way.\"");
+			  System.out.println();
 		    break;
 		  case "Grizz":
 			  p = new Player(3800, 200, start, name, x, y, 10, 10, 8);
 			  name = p.getGradientName("Mr.Grizz", "#9D3F01", "#7E390C", "#471D95", "#741F7A");
 			  p.skin(name);
 			  p.setC(88);
+			  System.out.println("\"Overtime starts now.\"");
+			  System.out.println();
 		    break;
 		  case "Clara":
 			  p = new Player(2450, 300, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Clara", "#F584DD", "#CF8AF5", "#F5AA42");
 			  p.skin(name);
 			  p.setC(219);
+			  System.out.println("\"Me against them? Easy.\"");
+			  System.out.println();
 		    break;
 		  case "Liam":
 			  p = new Player(2425, 225, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Liam", "#F53D3D", "#F76526");
 			  p.skin(name);
 			  p.setC(196);
+			  System.out.println("\"Nobody can escape the law.\"");
+			  System.out.println();
 		    break;
 		  case "Mayhem":
 			  p = new Player(3600, 225, start, name, x, y, 10, 10, 8);
 			  name = p.getGradientName("Mayhem", "#D748FE", "#B423D1", "#9A21FD");
 			  p.skin(name);
 			  p.setC(171);
+			  System.out.println("\"Everybody fears in the darkmess.\"");
+			  System.out.println();
 		    break;
 		  case "Bedrock":
 			  p = new Player(4100, 400, start, name, x, y, 7, 7, 8);
 			  name = p.getGradientName("Bedrock", "#525252", "#787878", "#B0B0B0");
 			  p.skin(name);
 			  p.setC(240);
+			  System.out.println("\"...\"");
+			  System.out.println();
 		    break;
 		  case "Augie":
 			  p = new Player(3650, 175, start, name, x, y, 10, 10, 8);
 			  name = p.getGradientName("Captain Augie", "#307DF8", "#51C4F5", "#B5B5B5", "#F0BC2D");
 			  p.skin(name);
 			  p.setC(34);
+			  System.out.println("\"Set sail for winning!\"");
+			  System.out.println();
 		    break;
 		  case "Midnite":
 			  p = new Player(2500, 275, start, name, x, y, 12, 10, 7);
 			  name = p.getGradientName("Midnite", "#011CE4", "#1E88BF1", "#CE92DD", "#B8B7B7");
 			  p.skin(name);
 			  p.setC(21);
+			  System.out.println("\"They’ll believe in ghosts soon.\"");
+			  System.out.println();
 		    break;
 		  case "Ashley":
 			  p = new Player(2150, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Ashley", "#4ECAB6", "#4AE5E8", "#A296B7", "#F070E5");
 			  p.skin(name);
 			  p.setC(80);
+			  System.out.println("\"Nature is our most precious resource. Let’s use it.\"");
+			  System.out.println();
 		    break;
 		  case "Radar":
 			  p = new Player(2400, 200, start, name, x, y, 10, 10, 3);
 			  name = p.getGradientName("Radar", "#8C79A0", "#AAA1A1", "#59854C");
 			  p.skin(name);
 			  p.setC(147);
+			  System.out.println("\"They’ll never see me coming.\"");
+			  System.out.println();
 		    break;
 		  case "Oona":
 			  p = new Player(2400, 225, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Oona", "#F88A30", "#F54242", "#F755E1");
 			  p.skin(name);
 			  p.setC(202);
+			  System.out.println("\"Time to turn this into our turf.\"");
+			  System.out.println();
 		    break;
 		  case "Dimentio":
 			  p = new Player(3500, 250, start, name, x, y, 10, 10, 8);
 			  name = p.getGradientName("Dimentio", "#F54242", "#ED390C", "#30F83E", "#55F785");
 			  p.skin(name);
 			  p.setC(202);
+			  System.out.println("\"I always get what I want.\"");
+			  System.out.println();
 		    break;
 		  case "Rocco":
 			  p = new Player(2325, 200, start, name, x, y, 10, 10, 5);
 			  name = p.getGradientName("Rocco", "#457F15", "#4ADEAD", "#2C7696");
 			  p.skin(name);
 			  p.setC(65);
+			  System.out.println("\"Wild tactics work 50% of the time.\"");
+			  System.out.println();
 		    break;
 		  case "Xara":
 			  p = new Player(3500, 200, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Xara", "#F38B2B", "#9345F2");
 			  p.skin(name);
 			  p.setC(129);
+			  System.out.println("\"Nobody messes with an admin.\"");
+			  System.out.println();
 		    break;
 		  case "Thunder":
 			  p = new Player(3850, 300, start, name, x, y, 9, 9, 7);
 			  name = p.getGradientName("Thunder", "#F1D627", "#E1DC37", "#B0B0B0", "#696969");
 			  p.skin(name);
 			  p.setC(226);
+			  System.out.println("\"Let’s crush them. Double time.\"");
+			  System.out.println();
 		    break;
 		  case "Archer":
 			  p = new Player(2300, 175, start, name, x, y, 15, 8, 6);
 			  name = p.getGradientName("Archer", "#57CF17", "#30C606", "#BC5B01", "#696969");
 			  p.skin(name);
 			  p.setC(76);
+			  System.out.println("\"They have nowhere to hide.\"");
+			  System.out.println();
 		    break;
 		  case "Tom":
 			  p = new Player(3825, 275, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Tom Phan", "#E01A1A", "#B70606", "#420000");
 			  p.skin(name);
 			  p.setC(196);
+			  System.out.println("\"I will take everything away from them.\"");
+			  System.out.println();
 		    break;
 		  case "Gates":
 			  p = new Player(3400, 200, start, name, x, y, 10, 10, 5);
 			  name = p.getGradientName("Dr.Gates", "#06B794", "#49E4CA", "#3478A2");
 			  p.skin(name);
 			  p.setC(44);
+			  System.out.println("\"Time to play with dimensional power.\"");
+			  System.out.println();
 		    break;
 		  case "Redgar":
 			  p = new Player(2200, 150, start, name, x, y, 10, 10, 4);
 			  name = p.getGradientName("Redgar", "#2980B9", "#637FBF", "#45D3D1");
 			  p.skin(name);
 			  p.setC(33);
+			  System.out.println("\"Gonna show off my true worth today!\"");
+			  System.out.println();
 		    break;
 		  case "Cherry":
 			  p = new Player(2300, 100, start, name, x, y, 12, 9, 7);
 			  name = p.getGradientName("Cherry", "#EA98F0", "#F25FA6", "#F72222");
 			  p.skin(name);
 			  p.setC(196);
+			  System.out.println("\"They won’t like the taste of my cherries after this.\"");
+			  System.out.println();
 		    break;
 		  case "Gash":
 			  p = new Player(3400, 200, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Gash", "#B72E01", "#B2552C", "#F72222");
 			  p.skin(name);
 			  p.setC(130);
+			  System.out.println("\"Finish them off one by one.\"");
+			  System.out.println();
 		    break;
 		  case "Audrey":
 			  p = new Player(2250, 150, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Audrey", "#BC9CF7", "#72CBC9", "#40F2CE");
 			  p.skin(name);
 			  p.setC(111);
+			  System.out.println("\"We are worlds and wonders above them.\"");
+			  System.out.println();
 		    break;
 		  case "Louis":
 			  p = new Player(2350, 225, start, name, x, y, 12, 10, 6);
 			  name = p.getGradientName("Louis", "#F0B128", "#F5D7B2", "#A1B0FC", "#9877F3");
 			  p.skin(name);
 			  p.setC(226);
+			  System.out.println("\"Keep them back and away.\"");
+			  System.out.println();
 		    break;
 		  case "Kithara":
 			  p = new Player(3450, 275, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Kithara", "#5C1CF2", "#9877F3", "#3084C5", "#47799E");
 			  p.skin(name);
 			  p.setC(93);
-		    break;
-		  case "Burt":
-			  p = new Player(2400, 250, start, name, x, y, 10, 11, 5);
-			  name = p.getGradientName("Burt", "#004CFF", "#5093B4");
-			  p.skin(name);
-			  p.setC(21);
-		    break;
-		  case "Bolo":
-			  p = new Player(2500, 275, start, name, x, y, 13, 9, 7);
-			  name = p.getGradientName("Bolo", "#00FF1E", "#66B450");
-			  p.skin(name);
-			  p.setC(47);
-		    break;
-		  case "Anjelika":
-			  p = new Player(3500, 250, start, name, x, y, 10, 10, 6);
-			  name = p.getGradientName("Anjelika", "#F0C014", "#E09B06", "#F2975A");
-			  p.skin(name);
-			  p.setC(214);
+			  System.out.println("\"The stories about me are about to become a reality.\"");
+			  System.out.println();
 		    break;
 		  case "Angelos":
 			  p = new Player(3700, 150, start, name, x, y, 12, 12, 8);
 			  name = p.getGradientName("Angelos", "#A9C3FE", "#647EFF", "#74F8FB");
 			  p.skin(name);
 			  p.setC(105);
+			  System.out.println("\"I will worry about the dimensions. Leave it to me.\"");
+			  System.out.println();
+		    break;
+		  case "Burt":
+			  p = new Player(2400, 250, start, name, x, y, 10, 11, 5);
+			  name = p.getGradientName("Burt", "#004CFF", "#5093B4");
+			  p.skin(name);
+			  p.setC(21);
+			  System.out.println("\"Slicing and dicing. Just how I like it.\"");
+			  System.out.println();
+		    break;
+		  case "Bolo":
+			  p = new Player(2500, 275, start, name, x, y, 13, 9, 7);
+			  name = p.getGradientName("Bolo", "#00FF1E", "#66B450");
+			  p.skin(name);
+			  p.setC(47);
+			  System.out.println("\"I’m still young enough to hit my shots.\"");
+			  System.out.println();
+		    break;
+		  case "Anjelika":
+			  p = new Player(3500, 250, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Anjelika", "#F0C014", "#E09B06", "#F2975A");
+			  p.skin(name);
+			  p.setC(214);
+			  System.out.println("\"Good always rises above evil.\"");
+			  System.out.println();
 		    break;
 		  case "Melony":
 			  p = new Player(2350, 175, start, name, x, y, 11, 9, 6);
 			  name = p.getGradientName("Melony", "#F4E68B", "#FF9EF2", "#4725F4");
 			  p.skin(name);
 			  p.setC(227);
+			  System.out.println("\"My creatures are gonna mow them down.\"");
+			  System.out.println();
 		    break;
 		  case "Echo":
 			  p = new Player(2450, 200, start, name, x, y, 12, 10, 7);
 			  name = p.getGradientName("Echo", "#70F5EC", "#9ED7E6", "#BDC8FF");
 			  p.skin(name);
 			  p.setC(87);
+			  System.out.println("\"I hear everything they do.\"");
+			  System.out.println();
 		    break;
 		  case "Makani":
 			  p = new Player(2350, 175, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Makani", "#0876BA", "#3BDEDB", "#C4BB5A", "#BEE2F3");
 			  p.skin(name);
 			  p.setC(27);
+			  System.out.println("\"Blow them out of the way.\"");
+			  System.out.println();
 		    break;
 		  case "Rhythm":
 			  p = new Player(2350, 175, start, name, x, y, 11, 11, 5);
 			  name = p.getGradientName("Rhythm", "#00A0FE", "#F61732", "#FDB10E", "#169A13");
 			  p.skin(name);
 			  p.setC(45);
+			  System.out.println("\"Let’s keep our beat going!\"");
+			  System.out.println();
 		    break;
 		  case "Grenadine":
 			  p = new Player(2525, 200, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Grenadine", "#FF944D", "#F05CD0", "#D41C1C");
 			  p.skin(name);
 			  p.setC(202);
+			  System.out.println("\"Boom Boom Boom!\"");
+			  System.out.println();
 		    break;
 		  case "Patitek":
 			  p = new Player(3900, 200, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Patitek", "#D76304", "#FF5C5C", "#D77C14");
 			  p.skin(name);
 			  p.setC(196);
+			  System.out.println("\"They gotta get past me first.\"");
+			  System.out.println();
 		    break;
 		  case "Crystal":
 			  p = new Player(2500, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Crystal", "#F186F9", "#647EFF", "#DA9A10");
 			  p.skin(name);
 			  p.setC(219);
+			  System.out.println("\"Today, we make history!\"");
+			  System.out.println();
 		    break;
 		  case "Velvet":
 			  p = new Player(3450, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Velvet", "#F7C5C5", "#E7AAB7", "#DB8192", "#C62744", "#79113A");
 			  p.skin(name);
 			  p.setC(203);
+			  System.out.println("\"You miss 100% of the shots you don’t take.\"");
+			  System.out.println();
 		    break;
 		}
 		return p;
@@ -8843,7 +8967,7 @@ public class GameSim {
 			a.takeDamage(75);
 			p.addDamage(75);
 			double rand = Math.random();
-			if(rand <= 0.2) {
+			if(rand <= 0.1) {
 				e.add(EliParalyze);
 				e.add(EliFreeze);
 				a.addEffects(e);
@@ -8853,7 +8977,7 @@ public class GameSim {
 		if(targetResponse.equals("2")) {
 			p.attack(a);
 			double rand = Math.random();
-			if(rand <= 0.2) {
+			if(rand <= 0.15) {
 				e.add(EliVulnerable);
 				a.addEffects(e);
 				a.applyEffects();
@@ -8864,7 +8988,7 @@ public class GameSim {
 			a.takeDamage(75);
 			p.addDamage(75);
 			double rand = Math.random();
-			if(rand <= 0.2) {
+			if(rand <= 0.15) {
 				e.add(EliBlind);
 				a.addEffects(e);
 				a.applyEffects();
@@ -11029,7 +11153,7 @@ public class GameSim {
 	public static void AiricAttack(Player p, Player a) {
 		p.attack(a);
 		double rand = Math.random();
-		if(rand <= 0.08) {
+		if(rand <= 0.05) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect BurtParalyze = new Effect("paralyze", 0, 1);
 			Effect AiricDaze = new Effect("daze", 0, 1);

@@ -399,17 +399,6 @@ public class Battlefield {
 		}
 		
 		
-		for(int i = 0; i < 42; i++) {
-			for(int j = 0; j < 42; j++){
-				Location l = new Location(i, j);
-				if(s.atRange(l, closeRange)) {
-					background[j][i] = 251;
-				}
-				if(s.atRange(l, farRange)) {
-					background[j][i] = 251;
-				}
-			}
-		}
 		
 		
 		
