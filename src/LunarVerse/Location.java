@@ -55,6 +55,15 @@ public class Location {
 		}
 	}
 	
+	public boolean atRange(Location l, double r) {
+		double d = distanceTo(l);
+		if (r >= d && !(d <= (r - 1))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public boolean eqLoc(Location l) {
 		if(x == l.getX() && y == l.getY()) {
 			return true;

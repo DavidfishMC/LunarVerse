@@ -21,6 +21,8 @@ public class Party {
 			roster[i].endTurn();
 			roster[i].applyRegen();
 			roster[i].resetJumpHeal();
+			roster[i].setAttackOnce(false);
+			roster[i].setBumps(0);
 			if (roster[i].drillDashed()) {
 				roster[i].returnloc();
 				roster[i].setDrill(false);
@@ -181,8 +183,11 @@ public class Party {
 			roster[i].resetCover();
 			roster[i].resetPat();
 			roster[i].setPat(false);
-			if(roster[i].getName().equals("Sammi")) {
+			if(roster[i].getName().equals("Sammi") && roster[i].getRange() > 100) {
 				roster[i].resetRange();
+			}
+			if(roster[i].getName().equals("Drift") && roster[i].ultActive()) {
+				roster[i].setBumps(3);
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Sphere") && GameSim.utility.get(j).owner(roster[i])) {

@@ -22,8 +22,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Player {
 
+	Cover curCover = null;
 	double health;
 	double maxHealth;
+	double saveHealth = 0;
 	double ogDamage;
 	double damage;
 	String name;
@@ -71,6 +73,8 @@ public class Player {
 	boolean blastpack = false;
 	boolean jumpDamage = false;
 	boolean drillDash = false;
+	boolean attackOnce = false;
+	boolean tire = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -87,6 +91,7 @@ public class Player {
 	int orbCount = 0;
 	int ultCharge;
 	int tacCharge = 0;
+	int bumpCount = 0;
 	double totalDamage = 0;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
 	public static final String reset = "\u001B[0m";
@@ -256,6 +261,9 @@ public class Player {
 		case "Cheesecake Bliss":
 			nameSkin = getGradientName(tempName, "#F68787", "#FDE488", "#D4973A", "#A16317");
 			break;
+		case "t":
+			nameSkin = getGradientName(tempName, "#CD35D0", "#6B6B6B", "#000000");
+			break;
 		default:
 			break;
 		}
@@ -327,6 +335,32 @@ public class Player {
 	// Method to get the ANSI color code for RGB values
 	private static String getColorCode(int r, int g, int b) {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
+	}
+	
+	public void setMotorcycle() {
+		saveHealth = health;
+		health = 600;
+		maxHealth = 600;
+	}
+	
+	public void setBumps(int i) {
+		bumpCount = i;
+	}
+	
+	public void useBump() {
+		bumpCount--;
+	}
+	
+	public int getBump() {
+		return bumpCount;
+	}
+	
+	public void setAttackOnce(boolean b) {
+		attackOnce = b;
+	}
+	
+	public boolean attackedOnce() {
+		return attackOnce;
 	}
 	
 	public boolean drillDashed() {
@@ -432,26 +466,28 @@ public class Player {
 		if (fortify) {
 			return;
 		}
-		if (curLoc.getX() > l.getX()) {
-			curLoc.adjust(-1 * i, 0);
-		}
-		if (curLoc.getX() < l.getX()) {
-			curLoc.adjust(i, 0);
-		}
-		if (curLoc.getY() > l.getY()) {
-			curLoc.adjust(0, -1 * i);
-		}
-		if (curLoc.getY() < l.getY()) {
-			curLoc.adjust(0, i);
+		for(int k = 0; k < i; k++) {
+			if (curLoc.getX() > l.getX()) {
+				curLoc.adjust(-1 * i, 0);
+			}
+			if (curLoc.getX() < l.getX()) {
+				curLoc.adjust(i, 0);
+			}
+			if (curLoc.getY() > l.getY()) {
+				curLoc.adjust(0, -1 * i);
+			}
+			if (curLoc.getY() < l.getY()) {
+				curLoc.adjust(0, i);
+			}
 		}
 	}
 	
 	public void addCharge(double d) {
 		echoCharge = echoCharge + d;
-		if (echoCharge > 800 && name.equals("Echo") && !charge) {
+		if (echoCharge > 1200 && name.equals("Echo") && !charge) {
 			System.out.println(nameSkin + "'s soundwave barrier is fully charged.");
 		}
-		if (echoCharge > 800 && name.equals("Echo")) {
+		if (echoCharge > 1200 && name.equals("Echo")) {
 			charge = true;
 		}
 	}
@@ -779,6 +815,7 @@ public class Player {
 
 	public void resetAttack() {
 		attacked = false;
+		attackOnce = false;
 	}
 
 	public boolean isParalyzed() {
@@ -997,7 +1034,7 @@ public class Player {
 			}
 		}
 		if (patProtect) {
-			d = d * 0.8;
+			d = d * 0.9;
 		}
 		d = Math.round(d * 10.0) / 10.0;
 		health = health - d;
@@ -1016,6 +1053,15 @@ public class Player {
 				victoryPlayer.play();
 			} catch (Exception e) {
 				System.out.println(e);
+			}
+			if (name.equals("Drift") && ultActive) {
+				health = saveHealth;
+				maxHealth = 2400;
+				resetUlt();
+				ultDown();
+				tire = false;
+				System.out.println("\"Hey, not cool man!\"");
+				return;
 			}
 			alive = false;
 			System.out.println(nameSkin + " is downed!");
@@ -1971,11 +2017,15 @@ public class Player {
 
 		healthshow = healthshow + ": ";
 		weaponShow = weaponShow + ": ";
+		String echoChargeShow = "";
+		if (name.equals("Echo")){
+			echoChargeShow = ", Soundwave: " + echoCharge + "/" + "800.0";
+		}
 
 		if (name.equals("Angelos") && !isAlive()) {
 			return "Ability: " + ability;
 		} else {
-			return (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + charms + "\n"
+			return (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + echoChargeShow + charms + "\n"
 					+ weaponShow + weapon + ". Ability: " + ability + ultimate + orbCount + "/" + ultCharge + "\n" + loc
 					+ curLoc + moveshow + move + dash + dashes + jump + jumps);
 		}
@@ -2727,6 +2777,29 @@ public class Player {
 			}
 			if (randomNum == 3) {
 				return ("\"Please please please please please.\"");
+			}
+		}
+		if (name.equals("Drift")) {
+			if (ultActive) {
+				if (randomNum == 1) {
+					return ("\"Not following traffic rules today!\"");
+				}
+				if (randomNum == 2) {
+					return ("\"Time to run you all over.\"");
+				}
+				if (randomNum == 3) {
+					return ("\"There's roadkill to collect out there.\"");
+				}
+			} else {
+				if (randomNum == 1) {
+					return ("\"Move or get run through!\"");
+				}
+				if (randomNum == 2) {
+					return ("\"I'll push them away, just watch.\"");
+				}
+				if (randomNum == 3) {
+					return ("\"Get these clowns out of our way!\"");
+				}
 			}
 		}
 		return "";

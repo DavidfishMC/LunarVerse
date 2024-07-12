@@ -199,6 +199,15 @@ public class Utility {
 		}
 	}
 	
+	public boolean atRange(Location l, double r) {
+		double d = loc.distanceTo(l);
+		if (r >= d && !(d <= (r - 1))) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void envolveStone() {
 		if (gemstone.equals("iron")) {
 			gemstone = "emerald";
