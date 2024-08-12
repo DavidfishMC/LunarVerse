@@ -6,6 +6,7 @@ public class Party {
 
 	boolean turn;
 	Player[] roster = new Player[3];
+	String name;
 	
 	public Party(boolean turn, Player p1, Player p2, Player p3) {
 		this.turn = turn;
@@ -23,6 +24,11 @@ public class Party {
 			roster[i].resetJumpHeal();
 			roster[i].setAttackOnce(false);
 			roster[i].setBumps(0);
+			roster[i].resetChance();
+			roster[i].resetDodge();
+			roster[i].setJing(false);
+			roster[i].resetStars();
+			roster[i].checkOverhealth();
 			if (roster[i].drillDashed()) {
 				roster[i].returnloc();
 				roster[i].setDrill(false);
@@ -47,10 +53,26 @@ public class Party {
 					roster[i].resetUlt();
 				}
 			}
+			for(int e = 0; e < GameSim.utility.size(); e++) {
+				if(GameSim.utility.get(e).getName().equals("Star") && GameSim.utility.get(e).owner(roster[i])) {
+					GameSim.utility.remove(e);
+					e--;
+				}
+			}
 			for(int y = 0; y < GameSim.utility.size(); y++) {
 				if(GameSim.utility.get(y).getName().equals("Explosive") && GameSim.utility.get(y).isEnemy(roster[i])) {
 					GameSim.utility.get(y).activateNuke();
 					GameSim.utility.remove(y);
+				}
+			}
+			for(int t = 0; t < GameSim.utility.size(); t++) {
+				if(GameSim.utility.get(t).getName().equals("Field") && GameSim.utility.get(t).isAlly(roster[i])) {
+					GameSim.utility.get(t).activateField();
+				}
+			}
+			for(int q = 0; q < GameSim.utility.size(); q++) {
+				if(GameSim.utility.get(q).getName().equals("Dragon") && GameSim.utility.get(q).owner(roster[i])) {
+					GameSim.utility.get(q).activateDragonStart();
 				}
 			}
 			if(roster[i].getName().equals("Rhythm") && !roster[i].isDazed() && roster[i].isAlive()) {
@@ -178,13 +200,27 @@ public class Party {
 			if(roster[i].getName().equals("Gates") && roster[i].ultActive()) {
 				roster[i].ultDown();
 			}
+			if (!roster[i].tookDamage) {
+				if (roster[i].isTank() && roster[i].isSupport()) {
+					roster[i].heal(0.025);
+				}else if (roster[i].isHybrid() && roster[i].isSupport() && !roster[i].isTank()) {
+					roster[i].heal(0.05);
+				}else if (roster[i].isSupport()) {
+					roster[i].heal(0.075);
+				}
+			}
+			roster[i].setTookDamage(false);
 			roster[i].resetDashes();
 			roster[i].resetJumps();
 			roster[i].resetCover();
 			roster[i].resetPat();
+			roster[i].setField(false);
 			roster[i].setPat(false);
 			if(roster[i].getName().equals("Sammi") && roster[i].getRange() > 100) {
 				roster[i].resetRange();
+			}
+			if(roster[i].getName().equals("Snowfall") && roster[i].getCooldown() == 0) {
+				roster[i].setFrost(false);
 			}
 			if(roster[i].getName().equals("Drift") && roster[i].ultActive()) {
 				roster[i].setBumps(3);
@@ -204,6 +240,11 @@ public class Party {
 				if(GameSim.utility.get(t).getName().equals("Wind") && GameSim.utility.get(t).owner(roster[i]) && !roster[i].onCooldown()) {
 					GameSim.utility.remove(t);
 					roster[i].resetWind();
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Flame") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.remove(j);
 				}
 			}
 			if(roster[i].getName().equals("Rhythm") && !roster[i].isDazed() && roster[i].isAlive()) {
@@ -312,6 +353,57 @@ public class Party {
 		names.add(roster[2]);
 		names.remove(used);
 		return names;
+	}
+	
+	public void setPartyName(String s) {
+		name = getGradientName(s, "#50d5f7", "#b6abfe", "#647eff");
+	}
+	
+	public String getPartyName() {
+		return name;
+	}
+	
+	public int[] hexToRgb(String colorStr) {
+		return new int[] { Integer.valueOf(colorStr.substring(1, 3), 16), Integer.valueOf(colorStr.substring(3, 5), 16),
+				Integer.valueOf(colorStr.substring(5, 7), 16) };
+	}
+
+	// Method to interpolate between two RGB colors
+	public int[] interpolate(int[] startRgb, int[] endRgb, float fraction) {
+		int r = (int) (startRgb[0] + (endRgb[0] - startRgb[0]) * fraction);
+		int g = (int) (startRgb[1] + (endRgb[1] - startRgb[1]) * fraction);
+		int b = (int) (startRgb[2] + (endRgb[2] - startRgb[2]) * fraction);
+		return new int[] { r, g, b };
+	}
+
+	// Method to create a gradient name string with bold formatting
+	public String getGradientName(String name, String... hexColors) {
+		StringBuilder coloredName = new StringBuilder();
+		ArrayList<int[]> rgbColors = new ArrayList<>();
+		for (String hex : hexColors) {
+			rgbColors.add(hexToRgb(hex));
+		}
+		// ANSI escape code for bold text
+		String boldCode = "\u001B[1m";
+		// Start the string with the bold code
+		coloredName.append(boldCode);
+		for (int i = 0; i < name.length(); i++) {
+			float fraction = (float) i / (name.length() - 1);
+			int colorIndex = (int) (fraction * (rgbColors.size() - 1));
+			int[] startColor = rgbColors.get(colorIndex);
+			int[] endColor = rgbColors.get(Math.min(colorIndex + 1, rgbColors.size() - 1));
+			float colorFraction = (fraction * (rgbColors.size() - 1)) - colorIndex;
+			int[] rgb = interpolate(startColor, endColor, colorFraction);
+			coloredName.append(getColorCode(rgb[0], rgb[1], rgb[2])).append(name.charAt(i));
+		}
+		// Reset the color and formatting at the end
+		coloredName.append("\u001B[0m");
+		return coloredName.toString();
+	}
+
+	// Method to get the ANSI color code for RGB values
+	private static String getColorCode(int r, int g, int b) {
+		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
 	}
 	
 }

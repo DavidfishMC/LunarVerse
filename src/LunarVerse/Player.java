@@ -40,6 +40,7 @@ public class Player {
 	int dashed = 0;
 	int jumped = 0;
 	int totalMovement = 0;
+	double electroCharge = 0;
 	double echoCharge = 0;
 	double damageOutput = 0;
 	double healingOutput = 0;
@@ -75,6 +76,15 @@ public class Player {
 	boolean drillDash = false;
 	boolean attackOnce = false;
 	boolean tire = false;
+	boolean tookDamage = false;
+	boolean jumped2 = false;
+	boolean dashed2 = false;
+	boolean permaFrost = false;
+	boolean electroField = false;
+	boolean jingAttack = false;
+	boolean dragon = false;
+	boolean butterfly = false;
+	boolean tank = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -92,8 +102,17 @@ public class Player {
 	int ultCharge;
 	int tacCharge = 0;
 	int bumpCount = 0;
+	int starCount = 0;
 	double totalDamage = 0;
+	double critChance = 0;
+	double fulField = 0;
+	double jingCharge = 0;
+	double dodgeChance = 0;
+	double jingUltCharge = 0;
+	double fuel = 625;
+	double overHealth = 0;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
+	ArrayList<String> roles = new ArrayList<String>();
 	public static final String reset = "\u001B[0m";
 	static final String bold = "\u001b[1m";
 	int cNum = 0;
@@ -151,6 +170,9 @@ public class Player {
 		}
 		if (name.equals("Gates")) {
 			tempName = "Dr.Gates";
+		}
+		if (name.equals("Jing")) {
+			tempName = "Li Jing";
 		}
 		switch (type) {
 		case "Sakura":
@@ -261,7 +283,7 @@ public class Player {
 		case "Cheesecake Bliss":
 			nameSkin = getGradientName(tempName, "#F68787", "#FDE488", "#D4973A", "#A16317");
 			break;
-		case "t":
+		case "Nightmare":
 			nameSkin = getGradientName(tempName, "#CD35D0", "#6B6B6B", "#000000");
 			break;
 		default:
@@ -306,6 +328,29 @@ public class Player {
 		int b = (int) (startRgb[2] + (endRgb[2] - startRgb[2]) * fraction);
 		return new int[] { r, g, b };
 	}
+	
+	public String getGradientText(String name, String... hexColors) {
+		StringBuilder coloredName = new StringBuilder();
+		ArrayList<int[]> rgbColors = new ArrayList<>();
+		for (String hex : hexColors) {
+			rgbColors.add(hexToRgb(hex));
+		}
+		// ANSI escape code for bold text
+		String boldCode = "\u001B[1m";
+		// Start the string with the bold code
+		for (int i = 0; i < name.length(); i++) {
+			float fraction = (float) i / (name.length() - 1);
+			int colorIndex = (int) (fraction * (rgbColors.size() - 1));
+			int[] startColor = rgbColors.get(colorIndex);
+			int[] endColor = rgbColors.get(Math.min(colorIndex + 1, rgbColors.size() - 1));
+			float colorFraction = (fraction * (rgbColors.size() - 1)) - colorIndex;
+			int[] rgb = interpolate(startColor, endColor, colorFraction);
+			coloredName.append(getColorCode(rgb[0], rgb[1], rgb[2])).append(name.charAt(i));
+		}
+		// Reset the color and formatting at the end
+		coloredName.append("\u001B[0m");
+		return coloredName.toString();
+	}
 
 	// Method to create a gradient name string with bold formatting
 	public String getGradientName(String name, String... hexColors) {
@@ -335,6 +380,163 @@ public class Player {
 	// Method to get the ANSI color code for RGB values
 	private static String getColorCode(int r, int g, int b) {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
+	}
+	
+	public void setOverhealth(double d) {
+		health = health + d;
+		overHealth = overHealth + d;
+	}
+	
+	public void checkOverhealth() {
+		if (overHealth > 0) {
+			health = health - (overHealth * 0.1);
+		}
+		overHealth = overHealth - (overHealth * 0.1);
+		if (overHealth < 0) {
+			overHealth = 0;
+		}
+	}
+	
+	public void addFuel(double d) {
+		fuel = fuel + d;
+		if (fuel > 1250) {
+			fuel = 1250;
+		}
+	}
+	
+	public void useFuel(double d) {
+		fuel = fuel - d;
+		if (fuel < 0) {
+			fuel = 0;
+		}
+	}
+	
+	public double getFuel() {
+		return fuel;
+	}
+	
+	public void useTank() {
+		tank = true;
+	}
+	
+	public void useButterfly() {
+		butterfly = true;
+	}
+	
+	public void useDragon() {
+		dragon = true;
+	}
+	
+	public boolean usedTank() {
+		return tank;
+	}
+	
+	public boolean usedButterfly() {
+		return butterfly;
+	}
+	
+	public boolean usedDragon() {
+		return dragon;
+	}
+	
+	public void pickupStar() {
+		starCount++;
+	}
+	
+	public void resetStars() {
+		starCount = 0;
+	}
+	
+	public int getStar() {
+		return starCount;
+	}
+	
+	public void setDodge(double d) {
+		dodgeChance = dodgeChance + d;
+	}
+	
+	public void resetDodge() {
+		dodgeChance = 0;
+	}
+	
+	public void setJing(boolean b) {
+		jingAttack = b;
+	}
+	
+	public void setField(boolean b) {
+		electroField = b;
+	}
+	
+	public void setChance(double d) {
+		critChance = critChance + d;
+	}
+	
+	public void resetChance() {
+		critChance = 0;
+	}
+	
+	public void permaFrost() {
+		setShield();
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect BurtProtect = new Effect("protect", 0.5, 2);
+		Effect BurtReflect = new Effect("reflection", 0, 2);
+		e.add(BurtProtect);
+		e.add(BurtReflect);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void setFrost(boolean b) {
+		permaFrost = b;
+	}
+	
+	public boolean getFrost() {
+		return permaFrost;
+	}
+	
+	public void resetFrost() {
+		jumped2 = false;
+		dashed2 = false;
+	}
+	
+	public boolean hasFrost() {
+		return jumped2 && dashed2;
+	}
+	
+	public void setTookDamage(boolean b) {
+		tookDamage = b;
+	}
+	
+	public boolean tookDamage() {
+		return tookDamage;
+	}
+	
+	public void addRole(String s) {
+		roles.add(s);
+	}
+	
+	public boolean isSupport() {
+		return roles.contains("support");
+	}
+	
+	public boolean isTank() {
+		return roles.contains("tank");
+	}
+	
+	public boolean isBrawler() {
+		return roles.contains("brawler");
+	}
+	
+	public boolean isDive() {
+		return roles.contains("dive");
+	}
+	
+	public boolean isEngineer() {
+		return roles.contains("engineer");
+	}
+	
+	public boolean isHybrid() {
+		return roles.size() > 1;
 	}
 	
 	public void setMotorcycle() {
@@ -611,6 +813,10 @@ public class Player {
 	public void useJump() {
 		jumped++;
 		jumps--;
+		jumped2 = true;
+		if (isDive()) {
+			increaseMovement(1);
+		}
 	}
 
 	public void skin(String s) {
@@ -642,6 +848,7 @@ public class Player {
 	public void useDash() {
 		dashed++;
 		dashes--;
+		dashed2 = true;
 	}
 
 	public boolean canDash() {
@@ -857,6 +1064,12 @@ public class Player {
 				GameSim.utility.remove(j);
 			}
 		}
+		if (isEngineer() && ultuse > 2) {
+			orbCount++;
+		}
+		dragon = false;
+		butterfly = false;
+		tank = false;
 	}
 
 	public void removeOrb() {
@@ -903,8 +1116,18 @@ public class Player {
 		}
 		int h = 1;
 		int v = 1;
-		int randomX = (int) (Math.random() * (4 - 1 + 1)) + 1;
-		int randomY = (int) (Math.random() * (4 - 1 + 1)) + 1;
+		int k = 4;
+		int n = 2;
+		if(isTank()) {
+			k = 2;
+			n = 0;
+		}
+		if(isTank() && isHybrid()) {
+			k = 3;
+			n = 1;
+		}
+		int randomX = (int) (Math.random() * (k - n + 1)) + n;
+		int randomY = (int) (Math.random() * (k - n + 1)) + n;
 		if (l.getX() > curLoc.getX()) {
 			h = -1;
 		}
@@ -949,8 +1172,18 @@ public class Player {
 	}
 
 	public void randomKnockback() {
-		int randomX = (int) (Math.random() * (5 - (-5) + 1)) + (-5);
-		int randomY = (int) (Math.random() * (5 - (-5) + 1)) + (-5);
+		int k = 5;
+		int n = -5;
+		if(isTank()) {
+			k = 3;
+			n = -3;
+		}
+		if(isTank() && isHybrid()) {
+			k = 4;
+			n = -4;
+		}
+		int randomX = (int) (Math.random() * (k - (n) + 1)) + (n);
+		int randomY = (int) (Math.random() * (k - (n) + 1)) + (n);
 		curLoc.adjust(randomX, randomY);
 		if (GameSim.b.hasTrench(curLoc.getX(), curLoc.getY())) {
 			takeDamage(150);
@@ -1015,9 +1248,31 @@ public class Player {
 	public boolean hasAttacked() {
 		return attacked;
 	}
+	
+	public void removeJumpDash() {
+		jumps = 0;
+		dashes = 0;
+	}
+	
+	public void callField() {
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect MidnitePower = new Effect("power", 0.1, 1);
+		Effect ArcherSight = new Effect("sight", 0.1, 1);
+		e1.add(MidnitePower);
+		e1.add(ArcherSight);
+		addEffects(e1);
+		applyEffects();
+	}
 
 	public void takeDamage(double d) {
 		if (!isAlive()) {
+			return;
+		}
+		double rand = Math.random();
+		if (rand < dodgeChance) {
+			System.out.println("Damage evaded!");
 			return;
 		}
 		if (shield) {
@@ -1033,13 +1288,76 @@ public class Player {
 				d = d + (d * effects.get(i).getIncrease());
 			}
 		}
+		if (isTank()) {
+			if (health <= (maxHealth * 0.5)) {
+				d = d * 0.9;
+			}
+		}
+		if (isTank() && isHybrid()) {
+			if (health <= (maxHealth * 0.5)) {
+				d = d * 0.95;
+			}
+		}
 		if (patProtect) {
 			d = d * 0.9;
 		}
+		if (ultActive && name.equals("Magnet")) {
+			d = d * 0.75;
+			fulField = fulField + d;
+		}
 		d = Math.round(d * 10.0) / 10.0;
 		health = health - d;
+		if (overHealth > 0) {
+			overHealth = overHealth - d;
+			if (overHealth < 0) {
+				overHealth = 0;
+			}
+		}
+		if (fulField >= 550) {
+			fulField = 0;
+			ultDown();
+			resetUlt();
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Fulmination") && GameSim.utility.get(j).owner(this)) {
+					GameSim.utility.get(j).activateFulmination();
+					GameSim.utility.remove(j);
+				}
+			}
+		}
+		if (jingUltCharge >= 0 && name.equals("Jing")) {
+			jingUltCharge = 0;
+			ultDown();
+			resetUlt();
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Dragon") && GameSim.utility.get(j).owner(this)) {
+					GameSim.utility.get(j).activateDragon();
+					GameSim.utility.remove(j);
+				}
+			}
+		}
+		tookDamage = true;
 		if (health < 0) {
 			health = 0;
+		}else if (electroField){
+			electroCharge = electroCharge + d;
+			while (electroCharge > 250) {
+	            int count = (int) (electroCharge / 250);
+	            for (int i = 0; i < count; i++) {
+	                callField();
+	            }
+	            electroCharge -= 250 * count;
+	        }
+		}
+		if (jingAttack) {
+			jingCharge = jingCharge + d;
+			if (jingCharge >= 450) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect CherryWeaken = new Effect("weak", 0.2, 1);
+				e.add(CherryWeaken);
+				addEffects(e);
+				applyEffects();
+				jingAttack = false;
+			}
 		}
 		System.out.println(nameSkin + " has taken " + d + " damage.");
 		if (d < 40000) {
@@ -1107,8 +1425,16 @@ public class Player {
 			randomNum = 0;
 		}
 		double rand2 = Math.random();
-		if (rand2 <= 0.1) {
-			c = damage * 0.3;
+		double check = 0.1;
+		if (isBrawler()) {
+			check = check + 0.05;
+		}
+		if (isBrawler() && isHybrid()) {
+			check = check + 0.025;
+		}
+		check = check + critChance;
+		if (rand2 <= check) {
+			c = damage * 0.25;
 		}
 
 		if (p.getName().equals("Bedrock") && p.ultActive() && p.inRange(this)) {
@@ -1783,10 +2109,12 @@ public class Player {
 			if (Battlefield.endgame) {
 				e = e / 2;
 			}
-			health = health + e;
+			if (overHealth == 0) {
+				health = health + e;
+			}
 			healingIn = healingIn + e;
 			System.out.println(nameSkin + " has healed for " + e);
-			if (health > maxHealth) {
+			if (health > maxHealth && overHealth == 0) {
 				health = maxHealth;
 			}
 		}
@@ -1823,10 +2151,12 @@ public class Player {
 			if (Battlefield.endgame) {
 				e = e / 2;
 			}
-			health = health + e;
+			if (overHealth == 0) {
+				health = health + e;
+			}
 			healingIn = healingIn + e;
 			System.out.println(nameSkin + " has healed for " + e);
-			if (health > maxHealth) {
+			if (health > maxHealth && overHealth == 0) {
 				health = maxHealth;
 			}
 		}
@@ -1875,6 +2205,10 @@ public class Player {
 			System.out.println();
 			return true;
 		}
+	}
+	
+	public int getCooldown(){
+		return cooldown;
 	}
 
 	public boolean isAlive() {
@@ -2014,20 +2348,27 @@ public class Player {
 		if (absorb < 1) {
 			healthshow = healthshow + bold + "\u001b[38;5;" + 46 + "m" + "💧" + reset;
 		}
+		String ult = orbCount + "/" + ultCharge;
+		if (ultActive()) {
+			ult = "Active";
+		}
 
 		healthshow = healthshow + ": ";
 		weaponShow = weaponShow + ": ";
 		String echoChargeShow = "";
 		if (name.equals("Echo")){
-			echoChargeShow = ", Soundwave: " + echoCharge + "/" + "800.0";
+			echoChargeShow = "\n" + "Soundwave Charge " + "\u001b[38;5;" + 105 + "m" + "🔊" + reset + ": " + echoCharge + "/" + "1200.0";
+		}
+		if (name.equals("Bladee")){
+			echoChargeShow = "\n" + "Fuel Level " + "\u001b[38;5;" + 202 + "m" + "⛽" + reset + ": " + fuel + "/" + "1250.0";
 		}
 
 		if (name.equals("Angelos") && !isAlive()) {
 			return "Ability: " + ability;
 		} else {
-			return (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + echoChargeShow + charms + "\n"
-					+ weaponShow + weapon + ". Ability: " + ability + ultimate + orbCount + "/" + ultCharge + "\n" + loc
-					+ curLoc + moveshow + move + dash + dashes + jump + jumps);
+			return (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + charms + "\n"
+					+ weaponShow + weapon + ". Ability: " + ability + ultimate + ult + "\n" + loc
+					+ curLoc + moveshow + move + dash + dashes + jump + jumps + echoChargeShow);
 		}
 
 	}
@@ -2800,6 +3141,83 @@ public class Player {
 				if (randomNum == 3) {
 					return ("\"Get these clowns out of our way!\"");
 				}
+			}
+		}
+		if (name.equals("Snowfall")) {
+			if (randomNum == 1) {
+				return ("\"I'll give them the cold shoulder.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Stay near me! I want to keep this frost on.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"This is permanent! Almost.\"");
+			}
+		}
+		if (name.equals("Shutter")) {
+			if (randomNum == 1) {
+				return ("\"You guys must be seeing things now!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"They'll see a different picture soon.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Wow, I got all of that in frame!\"");
+			}
+		}
+		if (name.equals("Magnet")) {
+			if (randomNum == 1) {
+				return ("\"Take a few hits, turn it into power!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Feeling electrified now?\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Let them punch us in the field.\"");
+			}
+		}
+		if (name.equals("Jing")) {
+			if (randomNum == 1) {
+				return ("\"Entering the flow state!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Stand your ground now!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"If you're swift enough, you can dodge anything!\"");
+			}
+		}
+		if (name.equals("Folden")) {
+			if (randomNum == 1) {
+				return ("\"No littering! Let's pick them up after.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Watch them fly!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Help me pick up the cranes after and we'll be golden.\"");
+			}
+		}
+		if (name.equals("Bladee")) {
+			if (randomNum == 1) {
+				return ("\"Strike them from above!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Your tools are no match for my mantis!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Terror rains on you today!\"");
+			}
+		}
+		if (name.equals("Margo")) {
+			if (randomNum == 1) {
+				return ("\"To alcohol! The solution of all our problems!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Party rock is in the house tonight!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Drinks on me guys!\"");
 			}
 		}
 		return "";

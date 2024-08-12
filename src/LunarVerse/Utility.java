@@ -87,12 +87,19 @@ public class Utility {
 			if (p.inRange(loc, 8)) {
 				p.takeDamage(200);
 				owner.addDamage(200);
-				p.knockbacked(loc);
 			}
 		}
 		for (Player p: allies) {
 			if (p.inRange(loc, 8)) {
 				p.setShield();
+			}
+		}
+	}
+	
+	public void activateField() {
+		for (Player p: allies) {
+			if (p.inRange(loc, 7)) {
+				p.setField(true);
 			}
 		}
 	}
@@ -161,8 +168,24 @@ public class Utility {
 		}
 	}
 	
+	public void activateFulmination() {
+		for (Player p: enemies) {
+			if (p.inRange(loc, 8)) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect RoccoParalyze = new Effect("paralyze", 0, 1);
+				e.add(RoccoParalyze);
+				p.addEffects(e);
+				p.applyEffects();
+			}
+		}
+	}
+	
 	public int getHealth() {
 		return health;
+	}
+	
+	public Player getOwner() {
+		return owner;
 	}
 	
 	public boolean inRange(Location l, double r) {
@@ -250,6 +273,27 @@ public class Utility {
 				p.heal(0.05);
 				owner.addHealing(p.getMaxHP() * 0.05);
 			}
+		}
+	}
+	
+	public void activateDragonStart() {
+		for (Player p: allies) {
+			p.setChance(0.15);
+			p.setDodge(0.5);
+		}
+	}
+	
+	public void activateDragon() {
+		for (Player p: enemies) {
+			p.takeDamage(350);
+			owner.addDamage(350);
+		}
+		for (Player p: allies) {
+			p.resetChance();
+			p.resetDodge();
+			p.cleanse();
+			p.heal(0.1);
+			owner.addHealing(p.getMaxHP() * 0.1);
 		}
 	}
 
