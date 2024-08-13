@@ -214,6 +214,9 @@ public class Party {
 			roster[i].resetJumps();
 			roster[i].resetCover();
 			roster[i].resetPat();
+			if (roster[i].getName().equals("Ivy") && roster[i].getMedic()) {
+				roster[i].setRes(true);
+			}
 			roster[i].setField(false);
 			roster[i].setPat(false);
 			if(roster[i].getName().equals("Sammi") && roster[i].getRange() > 100) {

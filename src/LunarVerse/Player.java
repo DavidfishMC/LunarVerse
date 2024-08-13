@@ -85,6 +85,8 @@ public class Player {
 	boolean dragon = false;
 	boolean butterfly = false;
 	boolean tank = false;
+	boolean medic = false;
+	boolean res = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -380,6 +382,22 @@ public class Player {
 	// Method to get the ANSI color code for RGB values
 	private static String getColorCode(int r, int g, int b) {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
+	}
+	
+	public void setRes(boolean b) {
+		res = b;
+	}
+	
+	public boolean getRes() {
+		return res;
+	}
+	
+	public void setMedic() {
+		medic = true;
+	}
+	
+	public boolean getMedic() {
+		return medic;
 	}
 	
 	public void setOverhealth(double d) {
@@ -1993,6 +2011,12 @@ public class Player {
 		resetCooldown();
 		return true;
 	}
+	
+	public void reviveIvy() {
+		turndead = 0;
+		health = health + (maxHealth * 0.05);
+		alive = true;
+	}
 
 	public void endTurn() {
 		turn = false;
@@ -3218,6 +3242,17 @@ public class Player {
 			}
 			if (randomNum == 3) {
 				return ("\"Drinks on me guys!\"");
+			}
+		}
+		if (name.equals("Ivy")) {
+			if (randomNum == 1) {
+				return ("\"Medic at your service!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Did you call?\"");
+			}
+			if (randomNum == 3) {
+				return ("\"I got you, don't worry.\"");
 			}
 		}
 		return "";

@@ -164,7 +164,7 @@ public class GameSim {
 			}
 
 		}else {
-			p1 = new Player(2400, 250, true, "Echo", 20, 20, 10, 10, 0);
+			p1 = new Player(2400, 250, true, "Ivy", 20, 20, 10, 10, 0);
 			p3 = new Player(1000, 475, false, "Bladee", 21, 21, 10, 10, 0);
 			p5 = new Player(1000, 175, false, "Mayhem", 20, 25, 11, 9, 0);
 			
@@ -345,6 +345,9 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p1.getName().equals("Ivy")) {
+								IvyUltimate(p1, p3, p5);
+							}
 							if(p1.getName().equals("Margo")) {
 								MargoUltimate(p1, p2, p4, p6);
 							}
@@ -580,7 +583,10 @@ public class GameSim {
 								System.out.println(p1.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p1.getName().equals("Bladee")) {
+								if (p1.getName().equals("Ivy")) {
+									IvyAttack(p1, p2, p4 ,p6, p3, p5);
+									weaponFX();
+								}else if (p1.getName().equals("Bladee")) {
 									BladeeAttack(p1, p2, p4 ,p6);
 									weaponFX();
 								}else if (p1.getName().equals("Makani")) {
@@ -1294,6 +1300,9 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p3.getName().equals("Ivy")) {
+								IvyUltimate(p3, p1, p5);
+							}
 							if(p3.getName().equals("Margo")) {
 								MargoUltimate(p3, p2, p4, p6);
 							}
@@ -1532,7 +1541,10 @@ public class GameSim {
 								System.out.println(p3.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p3.getName().equals("Bladee")) {
+								if (p3.getName().equals("Ivy")) {
+									IvyAttack(p3, p2, p4 ,p6, p1, p5);
+									weaponFX();
+								}else if (p3.getName().equals("Bladee")) {
 									BladeeAttack(p3, p2, p4 ,p6);
 									weaponFX();
 								}else if (p3.getName().equals("Makani")) {
@@ -2250,6 +2262,9 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p5.getName().equals("Ivy")) {
+								IvyUltimate(p5, p3, p1);
+							}
 							if(p5.getName().equals("Margo")) {
 								MargoUltimate(p5, p2, p4, p6);
 							}
@@ -2485,7 +2500,10 @@ public class GameSim {
 								System.out.println(p5.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p5.getName().equals("Bladee")) {
+								if (p5.getName().equals("Ivy")) {
+									IvyAttack(p5, p2, p4 ,p6, p3, p1);
+									weaponFX();
+								}else if (p5.getName().equals("Bladee")) {
 									BladeeAttack(p5, p2, p4 ,p6);
 									weaponFX();
 								}else if (p5.getName().equals("Makani")) {
@@ -3260,6 +3278,9 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p2.getName().equals("Ivy")) {
+								IvyUltimate(p2, p4, p6);
+							}
 							if(p2.getName().equals("Margo")) {
 								MargoUltimate(p2, p1, p3, p5);
 							}
@@ -3495,7 +3516,10 @@ public class GameSim {
 								System.out.println(p2.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p2.getName().equals("Bladee")) {
+								if (p2.getName().equals("Ivy")) {
+									IvyAttack(p2, p1, p3 ,p5, p4, p6);
+									weaponFX();
+								}else if (p2.getName().equals("Bladee")) {
 									BladeeAttack(p2, p1, p3 ,p5);
 									weaponFX();
 								}else if (p2.getName().equals("Makani")) {
@@ -4213,6 +4237,9 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p4.getName().equals("Ivy")) {
+								IvyUltimate(p4, p2, p6);
+							}
 							if(p4.getName().equals("Margo")) {
 								MargoUltimate(p4, p1, p3, p5);
 							}
@@ -4448,7 +4475,10 @@ public class GameSim {
 								System.out.println(p4.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p4.getName().equals("Bladee")) {
+								if (p4.getName().equals("Ivy")) {
+									IvyAttack(p4, p1, p3 ,p5, p2, p6);
+									weaponFX();
+								}else if (p4.getName().equals("Bladee")) {
 									BladeeAttack(p4, p1, p3 ,p5);
 									weaponFX();
 								}else if (p4.getName().equals("Makani")) {
@@ -5166,6 +5196,9 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p6.getName().equals("Ivy")) {
+								IvyUltimate(p6, p4, p2);
+							}
 							if(p6.getName().equals("Margo")) {
 								MargoUltimate(p6, p1, p3, p5);
 							}
@@ -5401,7 +5434,10 @@ public class GameSim {
 								System.out.println(p6.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p6.getName().equals("Bladee")) {
+								if (p6.getName().equals("Ivy")) {
+									IvyAttack(p6, p1, p3 ,p5, p4, p2);
+									weaponFX();
+								}else if (p6.getName().equals("Bladee")) {
 									BladeeAttack(p6, p1, p3 ,p5);
 									weaponFX();
 								}else if (p6.getName().equals("Makani")) {
@@ -6330,6 +6366,9 @@ public class GameSim {
 		if(p.getName().equals("Margo")) {
 			MargoAbility(p, d, e);
 		}
+		if(p.getName().equals("Ivy")) {
+			IvyAbility(p, d, e);
+		}
 	}
 	
 	public static void runUltimates(Player p, Player a, Player b, Player c, Player d, Player e) {
@@ -7049,6 +7088,16 @@ public class GameSim {
 			  System.out.println("\"Pull up a stool, night’s just getting started.\"");
 			  System.out.println();
 			  p.addRole("brawler");
+			  p.addRole("support");
+		    break;
+		  case "Ivy":
+			  p = new Player(2425, 200, start, name, x, y, 10, 10, 8);
+			  name = p.getGradientName("Ivy", "#26C485", "#E18AD4");
+			  p.skin(name);
+			  p.setC(77);
+			  System.out.println("\"Medic by your shoulder!\"");
+			  System.out.println();
+			  p.addRole("dive");
 			  p.addRole("support");
 		    break;
 		}
@@ -14370,6 +14419,222 @@ public class GameSim {
 		p.resetUlt();
 		System.out.println("\"These drinks are on the HOUSE!\"");
 		System.out.println();
+	}
+	
+	public static void IvyAttack(Player p, Player a, Player b, Player c, Player d, Player e) {
+		Scanner input = new Scanner(System.in);
+		String range = "No";
+		if(p.inRange(a)) {
+			range = "Yes";
+		}
+		String range2 = "No";
+		if(p.inRange(b)) {
+			range2 = "Yes";
+		}
+		String range3 = "No";
+		if(p.inRange(c)) {
+			range3 = "Yes";
+		}
+		String range4 = "No";
+		if(p.inRange(d, 3)) {
+			range4 = "Yes";
+		}
+		String range5 = "No";
+		if(p.inRange(e, 3)) {
+			range5 = "Yes";
+		}
+		System.out.println("1: Prescription Pill");
+		System.out.println("2: Medic Pistol");
+		System.out.print("Which part of your weapon would you like to use: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("2")) {
+			if(!p.inRange(a) && !p.inRange(b) && !p.inRange(c)) {
+				System.out.println();
+				System.out.println("No targets in range!");
+				System.out.println();
+				return;
+			}
+			System.out.println();
+			System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ". Location: " + a.getLoc() + ". Cover: " + a.getCover());
+			System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ". Location: " + b.getLoc() + ". Cover: " + b.getCover());
+			System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ". Location: " + c.getLoc() + ". Cover: " + c.getCover());
+			System.out.println("Who do you want to attack: ");
+			String targetResponse2 = input.next();
+			if(targetResponse2.equals("1")) {
+				if(p.inRange(a)) {
+					p.attack(a);
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+			if(targetResponse2.equals("2")) {
+				if(p.inRange(b)) {
+					p.attack(b);
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+			if(targetResponse2.equals("3")) {
+				if(p.inRange(c)) {
+					p.attack(c);
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+		}
+		if(targetResponse.equals("1")) {
+			Boolean pill = false;
+			System.out.println();
+			System.out.println("1: Healing Pill" );
+			System.out.println("2: Power Pill");
+			System.out.print("Which pill do you want to use: ");
+			String targetResponse2 = input.next();
+			if(targetResponse2.equals("1")) {
+				pill = true;
+			}
+			if(targetResponse2.equals("c")) {
+				return;
+			}
+			System.out.println();
+			System.out.println("1: " + d.getSkin() +". Health: " +  d.getHealth() + "/" + d.getMaxHP() + ". In Range: " + range4 + ". Location: " + d.getLoc() + ". Cover: " + d.getCover());
+			System.out.println("2: " + e.getSkin() +". Health: " +  e.getHealth() + "/" + e.getMaxHP() + ". In Range: " + range5 + ". Location: " + e.getLoc() + ". Cover: " + e.getCover());
+			System.out.println("Who do you want to give the pill to: ");
+			String targetResponse3 = input.next();
+			if(targetResponse3.equals("1")) {
+				if(p.inRange(d, 3)) {
+					if (pill) {
+						d.increaseHP(400);
+						p.addHealing(400);
+						d.cleanse();
+						if (p.getMedic()) {
+							e.increaseHP(400);
+							p.addHealing(400);
+							e.cleanse();
+						}
+					}else {
+						ArrayList<Effect> e2 = new ArrayList<Effect>();
+						Effect LunarPower = new Effect("power", 0.5, 1);
+						e2.add(LunarPower);
+						d.addEffects(e2);
+						d.applyEffects();
+						if (p.getMedic()) {
+							ArrayList<Effect> e22 = new ArrayList<Effect>();
+							Effect LunarPower2 = new Effect("power", 0.5, 1);
+							e22.add(LunarPower2);
+							e.addEffects(e22);
+							e.applyEffects();
+						}
+					}
+					p.setAttacked();
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+			if(targetResponse3.equals("2")) {
+				if(p.inRange(e, 3)) {
+					if (pill) {
+						e.increaseHP(400);
+						p.addHealing(400);
+						e.cleanse();
+						if (p.getMedic()) {
+							d.increaseHP(400);
+							p.addHealing(400);
+							d.cleanse();
+						}
+					}else {
+						ArrayList<Effect> e2 = new ArrayList<Effect>();
+						Effect LunarPower = new Effect("power", 0.5, 1);
+						e2.add(LunarPower);
+						e.addEffects(e2);
+						e.applyEffects();
+						if (p.getMedic()) {
+							ArrayList<Effect> e22 = new ArrayList<Effect>();
+							Effect LunarPower2 = new Effect("power", 0.5, 1);
+							e22.add(LunarPower2);
+							d.addEffects(e22);
+							d.applyEffects();
+						}
+					}
+					p.setAttacked();
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void IvyAbility(Player p, Player a, Player b) {
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
+		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
+		System.out.println("Who do you want to combat run towards: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if (p.inRange(a)) {
+				p.getLoc().set(a.getLoc().getX(), a.getLoc().getY());
+				if (!p.getMedic()) {
+					p.setCooldown(1);
+				}
+			}else {
+				System.out.println("That friend is too far!");
+				System.out.println();
+				return;
+			}
+		}
+		if(targetResponse.equals("2")) {
+			if (p.inRange(b)) {
+				p.getLoc().set(b.getLoc().getX(), b.getLoc().getY());
+				if (!p.getMedic()) {
+					p.setCooldown(1);
+				}
+			}else {
+				System.out.println("That friend is too far!");
+				System.out.println();
+				return;
+			}
+		}
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void IvyUltimate(Player p, Player a, Player b) {
+		if (p.getMedic()) {
+			if (p.getRes()) {
+				if (p.inRange(a, 0) && !a.isAlive()) {
+					a.reviveIvy();
+					p.setRes(false);
+				}
+				if (p.inRange(b, 0) && !b.isAlive()) {
+					b.reviveIvy();
+					p.setRes(false);
+				}
+				System.out.println("\"No time for slacking guys!\"");
+				System.out.println();
+			}else {
+				System.out.println("Can't revive anyone right now.");
+				System.out.println();
+			}
+		}else {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect DimentioPower = new Effect("refine", 0, 100);
+			e.add(DimentioPower);
+			p.addEffects(e);
+			p.applyEffects();
+			p.setMedic();
+			System.out.println("\"Here comes the Intensive Care Unit!\"");
+			System.out.println();
+		}
 	}
 
 }
