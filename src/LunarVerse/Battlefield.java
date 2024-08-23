@@ -30,6 +30,7 @@ public class Battlefield {
 	static final String clear = "\u001b[22m";
 	static final String bold = "\u001b[1m";
 	public static boolean endgame = false;
+	public static boolean temple = false;
 	boolean start = false;
 	Party trenchParty = null;
 	Location trenchLoc = null;
@@ -274,7 +275,14 @@ public class Battlefield {
 			}
 		}
 		
-	
+		if (temple) {
+			for(int i = 14; i < 28; i++) {
+				background[i][0] = 196;
+				background[0][i] = 196;
+				background[i][41] = 196;
+				background[41][i] = 196;
+			}
+		}
 		
 		for(int i = 0; i < 42; i++) {
 			for(int j = 0; j < 42; j++){
@@ -529,6 +537,52 @@ public class Battlefield {
 									Location l = new Location(k, h);
 									if(u.atRange(l, 5) && u.isEnemy(s)) {
 										background[h][k] = 216;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Umbrella")) {
+							int range = 7;
+							if (u.getOwner().ultActive()) {
+								range = 10;
+							}
+							field[i][j] = "U";
+							foreground[i][j] = 0;
+							background[i][j] = 147;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, range) && u.isAlly(s)) {
+										background[h][k] = 147;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Pylon")) {
+							field[i][j] = "P";
+							foreground[i][j] = 0;
+							background[i][j] = 226;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 5)) {
+										background[h][k] = 226;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Turret")) {
+							field[i][j] = "T";
+							foreground[i][j] = 0;
+							background[i][j] = 7;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 3) && u.isActivated() && u.hasSpikes()) {
+										background[h][k] = 7;
+									}
+									if(u.atRange(l, 15) && u.isActivated()) {
+										background[h][k] = 7;
 									}
 								}
 							}

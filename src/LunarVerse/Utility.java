@@ -1,18 +1,21 @@
 package LunarVerse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Utility {
 	
 	Player owner;
 	String name;
 	int health = 0;
+	int ogHealth = 0;
 	ArrayList<Player> allies = new ArrayList<Player>();
 	ArrayList<Player> enemies = new ArrayList<Player>();
 	Location loc;
 	boolean pickedUp = false;
-	boolean activated = false;
+	boolean activated = true;
 	boolean escape = false;
+	boolean spikes = false;
 	String gemstone = "iron";
 	
 	public Utility(String s, Location l, Player p, Player a1, Player a2, Player e1, Player e2, Player e3) {
@@ -34,6 +37,119 @@ public class Utility {
 		if (s.equals("Gemstone")) {
 			health = 2;
 		}
+		if (s.equals("Turret")) {
+			health = 1;
+			ogHealth = 1;
+		}
+	}
+	
+	public void deactivate() {
+		activated = false;
+	}
+	
+	public void activate() {
+		activated = true;
+		health = ogHealth;
+	}
+	
+	public boolean isActivated() {
+		return activated;
+	}
+	
+	public void setSpikes() {
+		spikes = true;
+	}
+	
+	public boolean hasSpikes() {
+		return spikes;
+	}
+	
+	public void setHealth(int i) {
+		ogHealth = i;
+		health = i;
+	}
+	
+	public void activateTurret() {
+		Player e1 = enemies.get(0);
+		Player e2 = enemies.get(1);
+		Player e3 = enemies.get(2);
+		Player a1 = allies.get(0);
+		Player a2 = allies.get(1);
+		Player a3 = allies.get(2);
+		Player target = attackClosest(e1, e2, e3);
+		if (target != null) {
+			owner.attack(target);
+		}
+		owner.resetAttack();
+		if (owner.getUltcharge() >= 8) {
+			if (a1.inRange(loc, 15)){
+				a1.heal(0.05);
+				owner.addHealing(a1.getMaxHP() * 0.05);
+			}
+			if (a2.inRange(loc, 15)){
+				a2.heal(0.05);
+				owner.addHealing(a2.getMaxHP() * 0.05);
+			}
+			if (a3.inRange(loc, 15)){
+				a3.heal(0.05);
+				owner.addHealing(a3.getMaxHP() * 0.05);
+			}
+		}
+	}
+	
+	public Player attackClosest(Player a, Player b, Player c) {
+		double smallest = 10000;
+		double smallest2 = 10000;
+		double smallest3 = 10000;
+		ArrayList<Double> values = new ArrayList<>();
+		Player target = null;
+		if (a.isAlive() && a.inRange(loc, 15)) {
+			smallest = a.getLoc().distanceTo(loc);
+			if (owner.getUltcharge() >= 7) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect RoccoParalyze = new Effect("ignite", 0, 2);
+				e.add(RoccoParalyze);
+				a.addEffects(e);
+				a.applyEffects();
+			}
+		}
+		if (b.isAlive() && a.inRange(loc, 15)) {
+			smallest2 = b.getLoc().distanceTo(loc);
+			if (owner.getUltcharge() >= 7) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect RoccoParalyze = new Effect("ignite", 0, 2);
+				e.add(RoccoParalyze);
+				b.addEffects(e);
+				b.applyEffects();
+			}
+		}
+		if (c.isAlive() && a.inRange(loc, 15)) {
+			smallest3 = c.getLoc().distanceTo(loc);
+			if (owner.getUltcharge() >= 7) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect RoccoParalyze = new Effect("ignite", 0, 2);
+				e.add(RoccoParalyze);
+				c.addEffects(e);
+				c.applyEffects();
+			}
+		}
+		if (smallest == 10000 && smallest2 == 10000 && smallest3 == 10000) {
+			return null;
+		}
+		values.add(smallest);
+		values.add(smallest2);
+		values.add(smallest3);
+		Collections.sort(values);
+		if (values.get(0) == smallest) {
+			target = a;
+		}
+		if (values.get(0) == smallest2) {
+			target = b;
+		}
+		if (values.get(0) == smallest3) {
+			target = c;
+		}
+		return target;
 	}
 	
 	public void setEscape(boolean b) {
@@ -294,6 +410,37 @@ public class Utility {
 			p.cleanse();
 			p.heal(0.1);
 			owner.addHealing(p.getMaxHP() * 0.1);
+		}
+	}
+	
+	public void activateUmbrella() {
+		int range = 7;
+		if (owner.ultActive()) {
+			range = 10;
+		}
+		for (Player p: allies) {
+			if (p.inRange(loc, range)) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect SolarProtect = new Effect("sight", 0.15, 2);
+				Effect SolarProtect2 = new Effect("refine", 0.15, 2);
+				if (owner.ultActive) {
+					Effect SolarProtect3 = new Effect("protect", 0.2, 2);
+					e.add(SolarProtect3);
+				}
+				e.add(SolarProtect);
+				e.add(SolarProtect2);
+				p.addEffects(e);
+				p.applyEffects();
+			}
+		}
+	}
+	
+	public void activatePylon() {
+		for (Player p: allies) {
+			if (p.inRange(loc, 5)) {
+				p.heal(0.1);
+				owner.addHealing(p.getMaxHP() * 0.1);
+			}
 		}
 	}
 

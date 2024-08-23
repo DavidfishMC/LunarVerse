@@ -15,6 +15,23 @@ public class Party {
 		roster[2] = p3;
 	}
 	
+	public void showTeam() {
+		for(int i = 0; i < 50; i++) {
+			System.out.println();
+		}
+		System.out.println(roster[0].getSkin() + "'s remaining kit:");
+		System.out.println(roster[0]);
+		System.out.println();
+		System.out.println();
+		System.out.println(roster[1].getSkin() + "'s remaining kit:");
+		System.out.println(roster[1]);
+		System.out.println();
+		System.out.println();
+		System.out.println(roster[2].getSkin() + "'s remaining kit:");
+		System.out.println(roster[2]);
+		System.out.println();
+	}
+	
 	public void passTurn(Party p) {
 		boolean heal = false;
 		Player a = null;
@@ -73,6 +90,16 @@ public class Party {
 			for(int q = 0; q < GameSim.utility.size(); q++) {
 				if(GameSim.utility.get(q).getName().equals("Dragon") && GameSim.utility.get(q).owner(roster[i])) {
 					GameSim.utility.get(q).activateDragonStart();
+				}
+			}
+			for(int q = 0; q < GameSim.utility.size(); q++) {
+				if(GameSim.utility.get(q).getName().equals("Umbrella") && GameSim.utility.get(q).owner(roster[i])) {
+					GameSim.utility.get(q).activateUmbrella();
+				}
+			}
+			for(int q = 0; q < GameSim.utility.size(); q++) {
+				if(GameSim.utility.get(q).getName().equals("Pylon") && GameSim.utility.get(q).owner(roster[i])) {
+					GameSim.utility.get(q).activatePylon();
 				}
 			}
 			if(roster[i].getName().equals("Rhythm") && !roster[i].isDazed() && roster[i].isAlive()) {
@@ -209,11 +236,19 @@ public class Party {
 					roster[i].heal(0.075);
 				}
 			}
+			if (roster[i].getName().equals("Thunder") && !roster[i].tookDamage() && roster[i].isCountering()) {
+				roster[i].resetCooldown();
+				roster[i].setThunder(false);
+			}
 			roster[i].setTookDamage(false);
 			roster[i].resetDashes();
 			roster[i].resetJumps();
 			roster[i].resetCover();
 			roster[i].resetPat();
+			roster[i].setStep(false);
+			roster[i].setRally(false);
+			roster[i].setBee(false);
+			roster[i].resetQuincy();
 			if (roster[i].getName().equals("Ivy") && roster[i].getMedic()) {
 				roster[i].setRes(true);
 			}
@@ -248,6 +283,11 @@ public class Party {
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Flame") && GameSim.utility.get(j).owner(roster[i])) {
 					GameSim.utility.remove(j);
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(roster[i]) && GameSim.utility.get(j).isActivated()) {
+					GameSim.utility.get(j).activateTurret();
 				}
 			}
 			if(roster[i].getName().equals("Rhythm") && !roster[i].isDazed() && roster[i].isAlive()) {

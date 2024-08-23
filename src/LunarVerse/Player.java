@@ -87,6 +87,10 @@ public class Player {
 	boolean tank = false;
 	boolean medic = false;
 	boolean res = false;
+	boolean step = false;
+	boolean rally = false;
+	boolean bee = false;
+	boolean thunder = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -121,6 +125,7 @@ public class Player {
 	Example image;
 	String fitbit = "Recovery";
 	Player pat = null;
+	Player quincy = null;
 
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -384,6 +389,46 @@ public class Player {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
 	}
 	
+	public int getUltcharge() {
+		return ultCharge;
+	}
+	
+	public void increaseUltcharge() {
+		ultCharge++;
+	}
+	
+	public void setThunder(boolean b) {
+		thunder = b;
+	}
+	
+	public boolean getThunder() {
+		return thunder;
+	}
+	
+	public void setBee(boolean b) {
+		bee = b;
+	}
+	
+	public boolean getBee() {
+		return bee;
+	}
+	
+	public void setRally(boolean b) {
+		rally = b;
+	}
+	
+	public boolean getRally() {
+		return rally;
+	}
+	
+	public void setStep(boolean b) {
+		step = b;
+	}
+	
+	public boolean getStep() {
+		return step;
+	}
+	
 	public void setRes(boolean b) {
 		res = b;
 	}
@@ -619,6 +664,18 @@ public class Player {
 		return pat;
 	}
 	
+	public Player returnQuincy() {
+		return quincy;
+	}
+	
+	public void resetQuincy() {
+		quincy = null;
+	}
+	
+	public void setQuincy(Player p) {
+		quincy = p;
+	}
+	
 	public void setJumpDamage(boolean b) {
 		jumpDamage = b;
 	}
@@ -802,6 +859,9 @@ public class Player {
 	}
 
 	public void resetCover() {
+		if (!cover.equals("None")) {
+			System.out.println(nameSkin + "'s cover was broken!");
+		}
 		cover = "None";
 	}
 
@@ -1246,7 +1306,7 @@ public class Player {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		orbCount++;
+		orbCount = ultCharge;
 	}
 
 	public boolean inRange(Player p) {
@@ -1324,7 +1384,25 @@ public class Player {
 			fulField = fulField + d;
 		}
 		d = Math.round(d * 10.0) / 10.0;
-		health = health - d;
+		if (quincy == null) {
+			health = health - d;
+		}else if (quincy.isAlive()){
+			double d1 = 0;
+			double d2 = 0;
+			if (quincy.getRally()) {
+				d = d * 0.25;
+				d1 = d;
+				d2 = d * 3;
+			}else {
+				d = d * 0.5;
+				d1 = d;
+				d2 = d;
+			}
+			health = health - d1;
+			quincy.takeDamage(d2);
+		}else {
+			health = health - d;
+		}
 		if (overHealth > 0) {
 			overHealth = overHealth - d;
 			if (overHealth < 0) {
@@ -1400,7 +1478,13 @@ public class Player {
 				return;
 			}
 			alive = false;
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(this)) {
+					GameSim.utility.remove(j);
+				}
+			}
 			System.out.println(nameSkin + " is downed!");
+			resetQuincy();
 			turndead = GameSim.turns2;
 			if (name.equals("Alex") && ultActive) {
 				reviveAlex();
@@ -1458,10 +1542,13 @@ public class Player {
 		if (p.getName().equals("Bedrock") && p.ultActive() && p.inRange(this)) {
 			p.getLoc().set(curLoc.getX(), curLoc.getY());
 		}
+		if (getName().equals("Yuri") && p.ultActive() && p.inRange(this)) {
+			p.resetCover();
+		}
 		if (name.equals("Sammi") && range > 100) {
 			p.takeDamage(damage + randomNum + c);
 			addDamage(damage + randomNum + c);
-			if (p.getName().equals("Thunder") && p.isCountering()) {
+			if (p.isCountering()) {
 				takeDamage(p.getDamage() * 1.25);
 				p.addDamage(p.getDamage() * 1.25);
 			}
@@ -1532,7 +1619,7 @@ public class Player {
 						}
 					}
 				}
-				if (p.getName().equals("Thunder") && p.isCountering()) {
+				if (p.isCountering()) {
 					takeDamage(p.getDamage() * 1.25);
 					p.addDamage(p.getDamage() * 1.25);
 				}
@@ -1578,7 +1665,7 @@ public class Player {
 				}
 			}
 		}
-		if (p.getName().equals("Thunder") && p.isCountering()) {
+		if (p.isCountering()) {
 			takeDamage(p.getDamage() * 1.25);
 			p.addDamage(p.getDamage() * 1.25);
 		}
@@ -3253,6 +3340,61 @@ public class Player {
 			}
 			if (randomNum == 3) {
 				return ("\"I got you, don't worry.\"");
+			}
+		}
+		if (name.equals("Petra")) {
+			if (randomNum == 1) {
+				return ("\"Coming for you!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"I'm gonna catch you!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Everybody come on in!\"");
+			}
+		}
+		if (name.equals("Quincy")) {
+			if (randomNum == 1) {
+				return ("\"Have no fear, I will help you out!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Paladin Link initiated.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"I can protect you!\"");
+			}
+		}
+		if (name.equals("Unice")) {
+			if (randomNum == 1) {
+				return ("\"Use this jump boost!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Take cover under Gale.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Make sure Gale comes back to me in once piece!\"");
+			}
+		}
+		if (name.equals("Flor")) {
+			if (randomNum == 1) {
+				return ("\"Honey Pylon is out!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Stay near the Pylon!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"If you want a sweet treat go over here!\"");
+			}
+		}
+		if (name.equals("Yuri")) {
+			if (randomNum == 1) {
+				return ("\"It's over for them, we have the advantage!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"They don't make grids like these anymore.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Always have secure protocols in place.\"");
 			}
 		}
 		return "";

@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -17,6 +22,7 @@ public class GameSim {
 	int xBound;
 	int yBound;
 	static Music audioPlayer;
+	static Music menuPlayer;
 	static Example image;
 	static int turns2 = 0;
 	static final String reset = "\u001B[0m";
@@ -42,6 +48,13 @@ public class GameSim {
 		}catch (Exception e) {
 			System.out.println(e);
 		}
+		try {
+			String audio = "lobby.wav";
+			menuPlayer = new Music(audio, false);
+			//menuPlayer.play();
+		}catch (Exception e) {
+			System.out.println(e);
+		}
 		boolean play = true;
 		boolean play2 = true;
 		boolean play3 = true;
@@ -62,8 +75,10 @@ public class GameSim {
 		String david = p1.getGradientName("Davidfish", "#3BDCFC", "#5370FD");
 		String sockyman = p1.getGradientName("sockyman", "#ABABAB", "#FD637A");
 		String starstruck = p1.getGradientName("_starrstruckk_", "#C1A5A9", "#F08CAE", "#9A4C95", "#EB7BC0");
+		String dilzee = p1.getGradientName("Dilzee", "#2DDF2A", "#1EC23F", "#3594ED", "#4F8CA1");
+		String ashy = p1.getGradientName("ashy0411", "#4ECAB6", "#4AE5E8", "#A296B7", "#F070E5");
 		System.out.println(title);
-		System.out.println("Developed by "+david+" and "+sockyman+". Artwork by "+starstruck+".");
+		System.out.println("Developed by "+david+" and "+sockyman+". Artwork by "+starstruck+", "+dilzee+", and "+ashy+".");
 		System.out.println("Inspired by the Mario and Rabbids games and the V.C., R.C., and D.C. trilogies.");
 		System.out.println("Music and Sound Effects taken from the Mario and Rabbids games, Valorant, and various shows.");
 		String url = p1.getGradientName("bit.ly/LunarVerseWiki", "#B68CB8", "#6461A0", "#314CB6", "#0A81D1");
@@ -162,14 +177,13 @@ public class GameSim {
 				String charm6 = input.next();
 				p6.setCharm(charm6);
 			}
-
 		}else {
-			p1 = new Player(2400, 250, true, "Ivy", 20, 20, 10, 10, 0);
+			p1 = new Player(800, 250, true, "Yuri", 20, 20, 10, 10, 5);
 			p3 = new Player(1000, 475, false, "Bladee", 21, 21, 10, 10, 0);
 			p5 = new Player(1000, 175, false, "Mayhem", 20, 25, 11, 9, 0);
 			
-			p2 = new Player(10000, 800, false, "Echo", 19, 19, 10, 10, 0);
-			p4 = new Player(10000, 250, false, "Crystal", 22, 22, 10, 10, 5);
+			p2 = new Player(10000, 800, false, "Bolo", 19, 19, 10, 10, 0);
+			p4 = new Player(10000, 250, false, "Zero", 22, 22, 10, 10, 0);
 			p6 = new Player(10000, 200, false, "Magnet", 23, 23, 10, 10, 7);
 			String skinName = "Sakura";
 			p1.changeSkin(skinName);
@@ -198,6 +212,12 @@ public class GameSim {
 			System.out.println(e);
 		}
 		//audioPlayer.play();
+		try {
+			menuPlayer.stop();
+		}catch (Exception e) {
+			System.out.println(e);
+		}
+		createController();
 		while(game) {
 			if(turns % 2 == 0) {
 				turns2++;
@@ -270,6 +290,9 @@ public class GameSim {
 							System.out.println();
 						}
 					}
+					if (response.equals("t")) {
+						party1.showTeam();
+					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
 						String switchResponse = input.next();
@@ -282,6 +305,7 @@ public class GameSim {
 						}
 					}
 					if(response.equals("p")) {
+						party1.showTeam();
 						System.out.print("Are you sure you want to pass to the enemy's turn: ");
 						String switchResponse = input.next();
 						if(switchResponse.equals("p")) {
@@ -332,7 +356,7 @@ public class GameSim {
 					if(response.equals("c")) {
 						ShowCover(p1);
 					}
-					if(response.equals("d")) {
+					if(response.equals("r")) {
 						Dash(p1, p2, p4, p6);
 					}
 					if(response.equals("j")) {
@@ -345,6 +369,21 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p1.getName().equals("Yuri")) {
+								YuriUltimate(p1);
+							}
+							if(p1.getName().equals("Flor")) {
+								FlorUltimate(p1, p3, p5);
+							}
+							if(p1.getName().equals("Unice")) {
+								UniceUltimate(p1);
+							}
+							if(p1.getName().equals("Quincy")) {
+								QuincyUltimate(p1, p3, p5);
+							}
+							if(p1.getName().equals("Petra")) {
+								PetraUltimate(p1, p2, p4, p6, p3, p5);
+							}
 							if(p1.getName().equals("Ivy")) {
 								IvyUltimate(p1, p3, p5);
 							}
@@ -583,7 +622,13 @@ public class GameSim {
 								System.out.println(p1.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p1.getName().equals("Ivy")) {
+								if (p1.getName().equals("Yuri")) {
+									Location l = SetCursor(p1, p2, p4, p6, p3, p5, 15);
+									YuriAttack(p1, p2, p4 ,p6, p3, p5, l);
+								}else if (p1.getName().equals("Flor")) {
+									FlorAttack(p1, p2, p4, p6);
+									weaponFX();
+								}else if (p1.getName().equals("Ivy")) {
 									IvyAttack(p1, p2, p4 ,p6, p3, p5);
 									weaponFX();
 								}else if (p1.getName().equals("Bladee")) {
@@ -808,6 +853,15 @@ public class GameSim {
 											if(p1.getName().equals("Margo")) {
 												MargoAttack(p1, p2, p4, p6);
 											}
+											if(p1.getName().equals("Petra")) {
+												PetraAttack(p1, p2, p4, p6);
+											}
+											if(p1.getName().equals("Quincy")) {
+												QuincyAttack(p1, p2, p3, p5);
+											}
+											if(p1.getName().equals("Unice")) {
+												UniceAttack(p1, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1002,6 +1056,15 @@ public class GameSim {
 											}
 											if(p1.getName().equals("Margo")) {
 												MargoAttack(p1, p4, p2, p6);
+											}
+											if(p1.getName().equals("Petra")) {
+												PetraAttack(p1, p4, p2, p6);
+											}
+											if(p1.getName().equals("Quincy")) {
+												QuincyAttack(p1, p4, p3, p5);
+											}
+											if(p1.getName().equals("Unice")) {
+												UniceAttack(p1, p4, p2, p6);
 											}
 										}
 									}
@@ -1199,6 +1262,15 @@ public class GameSim {
 											if(p1.getName().equals("Margo")) {
 												MargoAttack(p1, p6, p4, p2);
 											}
+											if(p1.getName().equals("Petra")) {
+												PetraAttack(p1, p6, p4, p2);
+											}
+											if(p1.getName().equals("Quincy")) {
+												QuincyAttack(p1, p6, p3, p5);
+											}
+											if(p1.getName().equals("Unice")) {
+												UniceAttack(p1, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -1246,6 +1318,9 @@ public class GameSim {
 							System.out.println();
 						}
 					}
+					if (response.equals("t")) {
+						party1.showTeam();
+					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
 						String switchResponse = input.next();
@@ -1258,6 +1333,7 @@ public class GameSim {
 						}
 					}
 					if(response.equals("p")) {
+						party1.showTeam();
 						System.out.print("Are you sure you want to pass to the enemy's turn: ");
 						String switchResponse = input.next();
 						if(switchResponse.equals("p")) {
@@ -1287,7 +1363,7 @@ public class GameSim {
 					if(response.equals("c")) {
 						ShowCover(p3);
 					}
-					if(response.equals("d")) {
+					if(response.equals("r")) {
 						Dash(p3, p2, p4, p6);
 					}
 					if(response.equals("j")) {
@@ -1300,6 +1376,21 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p3.getName().equals("Yuri")) {
+								YuriUltimate(p3);
+							}
+							if(p3.getName().equals("Flor")) {
+								FlorUltimate(p3, p1, p5);
+							}
+							if(p3.getName().equals("Unice")) {
+								UniceUltimate(p3);
+							}
+							if(p3.getName().equals("Quincy")) {
+								QuincyUltimate(p3, p1, p5);
+							}
+							if(p3.getName().equals("Petra")) {
+								PetraUltimate(p3, p2, p4, p6, p1, p5);
+							}
 							if(p3.getName().equals("Ivy")) {
 								IvyUltimate(p3, p1, p5);
 							}
@@ -1541,7 +1632,13 @@ public class GameSim {
 								System.out.println(p3.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p3.getName().equals("Ivy")) {
+								if (p3.getName().equals("Yuri")) {
+									Location l = SetCursor(p3, p2, p4, p6, p1, p5, 15);
+									YuriAttack(p3, p2, p4 ,p6, p1, p5, l);
+								}else if (p3.getName().equals("Flor")) {
+									FlorAttack(p3, p2, p4, p6);
+									weaponFX();
+								}else if (p3.getName().equals("Ivy")) {
 									IvyAttack(p3, p2, p4 ,p6, p1, p5);
 									weaponFX();
 								}else if (p3.getName().equals("Bladee")) {
@@ -1766,6 +1863,15 @@ public class GameSim {
 											if(p3.getName().equals("Margo")) {
 												MargoAttack(p3, p2, p4, p6);
 											}
+											if(p3.getName().equals("Petra")) {
+												PetraAttack(p3, p2, p4, p6);
+											}
+											if(p3.getName().equals("Quincy")) {
+												QuincyAttack(p3, p2, p1, p5);
+											}
+											if(p3.getName().equals("Unice")) {
+												UniceAttack(p3, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1961,6 +2067,15 @@ public class GameSim {
 											}
 											if(p3.getName().equals("Margo")) {
 												MargoAttack(p3, p4, p2, p6);
+											}
+											if(p3.getName().equals("Petra")) {
+												PetraAttack(p3, p4, p2, p6);
+											}
+											if(p3.getName().equals("Quincy")) {
+												QuincyAttack(p3, p4, p1, p5);
+											}
+											if(p3.getName().equals("Unice")) {
+												UniceAttack(p3, p4, p2, p6);
 											}
 										}
 									}
@@ -2158,6 +2273,15 @@ public class GameSim {
 											if(p3.getName().equals("Margo")) {
 												MargoAttack(p3, p6, p4, p2);
 											}
+											if(p3.getName().equals("Petra")) {
+												PetraAttack(p3, p6, p4, p2);
+											}
+											if(p3.getName().equals("Quincy")) {
+												QuincyAttack(p3, p6, p1, p5);
+											}
+											if(p3.getName().equals("Unice")) {
+												UniceAttack(p3, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -2205,6 +2329,9 @@ public class GameSim {
 							System.out.println();
 						}
 					}
+					if (response.equals("t")) {
+						party1.showTeam();
+					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
 						String switchResponse = input.next();
@@ -2217,6 +2344,7 @@ public class GameSim {
 						}
 					}
 					if(response.equals("p")) {
+						party1.showTeam();
 						System.out.print("Are you sure you want to pass to the enemy's turn: ");
 						String switchResponse = input.next();
 						if(switchResponse.equals("p")) {
@@ -2249,7 +2377,7 @@ public class GameSim {
 					if(response.equals("c")) {
 						ShowCover(p5);
 					}
-					if(response.equals("d")) {
+					if(response.equals("r")) {
 						Dash(p5, p2, p4, p6);
 					}
 					if(response.equals("j")) {
@@ -2262,6 +2390,21 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p5.getName().equals("Yuri")) {
+								YuriUltimate(p5);
+							}
+							if(p5.getName().equals("Flor")) {
+								FlorUltimate(p5, p3, p1);
+							}
+							if(p5.getName().equals("Unice")) {
+								UniceUltimate(p5);
+							}
+							if(p5.getName().equals("Quincy")) {
+								QuincyUltimate(p5, p3, p1);
+							}
+							if(p5.getName().equals("Petra")) {
+								PetraUltimate(p5, p2, p4, p6, p3, p1);
+							}
 							if(p5.getName().equals("Ivy")) {
 								IvyUltimate(p5, p3, p1);
 							}
@@ -2500,7 +2643,13 @@ public class GameSim {
 								System.out.println(p5.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p5.getName().equals("Ivy")) {
+								if (p5.getName().equals("Yuri")) {
+									Location l = SetCursor(p5, p2, p4, p6, p3, p1, 15);
+									YuriAttack(p5, p2, p4 ,p6, p3, p1, l);
+								}else if (p5.getName().equals("Flor")) {
+									FlorAttack(p5, p2, p4, p6);
+									weaponFX();
+								}else if (p5.getName().equals("Ivy")) {
 									IvyAttack(p5, p2, p4 ,p6, p3, p1);
 									weaponFX();
 								}else if (p5.getName().equals("Bladee")) {
@@ -2725,6 +2874,15 @@ public class GameSim {
 											if(p5.getName().equals("Margo")) {
 												MargoAttack(p5, p2, p4, p6);
 											}
+											if(p5.getName().equals("Petra")) {
+												PetraAttack(p5, p2, p4, p6);
+											}
+											if(p5.getName().equals("Quincy")) {
+												QuincyAttack(p5, p2, p1, p3);
+											}
+											if(p5.getName().equals("Unice")) {
+												UniceAttack(p5, p2, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2920,6 +3078,15 @@ public class GameSim {
 											}
 											if(p5.getName().equals("Margo")) {
 												MargoAttack(p5, p4, p2, p6);
+											}
+											if(p5.getName().equals("Petra")) {
+												PetraAttack(p5, p4, p2, p6);
+											}
+											if(p5.getName().equals("Quincy")) {
+												QuincyAttack(p5, p4, p1, p3);
+											}
+											if(p5.getName().equals("Unice")) {
+												UniceAttack(p5, p4, p2, p6);
 											}
 										}
 									}
@@ -3117,6 +3284,15 @@ public class GameSim {
 											if(p5.getName().equals("Margo")) {
 												MargoAttack(p5, p6, p4, p2);
 											}
+											if(p5.getName().equals("Petra")) {
+												PetraAttack(p5, p6, p4, p2);
+											}
+											if(p5.getName().equals("Quincy")) {
+												QuincyAttack(p5, p6, p1, p3);
+											}
+											if(p5.getName().equals("Unice")) {
+												UniceAttack(p5, p6, p4, p2);
+											}
 										}
 									}
 								}
@@ -3221,6 +3397,9 @@ public class GameSim {
 							System.out.println();
 						}
 					}
+					if (response.equals("t")) {
+						party2.showTeam();
+					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
 						String switchResponse = input.next();
@@ -3233,6 +3412,7 @@ public class GameSim {
 						}
 					}
 					if(response.equals("p")) {
+						party2.showTeam();
 						System.out.print("Are you sure you want to pass to the enemy's turn: ");
 						String switchResponse = input.next();
 						if(switchResponse.equals("p")) {
@@ -3265,7 +3445,7 @@ public class GameSim {
 					if(response.equals("c")) {
 						ShowCover(p2);
 					}
-					if(response.equals("d")) {
+					if(response.equals("r")) {
 						Dash(p2, p1, p3, p5);
 					}
 					if(response.equals("j")) {
@@ -3278,6 +3458,21 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p2.getName().equals("Yuri")) {
+								YuriUltimate(p2);
+							}
+							if(p2.getName().equals("Flor")) {
+								FlorUltimate(p2, p4, p6);
+							}
+							if(p2.getName().equals("Unice")) {
+								UniceUltimate(p2);
+							}
+							if(p2.getName().equals("Quincy")) {
+								QuincyUltimate(p2, p4, p6);
+							}
+							if(p2.getName().equals("Petra")) {
+								PetraUltimate(p2, p1, p3, p5, p4, p6);
+							}
 							if(p2.getName().equals("Ivy")) {
 								IvyUltimate(p2, p4, p6);
 							}
@@ -3516,7 +3711,13 @@ public class GameSim {
 								System.out.println(p2.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p2.getName().equals("Ivy")) {
+								if (p2.getName().equals("Yuri")) {
+									Location l = SetCursor(p2, p1, p3, p5, p4, p6, 15);
+									YuriAttack(p2, p1, p3 ,p5, p4, p6, l);
+								}else if (p2.getName().equals("Flor")) {
+									FlorAttack(p2, p1, p3, p5);
+									weaponFX();
+								}else if (p2.getName().equals("Ivy")) {
 									IvyAttack(p2, p1, p3 ,p5, p4, p6);
 									weaponFX();
 								}else if (p2.getName().equals("Bladee")) {
@@ -3741,6 +3942,15 @@ public class GameSim {
 											if(p2.getName().equals("Margo")) {
 												MargoAttack(p2, p1, p3, p5);
 											}
+											if(p2.getName().equals("Petra")) {
+												PetraAttack(p2, p1, p3, p5);
+											}
+											if(p2.getName().equals("Quincy")) {
+												QuincyAttack(p2, p1, p4, p6);
+											}
+											if(p2.getName().equals("Unice")) {
+												UniceAttack(p2, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -3936,6 +4146,15 @@ public class GameSim {
 											}
 											if(p2.getName().equals("Margo")) {
 												MargoAttack(p2, p3, p1, p5);
+											}
+											if(p2.getName().equals("Petra")) {
+												PetraAttack(p2, p3, p1, p5);
+											}
+											if(p2.getName().equals("Quincy")) {
+												QuincyAttack(p2, p3, p4, p6);
+											}
+											if(p2.getName().equals("Unice")) {
+												UniceAttack(p2, p3, p1, p5);
 											}
 										}
 									}
@@ -4133,6 +4352,15 @@ public class GameSim {
 											if(p2.getName().equals("Margo")) {
 												MargoAttack(p2, p5, p3, p1);
 											}
+											if(p2.getName().equals("Petra")) {
+												PetraAttack(p2, p5, p3, p1);
+											}
+											if(p2.getName().equals("Quincy")) {
+												QuincyAttack(p2, p5, p4, p6);
+											}
+											if(p2.getName().equals("Unice")) {
+												UniceAttack(p2, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -4180,6 +4408,9 @@ public class GameSim {
 							System.out.println();
 						}
 					}
+					if (response.equals("t")) {
+						party2.showTeam();
+					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
 						String switchResponse = input.next();
@@ -4192,6 +4423,7 @@ public class GameSim {
 						}
 					}
 					if(response.equals("p")) {
+						party2.showTeam();
 						System.out.print("Are you sure you want to pass to the enemy's turn: ");
 						String switchResponse = input.next();
 						if(switchResponse.equals("p")) {
@@ -4224,7 +4456,7 @@ public class GameSim {
 					if(response.equals("c")) {
 						ShowCover(p4);
 					}
-					if(response.equals("d")) {
+					if(response.equals("r")) {
 						Dash(p4, p1, p3, p5);
 					}
 					if(response.equals("j")) {
@@ -4237,6 +4469,21 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p4.getName().equals("Yuri")) {
+								YuriUltimate(p4);
+							}
+							if(p4.getName().equals("Flor")) {
+								FlorUltimate(p4, p2, p6);
+							}
+							if(p4.getName().equals("Unice")) {
+								UniceUltimate(p4);
+							}
+							if(p4.getName().equals("Quincy")) {
+								QuincyUltimate(p4, p2, p6);
+							}
+							if(p4.getName().equals("Petra")) {
+								PetraUltimate(p4, p1, p3, p5, p2, p6);
+							}
 							if(p4.getName().equals("Ivy")) {
 								IvyUltimate(p4, p2, p6);
 							}
@@ -4475,7 +4722,13 @@ public class GameSim {
 								System.out.println(p4.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p4.getName().equals("Ivy")) {
+								if (p4.getName().equals("Yuri")) {
+									Location l = SetCursor(p4, p1, p3, p5, p2, p6, 15);
+									YuriAttack(p4, p1, p3 ,p5, p2, p6, l);
+								}else if (p4.getName().equals("Flor")) {
+									FlorAttack(p4, p1, p3, p5);
+									weaponFX();
+								}else if (p4.getName().equals("Ivy")) {
 									IvyAttack(p4, p1, p3 ,p5, p2, p6);
 									weaponFX();
 								}else if (p4.getName().equals("Bladee")) {
@@ -4700,6 +4953,15 @@ public class GameSim {
 											if(p4.getName().equals("Margo")) {
 												MargoAttack(p4, p1, p3, p5);
 											}
+											if(p4.getName().equals("Petra")) {
+												PetraAttack(p4, p1, p3, p5);
+											}
+											if(p4.getName().equals("Quincy")) {
+												QuincyAttack(p4, p1, p2, p6);
+											}
+											if(p4.getName().equals("Unice")) {
+												UniceAttack(p4, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -4895,6 +5157,15 @@ public class GameSim {
 											}
 											if(p4.getName().equals("Margo")) {
 												MargoAttack(p4, p3, p1, p5);
+											}
+											if(p4.getName().equals("Petra")) {
+												PetraAttack(p4, p3, p1, p5);
+											}
+											if(p4.getName().equals("Quincy")) {
+												QuincyAttack(p4, p3, p2, p6);
+											}
+											if(p4.getName().equals("Unice")) {
+												UniceAttack(p4, p3, p1, p5);
 											}
 										}
 									}
@@ -5092,6 +5363,15 @@ public class GameSim {
 											if(p4.getName().equals("Margo")) {
 												MargoAttack(p4, p5, p3, p1);
 											}
+											if(p4.getName().equals("Petra")) {
+												PetraAttack(p4, p5, p3, p1);
+											}
+											if(p4.getName().equals("Quincy")) {
+												QuincyAttack(p4, p5, p2, p6);
+											}
+											if(p4.getName().equals("Unice")) {
+												UniceAttack(p4, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -5139,6 +5419,9 @@ public class GameSim {
 							System.out.println();
 						}
 					}
+					if (response.equals("t")) {
+						party2.showTeam();
+					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
 						String switchResponse = input.next();
@@ -5151,6 +5434,7 @@ public class GameSim {
 						}
 					}
 					if(response.equals("p")) {
+						party2.showTeam();
 						System.out.print("Are you sure you want to pass to the enemy's turn: ");
 						String switchResponse = input.next();
 						if(switchResponse.equals("p")) {
@@ -5183,7 +5467,7 @@ public class GameSim {
 					if(response.equals("c")) {
 						ShowCover(p6);
 					}
-					if(response.equals("d")) {
+					if(response.equals("r")) {
 						Dash(p6, p1, p3, p5);
 					}
 					if(response.equals("j")) {
@@ -5196,6 +5480,21 @@ public class GameSim {
 							System.out.println();
 						}else {
 							ultimateFX();
+							if(p6.getName().equals("Yuri")) {
+								YuriUltimate(p6);
+							}
+							if(p6.getName().equals("Flor")) {
+								FlorUltimate(p6, p4, p2);
+							}
+							if(p6.getName().equals("Unice")) {
+								UniceUltimate(p6);
+							}
+							if(p6.getName().equals("Quincy")) {
+								QuincyUltimate(p6, p4, p2);
+							}
+							if(p6.getName().equals("Petra")) {
+								PetraUltimate(p6, p1, p3, p5, p4, p2);
+							}
 							if(p6.getName().equals("Ivy")) {
 								IvyUltimate(p6, p4, p2);
 							}
@@ -5434,7 +5733,13 @@ public class GameSim {
 								System.out.println(p6.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if (p6.getName().equals("Ivy")) {
+								if (p6.getName().equals("Yuri")) {
+									Location l = SetCursor(p6, p1, p3, p5, p4, p2, 15);
+									YuriAttack(p6, p1, p3 ,p5, p4, p2, l);
+								}else if (p6.getName().equals("Flor")) {
+									FlorAttack(p6, p1, p3, p5);
+									weaponFX();
+								}else if (p6.getName().equals("Ivy")) {
 									IvyAttack(p6, p1, p3 ,p5, p4, p2);
 									weaponFX();
 								}else if (p6.getName().equals("Bladee")) {
@@ -5659,6 +5964,15 @@ public class GameSim {
 											if(p6.getName().equals("Margo")) {
 												MargoAttack(p6, p1, p3, p5);
 											}
+											if(p6.getName().equals("Petra")) {
+												PetraAttack(p6, p1, p3, p5);
+											}
+											if(p6.getName().equals("Quincy")) {
+												QuincyAttack(p6, p1, p2, p4);
+											}
+											if(p6.getName().equals("Unice")) {
+												UniceAttack(p6, p1, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -5854,6 +6168,15 @@ public class GameSim {
 											}
 											if(p6.getName().equals("Margo")) {
 												MargoAttack(p6, p3, p1, p5);
+											}
+											if(p6.getName().equals("Petra")) {
+												PetraAttack(p6, p3, p1, p5);
+											}
+											if(p6.getName().equals("Quincy")) {
+												QuincyAttack(p6, p3, p2, p4);
+											}
+											if(p6.getName().equals("Unice")) {
+												UniceAttack(p6, p3, p1, p5);
 											}
 										}
 									}
@@ -6051,6 +6374,15 @@ public class GameSim {
 											if(p6.getName().equals("Margo")) {
 												MargoAttack(p6, p5, p3, p1);
 											}
+											if(p6.getName().equals("Petra")) {
+												PetraAttack(p6, p5, p3, p1);
+											}
+											if(p6.getName().equals("Quincy")) {
+												QuincyAttack(p6, p5, p2, p4);
+											}
+											if(p6.getName().equals("Unice")) {
+												UniceAttack(p6, p5, p3, p1);
+											}
 										}
 									}
 								}
@@ -6141,6 +6473,207 @@ public class GameSim {
 		}
 		
 	}
+	
+	public static void createController() {
+		new Thread(() -> {
+        }).start();
+
+        // Create the main frame
+        JFrame frame = new JFrame("LunarVerse Game Controller");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(515, 385);
+        frame.setLayout(null); // Use null layout for custom positioning
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = screenSize.width - frame.getWidth() - (screenSize.width / 10);
+        int y = (screenSize.height - frame.getHeight()) / 2; // Center vertically
+        frame.setLocation(x, y);
+
+        // Create buttons
+        JLabel buttonBackground = new JLabel(new ImageIcon("controller.png"));
+        JButton buttonJump = new JButton(new ImageIcon("jumpbutton.png"));
+        JButton buttonDash = new JButton(new ImageIcon("dashbutton.png"));
+        JButton buttonSwitch = new JButton(new ImageIcon("switchbutton.png"));
+        JButton buttonWeapon = new JButton(new ImageIcon("weaponbutton.png"));
+        JButton buttonAbility = new JButton(new ImageIcon("clockbutton.png"));
+        JButton buttonUltimate = new JButton(new ImageIcon("ultimatebutton.png"));
+        JButton buttonPass = new JButton(new ImageIcon("passbutton.png"));
+        JButton buttonSearch = new JButton(new ImageIcon("searchbutton.png"));
+        JButton buttonMovement = new JButton(new ImageIcon("movebutton.png"));
+        JButton buttonUp = new JButton(new ImageIcon("upbutton.png"));
+        JButton buttonLeft = new JButton(new ImageIcon("leftbutton.png"));
+        JButton buttonDown = new JButton(new ImageIcon("downbutton.png"));
+        JButton buttonRight = new JButton(new ImageIcon("rightbutton.png"));
+        JButton buttonMap = new JButton(new ImageIcon("mapbutton.png"));
+        JButton buttonConfirm = new JButton(new ImageIcon("confirmbutton.png"));
+        JButton buttonSelectTwo = new JButton(new ImageIcon("selecttwobutton.png"));
+        JButton buttonSelectOne = new JButton(new ImageIcon("selectonebutton.png"));
+        JButton buttonSelectThree = new JButton(new ImageIcon("selectthreebutton.png"));
+
+        // Set bounds for buttons
+        buttonJump.setBounds(65,60,75,75);
+        buttonDash.setBounds(290,140,75,75);
+        buttonSwitch.setBounds(360,120,50,50);
+        buttonBackground.setBounds(0, 0, 500, 350);
+        buttonWeapon.setBounds(360,50,50,50);
+        buttonAbility.setBounds(325,85,50,50);
+        buttonUltimate.setBounds(395,85,50,50);
+        buttonMovement.setBounds(140,165,25,25);
+        buttonMap.setBounds(300, 400, 100, 30);
+        buttonPass.setBounds(300, 50, 40, 40);
+        buttonSearch.setBounds(280, 85, 40, 40);
+        buttonMap.setBounds(170, 50, 40, 40);
+        buttonConfirm.setBounds(190, 85, 40, 40);
+        buttonSelectTwo.setBounds(238, 210, 30, 30);
+        buttonSelectOne.setBounds(208, 210, 30, 30);
+        buttonSelectThree.setBounds(266, 210, 30, 30);
+        buttonUp.setBounds(140, 140, 25, 25);
+        buttonLeft.setBounds(117, 165, 25, 25);
+        buttonDown.setBounds(140, 190, 25, 25);
+        buttonRight.setBounds(164, 165, 25, 25);
+        
+        buttonJump.setOpaque(false);
+        buttonJump.setContentAreaFilled(false);
+        buttonJump.setBorderPainted(false);
+        buttonJump.setFocusPainted(false);
+        buttonDash.setOpaque(false);
+        buttonDash.setContentAreaFilled(false);
+        buttonDash.setBorderPainted(false);
+        buttonDash.setFocusPainted(false);
+        buttonSwitch.setOpaque(false);
+        buttonSwitch.setContentAreaFilled(false);
+        buttonSwitch.setBorderPainted(false);
+        buttonSwitch.setFocusPainted(false);
+        buttonAbility.setOpaque(false);
+        buttonAbility.setContentAreaFilled(false);
+        buttonAbility.setBorderPainted(false);
+        buttonAbility.setFocusPainted(false);
+        buttonUltimate.setOpaque(false);
+        buttonUltimate.setContentAreaFilled(false);
+        buttonUltimate.setBorderPainted(false);
+        buttonUltimate.setFocusPainted(false);
+        buttonWeapon.setOpaque(false);
+        buttonWeapon.setContentAreaFilled(false);
+        buttonWeapon.setBorderPainted(false);
+        buttonWeapon.setFocusPainted(false);
+        buttonPass.setOpaque(false);
+        buttonPass.setContentAreaFilled(false);
+        buttonPass.setBorderPainted(false);
+        buttonPass.setFocusPainted(false);
+        buttonSearch.setOpaque(false);
+        buttonSearch.setContentAreaFilled(false);
+        buttonSearch.setBorderPainted(false);
+        buttonSearch.setFocusPainted(false);
+        buttonMap.setOpaque(false);
+        buttonMap.setContentAreaFilled(false);
+        buttonMap.setBorderPainted(false);
+        buttonMap.setFocusPainted(false);
+        buttonConfirm.setOpaque(false);
+        buttonConfirm.setContentAreaFilled(false);
+        buttonConfirm.setBorderPainted(false);
+        buttonConfirm.setFocusPainted(false);
+        buttonSelectTwo.setOpaque(false);
+        buttonSelectTwo.setContentAreaFilled(false);
+        buttonSelectTwo.setBorderPainted(false);
+        buttonSelectTwo.setFocusPainted(false);
+        buttonSelectOne.setOpaque(false);
+        buttonSelectOne.setContentAreaFilled(false);
+        buttonSelectOne.setBorderPainted(false);
+        buttonSelectOne.setFocusPainted(false);
+        buttonSelectThree.setOpaque(false);
+        buttonSelectThree.setContentAreaFilled(false);
+        buttonSelectThree.setBorderPainted(false);
+        buttonSelectThree.setFocusPainted(false);
+        buttonMovement.setOpaque(false);
+        buttonMovement.setContentAreaFilled(false);
+        buttonMovement.setBorderPainted(false);
+        buttonMovement.setFocusPainted(false);
+        buttonUp.setOpaque(false);
+        buttonUp.setContentAreaFilled(false);
+        buttonUp.setBorderPainted(false);
+        buttonUp.setFocusPainted(false);
+        buttonLeft.setOpaque(false);
+        buttonLeft.setContentAreaFilled(false);
+        buttonLeft.setBorderPainted(false);
+        buttonLeft.setFocusPainted(false);
+        buttonDown.setOpaque(false);
+        buttonDown.setContentAreaFilled(false);
+        buttonDown.setBorderPainted(false);
+        buttonDown.setFocusPainted(false);
+        buttonRight.setOpaque(false);
+        buttonRight.setContentAreaFilled(false);
+        buttonRight.setBorderPainted(false);
+        buttonRight.setFocusPainted(false);
+        
+        // Add buttons to frame
+        frame.getContentPane().add(buttonJump);
+        frame.getContentPane().add(buttonDash);
+        frame.getContentPane().add(buttonSwitch);
+        frame.getContentPane().add(buttonWeapon);
+        frame.getContentPane().add(buttonAbility);
+        frame.getContentPane().add(buttonUltimate);
+        frame.getContentPane().add(buttonPass);
+        frame.getContentPane().add(buttonSearch);
+        frame.getContentPane().add(buttonConfirm);
+        frame.getContentPane().add(buttonSelectTwo);
+        frame.getContentPane().add(buttonSelectOne);
+        frame.getContentPane().add(buttonSelectThree);
+        frame.getContentPane().add(buttonMovement);
+        frame.getContentPane().add(buttonUp);
+        frame.getContentPane().add(buttonLeft);
+        frame.getContentPane().add(buttonDown);
+        frame.getContentPane().add(buttonRight);
+        frame.getContentPane().add(buttonMap);
+        frame.getContentPane().add(buttonBackground);
+
+        // Add action listeners to buttons
+        addButtonActionListener(buttonSelectThree, frame, KeyEvent.VK_3);
+        addButtonActionListener(buttonSelectOne, frame, KeyEvent.VK_1);
+        addButtonActionListener(buttonSelectTwo, frame, KeyEvent.VK_2);
+        addButtonActionListener(buttonConfirm, frame, KeyEvent.VK_C);
+        addButtonActionListener(buttonSearch, frame, KeyEvent.VK_T);
+        addButtonActionListener(buttonPass, frame, KeyEvent.VK_P);
+        addButtonActionListener(buttonSwitch, frame, KeyEvent.VK_S);
+        addButtonActionListener(buttonDash, frame, KeyEvent.VK_R);
+        addButtonActionListener(buttonJump, frame, KeyEvent.VK_J);
+        addButtonActionListener(buttonWeapon, frame, KeyEvent.VK_W);
+        addButtonActionListener(buttonAbility, frame, KeyEvent.VK_A);
+        addButtonActionListener(buttonUltimate, frame, KeyEvent.VK_U);
+        addButtonActionListener(buttonMovement, frame, KeyEvent.VK_M);
+        addButtonActionListener(buttonUp, frame, KeyEvent.VK_W);
+        addButtonActionListener(buttonLeft, frame, KeyEvent.VK_A);
+        addButtonActionListener(buttonDown, frame, KeyEvent.VK_S);
+        addButtonActionListener(buttonRight, frame, KeyEvent.VK_D);
+        addButtonActionListener(buttonMap, frame, KeyEvent.VK_B);
+
+        // Make the frame visible
+        frame.setVisible(true);
+	}
+	
+	private static void addButtonActionListener(JButton button, JFrame frame, int keyEvent) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Create a Robot instance
+                    Robot robot = new Robot();
+                    // Minimize the GUI window
+                    frame.setState(Frame.ICONIFIED);
+                    // Short delay to allow focus change
+                    robot.delay(50);
+                    // Simulate pressing the key
+                    robot.keyPress(keyEvent);
+                    robot.keyRelease(keyEvent);
+                    // Simulate pressing Enter
+                    robot.keyPress(KeyEvent.VK_ENTER);
+                    robot.keyRelease(KeyEvent.VK_ENTER);
+                    // Restore the GUI window
+                    frame.setState(Frame.NORMAL);
+                } catch (AWTException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
 	
 	public static void runAttacks(Player p, Player a, Player b, Player c, Player d, Player e) {
 		
@@ -6368,6 +6901,27 @@ public class GameSim {
 		}
 		if(p.getName().equals("Ivy")) {
 			IvyAbility(p, d, e);
+		}
+		if(p.getName().equals("Petra")) {
+			PetraAbility(p, a, b, c, d, e);
+		}
+		if(p.getName().equals("Quincy")) {
+			QuincyAbility(p, d, e);
+		}
+		if(p.getName().equals("Unice")) {
+			int range = 7;
+			if (p.ultActive()) {
+				range = 10;
+			}
+			Location l = SetCursor(p, a, b, c, d, e, range);
+			UniceAbility(p, a, b, c, d, e, l);
+		}
+		if(p.getName().equals("Flor")) {
+			Location l = SetCursor(p, a, b, c, d, e, 5);
+			FlorAbility(p, a, b, c, d, e, l);
+		}
+		if(p.getName().equals("Yuri")) {
+			YuriAbility(p, d, e);
 		}
 	}
 	
@@ -7100,6 +7654,58 @@ public class GameSim {
 			  p.addRole("dive");
 			  p.addRole("support");
 		    break;
+		  case "Petra":
+			  p = new Player(3525, 175, start, name, x, y, 11, 11, 7);
+			  name = p.getGradientName("Petra", "#55868C", "#C8AB83", "#7F636E");
+			  p.skin(name);
+			  p.setC(112);
+			  System.out.println("\"Adventure is out there!\"");
+			  System.out.println();
+			  p.addRole("dive");
+			  p.addRole("tank");
+			  p.addRole("brawler");
+		    break;
+		  case "Quincy":
+			  p = new Player(2700, 225, start, name, x, y, 10, 10, 5);
+			  name = p.getGradientName("Quincy", "#C7AC92", "#FFB997");
+			  p.skin(name);
+			  p.setC(136);
+			  System.out.println("\"I got our backline, promise.\"");
+			  System.out.println();
+			  p.addRole("support");
+		    break;
+		  case "Unice":
+			  p = new Player(2475, 250, start, name, x, y, 10, 10, 8);
+			  name = p.getGradientName("Unice", "#635255", "#CE7B91", "#9F2042");
+			  p.skin(name);
+			  p.setC(58);
+			  System.out.println("\"Rain or shine, one gust at a time.\"");
+			  System.out.println();
+			  p.addRole("dive");
+			  p.addRole("brawler");
+			  p.addRole("engineer");
+		    break;
+		  case "Flor":
+			  p = new Player(2375, 100, start, name, x, y, 11, 10, 6);
+			  name = p.getGradientName("Flor", "#FCD757", "#5E5B52");
+			  p.skin(name);
+			  p.setC(136);
+			  System.out.println("\"Just bee yourself!\"");
+			  System.out.println();
+			  p.addRole("support");
+			  p.addRole("engineer");
+		    break;
+		  case "Yuri":
+			  p = new Player(2450, 300, start, name, x, y, 9, 9, 5);
+			  name = p.getGradientName("Yuri", "#D0DB97", "#69B578", "#3A7D44");
+			  p.skin(name);
+			  p.setC(154);
+			  System.out.println("\"Upgrades people, upgrades.\"");
+			  System.out.println();
+			  p.addRole("brawler");
+			  p.addRole("support");
+			  p.addRole("engineer");
+		    break;
 		}
 		return p;
 	}
@@ -7138,12 +7744,22 @@ public class GameSim {
 	}
 	
 	public static void Jump(Player p, Player a, Player b, Location l, Player e1, Player e2, Player e3) {
+		boolean umbrella = false;
+		int jumpD = 6;
+		if (p.getName().equals("Unice")) {
+			jumpD = 9;
+		}
+		for(int q = 0; q < GameSim.utility.size(); q++) {
+			if(GameSim.utility.get(q).getName().equals("Umbrella") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc())) {
+				umbrella = true;
+			}
+		}
 		if(!p.canJump()) {
 			System.out.println("No more jumps left!");
 			System.out.println();
 			return;
 		}
-		if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY())) {
+		if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && !umbrella) {
 			System.out.println("Nothing in range to use a jump with!");
 			System.out.println();
 			return;
@@ -7155,7 +7771,7 @@ public class GameSim {
 		}
 		Scanner input = new Scanner(System.in);
 
-		if(!p.inReach(l, 6)) {
+		if(!p.inReach(l, jumpD)) {
 			System.out.println("Can't jump there!");
 			System.out.println();
 			return;
@@ -7165,7 +7781,21 @@ public class GameSim {
 			System.out.println();
 			return;
 		}
-		if(GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && p.canJump()) {
+		if(umbrella && p.canJump()) {
+			int d = p.getLoc().distance(l);
+			p.increaseTotalMovement(d);
+			p.getLoc().set(l.getX(), l.getY());
+			p.useJump();
+			for(int q = 0; q < GameSim.utility.size(); q++) {
+				if(GameSim.utility.get(q).getName().equals("Umbrella") && GameSim.utility.get(q).isAlly(p)) {
+					GameSim.utility.get(q).getOwner().resetAttack();
+					if (GameSim.utility.get(q).getOwner().ultActive()) {
+						GameSim.utility.get(q).getOwner().reduceCooldown();
+					}
+					GameSim.utility.remove(q);
+				}
+			}
+		}else if(GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && p.canJump()) {
 			int d = p.getLoc().distance(l);
 			p.increaseTotalMovement(d);
 			p.getLoc().set(l.getX(), l.getY());
@@ -7275,6 +7905,19 @@ public class GameSim {
 			System.out.println();
 			return;
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Turret") && utility.get(j).owner(p) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc())) {
+				GameSim.utility.get(j).activate();
+				System.out.println("Turret reactivated.");
+				try {
+					String audio = "dash.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
 		ArrayList<Player> dashPlayers = new ArrayList<Player>();
 		double damage = 100;
 		if(p.getLoc().eqLoc(a.getLoc()) && p.canDash() && a.isAlive()) {
@@ -7299,6 +7942,14 @@ public class GameSim {
 			}else {
 				e.takeDamage(damage);
 				p.addDamage(damage);
+			}
+			if (e.getBee()) {
+				p.takeDamage(350);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect MaxParalyze = new Effect("paralyze", 0, 1);
+				e1.add(MaxParalyze);
+				p.addEffects(e1);
+				p.applyEffects();
 			}
 		}
 		if(dashPlayers.size() > 0) {
@@ -7366,6 +8017,57 @@ public class GameSim {
 			if(GameSim.utility.get(j).getName().equals("Field") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && p.canDash()) {
 				GameSim.utility.remove(j);
 				System.out.println("Enemy Electromagnetic field destroyed.");
+				p.useDash();
+				try {
+					String audio = "dash.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Umbrella") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && p.canDash()) {
+				if (GameSim.utility.get(j).getOwner().ultActive()) {
+					GameSim.utility.get(j).getOwner().setSights(2);
+				}else {
+					GameSim.utility.get(j).getOwner().setSights(1);
+				}
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Umbrella destroyed.");
+				p.useDash();
+				try {
+					String audio = "dash.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Pylon") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && p.canDash()) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Honey Pylon destroyed.");
+				p.useDash();
+				try {
+					String audio = "dash.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Turret") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && p.canDash()) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Turret has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.get(j).deactivate();
+					System.out.println("Enemy Turret deactivated.");
+				}
 				p.useDash();
 				try {
 					String audio = "dash.wav";
@@ -7494,6 +8196,7 @@ public class GameSim {
 				    break;
 				  case "r":
 					  Dash(p, a, z, c);
+					  hasMoved = false;
 				    break;
 				  case "j":
 					  Location l = SetCursor(p, a, z, c, d, e, p.getRange());
@@ -7503,7 +8206,7 @@ public class GameSim {
 				  case "p":
 					  p.increaseMovement(1);
 				    break;
-				  case "c":
+				  case "m":
 					  System.out.println("Movement completed.");
 					  hasMoved = false;
 					  move = false;
@@ -7521,6 +8224,13 @@ public class GameSim {
 				int ver = 0;
 				if(hasMoved) {
 					for(int j = 0; j < GameSim.utility.size(); j++) {
+						if(GameSim.utility.get(j).getName().equals("Pylon") && GameSim.utility.get(j).isEnemy(p) && GameSim.utility.get(j).inRange(p, 5)) {
+							if (p.getMovement() > 0) {
+								p.reduceMovement(1);
+							}
+						}
+					}
+					for(int j = 0; j < GameSim.utility.size(); j++) {
 						if(GameSim.utility.get(j).getName().equals("Fulmination") && GameSim.utility.get(j).isEnemy(p) && GameSim.utility.get(j).inRange(p, 8)) {
 							p.removeJumpDash();
 							p.takeDamage(25);
@@ -7533,6 +8243,12 @@ public class GameSim {
 							Effect SolarIgnite = new Effect("ignite", 0, 2);
 							e4.add(SolarIgnite);
 							p.addEffects(e4);
+						}
+					}
+					for(int j = 0; j < GameSim.utility.size(); j++) {
+						if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).isEnemy(p) && GameSim.utility.get(j).inRange(p, 3) && GameSim.utility.get(j).isActivated()) {
+							p.takeDamage(25);
+							GameSim.utility.get(j).getOwner().addDamage(25);
 						}
 					}
 					if (lastMoved.equals("left")) {
@@ -7548,31 +8264,37 @@ public class GameSim {
 						ver = -1;
 					}
 					if(a.hasSights() && a.inRange(p) && !a.isStunned()) {
-						p.takeDamage(a.getDamage() * 0.9);
-						a.useSight();
-						a.addDamage(a.getDamage() * 0.9);
-						if(a.getName().equals("Zero") && rand <= 0.3) {
-							p.addEffects(e1);
-							p.applyEffects();
+						if (!p.getStep()) {
+							p.takeDamage(a.getDamage() * 0.9);
+							a.addDamage(a.getDamage() * 0.9);
+							if(a.getName().equals("Zero") && rand <= 0.3) {
+								p.addEffects(e1);
+								p.applyEffects();
+							}
 						}
+						a.useSight();
 					}
 					if(z.hasSights() && z.inRange(p) && !z.isStunned()) {
-						p.takeDamage(z.getDamage() * 0.9);
-						z.useSight();
-						z.addDamage(z.getDamage() * 0.9);
-						if(z.getName().equals("Zero") && rand <= 0.3) {
-							p.addEffects(e1);
-							p.applyEffects();
+						if (!p.getStep()) {
+							p.takeDamage(z.getDamage() * 0.9);
+							z.addDamage(z.getDamage() * 0.9);
+							if(z.getName().equals("Zero") && rand <= 0.3) {
+								p.addEffects(e1);
+								p.applyEffects();
+							}
 						}
+						z.useSight();
 					}
 					if(c.hasSights() && c.inRange(p) && !c.isStunned()) {
-						p.takeDamage(c.getDamage() * 0.9);
-						c.useSight();
-						c.addDamage(c.getDamage() * 0.9);
-						if(c.getName().equals("Zero") && rand <= 0.3) {
-							p.addEffects(e1);
-							p.applyEffects();
+						if (!p.getStep()) {
+							p.takeDamage(c.getDamage() * 0.9);
+							c.addDamage(c.getDamage() * 0.9);
+							if(c.getName().equals("Zero") && rand <= 0.3) {
+								p.addEffects(e1);
+								p.applyEffects();
+							}
 						}
+						c.useSight();
 					}
 					
 					if (p.getName().equals("Mayhem") && p.ultActive()) {
@@ -7696,7 +8418,7 @@ public class GameSim {
 					}
 				}
 				System.out.println();
-				if(p.getMovement() <= 0) {
+				if(p.getMovement() <= 0 || p.isParalyzed()) {
 					System.out.println("Out of movement.");
 					move = false;
 					System.out.println();
@@ -9999,9 +10721,12 @@ public class GameSim {
 	}
 	
 	public static void ThunderAbility(Player p) {
+		p.setThunder(true);
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		Effect ThunderCounter = new Effect("counter", 0, 2);
+		Effect ThunderCounter2 = new Effect("protect", 0.5, 2);
 		e.add(ThunderCounter);
+		e.add(ThunderCounter2);
 		p.addEffects(e);
 		p.applyEffects();
 		p.setCooldown(3);
@@ -11660,9 +12385,10 @@ public class GameSim {
 		}
 		String[] chars = {"Lunar", "Aidan", "Finley", "Katrina", "Sammi", "Mack", "Axol", "Via", "Kailani", "Zero", "Mason", "Max", "Evil",
 				"Airic", "Julian", "Solar", "Eli", "Dylan", "Orion", "Clara", "Liam", "Midnite", "Ashley", "Rocco", "Xara", "Thunder",
-				"Archer", "Tom", "Gash", "Louis", "Kithara", "Audrey", "Ayson", "Chloe", "Hopper", "Radar", "Augie", "Ruby", "Norman", "Chief", "Oona"};
+				"Archer", "Tom", "Gash", "Louis", "Kithara", "Audrey", "Ayson", "Chloe", "Hopper", "Radar", "Augie", "Ruby", "Norman", "Chief", "Oona", "Angelos",
+				"Melony", "Echo", "Makani", "Rhythm", "Grenadine", "Patitek", "Crystal", "Velvet", "Snowfall", "Shutter", "Margo", "Petra", "Quincy"};
 		//System.out.println(chars.length);
-		int randomX = (int)(Math.random() * (40 - 0 + 1)) + 0;
+		int randomX = (int)(Math.random() * (54 - 0 + 1)) + 0;
 		System.out.println("\"I have brought \"" +chars[randomX] +"\" to help us out!\"");
 		System.out.println();
 		p.setName(chars[randomX]);
@@ -14163,6 +14889,20 @@ public class GameSim {
 					j--;
 				}
 			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Umbrella") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 3)) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Umbrella destroyed.");
+					j--;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Pylon") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 3)) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Honey Pylon destroyed.");
+					j--;
+				}
+			}
 			p.useFuel(p.getLoc().distance(l) * 50);
 			System.out.println(p.voiceline());
 			System.out.println();
@@ -14224,6 +14964,20 @@ public class GameSim {
 			if(GameSim.utility.get(j).getName().equals("Field") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
 				GameSim.utility.remove(j);
 				System.out.println("Enemy Electromagnetic field destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Umbrella") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Umbrella destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Pylon") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Honey Pylon destroyed.");
 				j--;
 			}
 		}
@@ -14314,7 +15068,7 @@ public class GameSim {
 		System.out.println("1: Helium Cube (10% Weaken)");
 		System.out.println("2: Mercury Cube (10% Poison)");
 		System.out.println("3: Fluorine Cube (5% Vulnerability)");
-		System.out.println("4: Lead Cube (10% Blind)");
+		System.out.println("4: Lead Cube (15% Blind)");
 		System.out.println("5: 2 Chlorine Cubes (1 Turn Paralyze. Can only be added once.)");
 		System.out.println("6: 2 Carbon Cubes (1 Turn Daze. Can only be added once.)");
 		System.out.print("What do you want to add in this Concoction: ");
@@ -14336,7 +15090,7 @@ public class GameSim {
 				System.out.println("Fluorine cube added. " + drinks + " more cube(s) can be added.");
 			}
 			if(targetResponse.equals("4")) {
-				blind = blind + 0.1;
+				blind = blind + 0.15;
 				drinks--;
 				System.out.println("Lead cube added. " + drinks + " more cube(s) can be added.");
 			}
@@ -14634,6 +15388,652 @@ public class GameSim {
 			p.setMedic();
 			System.out.println("\"Here comes the Intensive Care Unit!\"");
 			System.out.println();
+		}
+	}
+	
+	public static void PetraAttack(Player p, Player a, Player b, Player c) {
+		if (a.getCover().equals("Partial")) {
+			a.resetCover();
+		}
+		if(a.inRange(b, 4) && b.getCover().equals("Partial")) {
+			b.resetCover();
+		}
+		if(a.inRange(c, 4) && c.getCover().equals("Partial")) {
+			c.resetCover();
+		}
+		p.attack(a);
+		if (a.getCover().equals("Full")) {
+			a.resetCover();
+		}
+		p.attack(a);
+		if(a.inRange(b, 4) && b.getCover().equals("Full")) {
+			b.resetCover();
+		}
+		if(a.inRange(c, 4) && c.getCover().equals("Full")) {
+			c.resetCover();
+		}
+		System.out.println();
+	}
+	
+	public static void PetraAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
+		Scanner input = new Scanner(System.in);
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect FinleyVulnerable = new Effect("protect", 0.25, 2);
+		Effect FinleyVulnerable2 = new Effect("protect", 0.25, 2);
+		Effect FinleyVulnerable3 = new Effect("protect", 0.25, 2);
+		e1.add(FinleyVulnerable);
+		e2.add(FinleyVulnerable2);
+		e3.add(FinleyVulnerable3);
+		if(!p.inRange(a, 25) && !p.inRange(b, 25) && !p.inRange(c, 25)) {
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
+		String range = "No";
+		if(p.inRange(a, 25)) {
+			range = "Yes";
+		}
+		String range2 = "No";
+		if(p.inRange(b, 25)) {
+			range2 = "Yes";
+		}
+		String range3 = "No";
+		if(p.inRange(c, 25)) {
+			range3 = "Yes";
+		}
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ".");
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ".");
+		System.out.println("Who do you want to Glyph Step towards: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if(p.inRange(a, 25)) {
+				p.setStep(true);
+				p.addDashes(1);
+				p.increaseMovement(4);
+				p.getLoc().set(a.getLoc().getX(), a.getLoc().getY());
+				p.addEffects(e1);
+				p.applyEffects();
+				d.addEffects(e2);
+				d.applyEffects();
+				e.addEffects(e3);
+				e.applyEffects();
+				System.out.println(p.voiceline());
+				p.setCooldown(3);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("2")) {
+			if(p.inRange(b, 25)) {
+				p.setStep(true);
+				p.addDashes(1);
+				p.increaseMovement(4);
+				p.getLoc().set(b.getLoc().getX(), b.getLoc().getY());
+				p.addEffects(e1);
+				p.applyEffects();
+				d.addEffects(e2);
+				d.applyEffects();
+				e.addEffects(e3);
+				e.applyEffects();
+				System.out.println(p.voiceline());
+				p.setCooldown(3);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("3")) {
+			if(p.inRange(c, 25)) {
+				p.setStep(true);
+				p.addDashes(1);
+				p.increaseMovement(4);
+				p.getLoc().set(c.getLoc().getX(), c.getLoc().getY());
+				p.addEffects(e1);
+				p.applyEffects();
+				d.addEffects(e2);
+				d.applyEffects();
+				e.addEffects(e3);
+				e.applyEffects();
+				System.out.println(p.voiceline());
+				p.setCooldown(3);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void PetraUltimate(Player p, Player a, Player b1, Player c, Player d, Player e) {
+		Scanner input = new Scanner(System.in);
+		Location l;
+		Location l2;
+		Location l3;
+		Battlefield.temple = true;
+		b.printField(p, a, b1, c, d, e, orbs, cover, p, a, b1, c, utility);
+		System.out.println("1: Left");
+		System.out.println("2: Right");
+		System.out.println("3: Up");
+		System.out.println("4: Down");
+		System.out.println("Which direction do you want to send the boulder in: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			l = new Location(-1, a.getLoc().getY());
+			l2 = new Location(-1, b1.getLoc().getY());
+			l3 = new Location(-1, c.getLoc().getY());
+			if(a.getLoc().getY() >= 14 && a.getLoc().getY() <= 27) {
+				a.knockbacked(l);
+				a.knockbacked(l);
+				a.knockbacked(l);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				a.addEffects(e1);
+				a.applyEffects();
+			}
+			if(b1.getLoc().getY() >= 14 && b1.getLoc().getY() <= 27) {
+				b1.knockbacked(l2);
+				b1.knockbacked(l2);
+				b1.knockbacked(l2);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				b1.addEffects(e1);
+				b1.applyEffects();
+			}
+			if(c.getLoc().getY() >= 14 && c.getLoc().getY() <= 27) {
+				c.knockbacked(l3);
+				c.knockbacked(l3);
+				c.knockbacked(l3);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				c.addEffects(e1);
+				c.applyEffects();
+			}
+		}
+		if(targetResponse.equals("2")) {
+			l = new Location(100, a.getLoc().getY());
+			l2 = new Location(100, b1.getLoc().getY());
+			l3 = new Location(100, c.getLoc().getY());
+			if(a.getLoc().getY() >= 14 && a.getLoc().getY() <= 27) {
+				a.knockbacked(l);
+				a.knockbacked(l);
+				a.knockbacked(l);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				a.addEffects(e1);
+				a.applyEffects();
+			}
+			if(b1.getLoc().getY() >= 14 && b1.getLoc().getY() <= 27) {
+				b1.knockbacked(l2);
+				b1.knockbacked(l2);
+				b1.knockbacked(l2);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				b1.addEffects(e1);
+				b1.applyEffects();
+			}
+			if(c.getLoc().getY() >= 14 && c.getLoc().getY() <= 27) {
+				c.knockbacked(l3);
+				c.knockbacked(l3);
+				c.knockbacked(l3);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				c.addEffects(e1);
+				c.applyEffects();
+			}
+		}
+		if(targetResponse.equals("4")) {
+			l = new Location(a.getLoc().getX(), -1);
+			l2 = new Location(b1.getLoc().getX(), -1);
+			l3 = new Location(c.getLoc().getX(), -1);
+			if(a.getLoc().getX() >= 14 && a.getLoc().getX() <= 27) {
+				a.knockbacked(l);
+				a.knockbacked(l);
+				a.knockbacked(l);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				a.addEffects(e1);
+				a.applyEffects();
+			}
+			if(b1.getLoc().getX() >= 14 && b1.getLoc().getX() <= 27) {
+				b1.knockbacked(l2);
+				b1.knockbacked(l2);
+				b1.knockbacked(l2);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				b1.addEffects(e1);
+				b1.applyEffects();
+			}
+			if(c.getLoc().getX() >= 14 && c.getLoc().getX() <= 27) {
+				c.knockbacked(l3);
+				c.knockbacked(l3);
+				c.knockbacked(l3);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				c.addEffects(e1);
+				c.applyEffects();
+			}
+		}
+		if(targetResponse.equals("3")) {
+			l = new Location(a.getLoc().getX(), 100);
+			l2 = new Location(b1.getLoc().getX(), 100);
+			l3 = new Location(c.getLoc().getX(), 100);
+			if(a.getLoc().getX() >= 14 && a.getLoc().getX() <= 27) {
+				a.knockbacked(l);
+				a.knockbacked(l);
+				a.knockbacked(l);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				a.addEffects(e1);
+				a.applyEffects();
+			}
+			if(b1.getLoc().getX() >= 14 && b1.getLoc().getX() <= 27) {
+				b1.knockbacked(l2);
+				b1.knockbacked(l2);
+				b1.knockbacked(l2);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				b1.addEffects(e1);
+				b1.applyEffects();
+			}
+			if(c.getLoc().getX() >= 14 && c.getLoc().getX() <= 27) {
+				c.knockbacked(l3);
+				c.knockbacked(l3);
+				c.knockbacked(l3);
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
+				e1.add(HopperReflect);
+				c.addEffects(e1);
+				c.applyEffects();
+			}
+		}
+		Battlefield.temple = false;
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		Effect HopperReflect = new Effect("power", 0.5, 1);
+		e1.add(HopperReflect);
+		p.cleanse();
+		p.heal(0.1);
+		d.cleanse();
+		d.heal(0.1);
+		e.cleanse();
+		e.heal(0.1);
+		p.addHealing(p.getMaxHP() * 0.1);
+		p.addHealing(d.getMaxHP() * 0.1);
+		p.addHealing(e.getMaxHP() * 0.1);
+		p.addEffects(e1);
+		p.applyEffects();
+		p.resetUlt();
+		System.out.println("\"Yall better run for the hills!\"");
+		System.out.println();
+	}
+	
+	public static void QuincyAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		if (p.getDamage() > 225) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			ArrayList<Effect> e2 = new ArrayList<Effect>();
+			Effect ChloePower = new Effect("mend", 0.5, 1);
+			Effect ChloePower2 = new Effect("mend", 0.5, 1);
+			e.add(ChloePower);
+			e2.add(ChloePower2);
+			b.addEffects(e);
+			b.applyEffects();
+			c.addEffects(e2);
+			c.applyEffects();
+		}
+		System.out.println();
+	}
+	
+	public static void QuincyAbility(Player p, Player a, Player b) {
+		Scanner input = new Scanner(System.in);
+		if(!a.isAlive() && !b.isAlive()) {
+			p.setShield();
+			p.heal(0.1);
+			p.addHealing(p.getMaxHP() * 0.1);
+			p.setCooldown(1);
+			System.out.println("\"I will stand until the end!\"");
+			System.out.println();
+			return;
+		}
+		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
+		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
+		System.out.println("3: Remove Current Link.");
+		System.out.println("Who do you want to link onto: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			a.setQuincy(p);
+			a.heal(0.05);
+			p.setShield();
+			p.setCooldown(1);
+		}
+		if(targetResponse.equals("2")) {
+			b.setQuincy(p);
+			b.heal(0.05);
+			p.setShield();
+			p.setCooldown(1);
+		}
+		if(targetResponse.equals("3")) {
+			a.resetQuincy();
+			b.resetQuincy();
+			System.out.println("\"Stay strong for now!\"");
+			System.out.println();
+			return;
+		}
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void QuincyUltimate(Player p, Player a, Player b) {
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect HopperProtect = new Effect("protect", 0.5, 2);
+		Effect HopperHeal = new Effect("fortify", 0.1, 2);
+		Effect HopperHeal2 = new Effect("fortify", 0.1, 2);
+		Effect HopperHeal3 = new Effect("fortify", 0.1, 2);
+		e1.add(HopperProtect);
+		e1.add(HopperHeal);
+		e2.add(HopperHeal2);
+		e3.add(HopperHeal3);
+		p.setRally(true);
+		p.cleanse();
+		p.heal(0.1);
+		p.increaseMovement(3);
+		if (p.inRange(a)) {
+			a.cleanse();
+			a.heal(0.15);
+			p.addHealing(a.getMaxHP() * 0.15);
+			a.increaseMovement(3);
+			a.addEffects(e2);
+			a.applyEffects();
+		}
+		if (p.inRange(b)) {
+			b.cleanse();
+			b.heal(0.15);
+			p.addHealing(b.getMaxHP() * 0.15);
+			b.increaseMovement(3);
+			b.addEffects(e3);
+			b.applyEffects();
+		}
+		p.addHealing(p.getMaxHP() * 0.1);
+		p.addEffects(e1);
+		p.applyEffects();
+		p.resetUlt();
+		System.out.println("\"We have a royal decree to make!\"");
+		System.out.println();
+	}
+	
+	public static void UniceAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		if (p.ultActive()) {
+			a.knockbacked(p.getLoc());
+		}
+		if(a.inRange(b, 4)) {
+			p.attack(b);
+			if (p.ultActive()) {
+				b.knockbacked(p.getLoc());
+			}
+		}
+		if(a.inRange(c, 4)) {
+			p.attack(c);
+			if (p.ultActive()) {
+				c.knockbacked(p.getLoc());
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void UniceAbility(Player p, Player a, Player b, Player c, Player d, Player e, Location l) {
+		if(!p.inRange(l)) {
+			System.out.println("Can't send Gale there!");
+			System.out.println();
+			return;
+		}
+		if(GameSim.b.hasTrench(l.getX(), l.getY())) {
+			System.out.println("Can't send Gale there!");
+			System.out.println();
+			return;
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Umbrella") && GameSim.utility.get(j).owner(p)) {
+				GameSim.utility.remove(j);
+			}
+		}
+		Utility Umbrella = new Utility("Umbrella", l, p, d, e, a, b, c);
+		utility.add(Umbrella);
+		p.setCooldown(4);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void UniceUltimate(Player p) {
+		p.setUlt();
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect MidnitePower = new Effect("power", 0.5, 30);
+		e.add(MidnitePower);
+		p.addEffects(e);
+		p.applyEffects();
+		System.out.println("\"Rain on me, Tsunami.\"");
+		System.out.println();
+	}
+	
+	public static void FlorAttack(Player p, Player a, Player b, Player c) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		if(!p.inRange(a) && !p.inRange(b) && !p.inRange(c)) {
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
+		if(p.inRange(a)){
+			p.attack(a);
+			Effect FlorPoison = new Effect("poison", 0.05, 1);
+			Effect FlorBlind = new Effect("blind", 0.05, 1);
+			e.add(FlorPoison);
+			e.add(FlorBlind);
+			a.addEffects(e);
+			a.applyEffects();
+		}
+		if(p.inRange(b)){
+			p.attack(b);
+			Effect FlorPoison = new Effect("poison", 0.05, 1);
+			Effect FlorBlind = new Effect("blind", 0.05, 1);
+			e2.add(FlorPoison);
+			e2.add(FlorBlind);
+			b.addEffects(e2);
+			b.applyEffects();
+		}
+		if(p.inRange(c)){
+			p.attack(c);
+			Effect FlorPoison = new Effect("poison", 0.05, 1);
+			Effect FlorBlind = new Effect("blind", 0.05, 1);
+			e3.add(FlorPoison);
+			e3.add(FlorBlind);
+			c.addEffects(e3);
+			c.applyEffects();
+		}
+		System.out.println();
+	}
+	
+	public static void FlorAbility(Player p, Player a, Player b, Player c, Player d, Player e, Location l) {
+		if(GameSim.b.hasTrench(l.getX(), l.getY())) {
+			System.out.println("Can't send the pylon there!");
+			System.out.println();
+			return;
+		}
+		Utility Pylon = new Utility("Pylon", l, p, d, e, a, b, c);
+		utility.add(Pylon);
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void FlorUltimate(Player p, Player a, Player b) {
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect HopperHeal = new Effect("protect", 0.3, 2);
+		Effect HopperHeal2 = new Effect("protect", 0.3, 2);
+		Effect HopperHeal3 = new Effect("protect", 0.3, 2);
+		Effect HopperHeal1 = new Effect("counter", 0.3, 2);
+		Effect HopperHeal21 = new Effect("counter", 0.3, 2);
+		Effect HopperHeal31 = new Effect("counter", 0.3, 2);
+		e1.add(HopperHeal);
+		e2.add(HopperHeal2);
+		e3.add(HopperHeal3);
+		e1.add(HopperHeal1);
+		e2.add(HopperHeal21);
+		e3.add(HopperHeal31);
+		p.addEffects(e1);
+		p.applyEffects();
+		a.addEffects(e2);
+		a.applyEffects();
+		b.addEffects(e3);
+		b.applyEffects();
+		p.setBee(true);
+		a.setBee(true);
+		b.setBee(true);
+		p.resetUlt();
+		System.out.println("\"Buzz off twerps!\"");
+		System.out.println();
+	}
+	
+	public static void YuriAttack(Player p, Player a, Player b, Player c, Player d, Player e, Location l) {
+		boolean madeTurret = false;
+		if(!p.inRange(l)) {
+			System.out.println("Can't put the Turret that far!");
+			System.out.println();
+			return;
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(p)) {
+				madeTurret = true;
+			}
+		}
+		if (madeTurret) {
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(p)) {
+					if (!GameSim.utility.get(j).isActivated()) {
+						System.out.println("Turret cannot be relocated while deactivated!");
+						System.out.println();
+						return;
+					}else {
+						GameSim.utility.get(j).getLoc().set(l.getX(), l.getY());
+						System.out.println("Turret relocated!");
+						System.out.println();
+						p.setAttacked();
+						return;
+					}
+				}
+			}
+		}else {
+			Utility Turret = new Utility("Turret", l, p, d, e, a, b, c);
+			utility.add(Turret);
+			System.out.println("Turret deployed.");
+			p.setAttacked();
+		}
+		System.out.println();
+	}
+	
+	public static void YuriAbility(Player p, Player a, Player b) {
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect ArcherSight = new Effect("sight", 0.25, 1);
+		Effect ArcherSight2 = new Effect("sight", 0.25, 1);
+		Effect ArcherSight3 = new Effect("sight", 0.25, 1);
+		e1.add(ArcherSight);
+		e2.add(ArcherSight2);
+		e3.add(ArcherSight3);
+		p.addEffects(e1);
+		a.addEffects(e2);
+		b.addEffects(e3);
+		p.applyEffects();
+		a.applyEffects();
+		b.applyEffects();
+		p.heal(0.1);
+		a.heal(0.1);
+		b.heal(0.1);
+		p.addHealing(p.getMaxHP() * 0.1);
+		p.addHealing(a.getMaxHP() * 0.1);
+		p.addHealing(b.getMaxHP() * 0.1);
+		p.setChance(0.1);
+		a.setChance(0.1);
+		b.setChance(0.1);
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void YuriUltimate(Player p) {
+		boolean madeTurret = false;
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(p)) {
+				madeTurret = true;
+			}
+		}
+		if (madeTurret) {
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(p)) {
+					GameSim.utility.get(j).activate();
+					if (p.getUltcharge() == 5) {
+						GameSim.utility.get(j).setSpikes();
+						p.increaseUltcharge();
+						p.resetUlt();
+						System.out.println("\"This turret now has sharp security!\"");
+						System.out.println();
+						return;
+					}
+					if (p.getUltcharge() == 6) {
+						p.increaseUltcharge();
+						p.resetUlt();
+						System.out.println("\"Why didn't this turret have a flamethrower before? I'll add one now!\"");
+						System.out.println();
+						return;
+					}
+					if (p.getUltcharge() == 7) {
+						GameSim.utility.get(j).setHealth(2);
+						p.increaseUltcharge();
+						p.resetUlt();
+						System.out.println("\"Try breaking through us now!\"");
+						System.out.println();
+						return;
+					}
+					if (p.getUltcharge() == 8) {
+						ArrayList<Effect> e = new ArrayList<Effect>();
+						Effect MidnitePower = new Effect("power", 1.5, 30);
+						e.add(MidnitePower);
+						p.addEffects(e);
+						p.applyEffects();
+						p.resetUlt();
+						System.out.println("\"Molten core overload!\"");
+						System.out.println();
+						return;
+					}
+				}
+			}
+		}else {
+			System.out.println("You need your turret placed down to use your ultimate!");
+			System.out.println();
+			return;
 		}
 	}
 
