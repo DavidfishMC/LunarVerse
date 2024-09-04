@@ -6,17 +6,22 @@ import java.util.Collections;
 public class Utility {
 	
 	Player owner;
+	Player target;
 	String name;
 	int health = 0;
 	int ogHealth = 0;
 	ArrayList<Player> allies = new ArrayList<Player>();
 	ArrayList<Player> enemies = new ArrayList<Player>();
+	ArrayList<Player> trapped = new ArrayList<Player>();
 	Location loc;
 	boolean pickedUp = false;
 	boolean activated = true;
 	boolean escape = false;
 	boolean spikes = false;
+	boolean rookActive = true;
 	String gemstone = "iron";
+	String direction = "";
+	String color = "";
 	
 	public Utility(String s, Location l, Player p, Player a1, Player a2, Player e1, Player e2, Player e3) {
 		owner = p;
@@ -41,6 +46,47 @@ public class Utility {
 			health = 1;
 			ogHealth = 1;
 		}
+		if (s.equals("Iron")) {
+			for (Player e: enemies) {
+				if (e.inRange(loc, 3)) {
+					trapped.add(e);
+					owner.addDagger();
+				}
+			}
+		}
+		for (Player e: trapped) {
+			e.setTrapped(true);
+		}
+	}
+	
+	public String getDirection() {
+		return direction;
+	}
+	
+	public void setDirection(String s) {
+		direction = s;
+	}
+	
+	public void setRookActive(boolean b) {
+		rookActive = b;
+	}
+	
+	public boolean rookActive() {
+		return rookActive;
+	}
+	
+	public void setColor(String s) {
+		color = s;
+	}
+	
+	public Player getTarget() {
+		return target;
+	}
+	
+	public void removeIron() {
+		for (Player e: trapped) {
+			e.setTrapped(false);
+		}
 	}
 	
 	public void deactivate() {
@@ -48,6 +94,7 @@ public class Utility {
 	}
 	
 	public void activate() {
+		System.out.println("Turret reactivated.");
 		activated = true;
 		health = ogHealth;
 	}
@@ -254,8 +301,13 @@ public class Utility {
 		for (Player p: enemies) {
 			if(Battlefield.endgame) {
 				if (p.inRange(loc, 0)) {
-					p.takeDamage(p.getMaxHP() * 0.5);
-					owner.addDamage(p.getMaxHP() * 0.5);
+					p.takeDamage(p.getMaxHP() * 0.35);
+					owner.addDamage(p.getMaxHP() * 0.35);
+					ArrayList<Effect> e = new ArrayList<Effect>();
+					Effect RoccoParalyze = new Effect("stun", 0, 2);
+					e.add(RoccoParalyze);
+					p.addEffects(e);
+					p.applyEffects();
 				}else if (p.inRange(loc, 5)) {
 					p.takeDamage(p.getMaxHP() * 0.35);
 					owner.addDamage(p.getMaxHP() * 0.35);
@@ -268,8 +320,13 @@ public class Utility {
 				}
 			}else {
 				if (p.inRange(loc, 0)) {
-					p.takeDamage(p.getMaxHP() * 0.5);
-					owner.addDamage(p.getMaxHP() * 0.5);
+					p.takeDamage(p.getMaxHP() * 0.35);
+					owner.addDamage(p.getMaxHP() * 0.35);
+					ArrayList<Effect> e = new ArrayList<Effect>();
+					Effect RoccoParalyze = new Effect("stun", 0, 2);
+					e.add(RoccoParalyze);
+					p.addEffects(e);
+					p.applyEffects();
 				}else if (p.inRange(loc, 8)) {
 					p.takeDamage(p.getMaxHP() * 0.35);
 					owner.addDamage(p.getMaxHP() * 0.35);
@@ -323,6 +380,14 @@ public class Utility {
 	
 	public boolean isAlly(Player p) {
 		if (allies.contains(p)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public boolean isTrapped(Player p) {
+		if (trapped.contains(p)) {
 			return true;
 		}else {
 			return false;
@@ -437,9 +502,116 @@ public class Utility {
 	
 	public void activatePylon() {
 		for (Player p: allies) {
-			if (p.inRange(loc, 5)) {
+			if (p.inRange(loc, 4)) {
 				p.heal(0.1);
 				owner.addHealing(p.getMaxHP() * 0.1);
+			}
+		}
+	}
+	
+	public void activateStar() {
+		for (Player p: enemies) {
+			if (p.inRange(loc, 11)) {
+				p.dragIn(loc, 4);
+				if (p.getLoc().eqLoc(loc)) {
+					p.takeDamage(350);
+					owner.addDamage(350);
+					p.knockbacked(loc);
+				}
+			}
+		}
+	}
+	
+	public void movePawn() {
+		if (direction.equals("up")) {
+			loc.adjust(0, 4);
+			if (loc.getY() == 27) {
+				for (Player p: allies) {
+					ArrayList<Effect> e = new ArrayList<Effect>();
+					Effect RoccoParalyze = new Effect("power", 0.15, 1);
+					e.add(RoccoParalyze);
+					p.addEffects(e);
+					p.applyEffects();
+				}
+				direction = "done";
+			}
+		}else {
+			loc.adjust(0, -4);
+			if (loc.getY() == 11) {
+				for (Player p: allies) {
+					ArrayList<Effect> e = new ArrayList<Effect>();
+					Effect RoccoParalyze = new Effect("power", 0.15, 1);
+					e.add(RoccoParalyze);
+					p.addEffects(e);
+					p.applyEffects();
+				}
+				direction = "done";
+			}
+		}
+	}
+	
+	public void activateTrap() {
+		System.out.println("Graffiti trap activated!");
+		for (Player p: enemies) {
+			p.reduceMovement(4);
+		}
+		switch (color) {
+		case "Orange":
+			for (Player p: enemies) {
+				p.takeDamage(250);
+				owner.addDamage(250);
+			}
+			break;
+		case "Green":
+			for (Player p: enemies) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect RoccoParalyze = new Effect("vulnerable", 0.25, 2);
+				e.add(RoccoParalyze);
+				p.addEffects(e);
+				p.applyEffects();
+			}
+			break;
+		case "Purple":
+			for (Player p: enemies) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect RoccoParalyze = new Effect("daze", 0.15, 1);
+				e.add(RoccoParalyze);
+				p.addEffects(e);
+				p.applyEffects();
+			}
+			break;
+		}
+	}
+	
+	public void setTarget(Player p) {
+		target = p;
+	}
+	
+	public void moveTo(int i) {
+		for(int k = 0; k < i; k++) {
+			if (loc.getX() > target.getLoc().getX()) {
+				loc.adjust(-1 * 1, 0);
+			}
+			if (loc.getX() < target.getLoc().getX()) {
+				loc.adjust(1, 0);
+			}
+			if (loc.getY() > target.getLoc().getY()) {
+				loc.adjust(0, -1 * 1);
+			}
+			if (loc.getY() < target.getLoc().getY()) {
+				loc.adjust(0, 1);
+			}
+			if (this.inRange(target, 3)) {
+				target.takeDamage(200);
+				owner.addDamage(200);
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect RoccoParalyze = new Effect("freeze", 0.15, 1);
+				e.add(RoccoParalyze);
+				target.addEffects(e);
+				target.applyEffects();
+				target = null;
+				System.out.println("\"Freeze, monkey style!\"");
+				return;
 			}
 		}
 	}

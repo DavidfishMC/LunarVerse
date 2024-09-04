@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -31,6 +32,7 @@ public class Player {
 	String name;
 	String ogName;
 	String nameSkin;
+	String smolluskSkin;
 	String cover = "None";
 	String charm = "";
 	int turndead = 0;
@@ -91,6 +93,19 @@ public class Player {
 	boolean rally = false;
 	boolean bee = false;
 	boolean thunder = false;
+	boolean trapped = false;
+	boolean tremor = false;
+	boolean tectonic = false;
+	boolean hover = false;
+	boolean hoverDash = false;
+	boolean nebula = false;
+	boolean darkness = false;
+	boolean hitDarkness = false;
+	boolean teleport = false;
+	boolean resting = false;
+	boolean enhance = false;
+	boolean ebbFlow = false;
+	boolean hijacked = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -109,6 +124,14 @@ public class Player {
 	int tacCharge = 0;
 	int bumpCount = 0;
 	int starCount = 0;
+	int daggers = 0;
+	int iron = 0;
+	int trash = 0;
+	int smokes = 0;
+	int redCharges = 1;
+	int blueCharges = 1;
+	int yellowCharges = 1;
+	int smolluskDashes = 0;
 	double totalDamage = 0;
 	double critChance = 0;
 	double fulField = 0;
@@ -117,6 +140,7 @@ public class Player {
 	double jingUltCharge = 0;
 	double fuel = 625;
 	double overHealth = 0;
+	double ebbFlowDamage = 0;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
 	ArrayList<String> roles = new ArrayList<String>();
 	public static final String reset = "\u001B[0m";
@@ -124,8 +148,14 @@ public class Player {
 	int cNum = 0;
 	Example image;
 	String fitbit = "Recovery";
+	String curColor = "None";
 	Player pat = null;
 	Player quincy = null;
+	String ab = "";
+	String tide = "";
+	Player e1;
+	Player e2;
+	Player e3;
 
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -152,6 +182,74 @@ public class Player {
 			ultCharge = u - 2;
 			ogRange = r + 2;
 		}
+		if (name.equals("Millie")){
+			daggers = 6;
+			iron = 2;
+			trash = 1;
+		}
+		smolluskSkin = getGradientName("Smollusk", "#5C5C5C", "#ACD2D2", "#5C5C5C");
+	}
+	
+	public void setRooks(Player a, Player b, Player c, Player d, Player e) {
+		Location l = new Location(curLoc.getX() - 2, curLoc.getY());
+		Location l2 = new Location(curLoc.getX() + 2, curLoc.getY());
+		Location l3 = new Location(curLoc.getX(), curLoc.getY() - 2);
+		Location l4 = new Location(curLoc.getX(), curLoc.getY() + 2);
+		Utility Rook = new Utility("Rook", l, this, d, e, a, b, c);
+		GameSim.utility.add(Rook);
+		Rook.setDirection("left");
+		Utility Rook2 = new Utility("Rook", l2, this, d, e, a, b, c);
+		GameSim.utility.add(Rook2);
+		Rook2.setDirection("right");
+		Utility Rook3 = new Utility("Rook", l3, this, d, e, a, b, c);
+		GameSim.utility.add(Rook3);
+		Rook3.setDirection("up");
+		Utility Rook4 = new Utility("Rook", l4, this, d, e, a, b, c);
+		GameSim.utility.add(Rook4);
+		Rook4.setDirection("down");
+	}
+	
+	public void setAb(String s) {
+		ab = s;
+	}
+	
+	public void hijack() {
+		hijacked = true;
+		System.out.println(nameSkin + " has been hijacked.");
+	}
+	
+	public void unhijack() {
+		hijacked = false;
+	}
+	
+	public void setEnemies(Player a, Player b, Player c) {
+		e1 = a;
+		e2 = b;
+		e3 = c;
+	}
+	
+	public void setEbbFlow(boolean b) {
+		ebbFlow = b;
+	}
+	
+	public String getAb() {
+		return ab;
+	}
+	
+	public void makeSmoke() {
+		smokes++;
+	}
+	
+	public void setSmokes(int i) {
+		smokes = i;
+	}
+	
+	public int getSmokes() {
+		return smokes;
+	}
+	
+	public void setTrapped(boolean b) {
+		trapped = b;
 	}
 
 	public void setImage(String name) {
@@ -180,6 +278,12 @@ public class Player {
 		}
 		if (name.equals("Jing")) {
 			tempName = "Li Jing";
+		}
+		if (name.equals("Leaf")) {
+			tempName = "Professor Leaf";
+		}
+		if (name.equals("Gambit")) {
+			tempName = "Sir Gambit";
 		}
 		switch (type) {
 		case "Sakura":
@@ -389,6 +493,245 @@ public class Player {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
 	}
 	
+	public void resetEbbFlow() {
+		ebbFlowDamage = 0;
+	}
+	
+	public double getFlowDamage() {
+		return ebbFlowDamage;
+	}
+	
+	public void resetFlow() {
+		ebbFlow = false;
+	}
+	
+	public void setTide(String s) {
+		tide = s;
+	}
+	
+	public String getTide() {
+		return tide;
+	}
+	
+	public void smolluskDash() {
+		smolluskDashes++;
+		if (smolluskDashes == 3 && !resting) {
+			resting = true;
+			System.out.println(smolluskSkin + " needs to rest!");
+		}
+		if (smolluskDashes > 3) {
+			smolluskDashes = 3;
+		}
+	}
+	
+	public int getSmolluskDashes() {
+		return smolluskDashes;
+	}
+	
+	public void resetSmolluskDashes() {
+		smolluskDashes = 0;
+	}
+	
+	public void setTeleport(boolean b) {
+		teleport = b;
+	}
+	
+	public boolean getTeleport() {
+		return teleport;
+	}
+	
+	public void enable() {
+		Scanner input = new Scanner(System.in);
+		if (name.equals("Courtney")) {
+			if (hover) {
+				System.out.println(nameSkin + "'s hover has been disabled.");
+				hover = false;
+			}else {
+				System.out.println(nameSkin + "'s hover has been enabled.");
+				hover = true;
+			}
+		}
+		if (name.equals("Winnie")) {
+			System.out.println("Current color is " + curColor);
+			System.out.print("Which color do you want to switch to:");
+			String targetResponse = input.next();
+			if (!targetResponse.equals("Red") && !targetResponse.equals("Blue") && !targetResponse.equals("Yellow") && !targetResponse.equals("Orange") && !targetResponse.equals("Green") && !targetResponse.equals("Purple")) {
+				curColor = "None";
+				System.out.println("Not a valid color! Default color set to " + curColor + ".");
+			}else {
+				curColor = targetResponse;
+				System.out.println("Default color set to " + curColor + ".");
+			}
+		}
+		if (name.equals("Pearl")) {
+			if (!resting) {
+				System.out.println(smolluskSkin + "'s enhancement is active for this turn!");
+				enhance = true;
+				resting = true;
+			}else {
+				System.out.println(smolluskSkin + " needs to rest!");
+			}
+		}
+		System.out.println();
+	}
+	
+	public void setResting(boolean b) {
+		resting = b;
+	}
+	
+	public boolean isResting() {
+		return resting;
+	}
+	
+	public void setEnhance(boolean b) {
+		enhance = b;
+	}
+	
+	public boolean hasEnhance() {
+		return enhance;
+	}
+	
+	public void refillCans() {
+		redCharges = 3;
+		blueCharges = 3;
+		yellowCharges = 3;
+	}
+	
+	public String getColor() {
+		return curColor;
+	}
+	
+	public void useRed() {
+		redCharges--;
+		if (redCharges < 0) {
+			redCharges = 0;
+		}
+	}
+	
+	public int getRed() {
+		return redCharges;
+	}
+	
+	public void useBlue() {
+		blueCharges--;
+		if (blueCharges < 0) {
+			blueCharges = 0;
+		}
+	}
+	
+	public int getBlue() {
+		return blueCharges;
+	}
+	
+	public void useYellow() {
+		yellowCharges--;
+		if (yellowCharges < 0) {
+			yellowCharges = 0;
+		}
+	}
+	
+	public int getYellow() {
+		return yellowCharges;
+	}
+	
+	public void setHitDarkness() {
+		hitDarkness = true;
+	}
+	
+	public boolean getHitDarkness() {
+		return hitDarkness;
+	}
+	
+	public void setNebula(boolean b) {
+		nebula = b;
+	}
+	
+	public boolean getNebula() {
+		return nebula;
+	}
+	
+	public void setHover(boolean b) {
+		hoverDash = b;
+	}
+	
+	public boolean isHoverDashing() {
+		return hoverDash;
+	}
+	
+	public boolean getHover() {
+		return hover;
+	}
+	
+	public boolean getTremor() {
+		return tremor;
+	}
+	
+	public void setTremor(boolean b) {
+		tremor = b;
+	}
+	
+	public void setTectonic(boolean b) {
+		tectonic = b;
+	}
+	
+	public boolean getTectonic() {
+		return tectonic;
+	}
+	
+	public int getIron() {
+		return iron;
+	}
+	
+	public void addIron() {
+		iron++;
+		if (iron > 2) {
+			iron = 2;
+		}
+	}
+	
+	public void useIron() {
+		iron--;
+		if (iron < 0) {
+			iron = 0;
+		}
+	}
+	
+	public int getTrash() {
+		return trash;
+	}
+	
+	public void addTrash() {
+		trash++;
+		if (trash > 4) {
+			trash = 4;
+		}
+	}
+	
+	public void useTrash() {
+		trash--;
+		if (trash < 0) {
+			trash = 0;
+		}
+	}
+	
+	public int getDaggers() {
+		return daggers;
+	}
+	
+	public void addDagger() {
+		daggers++;
+		if (daggers > 6) {
+			daggers = 6;
+		}
+	}
+	
+	public void useDagger() {
+		daggers--;
+		if (daggers < 0) {
+			daggers = 0;
+		}
+	}
+	
 	public int getUltcharge() {
 		return ultCharge;
 	}
@@ -435,6 +778,14 @@ public class Player {
 	
 	public boolean getRes() {
 		return res;
+	}
+	
+	public void setDarkness() {
+		darkness = true;
+	}
+	
+	public boolean getDarkness() {
+		return darkness;
 	}
 	
 	public void setMedic() {
@@ -745,26 +1096,33 @@ public class Player {
 		}
 		for(int k = 0; k < i; k++) {
 			if (curLoc.getX() > l.getX()) {
-				curLoc.adjust(-1 * i, 0);
+				curLoc.adjust(-1 * 1, 0);
 			}
 			if (curLoc.getX() < l.getX()) {
-				curLoc.adjust(i, 0);
+				curLoc.adjust(1, 0);
 			}
 			if (curLoc.getY() > l.getY()) {
-				curLoc.adjust(0, -1 * i);
+				curLoc.adjust(0, -1 * 1);
 			}
 			if (curLoc.getY() < l.getY()) {
-				curLoc.adjust(0, i);
+				curLoc.adjust(0, 1);
+			}
+			if (curLoc.eqLoc(l)) {
+				return;
 			}
 		}
 	}
 	
 	public void addCharge(double d) {
+		if (echoCharge >= 1200) {
+			return;
+		}
 		echoCharge = echoCharge + d;
 		if (echoCharge > 1200 && name.equals("Echo") && !charge) {
 			System.out.println(nameSkin + "'s soundwave barrier is fully charged.");
 		}
 		if (echoCharge > 1200 && name.equals("Echo")) {
+			echoCharge = 1200;
 			charge = true;
 		}
 	}
@@ -891,6 +1249,10 @@ public class Player {
 	public void useJump() {
 		jumped++;
 		jumps--;
+		redCharges++;
+		if(redCharges > 3) {
+			redCharges = 3;
+		}
 		jumped2 = true;
 		if (isDive()) {
 			increaseMovement(1);
@@ -926,6 +1288,10 @@ public class Player {
 	public void useDash() {
 		dashed++;
 		dashes--;
+		blueCharges++;
+		if (blueCharges > 3) {
+			blueCharges = 3;
+		}
 		dashed2 = true;
 	}
 
@@ -1116,9 +1482,17 @@ public class Player {
 			movement = movement + 3;
 		}
 	}
+	
+	public void keepMovement(int i) {
+		movement = i;
+	}
 
 	public void setMovement(int i) {
 		ogMovement = i;
+	}
+	
+	public void increaseOgMovement(int i) {
+		ogMovement = ogMovement + i;
 	}
 
 	public int getOrbCount() {
@@ -1152,6 +1526,9 @@ public class Player {
 
 	public void removeOrb() {
 		orbCount--;
+		if (orbCount < 0) {
+			orbCount = 0;
+		}
 	}
 
 	public void resetRange() {
@@ -1288,9 +1665,30 @@ public class Player {
 	}
 
 	public void move(int x, int y) {
+		Location l = new Location(x, y);
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Iron") && GameSim.utility.get(j).isEnemy(this) && GameSim.utility.get(j).getLoc().inRange(l, 3) && !trapped) {
+				System.out.println("Can't go there!");
+				System.out.println();
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Iron") && GameSim.utility.get(j).isEnemy(this) && !GameSim.utility.get(j).getLoc().inRange(l, 3) && trapped && GameSim.utility.get(j).isTrapped(this)) {
+				System.out.println("Can't go there!");
+				System.out.println();
+				return;
+			}
+		}
 		curLoc.set(x, y);
 		movement = movement - 1;
 		totalMovement++;
+		if (totalMovement % 10 == 0) {
+			yellowCharges++;
+			if (yellowCharges > 3) {
+				yellowCharges = 3;
+			}
+		}
 		System.out.println();
 	}
 
@@ -1306,7 +1704,11 @@ public class Player {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		orbCount = ultCharge;
+		System.out.println(nameSkin + " has gotten an orb.");
+		orbCount++;
+		if (orbCount == ultCharge) {
+			System.out.println(nameSkin + "'s ultimate is ready to use!");
+		}
 	}
 
 	public boolean inRange(Player p) {
@@ -1358,32 +1760,84 @@ public class Player {
 			shield = false;
 			return;
 		}
+		
 		for (int i = 0; i < effects.size(); i++) {
-			if (effects.get(i).getName().equals("protect")) {
-				d = d * (1 - effects.get(i).getIncrease());
+			if (effects.get(i).getName().equals("protect") && !tectonic) {
+				if (tremor) {
+					d = d * (1 - (effects.get(i).getIncrease() / 2));
+				}else {
+					d = d * (1 - effects.get(i).getIncrease());
+				}
 			}
 			if (effects.get(i).getName().equals("vulnerable")) {
 				d = d + (d * effects.get(i).getIncrease());
 			}
 		}
 		if (isTank()) {
-			if (health <= (maxHealth * 0.5)) {
-				d = d * 0.9;
+			if (health <= (maxHealth * 0.5 ) && !tectonic) {
+				if (tremor) {
+					d = d * 0.95;
+				}else {
+					d = d * 0.9;
+				}
 			}
 		}
-		if (isTank() && isHybrid()) {
+		if (isTank() && isHybrid() && !tectonic) {
 			if (health <= (maxHealth * 0.5)) {
-				d = d * 0.95;
+				if (tremor) {
+					d = d * 0.975;
+				}else {
+					d = d * 0.95;
+				}
 			}
 		}
 		if (patProtect) {
-			d = d * 0.9;
+			if (tremor) {
+				d = d * 0.95;
+			}else {
+				d = d * 0.9;
+			}
 		}
 		if (ultActive && name.equals("Magnet")) {
-			d = d * 0.75;
+			if (tectonic) {
+				
+			}else if (tremor) {
+				d = d * 0.875;
+			}else {
+				d = d * 0.75;
+			}
 			fulField = fulField + d;
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Iron") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 3) && !tectonic) {
+				if (tremor) {
+					d = d * 0.85;
+				}else {
+					d = d * 0.7;
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Rook") && GameSim.utility.get(j).owner(this) && !tectonic && GameSim.utility.get(j).rookActive()) {
+				if (tremor) {
+					d = d * 0.975;
+				}else {
+					d = d * 0.95;
+				}
+			}
+		}
+		if (name.equals("Cloud") && d < 75) {
+			d = 0;
+		}
 		d = Math.round(d * 10.0) / 10.0;
+		if (ebbFlow) {
+			ebbFlowDamage = ebbFlowDamage + d;
+		}
+		if (hijacked) {
+			e1.increaseHP(d * 0.1);
+			e2.increaseHP(d * 0.1);
+			e3.increaseHP(d * 0.1);
+		}
 		if (quincy == null) {
 			health = health - d;
 		}else if (quincy.isAlive()){
@@ -1497,6 +1951,44 @@ public class Player {
 			}
 		}
 	}
+	
+	public void down() {
+		health = 0;
+		try {
+			String audio = "downed.wav";
+			Music victoryPlayer = new Music(audio, false);
+			victoryPlayer.play();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		if (name.equals("Drift") && ultActive) {
+			health = saveHealth;
+			maxHealth = 2400;
+			resetUlt();
+			ultDown();
+			tire = false;
+			System.out.println("\"Hey, not cool man!\"");
+			return;
+		}
+		alive = false;
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(this)) {
+				GameSim.utility.remove(j);
+			}
+		}
+		System.out.println(nameSkin + " is downed!");
+		resetQuincy();
+		turndead = GameSim.turns2;
+		if (name.equals("Alex") && ultActive) {
+			reviveAlex();
+		}else if (tacCharge > 0) {
+			turndead = 0;
+			health = health + (maxHealth * 0.1);
+			alive = true;
+			System.out.println(nameSkin + " has used a tactical resurgence charge.");
+			tacCharge--;
+		}
+	}
 
 	public boolean isFreezed() {
 		return freezed;
@@ -1544,6 +2036,9 @@ public class Player {
 		}
 		if (getName().equals("Yuri") && p.ultActive() && p.inRange(this)) {
 			p.resetCover();
+			attacked = true;
+			weaponuse++;
+			return;
 		}
 		if (name.equals("Sammi") && range > 100) {
 			p.takeDamage(damage + randomNum + c);
@@ -1716,6 +2211,12 @@ public class Player {
 						|| e.get(j).getName().equals("paralyze") || e.get(j).getName().equals("daze")
 						|| e.get(j).getName().equals("blind") || e.get(j).getName().equals("stun")
 						|| e.get(j).getName().equals("poison")) {
+					e.remove(e.get(j));
+					j--;
+				}
+			}
+			if (name.equals("Pearl") && !resting) {
+				if (e.get(j).getName().equals("ignite")) {
 					e.remove(e.get(j));
 					j--;
 				}
@@ -2467,11 +2968,24 @@ public class Player {
 		healthshow = healthshow + ": ";
 		weaponShow = weaponShow + ": ";
 		String echoChargeShow = "";
+		String smolluskRest = "Energized,";
+		if (resting) {
+			smolluskRest = "Resting,";
+		}
 		if (name.equals("Echo")){
 			echoChargeShow = "\n" + "Soundwave Charge " + "\u001b[38;5;" + 105 + "m" + "🔊" + reset + ": " + echoCharge + "/" + "1200.0";
 		}
 		if (name.equals("Bladee")){
 			echoChargeShow = "\n" + "Fuel Level " + "\u001b[38;5;" + 202 + "m" + "⛽" + reset + ": " + fuel + "/" + "1250.0";
+		}
+		if (name.equals("Millie")){
+			echoChargeShow = "\n" + "Daggers " + "\u001b[38;5;" + 88 + "m" + "🗡️" + reset + ": " + daggers + "/" + "6." + " Iron " + "\u001b[38;5;" + 243 + "m" + "🪨" + reset + ": " + iron + "/" + "2." + " Trash " + "\u001b[38;5;" + 236 + "m" + "🗑️" + reset + ": " + trash + "/" + "4.";
+		}
+		if (name.equals("Winnie")){
+			echoChargeShow = "\n" + "Red " + "\u001b[38;5;" + 196 + "m" + "🎨" + reset + ": " + redCharges + "/" + "3." + " Blue " + "\u001b[38;5;" + 45 + "m" + "🎨" + reset + ": " + blueCharges + "/" + "3." + " Yellow " + "\u001b[38;5;" + 226 + "m" + "🎨" + reset + ": " + yellowCharges + "/" + "3." + " Current Color: " + curColor + ".";
+		}
+		if (name.equals("Pearl")){
+			echoChargeShow = "\n" + smolluskSkin + " " + "\u001b[38;5;" + 105 + "m" + "🦑" + reset + ": " + smolluskRest + " Hits: " + smolluskDashes + "/3.";
 		}
 
 		if (name.equals("Angelos") && !isAlive()) {
@@ -3395,6 +3909,105 @@ public class Player {
 			}
 			if (randomNum == 3) {
 				return ("\"Always have secure protocols in place.\"");
+			}
+		}
+		if (name.equals("Millie")) {
+			if (randomNum == 1) {
+				return ("\"No friends for you!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Eat scrap ya freaks!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Scrap is out!\"");
+			}
+		}
+		if (name.equals("Leaf")) {
+			if (randomNum == 1) {
+				return ("\"Breaking through the fault line.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Their guard is down.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Shake things up!\"");
+			}
+		}
+		if (name.equals("Courtney")) {
+			if (randomNum == 1) {
+				return ("\"I built this thing myself! Almost.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Catch you on the flip side!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"I don't need legs to get around you!\"");
+			}
+		}
+		if (name.equals("Divine")) {
+			if (randomNum == 1) {
+				return ("\"Come here will you?\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Stay close. You're gonna get killed out there!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"We work better as a team I would say.\"");
+			}
+		}
+		if (name.equals("Gambit")) {
+			if (randomNum == 1) {
+				return ("\"The queen lends her power to us!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Charge in swiftly!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"This is more then just a game!\"");
+			}
+		}
+		if (name.equals("Cloud")) {
+			if (randomNum == 1) {
+				return ("\"Cover going out.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Hide in here while you can.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Jump them after.\"");
+			}
+		}
+		if (name.equals("Winnie")) {
+			if (randomNum == 1) {
+				return ("\"Time for a little makover!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Step into my world!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"A comission, just for you!\"");
+			}
+		}
+		if (name.equals("Pearl")) {
+			if (randomNum == 1) {
+				return ("\"Tide goes in, Tide comes out!\"" + "\n" + "\"ʸᵒᵘ ˢᵗᵃⁿᵈ ⁿᵒ ᶜʰᵃⁿᶜᵉ ⁿᵒʷ!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"We'll wash you over!\"" + "\n" + "\"ᴰᵒⁿ'ᵗ ᵐᵉˢˢ ʷᶦᵗʰ ᵘˢ!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Bring them in? Or push them out?\"" + "\n" + "\"ᴴᵃ! ᵀʰᵒˢᵉ ᶠᵒᵒˡˢ ᵃʳᵉ ˢᶜᵃʷᵉᵈ.\"");
+			}
+		}
+		if (name.equals("Andrew")) {
+			if (randomNum == 1) {
+				return ("\"Sock monkeys, attack!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Monkey business underway.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Go minions!\"");
 			}
 		}
 		return "";

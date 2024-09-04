@@ -275,6 +275,25 @@ public class Battlefield {
 			}
 		}
 		
+		for (Utility rook : utilityLoc) {
+	        if (rook.getName().equals("Rook")) {
+	        	switch (rook.getDirection()) {
+	        	case "left":
+	        		rook.getLoc().set(rook.owner.getLoc().getX() - 2, rook.owner.getLoc().getY());
+	        		break;
+	        	case "right":
+	        		rook.getLoc().set(rook.owner.getLoc().getX() + 2, rook.owner.getLoc().getY());
+	        		break;
+	        	case "up":
+	        		rook.getLoc().set(rook.owner.getLoc().getX(), rook.owner.getLoc().getY() - 2);
+	        		break;
+	        	case "down":
+	        		rook.getLoc().set(rook.owner.getLoc().getX(), rook.owner.getLoc().getY() + 2);
+	        		break;
+	        	}
+	        }
+	    }
+		
 		if (temple) {
 			for(int i = 14; i < 28; i++) {
 				background[i][0] = 196;
@@ -422,6 +441,10 @@ public class Battlefield {
 							foreground[i][j] = 0;
 							background[i][j] = 224;
 						}
+						if(u.getName().equals("Nebula") && !u.getPickUp()) {
+							field[i][j] = "&";
+							foreground[i][j] = 165;
+						}
 						if(u.getName().equals("Sensor")) {
 							field[i][j] = "S";
 							foreground[i][j] = 0;
@@ -444,6 +467,19 @@ public class Battlefield {
 									Location l = new Location(k, h);
 									if(u.atRange(l, 8) && u.isEnemy(s)) {
 										background[h][k] = 229;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Starpull")) {
+							field[i][j] = "A";
+							foreground[i][j] = 0;
+							background[i][j] = 141;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 11) && u.isEnemy(s)) {
+										background[h][k] = 141;
 									}
 								}
 							}
@@ -565,7 +601,7 @@ public class Battlefield {
 							for(int k = 0; k < 42; k++) {
 								for(int h = 0; h < 42; h++){
 									Location l = new Location(k, h);
-									if(u.atRange(l, 5)) {
+									if(u.atRange(l, 4)) {
 										background[h][k] = 226;
 									}
 								}
@@ -578,14 +614,67 @@ public class Battlefield {
 							for(int k = 0; k < 42; k++) {
 								for(int h = 0; h < 42; h++){
 									Location l = new Location(k, h);
-									if(u.atRange(l, 3) && u.isActivated() && u.hasSpikes()) {
+									if(u.atRange(l, 3) && u.isActivated() && u.hasSpikes() && u.isEnemy(s)) {
 										background[h][k] = 7;
 									}
-									if(u.atRange(l, 15) && u.isActivated()) {
+									if(u.atRange(l, 15) && u.isActivated() && u.isEnemy(s)) {
 										background[h][k] = 7;
 									}
 								}
 							}
+						}
+						if(u.getName().equals("Iron")) {
+							foreground[i][j] = 0;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 3)) {
+										background[h][k] = 65;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Rook")) {
+							field[i][j] = "R";
+							foreground[i][j] = 0;
+							if (u.rookActive()) {
+								background[i][j] = 220;
+							}else {
+								background[i][j] = 242;
+							}
+						}
+						if(u.getName().equals("Pawn")) {
+							field[i][j] = "P";
+							foreground[i][j] = 0;
+							background[i][j] = 229;
+						}
+						if(u.getName().equals("Mural")) {
+							field[i][j] = "M";
+							foreground[i][j] = 0;
+							background[i][j] = 217;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+								}
+							}
+						}
+						if(u.getName().equals("Sock")) {
+							field[i][j] = "S";
+							foreground[i][j] = 0;
+							background[i][j] = 7;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 3) && u.isEnemy(s)) {
+										background[h][k] = 7;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Support")) {
+							field[i][j] = "S";
+							foreground[i][j] = 0;
+							background[i][j] = 160;
 						}
 					}
 				}
@@ -711,6 +800,26 @@ public class Battlefield {
 				
 			}
 			
+		}
+		for(Utility u: utilityLoc) {
+			if(u.getName().equals("Smoke")) {
+				for(int k = 0; k < 42; k++) {
+					for(int h = 0; h < 42; h++){
+						Location l = new Location(k, h);
+						int range = 4;
+						if (u.getOwner().getDarkness()) {
+							range = 6;
+						}
+						if(u.inRange(l, range) && u.isEnemy(s)) {
+							background[h][k] = 17;
+							field[h][k] = " ";
+						}
+						if(u.atRange(l, range) && u.isAlly(s)) {
+							background[h][k] = 17;
+						}
+					}
+				}
+			}
 		}
 		
 		if(cursor != null && cursor.getX() < 42 && cursor.getY() < 42) {
@@ -878,7 +987,7 @@ public class Battlefield {
 	public void checkTiles() {
 		for(Player p: players) {
 			for(Tile t: tiles) {
-				if(p.getLoc().eqLoc(t.getLoc())) {
+				if(p.getLoc().eqLoc(t.getLoc()) && !p.getHover()) {
 					if(t.getName().equals("Rift")) {
 						int x = (int)(Math.random() * (41 - 0 + 1)) + 0;
 						int y = (int)(Math.random() * (41 - 0 + 1)) + 0;

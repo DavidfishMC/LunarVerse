@@ -77,6 +77,14 @@ public class Location {
 		y = y + y2;
 	}
 	
+	public Location newLocation(int i, boolean ver) {
+		if (ver) {
+			return new Location(x, y + i);
+		}else {
+			return new Location(x + i, y);
+		}
+	}
+	
 	public String toString() {
 		return ("(" + x + ", " + y + ")");
 	}

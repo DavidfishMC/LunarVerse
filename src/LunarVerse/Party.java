@@ -5,8 +5,13 @@ import java.util.ArrayList;
 public class Party {
 
 	boolean turn;
+	boolean ebbFlow = false;
+	boolean enhance = false;
+	int count = 0;
+	double ebbFlowDamage = 0;
 	Player[] roster = new Player[3];
 	String name;
+	Party enemy;
 	
 	public Party(boolean turn, Player p1, Player p2, Player p3) {
 		this.turn = turn;
@@ -45,13 +50,24 @@ public class Party {
 			roster[i].resetDodge();
 			roster[i].setJing(false);
 			roster[i].resetStars();
+			roster[i].setNebula(false);
+			roster[i].setHover(false);
 			roster[i].checkOverhealth();
+			roster[i].setTremor(false);
+			roster[i].setTectonic(false);
+			roster[i].unhijack();
 			if (roster[i].drillDashed()) {
 				roster[i].returnloc();
 				roster[i].setDrill(false);
 			}
 			if(roster[i].getName().equals("Clara") && roster[i].ultActive()) {
 				roster[i].ultDown();
+			}
+			if(roster[i].getName().equals("Pearl") && !roster[i].isResting()) {
+				roster[i].heal(0.05);
+			}
+			if(roster[i].getName().equals("Pearl")) {
+				roster[i].setEnhance(false);
 			}
 			if(roster[i].getCanon()) {
 				roster[i].takeDamage(50000);
@@ -102,6 +118,37 @@ public class Party {
 					GameSim.utility.get(q).activatePylon();
 				}
 			}
+			for(int q = 0; q < GameSim.utility.size(); q++) {
+				if(GameSim.utility.get(q).getName().equals("Starpull") && GameSim.utility.get(q).owner(roster[i])) {
+					GameSim.utility.get(q).activateStar();
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Rook") && GameSim.utility.get(j).owner(roster[i]) && !GameSim.utility.get(j).rookActive) {
+					GameSim.utility.get(j).setRookActive(true);
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Sock") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.get(j).moveTo(3);
+					if (GameSim.utility.get(j).getTarget() == null) {
+						GameSim.utility.remove(j);
+						j--;
+					}
+				}
+			}
+			int range = 4;
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Smoke") && GameSim.utility.get(j).isAlly(roster[i])) {
+					if (GameSim.utility.get(j).owner.getDarkness()) {
+						range = 6;
+					}
+					if (roster[i].inRange(GameSim.utility.get(j).getLoc(), range)) {
+						roster[i].setDodge(0.25);
+						break;
+					}
+				}
+			}
 			if(roster[i].getName().equals("Rhythm") && !roster[i].isDazed() && roster[i].isAlive()) {
 				if (roster[i].getFitbit().equals("Recovery")){
 					heal = true;
@@ -131,11 +178,11 @@ public class Party {
 			if(roster[i].getName().equals("Patitek")) {
 				for(int j = 0; j < 3; j++) {
 					if (!roster[j].equals(roster[i])) {
-						if (roster[j].inRange(roster[i], 2)) {
+						if (roster[j].inRange(roster[i], 1)) {
 							roster[j].patProtect(roster[i]);
 							System.out.println(roster[i].getSkin() + " will protect " + roster[j].getSkin() + " this turn.");
 						}
-						if (roster[j].inRange(roster[i], 6) && roster[i].onCooldown()) {
+						if (roster[j].inRange(roster[i], 6) && roster[i].getCooldown() > 0) {
 							roster[j].setPat(true);
 							System.out.println(roster[j].getSkin() + " is within guard by " + roster[i].getSkin() + " this turn.");
 						}
@@ -178,7 +225,60 @@ public class Party {
 		}
 	}
 	
+	public void setEnhance() {
+		enhance = true;
+	}
+	
+	public void setEbbFlow() {
+		ebbFlow = true;
+		for(int i = 0; i < 3; i++) {
+			roster[i].setEbbFlow(true);
+		}
+	}
+	
+	public boolean hasEbbFlow() {
+		return ebbFlow;
+	}
+	
+	public void setEnemyParty(Party p) {
+		enemy = p;
+	}
+	
 	public void setTurn() {
+		if (ebbFlow) {
+			count++;
+		}
+		if (count == 2) {
+			count = 0;
+			ebbFlow = false;
+			for(int i = 0; i < 3; i++) {
+				ebbFlowDamage = ebbFlowDamage + roster[i].getFlowDamage();
+				roster[i].resetEbbFlow();
+				roster[i].resetFlow();
+				if (roster[i].getName().equals("Pearl")) {
+					roster[i].resetUlt();
+					roster[i].ultDown();
+				}
+			}
+			if (enhance) {
+				for(int i = 0; i < 3; i++) {
+					roster[i].increaseHP(ebbFlowDamage * 0.25);
+				}
+			}
+			for(int i = 0; i < 3; i++) {
+				double stat = 0.3;
+				if (enhance) {
+					stat = 0.6;
+				}
+				enemy.getRoster()[i].takeDamage(ebbFlowDamage * stat);
+			}
+			for(int i = 0; i < 3; i++) {
+				roster[i].resetEbbFlow();
+				roster[i].resetFlow();
+			}
+			ebbFlowDamage = 0;
+			enhance = false;
+		}
 		boolean sprint = false;
 		boolean power = false;
 		int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
@@ -227,6 +327,13 @@ public class Party {
 			if(roster[i].getName().equals("Gates") && roster[i].ultActive()) {
 				roster[i].ultDown();
 			}
+			if(roster[i].getName().equals("Millie")) {
+				roster[i].addDagger();
+				if (GameSim.turns2 % 2 == 0) {
+					roster[i].addIron();
+					roster[i].addTrash();
+				}
+			}
 			if (!roster[i].tookDamage) {
 				if (roster[i].isTank() && roster[i].isSupport()) {
 					roster[i].heal(0.025);
@@ -240,6 +347,14 @@ public class Party {
 				roster[i].resetCooldown();
 				roster[i].setThunder(false);
 			}
+			if (roster[i].getName().equals("Pearl")) {
+				if (roster[i].isResting() && roster[i].getSmolluskDashes() < 3) {
+					roster[i].setResting(false);
+				}
+				if(roster[i].getSmolluskDashes() == 3) {
+					roster[i].resetSmolluskDashes();
+				}
+			}
 			roster[i].setTookDamage(false);
 			roster[i].resetDashes();
 			roster[i].resetJumps();
@@ -249,8 +364,14 @@ public class Party {
 			roster[i].setRally(false);
 			roster[i].setBee(false);
 			roster[i].resetQuincy();
+			if (roster[i].getHitDarkness()) {
+				roster[i].takeDamage(100);
+			}
 			if (roster[i].getName().equals("Ivy") && roster[i].getMedic()) {
 				roster[i].setRes(true);
+			}
+			if (roster[i].getName().equals("Cloud") && roster[i].getDarkness()) {
+				roster[i].setTeleport(true);
 			}
 			roster[i].setField(false);
 			roster[i].setPat(false);
@@ -290,6 +411,19 @@ public class Party {
 					GameSim.utility.get(j).activateTurret();
 				}
 			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Iron") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.get(j).removeIron();
+					GameSim.utility.remove(j);
+					j--;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Smoke") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.remove(j);
+					j--;
+				}
+			}
 			if(roster[i].getName().equals("Rhythm") && !roster[i].isDazed() && roster[i].isAlive()) {
 				if (roster[i].getFitbit().equals("Sprint")){
 					sprint = true;
@@ -321,6 +455,15 @@ public class Party {
 				}
 			}
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Pawn")) {
+				GameSim.utility.get(j).movePawn();
+				if (GameSim.utility.get(j).getDirection().equals("done")) {
+					GameSim.utility.remove(j);
+					j--;
+				}
+			}
+		}
 		if((!roster[0].isAlive() || roster[0].isStunned()) && (roster[1].isAlive() && !roster[1].isStunned())) {
 			roster[1].setTurn();
 		}else if(!roster[0].isAlive() && roster[1].isStunned()) {
@@ -330,6 +473,7 @@ public class Party {
 		}else {
 			roster[0].setTurn();
 		}
+		getUpdates();
 	}
 	
 	public void checkDown() {
@@ -404,6 +548,33 @@ public class Party {
 	
 	public String getPartyName() {
 		return name;
+	}
+	
+	public void getUpdates() {
+		if (roster[0].isAlive()) {
+			if (roster[0].getCooldown() == 0) {
+				System.out.println(roster[0].getSkin() + "'s ability is ready to use!");
+			}
+			if (roster[0].ultReady()) {
+				System.out.println(roster[0].getSkin() + "'s ultimate is ready to use!");
+			}
+		}
+		if (roster[1].isAlive()) {
+			if (roster[1].getCooldown() == 0) {
+				System.out.println(roster[1].getSkin() + "'s ability is ready to use!");
+			}
+			if (roster[1].ultReady()) {
+				System.out.println(roster[1].getSkin() + "'s ultimate is ready to use!");
+			}
+		}
+		if (roster[2].isAlive()) {
+			if (roster[2].getCooldown() == 0) {
+				System.out.println(roster[2].getSkin() + "'s ability is ready to use!");
+			}
+			if (roster[2].ultReady()) {
+				System.out.println(roster[2].getSkin() + "'s ultimate is ready to use!");
+			}
+		}
 	}
 	
 	public int[] hexToRgb(String colorStr) {
