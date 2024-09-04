@@ -16286,7 +16286,9 @@ public class GameSim {
 		}else {
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect DimentioPower = new Effect("mend", 0.5, 100);
+			Effect DimentioPower2 = new Effect("sight", 1, 100);
 			e.add(DimentioPower);
+			e.add(DimentioPower2);
 			p.addEffects(e);
 			p.applyEffects();
 			p.setDarkness();
