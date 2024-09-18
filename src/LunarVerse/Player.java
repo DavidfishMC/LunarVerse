@@ -106,6 +106,7 @@ public class Player {
 	boolean enhance = false;
 	boolean ebbFlow = false;
 	boolean hijacked = false;
+	boolean doubleJump = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -132,6 +133,7 @@ public class Player {
 	int blueCharges = 1;
 	int yellowCharges = 1;
 	int smolluskDashes = 0;
+	int quincyAttacks = 0;
 	double totalDamage = 0;
 	double critChance = 0;
 	double fulField = 0;
@@ -211,6 +213,22 @@ public class Player {
 	
 	public void setAb(String s) {
 		ab = s;
+	}
+	
+	public void setDoubleJump() {
+		doubleJump = true;
+	}
+	
+	public boolean hasDoubleJumped() {
+		return doubleJump;
+	}
+	
+	public void addQuincyAttack() {
+		quincyAttacks++;
+	}
+	
+	public int getQuincy() {
+		return quincyAttacks;
 	}
 	
 	public void hijack() {
@@ -1453,6 +1471,9 @@ public class Player {
 	}
 
 	public void setSights(int i) {
+		if (!isAlive()) {
+			return;
+		}
 		sights = i;
 	}
 
@@ -4473,6 +4494,174 @@ public class Player {
 				break;
 			}
 		}
+		if (name.equals("Cloud")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"How long will it be until it ends?\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"They will regret this.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"They fear death? They should fear more then that.\"");
+				break;
+			}
+		}
+		if (name.equals("Archer")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Let's play the far away game.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"My arrows are sharp, but my aim is sharper.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"If you must fight up close, I will be right behind.\"");
+				break;
+			}
+		}
+		if (name.equals("Liam")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"No goofing off in this court session!\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Find the evidence, and bring them to justice.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"I will not backdown to any objections.\"");
+				break;
+			}
+		}
+		if (name.equals("Ashley")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"This is why we should respect nature.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I love the smell of flowers.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Sparks or not, let's stay safe out there today!\"");
+				break;
+			}
+		}
+		if (name.equals("Audrey")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Embrace the wonder power!\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"If you go down, I will bring you back.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Let's shake it up this time? Try something new?\"");
+				break;
+			}
+		}
+		if (name.equals("Ruby")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"I'll show them creativity.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Bug them up!\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"I've dealt with glitches before. We got this.\"");
+				break;
+			}
+		}
+		if (name.equals("Grizz")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"We have some buisness to finish here.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Everyone on the closing shift today.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Noone clocks out until we are done.\"");
+				break;
+			}
+		}
+		if (name.equals("Eli")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Let's eat them up.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"My buddies will make quick work of them.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"I could use a rainstorm right about now.\"");
+				break;
+			}
+		}
+		if (name.equals("Axol")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Ready up guys. We got a fight.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Don't fear, my Axolotls don't bite.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"We have the power of friendship.\"");
+				break;
+			}
+		}
+		if (name.equals("Augie")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Full steam ahead guys!\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Victory is close by, I can see it!\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Just keep sailing.\"");
+				break;
+			}
+		}
+		if (name.equals("Mason")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Gonna watch the football game after this.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I'm so bored. Let's do something interesting!\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"These guys are so bad. Take them out.\"");
+				break;
+			}
+		}
+		if (name.equals("Jesse")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Light them up guys!\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"They won't stand a chance as long as I'm alive.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"It's fireball time.\"");
+				break;
+			}
+		}
 	}
 
 	public void teamChat(Party p) {
@@ -5585,6 +5774,378 @@ public class Player {
 			case "Max":
 				System.out.println(nameSkin + ": " + "\"You raised your children well Max.\"");
 				break;
+			}
+		}
+		if (name.equals("Cloud")) {
+			switch (name3) {
+			case "Solar":
+				System.out.println(nameSkin + ": " + "\"Smoke them up Solar.\"");
+				break;
+			case "Norman":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Your experiment was a failure Norman. I demand to be reverted back.\"");
+					System.out.println(responseName + ": " + "\"Cloud, I'm trying I swear.\"");
+				}
+				break;
+			case "Midnite":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"You are nothing compared to real fear Midnite.\"");
+					System.out.println(responseName + ": " + "\"And you're pretty emotional for death Cloud.\"");
+				}
+				break;
+			case "Chief":
+				System.out.println(nameSkin + ": " + "\"No more hiding Chief.\"");
+				break;
+			case "Kithara":
+				System.out.println(nameSkin + ": " + "\"Rock them out Kithara.\"");
+				break;
+			case "Rhythm":
+				System.out.println(nameSkin + ": " + "\"Easy on the music Rhythm.\"");
+				break;
+			case "Max":
+				System.out.println(nameSkin + ": " + "\"At least your creations worked Max.\"");
+				break;
+			}
+		}
+		if (name.equals("Archer")) {
+			switch (name3) {
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"Lead our fight Lunar!\"");
+				break;
+			case "Archer":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"The other archers will be here soon Chief.\"");
+					System.out.println(responseName + ": " + "\"Let's bring the arrow pain Archer.\"");
+				}
+				break;
+			case "Zero":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"So Zero, how's it like fighting with us?\"");
+					System.out.println(responseName + ": " + "\"I'm just here to not be a disappointment.\"");
+				}
+				break;
+			case "Kailani":
+				System.out.println(nameSkin + ": " + "\"I like our combat style Kailani!\"");
+				break;
+			case "Rocco":
+				System.out.println(nameSkin + ": " + "\"You can trust us Rocco.\"");
+				break;
+			case "Hopper":
+				System.out.println(nameSkin + ": " + "\"Keep us going Hopper!\"");
+				break;
+			case "Alex":
+				System.out.println(nameSkin + ": " + "\"Keep them away from me Alex.\"");
+				break;
+			}
+		}
+		if (name.equals("Liam")) {
+			switch (name3) {
+			case "Julian":
+				System.out.println(nameSkin + ": " + "\"Blow them up punk.\"");
+				break;
+			case "Katrina":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"So you still want that skin tonight Kat?\"");
+					System.out.println(responseName + ": " + "\"Yep! Thanks!\"");
+				}
+				break;
+			case "Dylan":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Dylan! We gonna light them up tonight.\"");
+					System.out.println(responseName + ": " + "\"We gonna rob them tonight you mean!\"");
+				}
+				break;
+			case "Aidan":
+				System.out.println(nameSkin + ": " + "\"Show me those Fortnite skills Aidan.\"");
+				break;
+			case "Airic":
+				System.out.println(nameSkin + ": " + "\"Get us in there Airic!\"");
+				break;
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"Show off out there Lunar.\"");
+				break;
+			case "Mason":
+				System.out.println(nameSkin + ": " + "\"Mason that tech is awesome.\"");
+				break;
+			}
+		}
+		if (name.equals("Ashley")) {
+			switch (name3) {
+			case "Midnite":
+				System.out.println(nameSkin + ": " + "\"Spook them Midnite.\"");
+				break;
+			case "Katrina":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Kat! I got you a flower.\"");
+					System.out.println(responseName + ": " + "\"Aw, it's so pretty.\"");
+				}
+				break;
+			case "Sammi":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Sammi, don't go too crazy out there.\"");
+					System.out.println(responseName + ": " + "\"All good Ashley. I got aimbot!\"");
+				}
+				break;
+			case "Augie":
+				System.out.println(nameSkin + ": " + "\"Send them back to the fishes Augie.\"");
+				break;
+			case "Clara":
+				System.out.println(nameSkin + ": " + "\"Don't run off too far Clara.\"");
+				break;
+			case "Finley":
+				System.out.println(nameSkin + ": " + "\"Plant based protein is pretty good Finley.\"");
+				break;
+			case "Shutter":
+				System.out.println(nameSkin + ": " + "\"Shutter, I could use some pictures of my flowers later!\"");
+				break;
+			}
+		}
+		if (name.equals("Audrey")) {
+			switch (name3) {
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"Blast them up Lunar.\"");
+				break;
+			case "Kithara":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Have some fun with it Kithara!\"");
+					System.out.println(responseName + ": " + "\"Trying to. My idea of wonder is different.\"");
+				}
+				break;
+			case "Louis":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Get that guardian out there Louis!\"");
+					System.out.println(responseName + ": " + "\"Will do Audrey!\"");
+				}
+				break;
+			case "Tom":
+				System.out.println(nameSkin + ": " + "\"Let's go dad!\"");
+				break;
+			case "Gates":
+				System.out.println(nameSkin + ": " + "\"Bring in some support Dr. Gates!\"");
+				break;
+			case "Flor":
+				System.out.println(nameSkin + ": " + "\"The bees are so cute Flor!\"");
+				break;
+			case "Folden":
+				System.out.println(nameSkin + ": " + "\"Impressive origami Folden.\"");
+				break;
+			}
+		}
+		if (name.equals("Ruby")) {
+			switch (name3) {
+			case "Patitek":
+				System.out.println(nameSkin + ": " + "\"Keep up the good work Patitek!\"");
+				break;
+			case "Julian":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Get those TNT cannons ready!\"");
+					System.out.println(responseName + ": " + "\"On it boss!\"");
+				}
+				break;
+			case "Airic":
+				if (p.partyNames(this).get(cur).isAlive()) {
+					System.out.println(nameSkin + ": " + "\"Do I need to carry you as well?\"");
+					System.out.println(responseName + ": " + "\"Nah, I'll win this thing for us.\"");
+				}
+				break;
+			case "Sammi":
+				System.out.println(nameSkin + ": " + "\"Kick their ass Sammi!\"");
+				break;
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"Take them out Lunar!\"");
+				break;
+			case "Aidan":
+				System.out.println(nameSkin + ": " + "\"Aidan, with me!\"");
+				break;
+			case "Dylan":
+				System.out.println(nameSkin + ": " + "\"Mess with them Dylan!\"");
+				break;
+			}
+			if (name.equals("Grizz")) {
+				switch (name3) {
+				case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Show me what you have Lunar.\"");
+					break;
+				case "Max":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"My business was a colossal success Max.\"");
+						System.out.println(responseName + ": " + "\"Sure, but I built a family.\"");
+					}
+					break;
+				case "Dylan":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"I knew I shouldn't have trusted you.\"");
+						System.out.println(responseName + ": " + "\"We never liked your rule Grizz. Now it's time to let loose.\"");
+					}
+					break;
+				case "Eli":
+					System.out.println(nameSkin + ": " + "\"Little Buddy was always a threat to me Eli.\"");
+					break;
+				case "Solar":
+					System.out.println(nameSkin + ": " + "\"Ah Solar, I'm sure you can work easily.\"");
+					break;
+				case "Bladee":
+					System.out.println(nameSkin + ": " + "\"Strike them down Bladee.\"");
+					break;
+				case "Yuri":
+					System.out.println(nameSkin + ": " + "\"Keep up our defense Yuri.\"");
+					break;
+				}
+			}
+			if (name.equals("Eli")) {
+				switch (name3) {
+				case "Julian":
+					System.out.println(nameSkin + ": " + "\"Blow them up Julian.\"");
+					break;
+				case "Melony":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Your creatures are so cool Melony!\"");
+						System.out.println(responseName + ": " + "\"Thanks! Your buddies are just as cool too.\"");
+					}
+					break;
+				case "Unice":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"No need for an umbrella for my storm Unice!\"");
+						System.out.println(responseName + ": " + "\"Aha, yeah I'll take the power rain for sure.\"");
+					}
+					break;
+				case "Dylan":
+					System.out.println(nameSkin + ": " + "\"Send out the creatures Dylan!\"");
+					break;
+				case "Via":
+					System.out.println(nameSkin + ": " + "\"Awesome ship Via!\"");
+					break;
+				case "Margo":
+					System.out.println(nameSkin + ": " + "\"Pass me a drink after this Margo.\"");
+					break;
+				case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Crush them Lunar!\"");
+					break;
+				}
+			}
+			if (name.equals("Axol")) {
+				switch (name3) {
+				case "Via":
+					System.out.println(nameSkin + ": " + "\"Your parrot would love my axolotls Via.\"");
+					break;
+				case "Finley":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"So strong Finley.\"");
+						System.out.println(responseName + ": " + "\"Ahh, it's nothing really.\"");
+					}
+					break;
+				case "Alex":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"So when can I get my axolotls back?\"");
+						System.out.println(responseName + ": " + "\"Just need to kill this guardian later and it will be yours.\"");
+					}
+					break;
+				case "Chief":
+					System.out.println(nameSkin + ": " + "\"Let me know what you think of the new village axolotl enclosure later Chief.\"");
+					break;
+				case "Kailani":
+					System.out.println(nameSkin + ": " + "\"Mess them up Kailani!\"");
+					break;
+				case "Zero":
+					System.out.println(nameSkin + ": " + "\"Cheer up Zero. Do you want an axolotl?\"");
+					break;
+				case "Crystal":
+					System.out.println(nameSkin + ": " + "\"Can I get some leaves from the lush caves Crystal?\"");
+					break;
+				}
+			}
+			if (name.equals("Augie")) {
+				switch (name3) {
+				case "Clara":
+					System.out.println(nameSkin + ": " + "\"Don't go too crazy Clara. Or go for it.\"");
+					break;
+				case "Ashley":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"You've grown stronger Ashley.\"");
+						System.out.println(responseName + ": " + "\"Thanks for taking care of me when we were lost!\"");
+					}
+					break;
+				case "Via":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"You're an impressive pirate Via.\"");
+						System.out.println(responseName + ": " + "\"You got great sailing skills yourself.\"");
+					}
+					break;
+				case "Kailani":
+					System.out.println(nameSkin + ": " + "\"Create a splash out there Kailani.\"");
+					break;
+				case "Makani":
+					System.out.println(nameSkin + ": " + "\"Loving the storms Makani. Just keep them away from my boats.\"");
+					break;
+				case "Lunar":
+					System.out.println(nameSkin + ": " + "\"We need a hero Lunar!\"");
+					break;
+				case "Pearl":
+					System.out.println(nameSkin + ": " + "\"Pearl, I have an idea. Why don't we let Smollusk ride my ship!\"");
+					break;
+				}
+			}
+			if (name.equals("Mason")) {
+				switch (name3) {
+				case "Rhythm":
+					System.out.println(nameSkin + ": " + "\"Play a good game out there Rhythm.\"");
+					break;
+				case "Dylan":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Dylan, free those goblins!\"");
+						System.out.println(responseName + ": " + "\"Don't you mean free Young Thug?\"");
+					}
+					break;
+				case "Aidan":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Got to hop on fortnite.\"");
+						System.out.println(responseName + ": " + "\"You said it buddy.\"");
+					}
+					break;
+				case "Julian":
+					System.out.println(nameSkin + ": " + "\"Turn that punk into lethal force Julian.\"");
+					break;
+				case "Finley":
+					System.out.println(nameSkin + ": " + "\"Knock them out Finley.\"");
+					break;
+				case "Katrina":
+					System.out.println(nameSkin + ": " + "\"Keep us safe Kat.\"");
+					break;
+				case "Cherry":
+					System.out.println(nameSkin + ": " + "\"Let's disable them Cherry.\"");
+					break;
+				}
+			}
+			if (name.equals("Jesse")) {
+				switch (name3) {
+				case "Dylan":
+					System.out.println(nameSkin + ": " + "\"Let's see that dragon Dylan!\"");
+					break;
+				case "Aidan":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"How's the strider Aidan?\"");
+						System.out.println(responseName + ": " + "\"I see him from time to time.\"");
+					}
+					break;
+				case "Lunar":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"How's the heat Lunar?\"");
+						System.out.println(responseName + ": " + "\"It's pain for the enemies. Good for me.\"");
+					}
+					break;
+				case "Chief":
+					System.out.println(nameSkin + ": " + "\"Lead the way Chief!\"");
+					break;
+				case "Solar":
+					System.out.println(nameSkin + ": " + "\"Let's burn them up Solar.\"");
+					break;
+				case "Alex":
+					System.out.println(nameSkin + ": " + "\"Reel them into my fire Alex.\"");
+					break;
+				case "Orion":
+					System.out.println(nameSkin + ": " + "\"Orion, with me!\"");
+					break;
+				}
 			}
 		}
 	}

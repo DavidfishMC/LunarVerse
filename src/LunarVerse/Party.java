@@ -70,8 +70,7 @@ public class Party {
 				roster[i].setEnhance(false);
 			}
 			if(roster[i].getCanon()) {
-				roster[i].takeDamage(50000);
-				roster[i].takeDamage(50000);
+				roster[i].down();
 				roster[i].resetCanon();
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {

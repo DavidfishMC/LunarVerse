@@ -76,7 +76,7 @@ public class GameSim {
 		String sockyman = p1.getGradientName("sockyman", "#ABABAB", "#FD637A");
 		String starstruck = p1.getGradientName("_starrstruckk_", "#C1A5A9", "#F08CAE", "#9A4C95", "#EB7BC0");
 		String dilzee = p1.getGradientName("Dilzee", "#2DDF2A", "#1EC23F", "#3594ED", "#4F8CA1");
-		String ashy = p1.getGradientName("ashy0411", "#4ECAB6", "#4AE5E8", "#A296B7", "#F070E5");
+		String ashy = p1.getGradientName("ashyxin", "#4ECAB6", "#4AE5E8", "#A296B7", "#F070E5");
 		System.out.println(title);
 		System.out.println("Developed by "+david+" and "+sockyman+". Artwork by "+starstruck+", "+dilzee+", and "+ashy+".");
 		System.out.println("Inspired by the Mario and Rabbids games and the V.C., R.C., and D.C. trilogies.");
@@ -178,11 +178,11 @@ public class GameSim {
 				p6.setCharm(charm6);
 			}
 		}else {
-			p1 = new Player(1800, 100, true, "Andrew", 20, 20, 10, 10, 0);
-			p3 = new Player(1000, 475, false, "Lunar", 21, 21, 10, 10, 0);
+			p1 = new Player(1800, 225, true, "Courtney", 20, 20, 10, 10, 0);
+			p3 = new Player(1000, 475, false, "Chloe", 21, 21, 10, 10, 0);
 			p5 = new Player(1000, 175, false, "Mayhem", 20, 25, 11, 9, 0);
 			
-			p2 = new Player(10000, 250, false, "Solar", 19, 19, 10, 10, 0);
+			p2 = new Player(10000, 250, false, "Angelos", 19, 19, 10, 10, 0);
 			p4 = new Player(10000, 250, false, "Crystal", 22, 22, 10, 10, 0);
 			p6 = new Player(10000, 200, false, "Orion", 23, 23, 10, 10, 7);
 			String skinName = "Sakura";
@@ -6128,7 +6128,7 @@ public class GameSim {
 			DivineUltimate(p, a, b, c, l);
 		}
 		if(p.getName().equals("Courtney")) {
-			CourtneyUltimate(p);
+			CourtneyUltimate(p, a, b, c, d, e);
 		}
 		if(p.getName().equals("Leaf")) {
 			Location l = SetCursor(p, a, b, c, d, e, 0);
@@ -6445,7 +6445,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Ayson":
-			  p = new Player(2650, 200, start, name, x, y, 10, 10, 6);
+			  p = new Player(2650, 250, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Ayson Brothers", "#48C8FE", "#78CDDE", "#8F2D2D");
 			  p.skin(name);
 			  p.setC(45);
@@ -6468,12 +6468,12 @@ public class GameSim {
 			  name = p.getGradientName("Jesse", "#CF0202", "#FF4242", "#FE6410", "#FFC524", "#F7C308");
 			  p.skin(name);
 			  p.setC(160);
-			  System.out.println("\"Noone can last long in hell except me.\"");
+			  System.out.println("\"No one can last long in hell except me.\"");
 			  System.out.println();
 			  p.addRole("brawler");
 		    break;
 		  case "Chief":
-			  p = new Player(3800, 175, start, name, x, y, 8, 8, 7);
+			  p = new Player(3800, 175, start, name, x, y, 9, 9, 7);
 			  name = p.getGradientName("Chief", "#2EA4FF", "#397BFE", "#0544C2");
 			  p.skin(name);
 			  p.setC(69);
@@ -6558,7 +6558,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Zero":
-			  p = new Player(2325, 250, start, name, x, y, 10, 10, 6);
+			  p = new Player(2375, 250, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Zero", "#F11E1E", "#9E9E9E", "#7F5757");
 			  p.skin(name);
 			  p.setC(196);
@@ -6605,7 +6605,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Evil":
-			  p = new Player(2500, 250, start, name, x, y, 11, 9, 7);
+			  p = new Player(2500, 275, start, name, x, y, 11, 9, 7);
 			  name = p.getGradientName("Evil Lunar", "#F81616", "#A4A8DF", "#A89FD5", "#38E8FF");
 			  p.skin(name);
 			  p.setC(196);
@@ -6614,7 +6614,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Airic":
-			  p = new Player(2350, 250, start, name, x, y, 10, 10, 6);
+			  p = new Player(2350, 325, start, name, x, y, 10, 10, 5);
 			  name = p.getGradientName("Airic", "#473AF2", "#4367F9", "#A3A6F5", "#C2C2C2");
 			  p.skin(name);
 			  p.setC(19);
@@ -6624,7 +6624,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Julian":
-			  p = new Player(2400, 200, start, name, x, y, 10, 8, 7);
+			  p = new Player(2400, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Julian", "#FF8B1F", "#E89F64", "#74DEEC", "#6DF3EA");
 			  p.skin(name);
 			  p.setC(214);
@@ -6643,7 +6643,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Eli":
-			  p = new Player(2225, 150, start, name, x, y, 10, 10, 7);
+			  p = new Player(2225, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Eli", "#51C0F0", "#35A7ED");
 			  p.skin(name);
 			  p.setC(39);
@@ -6692,7 +6692,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Liam":
-			  p = new Player(2425, 225, start, name, x, y, 10, 10, 6);
+			  p = new Player(2425, 250, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Liam", "#F53D3D", "#F76526");
 			  p.skin(name);
 			  p.setC(196);
@@ -6740,7 +6740,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Ashley":
-			  p = new Player(2150, 200, start, name, x, y, 10, 10, 7);
+			  p = new Player(2275, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Ashley", "#4ECAB6", "#4AE5E8", "#A296B7", "#F070E5");
 			  p.skin(name);
 			  p.setC(80);
@@ -6749,7 +6749,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Radar":
-			  p = new Player(2400, 250, start, name, x, y, 10, 10, 3);
+			  p = new Player(2400, 300, start, name, x, y, 10, 10, 3);
 			  name = p.getGradientName("Radar", "#8C79A0", "#AAA1A1", "#59854C");
 			  p.skin(name);
 			  p.setC(147);
@@ -6827,7 +6827,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Gates":
-			  p = new Player(3400, 200, start, name, x, y, 10, 10, 5);
+			  p = new Player(3450, 200, start, name, x, y, 10, 10, 5);
 			  name = p.getGradientName("Dr.Gates", "#06B794", "#49E4CA", "#3478A2");
 			  p.skin(name);
 			  p.setC(44);
@@ -6846,7 +6846,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Cherry":
-			  p = new Player(2300, 100, start, name, x, y, 12, 9, 7);
+			  p = new Player(2300, 100, start, name, x, y, 12, 9, 8);
 			  name = p.getGradientName("Cherry", "#EA98F0", "#F25FA6", "#F72222");
 			  p.skin(name);
 			  p.setC(196);
@@ -6855,7 +6855,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Gash":
-			  p = new Player(3400, 200, start, name, x, y, 10, 10, 6);
+			  p = new Player(3400, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Gash", "#B72E01", "#B2552C", "#F72222");
 			  p.skin(name);
 			  p.setC(130);
@@ -7069,7 +7069,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Bladee":
-			  p = new Player(2350, 100, start, name, x, y, 7, 9, 7);
+			  p = new Player(2350, 100, start, name, x, y, 9, 9, 7);
 			  name = p.getGradientName("Bladee", "#F4E4CC", "#D5BE98", "#55AF7B");
 			  p.skin(name);
 			  p.setC(223);
@@ -7109,7 +7109,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Quincy":
-			  p = new Player(2700, 225, start, name, x, y, 10, 10, 5);
+			  p = new Player(2825, 225, start, name, x, y, 10, 10, 5);
 			  name = p.getGradientName("Quincy", "#C7AC92", "#FFB997");
 			  p.skin(name);
 			  p.setC(136);
@@ -7171,7 +7171,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Courtney":
-			  p = new Player(2350, 350, start, name, x, y, 8, 12, 5);
+			  p = new Player(2350, 350, start, name, x, y, 8, 12, 6);
 			  name = p.getGradientName("Courtney", "#DAA89B", "#690375", "#2C0E37");
 			  p.skin(name);
 			  p.setC(112);
@@ -7282,6 +7282,7 @@ public class GameSim {
 	
 	public static void Jump(Player p, Player a, Player b, Location l, Player e1, Player e2, Player e3) {
 		boolean umbrella = false;
+		Scanner input = new Scanner(System.in);
 		int jumpD = 6;
 		if (p.getName().equals("Unice")) {
 			jumpD = 9;
@@ -7298,38 +7299,43 @@ public class GameSim {
 				return;
 			}
 		}
+		
 		if(!p.canJump()) {
 			System.out.println("No more jumps left!");
 			System.out.println();
 			return;
 		}
-		if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && !umbrella && !p.getName().equals("Gambit")) {
-			System.out.println("Nothing in range to use a jump with!");
-			System.out.println();
-			return;
-		}
-		if (p.getName().equals("Gambit") && p.isParalyzed()) {
-			System.out.println("Cannot jump with the Knight's horse while paralyzed!");
-			System.out.println();
-			return;
-		}
-		if (p.drillDashed()) {
-			System.out.println("Cannot jump after drill dashing!");
-			System.out.println();
-			return;
-		}
-		Scanner input = new Scanner(System.in);
+		
+		if (!p.isHoverDashing() && !p.hasDoubleJumped() && !p.getName().equals("Courtney")) {
+			if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && !umbrella && !p.getName().equals("Gambit")) {
+				System.out.println("Nothing in range to use a jump with!");
+				System.out.println();
+				return;
+			}
+			if (p.getName().equals("Gambit") && p.isParalyzed()) {
+				System.out.println("Cannot jump with the Knight's horse while paralyzed!");
+				System.out.println();
+				return;
+			}
+			if (p.drillDashed()) {
+				System.out.println("Cannot jump after drill dashing!");
+				System.out.println();
+				return;
+			}
 
-		if(!p.inReach(l, jumpD)) {
-			System.out.println("Can't jump there!");
-			System.out.println();
-			return;
+			if(!p.inReach(l, jumpD)) {
+				System.out.println("Can't jump there!");
+				System.out.println();
+				return;
+			}
+			if(GameSim.b.hasTrench(l.getX(), l.getY()) && !p.getHover()) {
+				System.out.println("Cannot jump into a trench!");
+				System.out.println();
+				return;
+			}
 		}
-		if(GameSim.b.hasTrench(l.getX(), l.getY()) && !p.getHover()) {
-			System.out.println("Cannot jump into a trench!");
-			System.out.println();
-			return;
-		}
+		
+		
 		if(umbrella && p.canJump()) {
 			int d = p.getLoc().distance(l);
 			p.increaseTotalMovement(d);
@@ -7441,6 +7447,21 @@ public class GameSim {
 			p.addDamage(e3.getMaxHP() * 0.05);
 		}
 		
+		if (p.isHoverDashing()) {
+			if(p.getLoc().eqLoc(e1.getLoc())) {
+				e1.takeDamage(175);
+				p.addDamage(175);
+			}
+			if(p.getLoc().eqLoc(e2.getLoc())) {
+				e2.takeDamage(175);
+				p.addDamage(175);
+			}
+			if(p.getLoc().eqLoc(e3.getLoc())) {
+				e3.takeDamage(175);
+				p.addDamage(175);
+			}
+		}
+		
 		try {
 			String audio = "jump.wav";
 			Music victoryPlayer = new Music(audio, false); 
@@ -7450,6 +7471,76 @@ public class GameSim {
 		}
 		System.out.println("Jumped to " + p.getLoc() + ".");
 		System.out.println();
+		if (p.isHoverDashing() && !p.hasDoubleJumped()) {
+			p.setDoubleJump();
+			p.addJumps(1);
+			Location l2 = SetCursor(p, e1, e2, e3, a, b, p.getRange());
+			if(umbrella && p.canJump()) {
+				int d = p.getLoc().distance(l2);
+				p.increaseTotalMovement(d);
+				p.getLoc().set(l2.getX(), l2.getY());
+				p.useJump();
+				for(int q = 0; q < GameSim.utility.size(); q++) {
+					if(GameSim.utility.get(q).getName().equals("Umbrella") && GameSim.utility.get(q).isAlly(p)) {
+						GameSim.utility.get(q).getOwner().resetAttack();
+						if (GameSim.utility.get(q).getOwner().ultActive()) {
+							GameSim.utility.get(q).getOwner().reduceCooldown();
+						}
+						GameSim.utility.remove(q);
+					}
+				}
+			}else {
+				int d = p.getLoc().distance(l2);
+				p.increaseTotalMovement(d);
+				p.getLoc().set(l2.getX(), l2.getY());
+				p.useJump();
+			}
+			for(int i = 0; i < cover.size(); i++) {
+				if(p.getLoc().eqLoc(cover.get(i).getLoc())) {
+					if(cover.get(i).getName().equals("Full")) {
+						p.setCover("Full");
+						break;
+					}
+					if(cover.get(i).getName().equals("Partial")) {
+						p.setCover("Partial");
+						break;
+					}
+				}else {
+					p.resetCover();
+				}
+			}
+			for(int i = 0; i < orbs.size(); i++) {
+				if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
+					p.getOrb();
+					orbs.remove(i);
+				}
+			}
+			
+			if (p.isHoverDashing()) {
+				if(p.getLoc().eqLoc(e1.getLoc())) {
+					e1.takeDamage(175);
+					p.addDamage(175);
+				}
+				if(p.getLoc().eqLoc(e2.getLoc())) {
+					e2.takeDamage(175);
+					p.addDamage(175);
+				}
+				if(p.getLoc().eqLoc(e3.getLoc())) {
+					e3.takeDamage(175);
+					p.addDamage(175);
+				}
+			}
+			
+			try {
+				String audio = "jump.wav";
+				Music victoryPlayer = new Music(audio, false); 
+				victoryPlayer.play();
+			}catch (Exception e) {
+				System.out.println(e);
+			}
+			System.out.println("Jumped to " + p.getLoc() + ".");
+			System.out.println();
+		}
 	}
 	
 	public static void Dash(Player p, Player a, Player b, Player c) {
@@ -7871,7 +7962,7 @@ public class GameSim {
 						}
 					}
 					for(int j = 0; j < GameSim.utility.size(); j++) {
-						if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).isEnemy(p) && GameSim.utility.get(j).inRange(p, 3) && GameSim.utility.get(j).isActivated()) {
+						if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).isEnemy(p) && GameSim.utility.get(j).inRange(p, 3) && GameSim.utility.get(j).isActivated() && GameSim.utility.get(j).hasSpikes()) {
 							p.takeDamage(25);
 							GameSim.utility.get(j).getOwner().addDamage(25);
 						}
@@ -8070,13 +8161,13 @@ public class GameSim {
 							break;
 						}
 						if(utility.get(i).getName().equals("Nebula") && utility.get(i).isEnemy(p) && !utility.get(i).getPickUp()) {
-							p.takeDamage(100);
+							p.takeDamage(50);
 							ArrayList<Effect> e2 = new ArrayList<Effect>();
 							Effect RoccoParalyze = new Effect("blind", 0.05, 1);
 							e2.add(RoccoParalyze);
 							p.addEffects(e2);
 							p.applyEffects();
-							utility.get(i).getOwner().addDamage(100);
+							utility.get(i).getOwner().addDamage(50);
 							utility.get(i).pickedUp();
 							break;
 						}
@@ -8374,14 +8465,10 @@ public class GameSim {
 			p.addDamage(700);
 			a.addEffects(e);
 			a.applyEffects();
-			if(b.inRange(a, 10)) {
-				b.addEffects(e2);
-				b.applyEffects();
-			}
-			if(c.inRange(a, 10)) {
-				c.addEffects(e3);
-				c.applyEffects();
-			}
+			b.addEffects(e2);
+			b.applyEffects();
+			c.addEffects(e3);
+			c.applyEffects();
 			p.heal(0.2);
 			p.addHealing(p.getMaxHP() * 0.2);
 			p.resetUlt();
@@ -8391,14 +8478,10 @@ public class GameSim {
 			p.addDamage(700);
 			b.addEffects(e);
 			b.applyEffects();
-			if(a.inRange(b, 10)) {
-				a.addEffects(e2);
-				a.applyEffects();
-			}
-			if(c.inRange(b, 10)) {
-				c.addEffects(e3);
-				c.applyEffects();
-			}
+			a.addEffects(e2);
+			a.applyEffects();
+			c.addEffects(e3);
+			c.applyEffects();
 			p.heal(0.2);
 			p.addHealing(p.getMaxHP() * 0.2);
 			p.resetUlt();
@@ -8408,14 +8491,10 @@ public class GameSim {
 			p.addDamage(700);
 			c.addEffects(e);
 			c.applyEffects();
-			if(a.inRange(c, 10)) {
-				a.addEffects(e2);
-				a.applyEffects();
-			}
-			if(b.inRange(c, 10)) {
-				b.addEffects(e3);
-				b.applyEffects();
-			}
+			a.addEffects(e2);
+			a.applyEffects();
+			b.addEffects(e3);
+			b.applyEffects();
 			p.heal(0.2);
 			p.addHealing(p.getMaxHP() * 0.2);
 			p.resetUlt();
@@ -8716,9 +8795,9 @@ public class GameSim {
 	
 	public static void CherryUltimate(Player p) {
 		p.setUlt();
-		p.setMaxHP(3000);
+		p.setMaxHP(3300);
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 1, 30);
+		Effect MidnitePower = new Effect("power", 1, 100);
 		e.add(MidnitePower);
 		p.addEffects(e);
 		p.applyEffects();
@@ -9087,7 +9166,7 @@ public class GameSim {
 		}else {
 			p.attack(a);
 			double rand = Math.random();
-			if(rand <= 0.35) {
+			if(rand <= 0.4) {
 				e.add(DylanFreeze);
 				a.addEffects(e);
 				a.applyEffects();
@@ -9129,6 +9208,10 @@ public class GameSim {
 				p.addDamage(350);
 				a.addEffects(e);
 				a.applyEffects();
+				if (a.isIgnite() || a.isFreezed()) {
+					a.takeDamage(100);
+					p.addDamage(100);
+				}
 				p.setCooldown(3);
 			}else {
 				System.out.println();
@@ -9142,6 +9225,10 @@ public class GameSim {
 				p.addDamage(350);
 				b.addEffects(e);
 				b.applyEffects();
+				if (b.isIgnite() || b.isFreezed()) {
+					b.takeDamage(100);
+					p.addDamage(100);
+				}
 				p.setCooldown(3);
 			}else {
 				System.out.println();
@@ -9155,6 +9242,10 @@ public class GameSim {
 				p.addDamage(350);
 				c.addEffects(e);
 				c.applyEffects();
+				if (c.isIgnite() || c.isFreezed()) {
+					c.takeDamage(100);
+					p.addDamage(100);
+				}
 				p.setCooldown(3);
 			}else {
 				System.out.println();
@@ -9422,8 +9513,6 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			p.attack(a);
-			a.takeDamage(75);
-			p.addDamage(75);
 			double rand = Math.random();
 			if(rand <= 0.1) {
 				e.add(EliParalyze);
@@ -9443,8 +9532,6 @@ public class GameSim {
 		}
 		if(targetResponse.equals("3")) {
 			p.attack(a);
-			a.takeDamage(75);
-			p.addDamage(75);
 			double rand = Math.random();
 			if(rand <= 0.15) {
 				e.add(EliBlind);
@@ -9844,7 +9931,7 @@ public class GameSim {
 	public static void KailaniAttack(Player p, Player a) {
 		p.attack(a);
 		double rand = Math.random();
-		if(rand <= 0.1) {
+		if(rand <= 0.15) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect MackDaze = new Effect("daze", 0, 1);
 			e.add(MackDaze);
@@ -9866,18 +9953,18 @@ public class GameSim {
 			return;
 		}
 		if(p.inRange(a, 5)) {
-			a.takeDamage(a.getMaxHP() * 0.1);
-			p.addDamage(a.getMaxHP() * 0.1);
+			a.takeDamage(a.getMaxHP() * 0.075);
+			p.addDamage(a.getMaxHP() * 0.075);
 			a.knockbacked(p.getLoc());
 		}
 		if(p.inRange(b, 5)) {
-			b.takeDamage(b.getMaxHP() * 0.1);
-			p.addDamage(b.getMaxHP() * 0.1);
+			b.takeDamage(b.getMaxHP() * 0.075);
+			p.addDamage(b.getMaxHP() * 0.075);
 			b.knockbacked(p.getLoc());
 		}
 		if(p.inRange(c, 5)) {
-			c.takeDamage(c.getMaxHP() * 0.1);
-			p.addDamage(c.getMaxHP() * 0.1);
+			c.takeDamage(c.getMaxHP() * 0.075);
+			p.addDamage(c.getMaxHP() * 0.075);
 			c.knockbacked(p.getLoc());
 		}
 		int d = p.getLoc().distance(l);
@@ -9900,18 +9987,18 @@ public class GameSim {
 			}
 		}
 		if(p.inRange(a, 5)) {
-			a.takeDamage(a.getMaxHP() * 0.1);
-			p.addDamage(a.getMaxHP() * 0.1);
+			a.takeDamage(a.getMaxHP() * 0.075);
+			p.addDamage(a.getMaxHP() * 0.075);
 			a.knockbacked(p.getLoc());
 		}
 		if(p.inRange(b, 5)) {
-			b.takeDamage(b.getMaxHP() * 0.1);
-			p.addDamage(b.getMaxHP() * 0.1);
+			b.takeDamage(b.getMaxHP() * 0.075);
+			p.addDamage(b.getMaxHP() * 0.075);
 			b.knockbacked(p.getLoc());
 		}
 		if(p.inRange(c, 5)) {
-			c.takeDamage(c.getMaxHP() * 0.1);
-			p.addDamage(c.getMaxHP() * 0.1);
+			c.takeDamage(c.getMaxHP() * 0.075);
+			p.addDamage(c.getMaxHP() * 0.075);
 			c.knockbacked(p.getLoc());
 		}
 		p.setCooldown(3);
@@ -9942,14 +10029,11 @@ public class GameSim {
 	
 	public static void AshleyAttack(Player p, Player a) {
 		p.attack(a);
-		double rand = Math.random();
-		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect AshleyPoison = new Effect("poison", 0.2, 1);
-			e.add(AshleyPoison);
-			a.addEffects(e);
-			a.applyEffects();
-		}
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect AshleyPoison = new Effect("poison", 0.35, 1);
+		e.add(AshleyPoison);
+		a.addEffects(e);
+		a.applyEffects();
 		System.out.println();
 	}
 	
@@ -9996,18 +10080,18 @@ public class GameSim {
 		Effect AshleyProtect = new Effect("protect", 0.1, 3);
 		Effect AshleyProtect2 = new Effect("protect", 0.1, 3);
 		Effect AshleyProtect3 = new Effect("protect", 0.1, 3);
-		Effect AshleyPoison = new Effect("poison", 0.25, 2);
-		Effect AshleyPoison2 = new Effect("poison", 0.25, 2);
-		Effect AshleyPoison3 = new Effect("poison", 0.25, 2);
-		Effect AshleyBlind = new Effect("blind", 0.1, 2);
-		Effect AshleyBlind2 = new Effect("blind", 0.1, 2);
-		Effect AshleyBlind3 = new Effect("blind", 0.1, 2);
-		p.heal(0.30);
-		d.heal(0.30);
-		e.heal(0.30);
-		p.addHealing(p.getMaxHP() * 0.30);
-		p.addHealing(d.getMaxHP() * 0.30);
-		p.addHealing(e.getMaxHP() * 0.30);
+		Effect AshleyPoison = new Effect("poison", 0.3, 2);
+		Effect AshleyPoison2 = new Effect("poison", 0.3, 2);
+		Effect AshleyPoison3 = new Effect("poison", 0.3, 2);
+		Effect AshleyBlind = new Effect("blind", 0.3, 2);
+		Effect AshleyBlind2 = new Effect("blind", 0.3, 2);
+		Effect AshleyBlind3 = new Effect("blind", 0.3, 2);
+		p.heal(0.25);
+		d.heal(0.25);
+		e.heal(0.25);
+		p.addHealing(p.getMaxHP() * 0.25);
+		p.addHealing(d.getMaxHP() * 0.25);
+		p.addHealing(e.getMaxHP() * 0.25);
 		e1.add(EliPower);
 		e1.add(AshleyProtect);
 		e5.add(EliPower2);
@@ -10895,14 +10979,26 @@ public class GameSim {
 		d.applyEffects();
 		e.applyEffects();
 		if(p.inRange(a)) {
+			a.takeDamage(125);
+			p.addDamage(125);
 			a.knockbacked(p.getLoc());
 		}
 		if(p.inRange(b)) {
+			b.takeDamage(125);
+			p.addDamage(125);
 			b.knockbacked(p.getLoc());
 		}
 		if(p.inRange(c)) {
+			c.takeDamage(125);
+			p.addDamage(125);
 			c.knockbacked(p.getLoc());
 		}
+		a.takeDamage(125);
+		p.addDamage(125);
+		b.takeDamage(125);
+		p.addDamage(125);
+		c.takeDamage(125);
+		p.addDamage(125);
 		a.knockbacked(p.getLoc());
 		b.knockbacked(p.getLoc());
 		c.knockbacked(p.getLoc());
@@ -10962,7 +11058,7 @@ public class GameSim {
 		a.applyEffects();
 		b.addEffects(e3);
 		b.applyEffects();
-		p.increaseMaxHP(p.getMaxHP() * 0.05);
+		p.heal(0.05);
 		p.addHealing(p.getMaxHP() * 0.05);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
@@ -11179,9 +11275,9 @@ public class GameSim {
 		ArrayList<Effect> e1 = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 0.05, 1);
-		Effect MidnitePower2 = new Effect("power", 0.05, 1);
-		Effect MidnitePower3 = new Effect("power", 0.05, 1);
+		Effect MidnitePower = new Effect("power", 0.15, 1);
+		Effect MidnitePower2 = new Effect("power", 0.15, 1);
+		Effect MidnitePower3 = new Effect("power", 0.15, 1);
 		Effect ArcherSight = new Effect("sight", 0.25, 1);
 		Effect ArcherSight2 = new Effect("sight", 0.25, 1);
 		Effect ArcherSight3 = new Effect("sight", 0.25, 1);
@@ -11197,6 +11293,9 @@ public class GameSim {
 		p.applyEffects();
 		a.applyEffects();
 		b.applyEffects();
+		p.increaseMovement(3);
+		a.increaseMovement(3);
+		b.increaseMovement(3);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -11329,6 +11428,8 @@ public class GameSim {
 			}
 			a.addEffects(e);
 			a.applyEffects();
+			a.takeDamage(a.getMaxHP() * 0.1);
+			p.addDamage(a.getMaxHP() * 0.1);
 			p.setCooldown(4);
 			System.out.println(p.voiceline());
 			System.out.println();
@@ -11341,6 +11442,8 @@ public class GameSim {
 			}
 			b.addEffects(e);
 			b.applyEffects();
+			b.takeDamage(b.getMaxHP() * 0.1);
+			p.addDamage(b.getMaxHP() * 0.1);
 			p.setCooldown(4);
 			System.out.println(p.voiceline());
 			System.out.println();
@@ -11353,6 +11456,8 @@ public class GameSim {
 			}
 			c.addEffects(e);
 			c.applyEffects();
+			c.takeDamage(c.getMaxHP() * 0.1);
+			p.addDamage(c.getMaxHP() * 0.1);
 			p.setCooldown(4);
 			System.out.println(p.voiceline());
 			System.out.println();
@@ -11599,8 +11704,8 @@ public class GameSim {
 	public static void AiricAbility(Player p, Player a, Player b, Location l) {
 		Scanner input = new Scanner(System.in);
 		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxPower = new Effect("power", 0.25, 1);
-		Effect MaxPower2 = new Effect("power", 0.15, 1);
+		Effect MaxPower = new Effect("power", 0.15, 1);
+		Effect MaxPower2 = new Effect("power", 0.05, 1);
 		if(!p.inReach(l, 30)) {
 			System.out.println("Can't send the portal that far!");
 			System.out.println();
@@ -11627,7 +11732,7 @@ public class GameSim {
 			}
 			p.addEffects(e);
 			p.applyEffects();
-			p.setCooldown(4);
+			p.setCooldown(3);
 			System.out.println("\"Oh hell naw I'm outta here.\"");
 			System.out.println();
 			return;
@@ -11657,7 +11762,7 @@ public class GameSim {
 			}
 			a.addEffects(e);
 			a.applyEffects();
-			p.setCooldown(4);
+			p.setCooldown(3);
 		}
 		if(targetResponse.equals("2")) {
 			b.getLoc().set(l.getX(), l.getY());
@@ -11679,7 +11784,7 @@ public class GameSim {
 			}
 			b.addEffects(e);
 			b.applyEffects();
-			p.setCooldown(4);
+			p.setCooldown(3);
 		}
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -11689,7 +11794,7 @@ public class GameSim {
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
 		Effect AiricProtect = new Effect("protect", 0.5, 2);
-		Effect AiricVulnerable = new Effect("vulnerable", 0.1, 1);
+		Effect AiricVulnerable = new Effect("vulnerable", 0.2, 1);
 		e.add(AiricProtect);
 		e2.add(AiricVulnerable);
 		Scanner input = new Scanner(System.in);
@@ -11759,23 +11864,23 @@ public class GameSim {
 			a.applyEffects();
 			p.addDamage(175);
 		}
-		if(a.inRange(b, 3)) {
+		if(a.inRange(b, 5)) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect EvilIgnite = new Effect("ignite", 0, 1);
 			e.add(EvilIgnite);
 			b.addEffects(e);
 			b.applyEffects();
-			b.takeDamage(200);
-			p.addDamage(200);
+			b.takeDamage(100);
+			p.addDamage(100);
 		}
-		if(a.inRange(c, 3)) {
+		if(a.inRange(c, 5)) {
 			ArrayList<Effect> e = new ArrayList<Effect>();
 			Effect EvilIgnite = new Effect("ignite", 0, 1);
 			e.add(EvilIgnite);
 			c.addEffects(e);
 			c.applyEffects();
-			c.takeDamage(200);
-			p.addDamage(200);
+			c.takeDamage(100);
+			p.addDamage(100);
 		}
 		System.out.println();
 	}
@@ -12018,7 +12123,7 @@ public class GameSim {
 			p.setShield();
 			p.addEffects(e);
 			p.applyEffects();
-			p.setCooldown(2);
+			p.setCooldown(1);
 			System.out.println("\"Send in your worst now!\"");
 			System.out.println();
 			return;
@@ -12031,13 +12136,13 @@ public class GameSim {
 			a.setShield();
 			a.addEffects(e);
 			a.applyEffects();
-			p.setCooldown(2);
+			p.setCooldown(1);
 		}
 		if(targetResponse.equals("2")) {
 			b.setShield();
 			b.addEffects(e);
 			b.applyEffects();
-			p.setCooldown(2);
+			p.setCooldown(1);
 		}
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -12320,8 +12425,8 @@ public class GameSim {
 		p.attack(a);
 		ArrayList<Effect> e = new ArrayList<Effect>();
 		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		Effect ChloePower = new Effect("power", 0.03, 1);
-		Effect ChloePower2 = new Effect("power", 0.03, 1);
+		Effect ChloePower = new Effect("power", 0.05, 1);
+		Effect ChloePower2 = new Effect("power", 0.05, 1);
 		e.add(ChloePower);
 		e2.add(ChloePower2);
 		b.addEffects(e);
@@ -12467,8 +12572,8 @@ public class GameSim {
 			a.applyEffects();
 		}
 		if(p.ultActive()) {
-			p.increaseDPS(0.05);
-			p.increaseMaxHP(p.getMaxHP() * 0.03);
+			p.increaseDPSNum(10);
+			p.increaseMaxHP(25);
 		}
 		System.out.println();
 	}
@@ -12502,8 +12607,8 @@ public class GameSim {
 		System.out.println(p.voiceline());
 		System.out.println();
 		if(p.ultActive()) {
-			p.increaseDPS(0.05);
-			p.increaseMaxHP(p.getMaxHP() * 0.03);
+			p.increaseDPSNum(10);
+			p.increaseMaxHP(25);
 		}
 	}
 	
@@ -12657,6 +12762,9 @@ public class GameSim {
 			System.out.println(p.voiceline());
 			System.out.println();
 		}
+		a.setChance(-0.1);
+		b.setChance(-0.1);
+		c.setChance(-0.1);
 	}
 	
 	public static void OonaUltimate(Player p, Player a, Player b) {
@@ -13018,9 +13126,12 @@ public class GameSim {
 		if(b.isAlive()) {
 			b.getLoc().set(p.getLoc().getX(), p.getLoc().getY());
 		}
-		p.increaseMaxHP(p.getMaxHP() * 0.05);
-		a.increaseMaxHP(p.getMaxHP() * 0.05);
-		b.increaseMaxHP(p.getMaxHP() * 0.05);
+		p.heal(0.1);
+		a.heal(0.1);
+		b.heal(0.1);
+		p.addHealing(p.getMaxHP() * 0.1);
+		p.addHealing(a.getMaxHP() * 0.1);
+		p.addHealing(b.getMaxHP() * 0.1);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -15426,17 +15537,15 @@ public class GameSim {
 	
 	public static void QuincyAttack(Player p, Player a, Player b, Player c) {
 		p.attack(a);
+		a.knockbacked(p.getLoc());
 		if (p.getDamage() > 225) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			ArrayList<Effect> e2 = new ArrayList<Effect>();
-			Effect ChloePower = new Effect("mend", 0.5, 1);
-			Effect ChloePower2 = new Effect("mend", 0.5, 1);
-			e.add(ChloePower);
-			e2.add(ChloePower2);
-			b.addEffects(e);
-			b.applyEffects();
-			c.addEffects(e2);
-			c.applyEffects();
+			p.addQuincyAttack();
+		}
+		if (p.getQuincy() > 0) {
+			for(int i = 0; i < p.getQuincy(); i++) {
+				p.increaseHP(75);
+				p.addHealing(75);
+			}
 		}
 		System.out.println();
 	}
@@ -15459,13 +15568,15 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			a.setQuincy(p);
-			a.heal(0.05);
+			a.heal(0.1);
+			p.addHealing(a.getMaxHP() * 0.1);
 			p.setShield();
 			p.setCooldown(1);
 		}
 		if(targetResponse.equals("2")) {
 			b.setQuincy(p);
-			b.heal(0.05);
+			b.heal(0.1);
+			p.addHealing(b.getMaxHP() * 0.1);
 			p.setShield();
 			p.setCooldown(1);
 		}
@@ -15766,7 +15877,7 @@ public class GameSim {
 					}
 					if (p.getUltcharge() == 8) {
 						ArrayList<Effect> e = new ArrayList<Effect>();
-						Effect MidnitePower = new Effect("power", 1.5, 30);
+						Effect MidnitePower = new Effect("power", 0.5, 100);
 						e.add(MidnitePower);
 						p.addEffects(e);
 						p.applyEffects();
@@ -16009,9 +16120,25 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void CourtneyUltimate(Player p) {
+	public static void CourtneyUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
 		p.setNebula(true);
-		p.increaseMovement(12);
+		for(int k = 0; k < 42; k++) {
+			for(int h = 0; h < 42; h++){
+				Location l = new Location(k, h);
+				if(p.getLoc().atRange(l, 3)) {
+					Utility Nebula = new Utility("Nebula", l, p, d, e, a, b, c);
+					utility.add(Nebula);
+				}
+				if(p.getLoc().atRange(l, 6)) {
+					Utility Nebula = new Utility("Nebula", l, p, d, e, a, b, c);
+					utility.add(Nebula);
+				}
+				if(p.getLoc().atRange(l, 9)) {
+					Utility Nebula = new Utility("Nebula", l, p, d, e, a, b, c);
+					utility.add(Nebula);
+				}
+			}
+		}
 		p.addDashes(1);
 		p.setHover(true);
 		p.resetUlt();
@@ -16557,34 +16684,49 @@ public class GameSim {
 				if (p.hasEnhance()) {
 					if (p.inRange(a)) {
 						a.knockbacked(p.getLoc());
+						a.takeDamage(150);
+						p.addDamage(150);
 					}
 					if (p.inRange(b)) {
 						b.knockbacked(p.getLoc());
+						b.takeDamage(150);
+						p.addDamage(150);
 					}
 					if (p.inRange(c)) {
 						c.knockbacked(p.getLoc());
+						c.takeDamage(150);
+						p.addDamage(150);
 					}
 				}
 				p.setTide("low");
 			}else {
 				if (p.inRange(a)) {
 					a.dragIn(p.getLoc(), 4);
+					a.resetCover();
 				}
 				if (p.inRange(b)) {
 					b.dragIn(p.getLoc(), 4);
+					b.resetCover();
 				}
 				if (p.inRange(c)) {
 					c.dragIn(p.getLoc(), 4);
+					c.resetCover();
 				}
 				if (p.hasEnhance()) {
 					if (p.inRange(a)) {
 						a.dragIn(p.getLoc(), 4);
+						a.takeDamage(150);
+						p.addDamage(150);
 					}
 					if (p.inRange(b)) {
 						b.dragIn(p.getLoc(), 4);
+						b.takeDamage(150);
+						p.addDamage(150);
 					}
 					if (p.inRange(c)) {
 						c.dragIn(p.getLoc(), 4);
+						c.takeDamage(150);
+						p.addDamage(150);
 					}
 				}
 				p.setTide("high");
