@@ -107,6 +107,8 @@ public class Player {
 	boolean ebbFlow = false;
 	boolean hijacked = false;
 	boolean doubleJump = false;
+	boolean petal = false;
+	boolean expose = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -143,6 +145,8 @@ public class Player {
 	double fuel = 625;
 	double overHealth = 0;
 	double ebbFlowDamage = 0;
+	double petalBlockade = 500;
+	double defaultCritChance = 0.1;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
 	ArrayList<String> roles = new ArrayList<String>();
 	public static final String reset = "\u001B[0m";
@@ -186,8 +190,11 @@ public class Player {
 		}
 		if (name.equals("Millie")){
 			daggers = 6;
-			iron = 2;
+			iron = 1;
 			trash = 1;
+		}
+		if (name.equals("Orchid")){
+			setCooldown(2);
 		}
 		smolluskSkin = getGradientName("Smollusk", "#5C5C5C", "#ACD2D2", "#5C5C5C");
 	}
@@ -511,6 +518,29 @@ public class Player {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
 	}
 	
+	public void addChance(double d) {
+		defaultCritChance = defaultCritChance + d;
+	}
+	
+	public void setExpose(boolean b) {
+		expose = b;
+	}
+	
+	public boolean isExposed() {
+		return expose;
+	}
+	
+	public void chargeBlockade() {
+		petalBlockade = petalBlockade + 150;
+		if (petalBlockade > 750) {
+			petalBlockade = 750;
+		}
+	}
+	
+	public boolean petal() {
+		return petal;
+	}
+	
 	public void resetEbbFlow() {
 		ebbFlowDamage = 0;
 	}
@@ -578,7 +608,7 @@ public class Player {
 				System.out.println("Not a valid color! Default color set to " + curColor + ".");
 			}else {
 				curColor = targetResponse;
-				System.out.println("Default color set to " + curColor + ".");
+				System.out.println(nameSkin + "'s default color set to " + curColor + ".");
 			}
 		}
 		if (name.equals("Pearl")) {
@@ -588,6 +618,15 @@ public class Player {
 				resting = true;
 			}else {
 				System.out.println(smolluskSkin + " needs to rest!");
+			}
+		}
+		if (name.equals("Orchid")) {
+			if (petal) {
+				System.out.println(nameSkin + "'s petal blockade is retrieved.");
+				petal = false;
+			}else {
+				System.out.println(nameSkin + "'s petal blockade is out.");
+				petal = true;
 			}
 		}
 		System.out.println();
@@ -1345,6 +1384,9 @@ public class Player {
 	}
 
 	public boolean inRange(Location l, double r) {
+		if (expose) {
+			return true;
+		}
 		double d = curLoc.distanceTo(l);
 		if (r >= d) {
 			return true;
@@ -1354,6 +1396,9 @@ public class Player {
 	}
 
 	public boolean inRange(Location l) {
+		if (expose) {
+			return true;
+		}
 		double d = curLoc.distanceTo(l);
 		if (range >= d) {
 			return true;
@@ -1363,6 +1408,9 @@ public class Player {
 	}
 
 	public boolean inRange(Player p, double r) {
+		if (p.isExposed() || expose) {
+			return true;
+		}
 		Location otherLoc = p.getLoc();
 		double d = curLoc.distanceTo(otherLoc);
 		if (r >= d) {
@@ -1373,6 +1421,9 @@ public class Player {
 	}
 
 	public boolean overRange(Player p, double r) {
+		if (p.isExposed() || expose) {
+			return true;
+		}
 		Location otherLoc = p.getLoc();
 		double d = curLoc.distanceTo(otherLoc);
 		if (d >= r) {
@@ -1383,6 +1434,7 @@ public class Player {
 	}
 	
 	public boolean atRange(Location l, double r) {
+		
 		double d = curLoc.distanceTo(l);
 		if (r >= d && !(d <= (r - 1))) {
 			return true;
@@ -1687,6 +1739,7 @@ public class Player {
 
 	public void move(int x, int y) {
 		Location l = new Location(x, y);
+		/*
 		for(int j = 0; j < GameSim.utility.size(); j++) {
 			if(GameSim.utility.get(j).getName().equals("Iron") && GameSim.utility.get(j).isEnemy(this) && GameSim.utility.get(j).getLoc().inRange(l, 3) && !trapped) {
 				System.out.println("Can't go there!");
@@ -1701,6 +1754,7 @@ public class Player {
 				return;
 			}
 		}
+		*/
 		curLoc.set(x, y);
 		movement = movement - 1;
 		totalMovement++;
@@ -1733,6 +1787,9 @@ public class Player {
 	}
 
 	public boolean inRange(Player p) {
+		if (p.isExposed() || expose) {
+			return true;
+		}
 		Location otherLoc = p.getLoc();
 		double d = curLoc.distanceTo(otherLoc);
 		if (range >= d) {
@@ -1860,7 +1917,21 @@ public class Player {
 			e3.increaseHP(d * 0.1);
 		}
 		if (quincy == null) {
-			health = health - d;
+			if (petal) {
+				double ogPetal = petalBlockade;
+				petalBlockade = petalBlockade - d;
+				if (petalBlockade < 0) {
+					petalBlockade = 0;
+				}
+				d = ogPetal - d;
+				if (d < -1) {
+					d = d * -1;
+					System.out.println(nameSkin + "'s petal blockade has been destroyed!");
+					health = health - d;
+				}
+			}else {
+				health = health - d;
+			}
 		}else if (quincy.isAlive()){
 			double d1 = 0;
 			double d2 = 0;
@@ -1873,10 +1944,38 @@ public class Player {
 				d1 = d;
 				d2 = d;
 			}
-			health = health - d1;
+			if (petal) {
+				double ogPetal = petalBlockade;
+				petalBlockade = petalBlockade - d1;
+				if (petalBlockade < 0) {
+					petalBlockade = 0;
+				}
+				d1 = ogPetal - d1;
+				if (d1 < -1) {
+					d1 = d1 * -1;
+					System.out.println(nameSkin + "'s petal blockade has been destroyed!");
+					health = health - d1;
+				}
+			}else {
+				health = health - d1;
+			}
 			quincy.takeDamage(d2);
 		}else {
-			health = health - d;
+			if (petal) {
+				double ogPetal = petalBlockade;
+				petalBlockade = petalBlockade - d;
+				if (petalBlockade < 0) {
+					petalBlockade = 0;
+				}
+				d = ogPetal - d;
+				if (d < -1) {
+					d = d * -1;
+					System.out.println(nameSkin + "'s petal blockade has been destroyed!");
+					health = health - d;
+				}
+			}else {
+				health = health - d;
+			}
 		}
 		if (overHealth > 0) {
 			overHealth = overHealth - d;
@@ -2031,7 +2130,7 @@ public class Player {
 		if (!p.isAlive()) {
 			return;
 		}
-		if(p.returnPat() != null) {
+		if(p.returnPat() != null && p.returnPat().isAlive() && p.returnPat().inRange(p, 1)) {
 			p = p.returnPat();
 		}
 		double c = 0;
@@ -2040,7 +2139,7 @@ public class Player {
 			randomNum = 0;
 		}
 		double rand2 = Math.random();
-		double check = 0.1;
+		double check = defaultCritChance;
 		if (isBrawler()) {
 			check = check + 0.05;
 		}
@@ -2054,12 +2153,6 @@ public class Player {
 
 		if (p.getName().equals("Bedrock") && p.ultActive() && p.inRange(this)) {
 			p.getLoc().set(curLoc.getX(), curLoc.getY());
-		}
-		if (getName().equals("Yuri") && p.ultActive() && p.inRange(this)) {
-			p.resetCover();
-			attacked = true;
-			weaponuse++;
-			return;
 		}
 		if (name.equals("Sammi") && range > 100) {
 			p.takeDamage(damage + randomNum + c);
@@ -3007,6 +3100,9 @@ public class Player {
 		}
 		if (name.equals("Pearl")){
 			echoChargeShow = "\n" + smolluskSkin + " " + "\u001b[38;5;" + 105 + "m" + "🦑" + reset + ": " + smolluskRest + " Hits: " + smolluskDashes + "/3.";
+		}
+		if (name.equals("Orchid")){
+			echoChargeShow = "\n" + "Petal Blockade " + "\u001b[38;5;" + 208 + "m" + "🌺" + reset + ": " + petalBlockade + "/" + "750.0";
 		}
 
 		if (name.equals("Angelos") && !isAlive()) {
@@ -4029,6 +4125,17 @@ public class Player {
 			}
 			if (randomNum == 3) {
 				return ("\"Go minions!\"");
+			}
+		}
+		if (name.equals("Orchid")) {
+			if (randomNum == 1) {
+				return ("\"Nowhere to go now!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Chill out dudes.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"We got them right where we want them.\"");
 			}
 		}
 		return "";

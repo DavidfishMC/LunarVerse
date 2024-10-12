@@ -676,6 +676,16 @@ public class Battlefield {
 							foreground[i][j] = 0;
 							background[i][j] = 160;
 						}
+						if(u.getName().equals("Vine")) {
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 2) && u.isEnemy(s)) {
+										background[h][k] = 130;
+									}
+								}
+							}
+						}
 					}
 				}
 				
@@ -995,10 +1005,12 @@ public class Battlefield {
 						System.out.println(p.getSkin() + " rifted to " + p.getLoc() + ".");
 						System.out.println();
 					}
+					/*
 					if(t.getName().equals("Space")) {
 						p.takeDamage(p.getMaxHP() * 0.1);
 						System.out.println();
 					}
+					*/
 					if(t.getName().equals("Trench")) {
 						p.takeDamage(150);
 						p.knockbacked(p.getLoc());

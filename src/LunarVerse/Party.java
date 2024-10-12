@@ -179,7 +179,7 @@ public class Party {
 					if (!roster[j].equals(roster[i])) {
 						if (roster[j].inRange(roster[i], 1)) {
 							roster[j].patProtect(roster[i]);
-							System.out.println(roster[i].getSkin() + " will protect " + roster[j].getSkin() + " this turn.");
+							System.out.println(roster[i].getSkin() + " is protecting " + roster[j].getSkin() + ".");
 						}
 						if (roster[j].inRange(roster[i], 6) && roster[i].getCooldown() > 0) {
 							roster[j].setPat(true);
@@ -265,9 +265,9 @@ public class Party {
 				}
 			}
 			for(int i = 0; i < 3; i++) {
-				double stat = 0.3;
+				double stat = 0.15;
 				if (enhance) {
-					stat = 0.6;
+					stat = 0.3;
 				}
 				enemy.getRoster()[i].takeDamage(ebbFlowDamage * stat);
 			}
@@ -333,6 +333,9 @@ public class Party {
 					roster[i].addTrash();
 				}
 			}
+			if(roster[i].getName().equals("Orchid") && !roster[i].petal) {
+				roster[i].chargeBlockade();
+			}
 			if (!roster[i].tookDamage) {
 				if (roster[i].isTank() && roster[i].isSupport()) {
 					roster[i].heal(0.025);
@@ -363,6 +366,7 @@ public class Party {
 			roster[i].setRally(false);
 			roster[i].setBee(false);
 			roster[i].resetQuincy();
+			roster[i].setExpose(false);
 			if (roster[i].getHitDarkness()) {
 				roster[i].takeDamage(100);
 			}
@@ -402,6 +406,11 @@ public class Party {
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Flame") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.remove(j);
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Vine") && GameSim.utility.get(j).owner(roster[i])) {
 					GameSim.utility.remove(j);
 				}
 			}
@@ -461,6 +470,14 @@ public class Party {
 					GameSim.utility.remove(j);
 					j--;
 				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Support") && (GameSim.utility.get(j).isEnemy(roster[0]) || GameSim.utility.get(j).isEnemy(roster[1]) || GameSim.utility.get(j).isEnemy(roster[2]))) {
+				for(int b = 0; b < 3; b++) {
+					roster[b].removeOrb();
+				}
+				break;
 			}
 		}
 		if((!roster[0].isAlive() || roster[0].isStunned()) && (roster[1].isAlive() && !roster[1].isStunned())) {

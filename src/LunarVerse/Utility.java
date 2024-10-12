@@ -126,6 +126,7 @@ public class Utility {
 		Player target = attackClosest(e1, e2, e3);
 		if (target != null) {
 			owner.attack(target);
+			target.resetCover();
 		}
 		owner.resetAttack();
 		if (owner.getUltcharge() >= 8) {
