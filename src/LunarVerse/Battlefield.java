@@ -255,6 +255,661 @@ public class Battlefield {
 		cursor = null;
 	}
 	
+	public void printMochiField(Player a, Player b, Player c, Player d, Player e, Player f, ArrayList<Orb> orbLoc, ArrayList<Cover> coverLoc, Player s, Player e1, Player e2, Player e3, ArrayList<Utility> utilityLoc) {
+		one = a.getLoc();
+		two = b.getLoc();
+		three = c.getLoc();
+		four = d.getLoc();
+		five = e.getLoc();
+		six = f.getLoc();
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				field[i][j] = " ";
+				foreground[i][j] = 0;
+				background[i][j] = 999;
+				for(Utility u: utilityLoc) {
+					if(u.getName().equals("Dragon")) {
+						//background[i][j] = 220;
+					}
+				}
+			}
+		}
+		
+		for (Utility rook : utilityLoc) {
+	        if (rook.getName().equals("Rook")) {
+	        	switch (rook.getDirection()) {
+	        	case "left":
+	        		rook.getLoc().set(rook.owner.getLoc().getX() - 2, rook.owner.getLoc().getY());
+	        		break;
+	        	case "right":
+	        		rook.getLoc().set(rook.owner.getLoc().getX() + 2, rook.owner.getLoc().getY());
+	        		break;
+	        	case "up":
+	        		rook.getLoc().set(rook.owner.getLoc().getX(), rook.owner.getLoc().getY() - 2);
+	        		break;
+	        	case "down":
+	        		rook.getLoc().set(rook.owner.getLoc().getX(), rook.owner.getLoc().getY() + 2);
+	        		break;
+	        	}
+	        }
+	    }
+		
+		if (temple) {
+			for(int i = 14; i < 28; i++) {
+				background[i][0] = 196;
+				background[0][i] = 196;
+				background[i][41] = 196;
+				background[41][i] = 196;
+			}
+		}
+		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e1.inRange(l) && e1.hasSights() && !e1.isStunned()) {
+					field[j][i] = "∙";
+					foreground[j][i] = 196;
+				}
+			}
+		}
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e2.inRange(l) && e2.hasSights() && !e2.isStunned()) {
+					field[j][i] = "∙";
+					foreground[j][i] = 196;
+				}
+			}
+		}
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e3.inRange(l) && e3.hasSights() && !e3.isStunned()) {
+					field[j][i] = "∙";
+					foreground[j][i] = 196;
+				}
+			}
+		}
+		
+		Utility mochi = null;
+		
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Mochi") && GameSim.utility.get(j).owner(s)) {
+				mochi = GameSim.utility.get(j);
+			}
+		}
+		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(mochi.inRange(l)) {
+					if(!l.eqLoc(mochi.getLoc())) {
+						background[j][i] = 255;
+					}
+				}
+			}
+		}
+		
+		
+		
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(mochi.inReach(l) && !s.ultActive()) {
+						if(!l.eqLoc(mochi.getLoc())) {
+							background[j][i] = 254;
+						}
+					}
+				}
+			}
+		
+		if(s.getPack()) {
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(s.inRange(l, 5)) {
+						if(!l.eqLoc(s.getLoc())) {
+							background[j][i] = 223;
+						}
+					}
+				}
+			}
+		}
+		
+		if(s.getMochiMovement() > 4){
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(mochi.inRange(l, 4)) {
+						//field[j][i] = "∙";
+						//field[j][i]= "\u001B[41m" + " " + reset;
+						background[j][i] = 255;
+					}
+				}
+			}
+		}
+		
+		int closeRange = -1;
+		int farRange = -1;
+		
+		switch (s.getName()) {
+			case "Aidan":
+				closeRange = 4;
+				farRange = 10;
+				break;
+			default:
+				break;
+		}
+		
+		if (start) {
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(new Location(4, 4).inRange(l, 3)) {
+						background[j][i] = 195;
+					}
+				}
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(new Location(37, 37).inRange(l, 3)) {
+						background[j][i] = 195;
+					}
+				}
+			}
+		}
+		
+		
+		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				
+				
+				
+				for(Utility u: utilityLoc) {
+					if(i == u.getLoc().getY() && j == u.getLoc().getX()) {
+						if(u.getName().equals("Swiftwing") && !u.getPickUp()) {
+							field[i][j] = "S";
+							foreground[i][j] = 0;
+							background[i][j] = 213;
+						}
+						if(u.getName().equals("Howler") && !u.getPickUp()) {
+							field[i][j] = "H";
+							foreground[i][j] = 0;
+							background[i][j] = 93;
+						}
+						if(u.getName().equals("Star") && !u.getPickUp()) {
+							field[i][j] = "★";
+							foreground[i][j] = 0;
+							background[i][j] = 194;
+						}
+						if(u.getName().equals("Crane") && !u.getPickUp() && u.isAlly(s)) {
+							field[i][j] = "c";
+							foreground[i][j] = 0;
+							background[i][j] = 224;
+						}
+						if(u.getName().equals("Nebula") && !u.getPickUp()) {
+							field[i][j] = "&";
+							foreground[i][j] = 165;
+						}
+						if(u.getName().equals("Sensor")) {
+							field[i][j] = "S";
+							foreground[i][j] = 0;
+							background[i][j] = 193;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 5) && u.isEnemy(s)) {
+										background[h][k] = 193;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Sphere")) {
+							field[i][j] = "Y";
+							foreground[i][j] = 0;
+							background[i][j] = 299;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 8) && u.isEnemy(s)) {
+										background[h][k] = 229;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Starpull")) {
+							field[i][j] = "A";
+							foreground[i][j] = 0;
+							background[i][j] = 141;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 11) && u.isEnemy(s)) {
+										background[h][k] = 141;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Wind")) {
+							field[i][j] = "W";
+							foreground[i][j] = 0;
+							background[i][j] = 220;
+						}
+						if(u.getName().equals("Explosive")) {
+							field[i][j] = "E";
+							foreground[i][j] = 0;
+							background[i][j] = 196;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(endgame) {
+										if(u.atRange(l, 5) && u.isEnemy(s)) {
+											background[h][k] = 214;
+										}else if(u.atRange(l, 10) && u.isEnemy(s)) {
+											background[h][k] = 220;
+										}
+										if(u.atRange(l, 0) && u.isEnemy(s)) {
+											background[h][k] = 196;
+										}
+									}else {
+										if(u.atRange(l, 8) && u.isEnemy(s)) {
+											background[h][k] = 214;
+										}else if(u.atRange(l, 15) && u.isEnemy(s)) {
+											background[h][k] = 220;
+										}
+										if(u.atRange(l, 0) && u.isEnemy(s)) {
+											background[h][k] = 196;
+										}
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Gemstone")) {
+							field[i][j] = "G";
+							foreground[i][j] = 0;
+							background[i][j] = 252;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 0) && u.isAlly(s) && u.getStone().equals("iron")) {
+										field[i][j] = "I";
+										background[h][k] = 252;
+									}
+									if(u.atRange(l, 4) && u.isAlly(s) && u.getStone().equals("emerald")) {
+										field[i][j] = "E";
+										background[h][k] = 155;
+									}
+									if(u.atRange(l, 6) && u.isAlly(s) && u.getStone().equals("diamond")) {
+										field[i][j] = "D";
+										background[h][k] = 159;
+									}
+									if(u.atRange(l, 8) && u.isAlly(s) && u.getStone().equals("kunzite")) {
+										field[i][j] = "K";
+										background[h][k] = 225;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Field")) {
+							field[i][j] = "F";
+							foreground[i][j] = 0;
+							background[i][j] = 153;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 7) && u.isAlly(s)) {
+										background[h][k] = 153;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Fulmination")) {
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 8) && u.isEnemy(s)) {
+										background[h][k] = 63;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Steam")) {
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, u.getOwner().getRange()) && u.isEnemy(s) && u.getOwner().isClockwork()) {
+										background[h][k] = 136;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Flame")) {
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 5) && u.isEnemy(s)) {
+										background[h][k] = 216;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Umbrella")) {
+							int range = 7;
+							if (u.getOwner().ultActive()) {
+								range = 10;
+							}
+							field[i][j] = "U";
+							foreground[i][j] = 0;
+							background[i][j] = 147;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, range) && u.isAlly(s)) {
+										background[h][k] = 147;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Pylon")) {
+							field[i][j] = "P";
+							foreground[i][j] = 0;
+							background[i][j] = 226;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 4)) {
+										background[h][k] = 226;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Matrix")) {
+							field[i][j] = "M";
+							foreground[i][j] = 0;
+							background[i][j] = 225;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 6)) {
+										background[h][k] = 225;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Turret")) {
+							field[i][j] = "T";
+							foreground[i][j] = 0;
+							background[i][j] = 7;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 3) && u.isActivated() && u.hasSpikes() && u.isEnemy(s)) {
+										background[h][k] = 7;
+									}
+									if(u.atRange(l, 15) && u.isActivated() && u.isEnemy(s)) {
+										background[h][k] = 7;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Iron")) {
+							foreground[i][j] = 0;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 3)) {
+										background[h][k] = 65;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Rook")) {
+							field[i][j] = "R";
+							foreground[i][j] = 0;
+							if (u.rookActive()) {
+								background[i][j] = 220;
+							}else {
+								background[i][j] = 242;
+							}
+						}
+						if(u.getName().equals("Mochi")) {
+							field[i][j] = "🦊";
+							foreground[i][j] = 214;
+						}
+						if(u.getName().equals("Pawn")) {
+							field[i][j] = "P";
+							foreground[i][j] = 0;
+							background[i][j] = 229;
+						}
+						if(u.getName().equals("Mural")) {
+							field[i][j] = "M";
+							foreground[i][j] = 0;
+							background[i][j] = 217;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+								}
+							}
+						}
+						if(u.getName().equals("Sock")) {
+							field[i][j] = "S";
+							foreground[i][j] = 0;
+							background[i][j] = 7;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 3) && u.isEnemy(s)) {
+										background[h][k] = 7;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Support")) {
+							field[i][j] = "S";
+							foreground[i][j] = 0;
+							background[i][j] = 160;
+						}
+						if(u.getName().equals("Vine")) {
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 2) && u.isEnemy(s)) {
+										background[h][k] = 130;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Mine")) {
+							field[i][j] = "M";
+							foreground[i][j] = 0;
+							background[i][j] = 217;
+						}
+					}
+				}
+				
+				for(Tile t: tiles) {
+					if(i == t.getLoc().getY() && j == t.getLoc().getX()) {
+						if(t.getName().equals("Rift")) {
+							field[i][j] = "@";
+							foreground[i][j] = 117;
+						}
+						if(t.getName().equals("Trench")) {
+							field[i][j] = "*" ;
+						}
+						if(t.getName().equals("Space")) {
+							field[i][j] = "^";
+						}
+						if(t.getName().equals("Firepower")) {
+							field[i][j] = ",";
+							foreground[i][j] = 202;
+						}
+						if(t.getName().equals("Tower")) {
+							field[i][j] = "#";
+							foreground[i][j] = 40;
+						}
+						if(t.getName().equals("Bounce")) {
+							field[i][j] = "%";
+							foreground[i][j] = 98;
+						}
+						if(t.getName().equals("Time")) {
+							field[i][j] = "$";
+							foreground[i][j] = 30;
+						}
+						if(t.getName().equals("Car")) {
+							field[i][j] = "=";
+							foreground[i][j] = 200;
+						}
+					}
+				}
+				for(Orb o: orbLoc) {
+					if(i == o.getLoc().getY() && j == o.getLoc().getX()) {
+						//field[i][j] = bold + "\u001b[38;5;" + 189 + "m" + "🪩" + reset;
+						//field[i][j] = "🪩";
+						background[i][j] = 225;
+						foreground[i][j] = 0;
+						field[i][j] = "O";
+					}
+				}
+				for(Cover w: coverLoc) {
+					if(i == w.getLoc().getY() && j == w.getLoc().getX()) {
+						if(w.getName().equals("Full")) {
+							//field[i][j] = "\u001b[38;5;" + 46 + "m" + "🛡️" + reset;
+							field[i][j] = "F";
+							//field[i][j] = "🛡️";
+							foreground[i][j] = 0;
+							background[i][j] = 226;
+						}
+						if(w.getName().equals("Partial")) {
+							//field[i][j] = bold + "\u001b[38;5;" + 46 + "m" + "🪨" + reset;
+							field[i][j] = "P";
+							//field[i][j] = "🪨";
+							foreground[i][j] = 0;
+							background[i][j] = 195;
+						}
+					}
+				}
+				
+				
+				if(i == one.getY() && j == one.getX()) {
+					if(!a.isAlive()) {
+						field[i][j] = "-";
+					}else {
+						field[i][j] = bold + a.getName().substring(0,1) + clear;
+						foreground[i][j] = a.skinC();
+						//background[i][j] = 255;
+					}
+				}
+				if(i == two.getY() && j == two.getX()) {
+					if(!b.isAlive()) {
+						field[i][j] = "-";
+					}else {
+						field[i][j] = bold + b.getName().substring(0,1) + clear;
+						foreground[i][j] = b.skinC();
+						//background[i][j] = 255;
+					}
+				}
+				if(i == three.getY() && j == three.getX()) {
+					if(!c.isAlive()) {
+						field[i][j] = "-";
+					}else {
+						field[i][j] = bold + c.getName().substring(0,1) + clear;
+						foreground[i][j] = c.skinC();
+						//background[i][j] = 255;
+					}
+				}
+				if(i == four.getY() && j == four.getX()) {
+					if(!d.isAlive()) {
+						field[i][j] = "-";
+					}else {
+						field[i][j] = bold + d.getName().substring(0,1) + clear;
+						foreground[i][j] = d.skinC();
+						//background[i][j] = 255;
+					}
+				}
+				if(i == five.getY() && j == five.getX()) {
+					if(!e.isAlive()) {
+						field[i][j] = "-";
+					}else {
+						field[i][j] = bold + e.getName().substring(0,1) + clear;
+						foreground[i][j] = e.skinC();
+						//background[i][j] = 255;
+					}
+				}
+				if(i == six.getY() && j == six.getX()) {
+					if(!f.isAlive()) {
+						field[i][j] = "-";
+					}else {
+						field[i][j] = bold + f.getName().substring(0,1) + clear;
+						foreground[i][j] = f.skinC();
+						//background[i][j] = 255;
+					}
+				}
+				
+				
+			}
+			
+		}
+		for(Utility u: utilityLoc) {
+			if(u.getName().equals("Smoke")) {
+				for(int k = 0; k < 42; k++) {
+					for(int h = 0; h < 42; h++){
+						Location l = new Location(k, h);
+						int range = 4;
+						if (u.getOwner().getDarkness()) {
+							range = 6;
+						}
+						if(u.inRange(l, range) && u.isEnemy(s)) {
+							background[h][k] = 17;
+							field[h][k] = " ";
+						}
+						if(u.atRange(l, range) && u.isAlly(s)) {
+							background[h][k] = 17;
+						}
+					}
+				}
+			}
+		}
+		
+		if(cursor != null && cursor.getX() < 42 && cursor.getY() < 42) {
+			field[cursor.getY()][cursor.getX()] = "✦";
+			for(int i = 0; i < 42; i++) {
+				for(int j = 0; j < 42; j++){
+					Location l = new Location(i, j);
+					if(cursor.inRange(l, cursorRange)) {
+						background[j][i] = 195;
+					}
+				}
+			}
+		}
+		for(int i = 0; i < 42; i ++) {
+			System.out.print(i + " ");
+			if(i < 10) {
+				System.out.print(" ");
+			}
+			int prev = 0;
+			int prevBack = 999;
+			for(int j = 0; j < 42; j++) {
+				if(foreground[i][j] != prev) {
+					System.out.print(color + foreground[i][j] + "m");
+					prev = foreground[i][j];
+				}
+				if(background[i][j] != prevBack) {
+					if(background[i][j] == 999) {
+						System.out.print(reset);
+						System.out.print(color + foreground[i][j] + "m");
+						prevBack = background[i][j];
+					}else {
+						System.out.print(back + background[i][j] + "m");
+						prevBack = background[i][j];
+					}
+				}
+				System.out.print(field[i][j] + " ");
+			}
+			System.out.println(reset);
+		}
+		System.out.println();
+	}
+	
 	public void printField(Player a, Player b, Player c, Player d, Player e, Player f, ArrayList<Orb> orbLoc, ArrayList<Cover> coverLoc, Player s, Player e1, Player e2, Player e3, ArrayList<Utility> utilityLoc) {
 		one = a.getLoc();
 		two = b.getLoc();
@@ -567,6 +1222,16 @@ public class Battlefield {
 								}
 							}
 						}
+						if(u.getName().equals("Steam")) {
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, u.getOwner().getRange()) && u.isEnemy(s) && u.getOwner().isClockwork()) {
+										background[h][k] = 100;
+									}
+								}
+							}
+						}
 						if(u.getName().equals("Flame")) {
 							for(int k = 0; k < 42; k++) {
 								for(int h = 0; h < 42; h++){
@@ -607,6 +1272,19 @@ public class Battlefield {
 								}
 							}
 						}
+						if(u.getName().equals("Matrix")) {
+							field[i][j] = "M";
+							foreground[i][j] = 0;
+							background[i][j] = 225;
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 6)) {
+										background[h][k] = 225;
+									}
+								}
+							}
+						}
 						if(u.getName().equals("Turret")) {
 							field[i][j] = "T";
 							foreground[i][j] = 0;
@@ -642,6 +1320,10 @@ public class Battlefield {
 							}else {
 								background[i][j] = 242;
 							}
+						}
+						if(u.getName().equals("Mochi")) {
+							field[i][j] = "🦊";
+							foreground[i][j] = 214;
 						}
 						if(u.getName().equals("Pawn")) {
 							field[i][j] = "P";
@@ -685,6 +1367,11 @@ public class Battlefield {
 									}
 								}
 							}
+						}
+						if(u.getName().equals("Mine")) {
+							field[i][j] = "M";
+							foreground[i][j] = 0;
+							background[i][j] = 217;
 						}
 					}
 				}

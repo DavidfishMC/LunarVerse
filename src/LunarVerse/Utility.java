@@ -2,6 +2,7 @@ package LunarVerse;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Utility {
 	
@@ -19,6 +20,8 @@ public class Utility {
 	boolean escape = false;
 	boolean spikes = false;
 	boolean rookActive = true;
+	boolean pounced = false;
+	boolean destroy = false;
 	String gemstone = "iron";
 	String direction = "";
 	String color = "";
@@ -61,6 +64,14 @@ public class Utility {
 	
 	public String getDirection() {
 		return direction;
+	}
+	
+	public void resetPounce() {
+		pounced = false;
+	}
+	
+	public void resetDestroy() {
+		destroy = false;
 	}
 	
 	public void setDirection(String s) {
@@ -613,6 +624,314 @@ public class Utility {
 				target = null;
 				System.out.println("\"Freeze, monkey style!\"");
 				return;
+			}
+		}
+	}
+	
+	public void move(int x, int y) {
+		Location l = new Location(x, y);
+		loc.set(x, y);
+		owner.mochiMove();
+		System.out.println();
+	}
+	
+	public boolean inRange(Location l) {
+		double d = loc.distanceTo(l);
+		if (4 >= d) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean inReach(Location l) {
+		int x = l.getX();
+		int y = l.getY();
+		int d = Math.abs(x - loc.getX()) + Math.abs(y - loc.getY());
+		if (owner.getMochiMovement() >= d) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void pounce() {
+		Scanner input = new Scanner(System.in);
+		if(pounced) {
+			System.out.println("Mochi has already pounced this turn!");
+			System.out.println();
+			return;
+		}
+		if(!this.inRange(enemies.get(0), 20) && !this.inRange(enemies.get(1), 20) && !this.inRange(enemies.get(2), 20)) {
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
+		String range = "No";
+		if(this.inRange(enemies.get(0), 4)) {
+			range = "Yes";
+		}
+		String range2 = "No";
+		if(this.inRange(enemies.get(1), 4)) {
+			range2 = "Yes";
+		}
+		String range3 = "No";
+		if(this.inRange(enemies.get(2), 4)) {
+			range3 = "Yes";
+		}
+		System.out.println("1: " + enemies.get(0).getSkin() +". Health: " +  enemies.get(0).getHealth() + "/" + enemies.get(0).getMaxHP() + ". In Range: " + range + ".");
+		System.out.println("2: " + enemies.get(1).getSkin() +". Health: " +  enemies.get(1).getHealth() + "/" + enemies.get(1).getMaxHP() + ". In Range: " + range2 + ".");
+		System.out.println("3: " + enemies.get(2).getSkin() +". Health: " +  enemies.get(2).getHealth() + "/" + enemies.get(2).getMaxHP() + ". In Range: " + range3 + ".");
+		System.out.println("Who should Mochi pounce on: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if(this.inRange(enemies.get(0), 4)) {
+				enemies.get(0).takeDamage(100);
+				owner.addDamage(100);
+				pounced = true;
+				loc.set(enemies.get(0).getLoc().getX(), enemies.get(0).getLoc().getY());
+				if (owner.ultActive()) {
+					if (allies.get(0).inRange(enemies.get(0), 5)) {
+						allies.get(0).heal(0.05);
+						owner.addHealing(allies.get(0).getMaxHP() * 0.05);
+					}
+					if (allies.get(1).inRange(enemies.get(0), 5)) {
+						allies.get(1).heal(0.05);
+						owner.addHealing(allies.get(1).getMaxHP() * 0.05);
+					}
+					if (allies.get(2).inRange(enemies.get(0), 5)) {
+						allies.get(2).heal(0.05);
+						owner.addHealing(allies.get(2).getMaxHP() * 0.05);
+					}
+					owner.setShield();
+				}
+				System.out.println("\"No mercy Mochi!\"");
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("2")) {
+			if(this.inRange(enemies.get(1), 4)) {
+				enemies.get(1).takeDamage(100);
+				owner.addDamage(100);
+				pounced = true;
+				loc.set(enemies.get(1).getLoc().getX(), enemies.get(1).getLoc().getY());
+				if (owner.ultActive()) {
+					if (allies.get(0).inRange(enemies.get(1), 5)) {
+						allies.get(0).heal(0.05);
+						owner.addHealing(allies.get(0).getMaxHP() * 0.05);
+					}
+					if (allies.get(1).inRange(enemies.get(1), 5)) {
+						allies.get(1).heal(0.05);
+						owner.addHealing(allies.get(1).getMaxHP() * 0.05);
+					}
+					if (allies.get(2).inRange(enemies.get(1), 5)) {
+						allies.get(2).heal(0.05);
+						owner.addHealing(allies.get(2).getMaxHP() * 0.05);
+					}
+					owner.setShield();
+				}
+				System.out.println("\"No mercy Mochi!\"");
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("3")) {
+			if(this.inRange(enemies.get(2), 4)) {
+				enemies.get(2).takeDamage(100);
+				owner.addDamage(100);
+				pounced = true;
+				loc.set(enemies.get(2).getLoc().getX(), enemies.get(2).getLoc().getY());
+				if (owner.ultActive()) {
+					if (allies.get(0).inRange(enemies.get(2), 5)) {
+						allies.get(0).heal(0.05);
+						owner.addHealing(allies.get(0).getMaxHP() * 0.05);
+					}
+					if (allies.get(1).inRange(enemies.get(2), 5)) {
+						allies.get(1).heal(0.05);
+						owner.addHealing(allies.get(1).getMaxHP() * 0.05);
+					}
+					if (allies.get(2).inRange(enemies.get(2), 5)) {
+						allies.get(2).heal(0.05);
+						owner.addHealing(allies.get(2).getMaxHP() * 0.05);
+					}
+					owner.setShield();
+				}
+				System.out.println("\"No mercy Mochi!\"");
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		System.out.println();
+	}
+	
+	public void destroyUtility() {
+		if(destroy) {
+			System.out.println("Mochi has already destroyed utility this turn!");
+			System.out.println();
+			return;
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Sensor") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy sound sensor destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Sphere") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Symphony Sphere has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Symphony Sphere destroyed.");
+				}
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Gemstone") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Gemstone Lode has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Gemstone Lode destroyed.");
+				}
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Field") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Electromagnetic field destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Umbrella") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Umbrella destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Pylon") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Honey Pylon destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Turret") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Turret has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.get(j).deactivate();
+					System.out.println("Enemy Turret deactivated.");
+				}
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Pawn") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Pawn destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Mural") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Mural destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Sock") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Sock Monkey destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Support") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Sockyman Support destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Matrix") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Immortality Matrix destroyed.");
+				j--;
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
+	}
+	
+	public void returnTo() {
+		loc.set(owner.getLoc().getX(), owner.getLoc().getY());
+		System.out.println("\"Back to me Mochi!\"");
+	}
+	
+	public void firework() {
+		int randomNum = (int) (Math.random() * (2 - 0 + 0)) + 0;
+		Player target = enemies.get(randomNum);
+		if (owner.inRange(target)) {
+			target.resetCover();
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect SolarProtect = new Effect("weak", 0.15, 1);
+			e.add(SolarProtect);
+			target.addEffects(e);
+			target.applyEffects();
+			System.out.println(target.getSkin() + " was fireworked!");
+		}
+	}
+	
+	public void steam() {
+		for (Player e: enemies) {
+			while (!e.isFortified() && owner.inRange(e)) {
+				e.knockbacked(owner.getLoc());
 			}
 		}
 	}

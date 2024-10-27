@@ -3,8 +3,11 @@ package LunarVerse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -178,11 +181,12 @@ public class GameSim {
 				p6.setCharm(charm6);
 			}
 		}else {
-			p1 = new Player(1000, 75, true, "Patitek", 20, 20, 10, 10, 0);
-			p3 = new Player(1000, 475, false, "Louis", 20, 20, 10, 10, 0);
+			p1 = new Player(1, 75, true, "Rin", 20, 20, 10, 10, 0);
+			p1.addRole("tank");
+			p3 = new Player(1000, 475, false, "Archer", 20, 20, 10, 10, 0);
 			p5 = new Player(1000, 175, false, "Mayhem", 20, 20, 11, 9, 0);
 			
-			p2 = new Player(10000, 250, false, "Quincy", 19, 19, 10, 10, 7);
+			p2 = new Player(10000, 250, false, "Chloe", 19, 19, 10, 10, 7);
 			p4 = new Player(10000, 250, false, "Lunar", 22, 22, 10, 10, 0);
 			p6 = new Player(10000, 200, false, "Sammi", 23, 23, 10, 10, 7);
 			String skinName = "Sakura";
@@ -214,6 +218,44 @@ public class GameSim {
 		if (p6.getName().equals("Gambit")) {
 			p6.setRooks(p1, p3, p5, p4, p2);
 		}
+		
+		if (p1.getName().equals("Rin")) {
+			p1.setMochi(p2, p4, p6, p3, p5);
+		}
+		if (p3.getName().equals("Rin")) {
+			p3.setMochi(p2, p4, p6, p1, p5);
+		}
+		if (p5.getName().equals("Rin")) {
+			p5.setMochi(p2, p4, p6, p3, p1);
+		}
+		if (p2.getName().equals("Rin")) {
+			p2.setMochi(p1, p3, p5, p4, p6);
+		}
+		if (p4.getName().equals("Rin")) {
+			p4.setMochi(p1, p3, p5, p2, p6);
+		}
+		if (p6.getName().equals("Rin")) {
+			p6.setMochi(p1, p3, p5, p4, p2);
+		}
+		
+		if (p1.getName().equals("Victor")) {
+			p1.setSteam(p2, p4, p6, p3, p5);
+		}
+		if (p3.getName().equals("Victor")) {
+			p3.setSteam(p2, p4, p6, p1, p5);
+		}
+		if (p5.getName().equals("Victor")) {
+			p5.setSteam(p2, p4, p6, p3, p1);
+		}
+		if (p2.getName().equals("Victor")) {
+			p2.setSteam(p1, p3, p5, p4, p6);
+		}
+		if (p4.getName().equals("Victor")) {
+			p4.setSteam(p1, p3, p5, p2, p6);
+		}
+		if (p6.getName().equals("Victor")) {
+			p6.setSteam(p1, p3, p5, p4, p2);
+		}
 		b = new Battlefield("Nexus Village", p1, p3, p5, p2, p4, p6);
 		Party party1 = new Party(true, p1, p3, p5);
 		Party party2 = new Party(false, p2, p4, p6);
@@ -235,7 +277,7 @@ public class GameSim {
 		}catch (Exception e) {
 			System.out.println(e);
 		}
-		audioPlayer.play();
+		//audioPlayer.play();
 		try {
 			menuPlayer.stop();
 		}catch (Exception e) {
@@ -264,6 +306,11 @@ public class GameSim {
 						GameSim.cover.clear();
 						break;
 					}
+				}
+				if (p2.getEMP() > 0 || p4.getEMP() > 0 || p6.getEMP() > 0) {
+					p1.setSupress(true);
+					p3.setSupress(true);
+					p5.setSupress(true);
 				}
 				if(party1.oneLeft() && play) {
 					try {
@@ -329,6 +376,13 @@ public class GameSim {
 					}
 					if (response.equals("e")) {
 						p1.enable();
+						if (p1.getName().equals("Everest")) {
+							EverestPassive(p1, p3, p5);
+						}
+						if (p1.getName().equals("Rin")) {
+							RinPassive(p1, p2, p4, p6, p3, p5);
+						}
+						ReviveDeny(p1, p3, p5);
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -427,7 +481,17 @@ public class GameSim {
 								System.out.println(p1.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p1.getName().equals("Millie")) {
+								if(p1.getName().equals("Victor")) {
+									VictorAttack(p1, p2, p4 ,p6);
+									weaponFX();
+								}else if(p1.getName().equals("Deny")) {
+									Location l = SetCursor(p1, p2, p4, p6, p3, p5, 4);
+									DenyAttack(p1, p2, p4 ,p6, l);
+									weaponFX();
+								}else if(p1.getName().equals("Everest")) {
+									EverestAttack(p1, p2, p4 ,p6);
+									weaponFX();
+								}else if(p1.getName().equals("Millie")) {
 									MillieAttack(p1, p2, p4 ,p6);
 									weaponFX();
 								}else if (p1.getName().equals("Yuri")) {
@@ -697,6 +761,15 @@ public class GameSim {
 											if(p1.getName().equals("Orchid")) {
 												OrchidAttack(p1, p2, p4, p6);
 											}
+											if(p1.getName().equals("Clementine")) {
+												ClementineAttack(p1, p2);
+											}
+											if(p1.getName().equals("Rin")) {
+												RinAttack(p1, p2, p4, p6);
+											}
+											if(p1.getName().equals("Isabelle")) {
+												IsabelleAttack(p1, p2, p3, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -927,6 +1000,15 @@ public class GameSim {
 											}
 											if(p1.getName().equals("Orchid")) {
 												OrchidAttack(p1, p4, p2, p6);
+											}
+											if(p1.getName().equals("Clementine")) {
+												ClementineAttack(p1, p4);
+											}
+											if(p1.getName().equals("Rin")) {
+												RinAttack(p1, p4, p2, p6);
+											}
+											if(p1.getName().equals("Isabelle")) {
+												IsabelleAttack(p1, p4, p3, p5);
 											}
 										}
 									}
@@ -1160,6 +1242,15 @@ public class GameSim {
 											if(p1.getName().equals("Orchid")) {
 												OrchidAttack(p1, p6, p4, p2);
 											}
+											if(p1.getName().equals("Clementine")) {
+												ClementineAttack(p1, p6);
+											}
+											if(p1.getName().equals("Rin")) {
+												RinAttack(p1, p6, p4, p2);
+											}
+											if(p1.getName().equals("Isabelle")) {
+												IsabelleAttack(p1, p6, p3, p5);
+											}
 										}
 									}
 								}
@@ -1216,6 +1307,13 @@ public class GameSim {
 					}
 					if (response.equals("e")) {
 						p3.enable();
+						if (p3.getName().equals("Everest")) {
+							EverestPassive(p3, p1, p5);
+						}
+						if (p3.getName().equals("Rin")) {
+							RinPassive(p3, p2, p4, p6, p1, p5);
+						}
+						ReviveDeny(p3, p1, p5);
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -1296,7 +1394,17 @@ public class GameSim {
 								System.out.println(p3.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p3.getName().equals("Millie")) {
+								if(p3.getName().equals("Victor")) {
+									VictorAttack(p3, p2, p4 ,p6);
+									weaponFX();
+								}else if(p3.getName().equals("Deny")) {
+									Location l = SetCursor(p3, p2, p4, p6, p1, p5, 4);
+									DenyAttack(p3, p2, p4 ,p6, l);
+									weaponFX();
+								}else if(p3.getName().equals("Everest")) {
+									EverestAttack(p3, p2, p4 ,p6);
+									weaponFX();
+								}else if(p3.getName().equals("Millie")) {
 									MillieAttack(p3, p2, p4 ,p6);
 									weaponFX();
 								}else if (p3.getName().equals("Yuri")) {
@@ -1566,6 +1674,15 @@ public class GameSim {
 											if(p3.getName().equals("Orchid")) {
 												OrchidAttack(p3, p2, p4, p6);
 											}
+											if(p3.getName().equals("Clementine")) {
+												ClementineAttack(p3, p2);
+											}
+											if(p3.getName().equals("Rin")) {
+												RinAttack(p3, p2, p4, p6);
+											}
+											if(p3.getName().equals("Isabelle")) {
+												IsabelleAttack(p3, p2, p1, p5);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1797,6 +1914,15 @@ public class GameSim {
 											}
 											if(p3.getName().equals("Orchid")) {
 												OrchidAttack(p3, p4, p2, p6);
+											}
+											if(p3.getName().equals("Clementine")) {
+												ClementineAttack(p3, p4);
+											}
+											if(p3.getName().equals("Rin")) {
+												RinAttack(p3, p4, p2, p6);
+											}
+											if(p3.getName().equals("Isabelle")) {
+												IsabelleAttack(p3, p4, p1, p5);
 											}
 										}
 									}
@@ -2030,6 +2156,15 @@ public class GameSim {
 											if(p3.getName().equals("Orchid")) {
 												OrchidAttack(p3, p6, p4, p2);
 											}
+											if(p3.getName().equals("Clementine")) {
+												ClementineAttack(p3, p6);
+											}
+											if(p3.getName().equals("Rin")) {
+												RinAttack(p3, p6, p4, p2);
+											}
+											if(p3.getName().equals("Isabelle")) {
+												IsabelleAttack(p3, p6, p1, p5);
+											}
 										}
 									}
 								}
@@ -2086,6 +2221,13 @@ public class GameSim {
 					}
 					if (response.equals("e")) {
 						p5.enable();
+						if (p5.getName().equals("Everest")) {
+							EverestPassive(p5, p3, p1);
+						}
+						if (p5.getName().equals("Rin")) {
+							RinPassive(p5, p2, p4, p6, p3, p1);
+						}
+						ReviveDeny(p5, p3, p1);
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -2166,7 +2308,17 @@ public class GameSim {
 								System.out.println(p5.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p5.getName().equals("Millie")) {
+								if(p5.getName().equals("Victor")) {
+									VictorAttack(p5, p2, p4 ,p6);
+									weaponFX();
+								}else if(p5.getName().equals("Deny")) {
+									Location l = SetCursor(p5, p2, p4, p6, p3, p1, 4);
+									DenyAttack(p5, p2, p4 ,p6, l);
+									weaponFX();
+								}else if(p5.getName().equals("Everest")) {
+									EverestAttack(p5, p2, p4 ,p6);
+									weaponFX();
+								}else if(p5.getName().equals("Millie")) {
 									MillieAttack(p5, p2, p4 ,p6);
 									weaponFX();
 								}else if (p5.getName().equals("Yuri")) {
@@ -2436,6 +2588,15 @@ public class GameSim {
 											if(p5.getName().equals("Orchid")) {
 												OrchidAttack(p5, p2, p4, p6);
 											}
+											if(p5.getName().equals("Clementine")) {
+												ClementineAttack(p5, p2);
+											}
+											if(p5.getName().equals("Rin")) {
+												RinAttack(p5, p2, p4, p6);
+											}
+											if(p5.getName().equals("Isabelle")) {
+												IsabelleAttack(p5, p2, p1, p3);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2667,6 +2828,15 @@ public class GameSim {
 											}
 											if(p5.getName().equals("Orchid")) {
 												OrchidAttack(p5, p4, p2, p6);
+											}
+											if(p5.getName().equals("Clementine")) {
+												ClementineAttack(p5, p4);
+											}
+											if(p5.getName().equals("Rin")) {
+												RinAttack(p5, p4, p2, p6);
+											}
+											if(p5.getName().equals("Isabelle")) {
+												IsabelleAttack(p5, p4, p1, p3);
 											}
 										}
 									}
@@ -2900,6 +3070,15 @@ public class GameSim {
 											if(p5.getName().equals("Orchid")) {
 												OrchidAttack(p5, p6, p4, p2);
 											}
+											if(p5.getName().equals("Clementine")) {
+												ClementineAttack(p5, p6);
+											}
+											if(p5.getName().equals("Rin")) {
+												RinAttack(p5, p6, p4, p2);
+											}
+											if(p5.getName().equals("Isabelle")) {
+												IsabelleAttack(p5, p6, p1, p3);
+											}
 										}
 									}
 								}
@@ -2957,6 +3136,11 @@ public class GameSim {
 						GameSim.cover.clear();
 						break;
 					}
+				}
+				if (p1.getEMP() > 0 || p3.getEMP() > 0 || p5.getEMP() > 0) {
+					p2.setSupress(true);
+					p4.setSupress(true);
+					p6.setSupress(true);
 				}
 				if(party2.oneLeft() && play) {
 					try {
@@ -3019,6 +3203,13 @@ public class GameSim {
 					}
 					if (response.equals("e")) {
 						p2.enable();
+						if (p2.getName().equals("Everest")) {
+							EverestPassive(p2, p4, p6);
+						}
+						if (p2.getName().equals("Rin")) {
+							RinPassive(p2, p1, p3, p5, p4, p6);
+						}
+						ReviveDeny(p2, p4, p6);
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -3099,7 +3290,17 @@ public class GameSim {
 								System.out.println(p2.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p2.getName().equals("Millie")) {
+								if(p2.getName().equals("Victor")) {
+									VictorAttack(p2, p1, p3 ,p5);
+									weaponFX();
+								}else if(p2.getName().equals("Deny")) {
+									Location l = SetCursor(p2, p1, p3, p5, p4, p6, 4);
+									DenyAttack(p2, p1, p3 ,p5, l);
+									weaponFX();
+								}else if(p2.getName().equals("Everest")) {
+									EverestAttack(p2, p1, p3 ,p5);
+									weaponFX();
+								}else if(p2.getName().equals("Millie")) {
 									MillieAttack(p2, p1, p3 ,p5);
 									weaponFX();
 								}else if (p2.getName().equals("Yuri")) {
@@ -3369,6 +3570,15 @@ public class GameSim {
 											if(p2.getName().equals("Orchid")) {
 												OrchidAttack(p2, p1, p3, p5);
 											}
+											if(p2.getName().equals("Clementine")) {
+												ClementineAttack(p2, p1);
+											}
+											if(p2.getName().equals("Rin")) {
+												RinAttack(p2, p1, p3, p5);
+											}
+											if(p2.getName().equals("Isabelle")) {
+												IsabelleAttack(p2, p1, p4, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -3600,6 +3810,15 @@ public class GameSim {
 											}
 											if(p2.getName().equals("Orchid")) {
 												OrchidAttack(p2, p3, p1, p5);
+											}
+											if(p2.getName().equals("Clementine")) {
+												ClementineAttack(p2, p3);
+											}
+											if(p2.getName().equals("Rin")) {
+												RinAttack(p2, p3, p1, p5);
+											}
+											if(p2.getName().equals("Isabelle")) {
+												IsabelleAttack(p2, p3, p4, p6);
 											}
 										}
 									}
@@ -3833,6 +4052,15 @@ public class GameSim {
 											if(p2.getName().equals("Orchid")) {
 												OrchidAttack(p2, p5, p3, p1);
 											}
+											if(p2.getName().equals("Clementine")) {
+												ClementineAttack(p2, p5);
+											}
+											if(p2.getName().equals("Rin")) {
+												RinAttack(p2, p5, p3, p1);
+											}
+											if(p2.getName().equals("Isabelle")) {
+												IsabelleAttack(p2, p5, p4, p6);
+											}
 										}
 									}
 								}
@@ -3889,6 +4117,13 @@ public class GameSim {
 					}
 					if (response.equals("e")) {
 						p4.enable();
+						if (p4.getName().equals("Everest")) {
+							EverestPassive(p4, p2, p6);
+						}
+						if (p4.getName().equals("Rin")) {
+							RinPassive(p4, p1, p3, p5, p2, p6);
+						}
+						ReviveDeny(p4, p2, p6);
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -3969,7 +4204,17 @@ public class GameSim {
 								System.out.println(p4.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p4.getName().equals("Millie")) {
+								if(p4.getName().equals("Victor")) {
+									VictorAttack(p4, p1, p3 ,p5);
+									weaponFX();
+								}else if(p4.getName().equals("Deny")) {
+									Location l = SetCursor(p4, p1, p3, p5, p2, p6, 4);
+									DenyAttack(p4, p1, p3 ,p5, l);
+									weaponFX();
+								}else if(p4.getName().equals("Everest")) {
+									EverestAttack(p4, p1, p3 ,p5);
+									weaponFX();
+								}else if(p4.getName().equals("Millie")) {
 									MillieAttack(p4, p1, p3 ,p5);
 									weaponFX();
 								}else if (p4.getName().equals("Yuri")) {
@@ -4239,6 +4484,15 @@ public class GameSim {
 											if(p4.getName().equals("Orchid")) {
 												OrchidAttack(p4, p1, p3, p5);
 											}
+											if(p4.getName().equals("Clementine")) {
+												ClementineAttack(p4, p1);
+											}
+											if(p4.getName().equals("Rin")) {
+												RinAttack(p4, p1, p3, p5);
+											}
+											if(p4.getName().equals("Isabelle")) {
+												IsabelleAttack(p4, p1, p2, p6);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -4470,6 +4724,15 @@ public class GameSim {
 											}
 											if(p4.getName().equals("Orchid")) {
 												OrchidAttack(p4, p3, p1, p5);
+											}
+											if(p4.getName().equals("Clementine")) {
+												ClementineAttack(p4, p3);
+											}
+											if(p4.getName().equals("Rin")) {
+												RinAttack(p4, p3, p1, p5);
+											}
+											if(p4.getName().equals("Isabelle")) {
+												IsabelleAttack(p4, p3, p2, p6);
 											}
 										}
 									}
@@ -4703,6 +4966,15 @@ public class GameSim {
 											if(p4.getName().equals("Orchid")) {
 												OrchidAttack(p4, p5, p3, p1);
 											}
+											if(p4.getName().equals("Clementine")) {
+												ClementineAttack(p4, p5);
+											}
+											if(p4.getName().equals("Rin")) {
+												RinAttack(p4, p5, p3, p1);
+											}
+											if(p4.getName().equals("Isabelle")) {
+												IsabelleAttack(p4, p5, p2, p6);
+											}
 										}
 									}
 								}
@@ -4759,6 +5031,13 @@ public class GameSim {
 					}
 					if (response.equals("e")) {
 						p6.enable();
+						if (p6.getName().equals("Everest")) {
+							EverestPassive(p6, p4, p2);
+						}
+						if (p6.getName().equals("Rin")) {
+							RinPassive(p6, p1, p3, p5, p4, p2);
+						}
+						ReviveDeny(p6, p2, p4);
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -4839,7 +5118,17 @@ public class GameSim {
 								System.out.println(p6.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p6.getName().equals("Millie")) {
+								if(p6.getName().equals("Victor")) {
+									VictorAttack(p6, p1, p3 ,p5);
+									weaponFX();
+								}else if(p6.getName().equals("Deny")) {
+									Location l = SetCursor(p6, p1, p3, p5, p4, p2, 4);
+									DenyAttack(p6, p1, p3 ,p5, l);
+									weaponFX();
+								}else if(p6.getName().equals("Everest")) {
+									EverestAttack(p6, p1, p3 ,p5);
+									weaponFX();
+								}else if(p6.getName().equals("Millie")) {
 									MillieAttack(p6, p1, p3 ,p5);
 									weaponFX();
 								}else if (p6.getName().equals("Yuri")) {
@@ -5109,6 +5398,15 @@ public class GameSim {
 											if(p6.getName().equals("Orchid")) {
 												OrchidAttack(p6, p1, p3, p5);
 											}
+											if(p6.getName().equals("Clementine")) {
+												ClementineAttack(p6, p1);
+											}
+											if(p6.getName().equals("Rin")) {
+												RinAttack(p6, p1, p3, p5);
+											}
+											if(p6.getName().equals("Isabelle")) {
+												IsabelleAttack(p6, p1, p2, p4);
+											}
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -5341,6 +5639,15 @@ public class GameSim {
 											if(p6.getName().equals("Orchid")) {
 												OrchidAttack(p6, p3, p1, p5);
 											}
+											if(p6.getName().equals("Clementine")) {
+												ClementineAttack(p6, p3);
+											}
+											if(p6.getName().equals("Rin")) {
+												RinAttack(p6, p3, p1, p5);
+											}
+											if(p6.getName().equals("Isabelle")) {
+												IsabelleAttack(p6, p3, p2, p4);
+											}
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -5572,6 +5879,15 @@ public class GameSim {
 											}
 											if(p6.getName().equals("Orchid")) {
 												OrchidAttack(p6, p5, p3, p1);
+											}
+											if(p6.getName().equals("Clementine")) {
+												ClementineAttack(p6, p5);
+											}
+											if(p6.getName().equals("Rin")) {
+												RinAttack(p6, p5, p3, p1);
+											}
+											if(p6.getName().equals("Isabelle")) {
+												IsabelleAttack(p6, p5, p2, p4);
 											}
 										}
 									}
@@ -6156,9 +6472,46 @@ public class GameSim {
 		if(p.getName().equals("Orchid")) {
 			OrchidAbility(p, a, b, c, d, e);
 		}
+		if(p.getName().equals("Everest")) {
+			EverestAbility(p, a, b, c, d, e);
+		}
+		if(p.getName().equals("Clementine")) {
+			ClementineAbility(p, a, b, c, d, e);
+		}
+		if(p.getName().equals("Deny")) {
+			DenyAbility(p, a, b, c, d, e);
+		}
+		if(p.getName().equals("Rin")) {
+			RinAbility(p, a, b, c);
+		}
+		if(p.getName().equals("Victor")) {
+			VictorAbility(p);
+		}
+		if(p.getName().equals("Isabelle")) {
+			Location l = SetCursor(p, a, b, c, d, e, 6);
+			IsabelleAbility(p, a, b, c, d, e, l);
+		}
 	}
 	
 	public static void runUltimates(Player p, Player a, Player b, Player c, Player d, Player e, Party one, Party two) {
+		if(p.getName().equals("Isabelle")) {
+			IsabelleUltimate(p, a, b, c, d, e);
+		}
+		if(p.getName().equals("Victor")) {
+			VictorUltimate(p);
+		}
+		if(p.getName().equals("Rin")) {
+			RinUltimate(p, a, b);
+		}
+		if(p.getName().equals("Deny")) {
+			DenyUltimate(p, a, b, c);
+		}
+		if(p.getName().equals("Clementine")) {
+			ClementineUltimate(p, a, b, c, false);
+		}
+		if(p.getName().equals("Everest")) {
+			EverestUltimate(p);
+		}
 		if(p.getName().equals("Orchid")) {
 			OrchidUltimate(p, a, b, c, d, e);
 		}
@@ -6464,6 +6817,190 @@ public class GameSim {
             // Update the elapsed time
             clock = System.currentTimeMillis() - startTime;
         }
+	}
+	
+	public static void EverestPassive(Player p, Player a, Player b) {
+		if (p.getBalance() == 0) {
+			System.out.println("I do not have any Balance Orbs right now.");
+			System.out.println();
+			return;
+		}
+		if (p.isSupressed()) {
+			System.out.println("Cannot use passive skill while supressed!");
+			System.out.println();
+			return;
+		}
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
+		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
+		System.out.println("3: " + p.getSkin() +b.showHP() +  p.getHealth() + "/" + p.getMaxHP() + ".");
+		System.out.print("Who do you want to give a Balance Orb to: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			p.useBalance();
+			a.cleanse();
+			System.out.println("\"Let me clean that off for you, " + a.getSkin() + ".\"");
+		}
+		if(targetResponse.equals("2")) {
+			p.useBalance();
+			b.cleanse();
+			System.out.println("\"Let me clean that off for you, " + b.getSkin() + ".\"");
+		}
+		if(targetResponse.equals("3")) {
+			p.useBalance();
+			p.cleanse();
+			System.out.println("\"At peace, once again.\"");
+		}
+		System.out.println();
+	}
+	
+	public static void ReviveDeny(Player p, Player a, Player b) {
+		if (a.getEMP() > 0 && !a.isAlive()) {
+			if (p.getLoc().eqLoc(a.getLoc())) {
+				a.reviveDeny();
+			}else {
+				return;
+			}
+		}
+		if (b.getEMP() > 0 && !b.isAlive()) {
+			if (p.getLoc().eqLoc(b.getLoc())) {
+				b.reviveDeny();
+			}else {
+				return;
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void RinPassive(Player p, Player a, Player z, Player c, Player d, Player e) {
+		Utility u = null;
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Mochi") && GameSim.utility.get(j).owner(p)) {
+				u = utility.get(j);
+			}
+		}
+		String s = "";
+		boolean move = true;
+		boolean hasMoved = false;
+		String lastMoved = "";
+		double rand = Math.random();
+		Scanner input = new Scanner(System.in);
+		if(p.getMochiMovement() <= 0) {
+			System.out.println("Mochi has no more movement left!");
+			System.out.println();
+		}else {
+			int originalMovement = p.getMovement();
+			b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+			while(move) {
+				System.out.print("Which way does Mochi want to move: ");
+				String moveResponse = input.next();
+				switch (moveResponse) {
+				  case "a":
+					  if(b.hasTrench(u.getLoc().getX() - 1, u.getLoc().getY())) {
+						  System.out.println("Cannot move onto a Trench tile!");
+						  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+						  break;
+					  }
+					  u.move(u.getLoc().getX() - 1, u.getLoc().getY());
+						if(b.hasCar(u.getLoc().getX(), u.getLoc().getY())) {
+							u.getLoc().set(u.getLoc().getX() - 3, u.getLoc().getY());
+						}
+					  hasMoved = true;
+					  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+					  lastMoved = "left";
+					  System.out.println("Relocated to " + u.getLoc() + ". " + p.getMochiMovement() + " movement left.");
+				    break;
+				  case "d":
+					  if(b.hasTrench(u.getLoc().getX() + 1, u.getLoc().getY())) {
+						  System.out.println("Cannot move onto a Trench tile!");
+						  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+						  break;
+					  }
+					  u.move(u.getLoc().getX() + 1, u.getLoc().getY());
+					  if(b.hasCar(u.getLoc().getX(), u.getLoc().getY())) {
+							u.getLoc().set(u.getLoc().getX() + 3, u.getLoc().getY());
+						}
+					  hasMoved = true;
+					  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+					  lastMoved = "right";
+					  System.out.println("Relocated to " + u.getLoc() + ". " + p.getMochiMovement() + " movement left.");
+				    break;
+				  case "w":
+					  if(b.hasTrench(u.getLoc().getX(), u.getLoc().getY() - 1)) {
+						  System.out.println("Cannot move onto a Trench tile!");
+						  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+						  break;
+					  }
+					  u.move(u.getLoc().getX(), u.getLoc().getY() - 1);
+					  if(b.hasCar(u.getLoc().getX(), u.getLoc().getY())) {
+							u.getLoc().set(u.getLoc().getX(), u.getLoc().getY() - 3);
+						}
+					  hasMoved = true;
+					  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+					  lastMoved = "up";
+					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMochiMovement() + " movement left.");
+				    break;
+				  case "s":
+					  if(b.hasTrench(u.getLoc().getX(), u.getLoc().getY() + 1)) {
+						  System.out.println("Cannot move onto a Trench tile!");
+						  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+						  break;
+					  }
+					  u.move(u.getLoc().getX(), u.getLoc().getY() + 1);
+					  if(b.hasCar(u.getLoc().getX(), u.getLoc().getY())) {
+						  u.getLoc().set(u.getLoc().getX(), u.getLoc().getY() + 3);
+						}
+					  hasMoved = true;
+					  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+					  lastMoved = "down";
+					  System.out.println("Relocated to " + p.getLoc() + ". " + p.getMochiMovement() + " movement left.");
+				    break;
+				  case "r":
+					  u.pounce();
+					  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				    break;
+				  case "u":
+					  u.destroyUtility();
+					  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				    break;
+				  case "o":
+					  u.returnTo();
+					  b.printMochiField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				    break;
+				  case "p":
+					  p.increaseMochiMovement();
+				    break;
+				  case "m":
+					  System.out.println("Mochi movement completed.");
+					  hasMoved = false;
+					  move = false;
+				    break;
+				}
+				int hor = 0;
+				int ver = 0;
+				if(hasMoved) {
+					int range = 4;
+					
+					
+				}
+				for(int i = 0; i < utility.size(); i++) {
+					if(p.getLoc().eqLoc(utility.get(i).getLoc())) {
+						if(utility.get(i).getName().equals("Crane") && utility.get(i).isAlly(p) && !utility.get(i).getPickUp()) {
+							System.out.println("Got a crane!");
+							utility.get(i).getOwner().increaseDPSNum(5);
+							utility.get(i).pickedUp();
+							break;
+						}
+					}
+				}
+				System.out.println();
+				if(p.getMochiMovement() <= 0) {
+					System.out.println("Mochi is out of movement.");
+					move = false;
+					System.out.println();
+				}
+			}
+		}
 	}
 	
 	public static Player CharacterSelection(Player p, String name, boolean start, int x, int y) {
@@ -7307,6 +7844,63 @@ public class GameSim {
 			  p.addRole("brawler");
 			  p.addRole("support");
 		    break;
+		  case "Everest":
+			  p = new Player(2275, 150, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Everest", "#66F0B2", "#5671F5", "#2A134E");
+			  p.skin(name);
+			  p.setC(214);
+			  System.out.println("\"Amid chaos, we will find harmony.\"");
+			  System.out.println();
+			  p.addRole("support");
+		    break;
+		  case "Clementine":
+			  p = new Player(2900, 225, start, name, x, y, 11, 10, 6);
+			  name = p.getGradientName("Clementine", "#F3A639", "#FB9550", "#E760F0", "#363CE7");
+			  p.skin(name);
+			  p.setC(85);
+			  System.out.println("\"Rolling out. Let’s do this!\"");
+			  System.out.println();
+			  p.addRole("tank");
+		    break;
+		  case "Deny":
+			  p = new Player(2550, 100, start, name, x, y, 11, 11, 7);
+			  name = p.getGradientName("D3/NY", "#A3EAFF", "#A6B0CE", "#6C2920");
+			  p.skin(name);
+			  p.setC(81);
+			  System.out.println("\"Suppress them to get the last laugh.\"");
+			  System.out.println();
+			  p.addRole("brawler");
+		    break;
+		  case "Rin":
+			  p = new Player(2450, 250, start, name, x, y, 10, 10, 8);
+			  name = p.getGradientName("Rin", "#F3952B", "#C66D24");
+			  p.skin(name);
+			  p.setC(216);
+			  System.out.println("\"Our bond is our strength.\"");
+			  System.out.println();
+			  p.addRole("dive");
+			  p.addRole("brawler");
+		    break;
+		  case "Victor":
+			  p = new Player(3750, 50, start, name, x, y, 10, 10, 5);
+			  name = p.getGradientName("Victor", "#52494C", "#B9A167", "#AF8561");
+			  p.skin(name);
+			  p.setC(58);
+			  System.out.println("\"Steam and steel, ready to defend and conquer.\"");
+			  System.out.println();
+			  p.addRole("tank");
+			  p.addRole("brawler");
+		    break;
+		  case "Isabelle":
+			  p = new Player(2300, 125, start, name, x, y, 12, 9, 6);
+			  name = p.getGradientName("Isabelle", "#DAB6FC", "#BBADFF", "#9FA0FF", "#8E94F2");
+			  p.skin(name);
+			  p.setC(177);
+			  System.out.println("\"Another day, another battlefield.\"");
+			  System.out.println();
+			  p.addRole("support");
+			  p.addRole("engineer");
+		    break;
 		}
 		return p;
 	}
@@ -7346,6 +7940,7 @@ public class GameSim {
 	
 	public static void Jump(Player p, Player a, Player b, Location l, Player e1, Player e2, Player e3) {
 		boolean umbrella = false;
+		boolean mochi = false;
 		Scanner input = new Scanner(System.in);
 		int jumpD = 6;
 		if (p.getName().equals("Unice")) {
@@ -7354,6 +7949,11 @@ public class GameSim {
 		for(int q = 0; q < GameSim.utility.size(); q++) {
 			if(GameSim.utility.get(q).getName().equals("Umbrella") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc())) {
 				umbrella = true;
+			}
+		}
+		for(int q = 0; q < GameSim.utility.size(); q++) {
+			if(GameSim.utility.get(q).getName().equals("Mochi") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc())) {
+				mochi = true;
 			}
 		}
 		for(int q = 0; q < GameSim.utility.size(); q++) {
@@ -7371,7 +7971,7 @@ public class GameSim {
 		}
 		
 		if (!p.isHoverDashing() && !p.hasDoubleJumped() && !p.getName().equals("Courtney")) {
-			if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && !umbrella && !p.getName().equals("Gambit")) {
+			if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && !umbrella && !mochi && !p.getName().equals("Gambit")) {
 				System.out.println("Nothing in range to use a jump with!");
 				System.out.println();
 				return;
@@ -7399,8 +7999,12 @@ public class GameSim {
 			}
 		}
 		
-		
-		if(umbrella && p.canJump()) {
+		if(mochi && p.canJump()) {
+			int d = p.getLoc().distance(l);
+			p.increaseTotalMovement(d);
+			p.getLoc().set(l.getX(), l.getY());
+			p.useJump();
+		}else if(umbrella && p.canJump()) {
 			int d = p.getLoc().distance(l);
 			p.increaseTotalMovement(d);
 			p.getLoc().set(l.getX(), l.getY());
@@ -7525,6 +8129,19 @@ public class GameSim {
 				p.addDamage(175);
 			}
 		}
+		int d2 = p.getLoc().distance(l);
+		if (p.getName().equals("Clementine") && p.isTank() && d2 < 4) {
+			if (p.inRange(e1)) {
+				e1.knockbacked(l);
+			}
+			if (p.inRange(e2)) {
+				e2.knockbacked(l);
+			}
+			if (p.inRange(e3)) {
+				e3.knockbacked(l);
+			}
+			System.out.println("\"Piledriver!\"");
+		}
 		
 		try {
 			String audio = "jump.wav";
@@ -7610,6 +8227,11 @@ public class GameSim {
 	public static void Dash(Player p, Player a, Player b, Player c) {
 		if(!p.canDash()) {
 			System.out.println("No more dashes left!");
+			System.out.println();
+			return;
+		}
+		if (p.isSupressed()) {
+			System.out.println("Cannot dash while supressed!");
 			System.out.println();
 			return;
 		}
@@ -7858,6 +8480,20 @@ public class GameSim {
 				}
 			}
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Matrix") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && (p.canDash() || p.isHoverDashing())) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Immortality Matrix destroyed.");
+				p.useDash();
+				try {
+					String audio = "dash.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
 		
 		System.out.println();
 	}
@@ -8052,6 +8688,21 @@ public class GameSim {
 							GameSim.utility.get(j).getOwner().addDamage(25);
 						}
 					}
+					for(int j = 0; j < GameSim.utility.size(); j++) {
+						if(GameSim.utility.get(j).getName().equals("Mine") && GameSim.utility.get(j).isEnemy(p) && GameSim.utility.get(j).inRange(p, 0)) {
+							p.takeDamage(175);
+							GameSim.utility.get(j).getOwner().addDamage(175);
+							p.knockbacked(GameSim.utility.get(j).getLoc());
+							GameSim.utility.remove(j);
+						}
+					}
+					for(int j = 0; j < GameSim.utility.size(); j++) {
+						if(GameSim.utility.get(j).getName().equals("Steam") && GameSim.utility.get(j).isEnemy(p) && GameSim.utility.get(j).getOwner().inRange(p)) {
+							if (GameSim.utility.get(j).getOwner().isClockwork()){
+								GameSim.utility.get(j).steam();
+							}
+						}
+					}
 					if (lastMoved.equals("left")) {
 						hor = 1;
 					}
@@ -8126,6 +8777,13 @@ public class GameSim {
 							c.takeDamage(c.getMaxHP() * 0.0075);
 							p.addDamage(c.getMaxHP() * 0.0075);
 						}
+					}
+					
+					if (a.isTranscend() || z.isTranscend() || c.isTranscend()){
+						p.takeDamage(p.getMaxHP() * 0.02);
+					}
+					if (d.isTranscend() || e.isTranscend()){
+						p.increaseHP(p.getMaxHP() * 0.02);
 					}
 					
 					if (p.getBump() > 0) {
@@ -8277,6 +8935,7 @@ public class GameSim {
 		}
 		Scanner input = new Scanner(System.in);
 		boolean move = true;
+		Location l2 = new Location(p.getLoc().getX(), p.getLoc().getY());
 		Location l = new Location(p.getLoc().getX(), p.getLoc().getY());
 		b.setCursor(l);
 		while(move) {
@@ -8308,6 +8967,13 @@ public class GameSim {
 				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
 				  System.out.println("Moved cursor to " + l + ".");
 			    break;
+			  case "u":
+				  if (p.getName().equals("Clementine") && p.ultReady() && l2.distance(l) < 4) {
+					  ClementineUltimate(p, a, z, c, true);
+					  ultimateFX();
+				  }
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  break;
 			  case "c":
 				  System.out.println("Cursor set to " + l + ".");
 				  move = false;
@@ -14800,6 +15466,13 @@ public class GameSim {
 					j--;
 				}
 			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Matrix") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 3)) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Immortality Matrix destroyed.");
+					j--;
+				}
+			}
 			p.useFuel(p.getLoc().distance(l) * 50);
 			System.out.println(p.voiceline());
 			System.out.println();
@@ -14909,6 +15582,13 @@ public class GameSim {
 			if(GameSim.utility.get(j).getName().equals("Support") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
 				GameSim.utility.remove(j);
 				System.out.println("Enemy Sockyman Support destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Matrix") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Immortality Matrix destroyed.");
 				j--;
 			}
 		}
@@ -16963,6 +17643,892 @@ public class GameSim {
 		e.addChance(0.05);
 		p.resetUlt();
 		System.out.println("\"Your journey stops right now!\"");
+		System.out.println();
+	}
+	
+	public static void EverestAttack(Player p, Player a, Player b, Player c) {
+		Scanner input = new Scanner(System.in);
+		String range = "No";
+		if(p.inRange(a)) {
+			range = "Yes";
+		}
+		String range2 = "No";
+		if(p.inRange(b)) {
+			range2 = "Yes";
+		}
+		String range3 = "No";
+		if(p.inRange(c)) {
+			range3 = "Yes";
+		}
+		System.out.println("1: Single Attack");
+		System.out.println("2: Charge Attack");
+		System.out.println("3: Use Charged Attack (" + p.getOrbCharges() + " charge(s) stored)");
+		System.out.print("What would you like to do with the Destruction Orbs: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if(!p.inRange(a) && !p.inRange(b) && !p.inRange(c)) {
+				System.out.println();
+				System.out.println("No targets in range!");
+				System.out.println();
+				return;
+			}
+			System.out.println();
+			System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ". Location: " + a.getLoc() + ". Cover: " + a.getCover());
+			System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ". Location: " + b.getLoc() + ". Cover: " + b.getCover());
+			System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ". Location: " + c.getLoc() + ". Cover: " + c.getCover());
+			System.out.println("Who do you want to attack: ");
+			String targetResponse2 = input.next();
+			if(targetResponse2.equals("1")) {
+				if(p.inRange(a)) {
+					p.attack(a);
+					double rand = Math.random();
+					if(rand <= 0.05) {
+						ArrayList<Effect> e = new ArrayList<Effect>();
+						Effect MackDaze = new Effect("daze", 0, 1);
+						e.add(MackDaze);
+						a.addEffects(e);
+						a.applyEffects();
+					}
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+			if(targetResponse2.equals("2")) {
+				if(p.inRange(b)) {
+					p.attack(b);
+					double rand = Math.random();
+					if(rand <= 0.05) {
+						ArrayList<Effect> e = new ArrayList<Effect>();
+						Effect MackDaze = new Effect("daze", 0, 1);
+						e.add(MackDaze);
+						a.addEffects(e);
+						a.applyEffects();
+					}
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+			if(targetResponse2.equals("3")) {
+				if(p.inRange(c)) {
+					p.attack(c);
+					double rand = Math.random();
+					if(rand <= 0.05) {
+						ArrayList<Effect> e = new ArrayList<Effect>();
+						Effect MackDaze = new Effect("daze", 0, 1);
+						e.add(MackDaze);
+						a.addEffects(e);
+						a.applyEffects();
+					}
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+		}
+		if(targetResponse.equals("2")) {
+			p.addOrbCharge();
+			p.setAttacked();
+		}
+		if(targetResponse.equals("3")) {
+			if ((int) ((p.getOrbCharges() * 10) % 10) == 5) {
+			    System.out.println("Need a whole number of orbs to use the charged orbs attack.");
+			    System.out.println();
+			    return;
+			}
+			if(!p.inRange(a) && !p.inRange(b) && !p.inRange(c)) {
+				System.out.println();
+				System.out.println("No targets in range!");
+				System.out.println();
+				return;
+			}
+			System.out.println();
+			System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ". Location: " + a.getLoc() + ". Cover: " + a.getCover());
+			System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ". Location: " + b.getLoc() + ". Cover: " + b.getCover());
+			System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ". Location: " + c.getLoc() + ". Cover: " + c.getCover());
+			System.out.println("Who do you want to attack: ");
+			String targetResponse2 = input.next();
+			if(targetResponse2.equals("1")) {
+				if(p.inRange(a)) {
+					for(int i = 0; i < p.getOrbCharges(); i++) {
+						p.attack(a);
+						double rand = Math.random();
+						if(rand <= 0.05) {
+							ArrayList<Effect> e = new ArrayList<Effect>();
+							Effect MackDaze = new Effect("daze", 0, 1);
+							e.add(MackDaze);
+							a.addEffects(e);
+							a.applyEffects();
+						}
+					}
+					p.useOrbCharges();
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+			if(targetResponse2.equals("2")) {
+				if(p.inRange(b)) {
+					for(int i = 0; i < p.getOrbCharges(); i++) {
+						p.attack(b);
+						double rand = Math.random();
+						if(rand <= 0.05) {
+							ArrayList<Effect> e = new ArrayList<Effect>();
+							Effect MackDaze = new Effect("daze", 0, 1);
+							e.add(MackDaze);
+							b.addEffects(e);
+							b.applyEffects();
+						}
+					}
+					p.useOrbCharges();
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+			if(targetResponse2.equals("3")) {
+				if(p.inRange(c)) {
+					p.attack(c);
+					for(int i = 0; i < p.getOrbCharges(); i++) {
+						p.attack(c);
+						double rand = Math.random();
+						if(rand <= 0.05) {
+							ArrayList<Effect> e = new ArrayList<Effect>();
+							Effect MackDaze = new Effect("daze", 0, 1);
+							e.add(MackDaze);
+							c.addEffects(e);
+							c.applyEffects();
+						}
+					}
+					p.useOrbCharges();
+				}else {
+					System.out.println();
+					System.out.println("Target is out of range!");
+					System.out.println();
+				}
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void EverestAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: Harmony Orb");
+		System.out.println("2: Chaos Orb");
+		System.out.print("Which orb do you want to use: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("2")) {
+			System.out.println();
+			System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
+			System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
+			System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
+			System.out.println("Who do you want to give the Chaos Orb to: ");
+			String targetResponse2 = input.next();
+			if(targetResponse2.equals("1")) {
+				a.setChaos(true);
+				b.setChaos(false);
+				c.setChaos(false);
+				System.out.println("\"A shadow hangs over your head.\"");
+			}
+			if(targetResponse2.equals("2")) {
+				a.setChaos(false);
+				b.setChaos(true);
+				c.setChaos(false);
+				System.out.println("\"A shadow hangs over your head.\"");
+			}
+			if(targetResponse2.equals("3")) {
+				a.setChaos(false);
+				b.setChaos(false);
+				c.setChaos(true);
+				System.out.println("\"A shadow hangs over your head.\"");
+			}
+		}
+		if(targetResponse.equals("1")) {
+			System.out.println();
+			System.out.println("1: " + d.getSkin() +". Health: " +  d.getHealth() + "/" + d.getMaxHP());
+			System.out.println("2: " + e.getSkin() +". Health: " +  e.getHealth() + "/" + e.getMaxHP());
+			System.out.println("Who do you want to give the Harmony Orb to: ");
+			String targetResponse2 = input.next();
+			if(targetResponse2.equals("1")) {
+				d.setHarmony(true);
+				e.setHarmony(false);
+				System.out.println("\"Harmony is with you, my friend.\"");
+			}
+			if(targetResponse2.equals("2")) {
+				d.setHarmony(false);
+				e.setHarmony(true);
+				System.out.println("\"Harmony is with you, my friend.\"");
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void EverestUltimate(Player p) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect AlexProtect = new Effect("sight", 1, 2);
+		e.add(AlexProtect);
+		p.addEffects(e);
+		p.applyEffects();
+		p.setDodge(100);
+		p.setTranscend(true);
+		p.resetUlt();
+		System.out.println("\"Experience my full power.\"");
+		System.out.println();
+	}
+	
+	public static void ClementineAttack(Player p, Player a) {
+		p.attack(a);
+		double rand = Math.random();
+		if(rand <= 0.1) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect BurtParalyze = new Effect("paralyze", 0, 1);
+			e.add(BurtParalyze);
+			a.addEffects(e);
+			a.applyEffects();
+		}
+		if (p.isBrawler()) {
+			p.attack(a);
+			double rand2 = Math.random();
+			if(rand2 <= 0.1) {
+				ArrayList<Effect> e = new ArrayList<Effect>();
+				Effect BurtParalyze = new Effect("paralyze", 0, 1);
+				e.add(BurtParalyze);
+				a.addEffects(e);
+				a.applyEffects();
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void ClementineAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
+		if (p.isBrawler()) {
+			System.out.println("Can't use ability in brawler form!");
+			System.out.println();
+			return;
+		}
+		double health = 0;
+		int reduce = 0;
+		if (p.inRange(a)) {
+			health = health + 300;
+		}
+		if (p.inRange(b)) {
+			health = health + 300;
+		}
+		if (p.inRange(c)) {
+			health = health + 300;
+		}
+		if (d.isAlive()) {
+			d.increaseHP(health * 0.3);
+			reduce++;
+		}
+		double newHealth = health * 0.3;
+		if (e.isAlive()) {
+			e.increaseHP(health * 0.3);
+			reduce++;
+		}
+		for(int i = 0; i < reduce; i++) {
+			health = health - newHealth;
+		}
+		p.increaseHP(health);
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		ArrayList<Effect> e3 = new ArrayList<Effect>();
+		Effect LiamProtect = new Effect("protect", 0.25, 2);
+		Effect LiamProtect2 = new Effect("protect", 0.25, 2);
+		Effect LiamProtect3 = new Effect("protect", 0.25, 2);
+		e1.add(LiamProtect);
+		e2.add(LiamProtect2);
+		e3.add(LiamProtect3);
+		p.addEffects(e1);
+		p.applyEffects();
+		d.addEffects(e2);
+		d.applyEffects();
+		e.addEffects(e3);
+		e.applyEffects();
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void ClementineUltimate(Player p, Player a, Player b, Player c, boolean jumped) {
+		if (p.isBrawler()) {
+			System.out.println("Can't use ultimate in brawler form!");
+			System.out.println();
+			return;
+		}
+		if (jumped) {
+			int[][] offsets3 = {
+				    {-6, 0}, {6, 0}, {0, -6}, {0, 6}, {-6, -6}, {-6, 6}, {2, -6}, {2, 6}, {6, -6}, {6, 6}, {-2, -6}, {-2, 6}, {-6, -2}, {-6, 2}, {6, -2}, {6, 2}, {-6, -4}, {-6, 4}, {-4, -6}, {-4, 6}, {4, -6}, {4, 6}, {6, -4}, {6, -2}, {6, 4}
+				};
+			for (int[] offset : offsets3) {
+			    int x = p.getLoc().getX() + offset[0];
+			    int y = p.getLoc().getY() + offset[1];
+			    Utility Mine = new Utility("Mine", new Location(x, y), p, p, p, a, b, c);
+			    utility.add(Mine);
+			}
+		}
+			// Offsets for the first 2x2 box
+	        int[][] offsets1 = {
+	            {0, 0}, {-2, 0}, {2, 0}, {0, -2}, {0, 2}, {-2, -2}, {-2, 2}, {2, -2}, {2, 2}
+	        };
+
+	        // Offsets for the second 2x2 box
+	        int[][] offsets2 = {
+	            {-4, 0}, {4, 0}, {0, -4}, {0, 4}, {-4, -4}, {-4, 4}, {2, -4}, {2, 4}, {4, -4}, {4, 4}, {-2, -4}, {-2, 4}, {-4, -2}, {-4, 2}, {4, -2}, {4, 2}
+	        };
+
+	        // Place mines for the first 2x2 box
+	        for (int[] offset : offsets1) {
+	            int x = p.getLoc().getX() + offset[0];
+	            int y = p.getLoc().getY()  + offset[1];
+	            Utility Mine = new Utility("Mine", new Location(x, y), p, p, p, a, b, c);
+	            utility.add(Mine);
+	        }
+
+	        // Place mines for the second 2x2 box
+	        for (int[] offset : offsets2) {
+	            int x = p.getLoc().getX()  + offset[0];
+	            int y = p.getLoc().getY()  + offset[1];
+	            Utility Mine = new Utility("Mine", new Location(x, y), p, p, p, a, b, c);
+	            utility.add(Mine);
+	        }
+		
+		p.resetUlt();
+		System.out.println("\"Area, DENIED!\"");
+		System.out.println();
+	}
+	
+	public static void DenyAttack(Player p, Player a, Player b, Player c, Location l) {
+		if(!p.inRange(l)) {
+			System.out.println("Can't throw the Pulse Grenade that far!");
+			System.out.println();
+			return;
+		}
+		if(!a.inRange(l, 4) && !b.inRange(l, 4) && !c.inRange(l, 4)) {
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
+		if (a.inRange(l, 4)) {
+			p.attack(a);
+			p.attack(a);
+			a.setFrag(true);
+		}
+		if (b.inRange(l, 4)) {
+			p.attack(b);
+			p.attack(b);
+			b.setFrag(true);
+		}
+		if (c.inRange(l, 4)) {
+			p.attack(c);
+			p.attack(c);
+			c.setFrag(true);
+		}
+		if (a.getLoc().eqLoc(l)) {
+			p.attack(a);
+		}
+		if (b.getLoc().eqLoc(l)) {
+			p.attack(b);
+		}
+		if (c.getLoc().eqLoc(l)) {
+			p.attack(c);
+		}
+		System.out.println();
+	}
+	
+	public static void DenyAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
+		Scanner input = new Scanner(System.in);
+		String s1 = "Ready for use.";
+		String s2 = "Ready for use.";
+		String s3 = "Ready for use.";
+		if (p.getFlash() > 0) {
+			s1 = "On Cooldown (" + p.getFlash() + ").";
+		}
+		if (p.getBarrier() > 0) {
+			s2 = "On Cooldown (" + p.getBarrier() + ").";
+		}
+		if (p.getSupressBolt() > 0) {
+			s3 = "On Cooldown (" + p.getSupressBolt() + ").";
+		}
+		System.out.println("1: Flashbang. " + s1);
+		System.out.println("2: Energy Barrier. " + s2);
+		System.out.println("3: Supression Bolt. " + s3);
+		System.out.print("Which tool do you want to use: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if (p.getFlash() > 0) {
+				System.out.println("Flashbang is on cooldown!");
+				System.out.println();
+				return;
+			}
+			Location l = SetCursor(p, a, b, c, d, e, 4);
+			if (a.inRange(l, 4)) {
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect AnjelikaBlind = new Effect("blind", 0.3, 1);
+				e1.add(AnjelikaBlind);
+				a.addEffects(e1);
+				a.applyEffects();
+			}
+			if (b.inRange(l, 4)) {
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect AnjelikaBlind = new Effect("blind", 0.3, 1);
+				e1.add(AnjelikaBlind);
+				b.addEffects(e1);
+				b.applyEffects();
+			}
+			if (c.inRange(l, 4)) {
+				ArrayList<Effect> e1 = new ArrayList<Effect>();
+				Effect AnjelikaBlind = new Effect("blind", 0.3, 1);
+				e1.add(AnjelikaBlind);
+				c.addEffects(e1);
+				c.applyEffects();
+			}
+			System.out.println("\"Flashbang!\"");
+			p.setFlash();
+		}
+		if(targetResponse.equals("2")) {
+			if (p.getBarrier() > 0) {
+				System.out.println("Energy Barrier is on cooldown!");
+				System.out.println();
+				return;
+			}
+			p.setShield();
+			d.setShield();
+			e.setShield();
+			p.setBarrier();
+			System.out.println("\"Energy Barrier created.\"");
+		}
+		if(targetResponse.equals("3")) {
+			if (p.getSupressBolt() > 0) {
+				System.out.println("Supression Bolt is on cooldown!");
+				System.out.println();
+				return;
+			}
+			Location l = SetCursor(p, a, b, c, d, e, 6);
+			if (a.inRange(l, 6)) {
+				a.setSupress(true);
+			}
+			if (b.inRange(l, 6)) {
+				b.setSupress(true);
+			}
+			if (c.inRange(l, 6)) {
+				c.setSupress(true);
+			}
+			System.out.println("\"Shutting them down!\"");
+			p.setSupressBolt();
+		}
+		System.out.println();
+	}
+	
+	public static void DenyUltimate(Player p, Player a, Player b, Player c) {
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		Effect AlexProtect = new Effect("power", 0.25, 3);
+		e1.add(AlexProtect);
+		p.addEffects(e1);
+		p.applyEffects();
+		p.setUlt();
+		p.setEMP();
+		a.setSupress(true);
+		b.setSupress(true);
+		c.setSupress(true);
+		System.out.println("\"No one walks away!\"");
+		System.out.println();
+	}
+	
+	public static void RinAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		double rand = Math.random();
+		if(rand <= 0.25) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect BurtParalyze = new Effect("ignite", 0, 1);
+			e.add(BurtParalyze);
+			a.addEffects(e);
+			a.applyEffects();
+		}
+		ArrayList<Location> validTargets = new ArrayList<>();
+
+        // Collect all valid targets within range
+        for(int i = 0; i < 42; i++) {
+            for(int j = 0; j < 42; j++) {
+                Location l = new Location(i, j);
+                if(l.inRange(a.getLoc(), 6)) {
+                    validTargets.add(l);
+                }
+            }
+        }
+
+        // Randomly select 9 unique targets
+        Random rand2 = new Random();
+        Set<Location> selectedTargets = new HashSet<>();
+        int numArrows = 10;
+        if (p.ultActive()) {
+        	numArrows = 30;
+        }
+
+        while(selectedTargets.size() < numArrows && !validTargets.isEmpty()) {
+            int randomIndex = rand2.nextInt(validTargets.size());
+            if (!p.ultActive()) {
+            	selectedTargets.add(validTargets.remove(randomIndex));
+            }else {
+            	selectedTargets.add(validTargets.get(randomIndex));
+            }
+        }
+        for (Location l: selectedTargets) {
+        	if (b.getLoc().eqLoc(l)) {
+        		p.attack(b);
+        		double rand3 = Math.random();
+        		if(rand3 <= 0.25) {
+        			ArrayList<Effect> e = new ArrayList<Effect>();
+        			Effect BurtParalyze = new Effect("ignite", 0, 1);
+        			e.add(BurtParalyze);
+        			b.addEffects(e);
+        			b.applyEffects();
+        		}
+        	}
+        	if (c.getLoc().eqLoc(l)) {
+        		p.attack(c);
+        		double rand3 = Math.random();
+        		if(rand3 <= 0.25) {
+        			ArrayList<Effect> e = new ArrayList<Effect>();
+        			Effect BurtParalyze = new Effect("ignite", 0, 1);
+        			e.add(BurtParalyze);
+        			c.addEffects(e);
+        			c.applyEffects();
+        		}
+        	}
+        }
+		System.out.println();
+	}
+	
+	public static void RinAbility(Player p, Player a, Player b, Player c) {
+		Scanner input = new Scanner(System.in);
+
+		if (a.hasDagger() || b.hasDagger() || c.hasDagger()) {
+			int damage = 175;
+			if (p.ultActive()) {
+				damage = 350;
+			}
+			if (a.hasDagger()) {
+				a.dragIn(p.getLoc(), 7);
+				a.takeDamage(damage);
+				p.addDamage(damage);
+				a.setDagger(false);
+				a.resetCover();
+			}
+			if (b.hasDagger()) {
+				b.dragIn(p.getLoc(), 7);
+				b.takeDamage(damage);
+				p.addDamage(damage);
+				b.setDagger(false);
+				b.resetCover();
+			}
+			if (c.hasDagger()) {
+				c.dragIn(p.getLoc(), 7);
+				c.takeDamage(damage);
+				p.addDamage(damage);
+				c.setDagger(false);
+				c.resetCover();
+			}
+			p.setCooldown(2);
+			System.out.println("\"There's my sweet tooth!\"");
+			System.out.println();
+			return;
+		}
+		
+		if(!p.inRange(a) && !p.inRange(b) && !p.inRange(c)) {
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
+		String range = "No";
+		if(p.inRange(a)) {
+			range = "Yes";
+		}
+		String range2 = "No";
+		if(p.inRange(b)) {
+			range2 = "Yes";
+		}
+		String range3 = "No";
+		if(p.inRange(c)) {
+			range3 = "Yes";
+		}
+		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
+		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ".");
+		System.out.println("3: " + c.getSkin() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ".");
+		System.out.println("Who do you want to throw the Fang Dagger at: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if(p.inRange(a)) {
+				a.setDagger(true);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("2")) {
+			if(p.inRange(b)) {
+				b.setDagger(true);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("3")) {
+			if(p.inRange(c)) {
+				c.setDagger(true);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void RinUltimate(Player p, Player a, Player b) {
+		p.setUlt();
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect AlexProtect = new Effect("power", 0.15, 100);
+		e.add(AlexProtect);
+		p.addEffects(e);
+		p.applyEffects();
+		ArrayList<Effect> e1 = new ArrayList<Effect>();
+		Effect AlexProtect1 = new Effect("power", 0.15, 100);
+		e1.add(AlexProtect1);
+		a.addEffects(e1);
+		a.applyEffects();
+		ArrayList<Effect> e2 = new ArrayList<Effect>();
+		Effect AlexProtect2 = new Effect("power", 0.15, 100);
+		e2.add(AlexProtect2);
+		b.addEffects(e2);
+		b.applyEffects();
+		System.out.println("\"Mochi and I, we are unstoppable!\"");
+		System.out.println();
+	}
+	
+	public static void VictorAttack(Player p, Player a, Player b, Player c) {
+		if (p.isOverheat()) {
+			System.out.println("Steam Gatling is recharged for next turn!");
+			System.out.println();
+			p.setOverheat(false);
+			p.setAttacked();
+			return;
+		}
+		if(!p.inRange(a) && !p.inRange(b) && !p.inRange(c)) {
+			System.out.println();
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
+		Scanner input = new Scanner(System.in);
+		String range = "No";
+		if(p.inRange(a)) {
+			range = "Yes";
+		}
+		String range2 = "No";
+		if(p.inRange(b)) {
+			range2 = "Yes";
+		}
+		String range3 = "No";
+		if(p.inRange(c)) {
+			range3 = "Yes";
+		}
+		Player target = null;
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ". Cover: " + a.getCover());
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ". Cover: " + b.getCover());
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ". Cover: " + c.getCover());
+		System.out.print("Who do you want to attack: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if(p.inRange(a)) {
+				target = a;
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("2")) {
+			if(p.inRange(b)) {
+				target = b;
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("3")) {
+			if(p.inRange(c)) {
+				target = c;
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		int number = 0;
+		boolean valid = false;
+		while (!valid) {
+			if (target != null) {
+				System.out.print("How many bullets do you want to fire (5 - 10): ");
+				if (input.hasNextInt()) {
+	                number = input.nextInt();
+	                valid = true;
+	            } else {
+	                System.out.println("Invalid input. Please enter a valid integer.");
+	                input.next(); // Clear the invalid input
+	            }
+			}
+		}
+		if (target != null && number != 0) {
+			for (int i = 0; i < number; i++) {
+				p.attack(target);
+				if (i > 4) {
+					double chance = 0.2;
+					if (p.isCogwork()) {
+						chance = 0.1;
+					}
+					if (p.isClockwork()) {
+						chance = -1;
+					}
+					double rand = Math.random();
+					if (rand < chance) {
+						p.setOverheat(true);
+						System.out.println("Steam Gatling is overheated!");
+						break;
+					}
+				}
+			}
+		}
+		if (number == 10 && !p.isClockwork()) {
+			System.out.println("Steam Gatling is overheated!");
+			p.setOverheat(true);
+		}
+		System.out.println();
+	}
+	
+	public static void VictorAbility(Player p) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect MidniteProtect = new Effect("protect", 0.5, 3);
+		Effect MidniteRefine = new Effect("refine", 0, 3);
+		Effect MidniteFortify = new Effect("fortify", 0, 3);
+		e.add(MidniteProtect);
+		e.add(MidniteRefine);
+		e.add(MidniteFortify);
+		p.addEffects(e);
+		p.applyEffects();
+		p.setCogwork(true);
+		p.setCooldown(4);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void VictorUltimate(Player p) {
+		p.setClockwork(true);
+		p.setOverheat(false);
+		p.resetUlt();
+		System.out.println("\"Gears in motion, enemies in retreat!\"");
+		System.out.println();
+	}
+	
+	public static void IsabelleAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		p.attack(a);
+		System.out.println();
+		if (!p.inRange(b) && !p.inRange(c)) {
+			System.out.println("No ally in range for burst healing!");
+			System.out.println();
+			return;
+		}
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
+		System.out.println("2: " + c.getSkin() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP() + ".");
+		System.out.print("Which ally do you want to send the burst healing to: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			b.increaseHP(250);
+			p.addHealing(250);
+			if (p.inRange(b, 4)) {
+				p.increaseHP(100);
+				p.addHealing(100);
+			}
+			if (c.inRange(b, 4)) {
+				c.increaseHP(100);
+				p.addHealing(100);
+			}
+		}
+		if(targetResponse.equals("2")) {
+			c.increaseHP(250);
+			p.addHealing(250);
+			if (p.inRange(c, 4)) {
+				p.increaseHP(100);
+				p.addHealing(100);
+			}
+			if (b.inRange(c, 4)) {
+				b.increaseHP(100);
+				p.addHealing(100);
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void IsabelleAbility(Player p, Player a, Player b, Player c, Player d, Player e, Location l) {
+		if(GameSim.b.hasTrench(l.getX(), l.getY())) {
+			System.out.println("Can't send the Matrix there!");
+			System.out.println();
+			return;
+		}
+		if (!p.inReach(l, 6)) {
+			System.out.println("Can't send the Matrix there!");
+			System.out.println();
+			return;
+		}
+		Utility Matrix = new Utility("Matrix", l, p, d, e, a, b, c);
+		utility.add(Matrix);
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void IsabelleUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
+		System.out.println("Where do you want to place " + d.getSkin() + ".");
+		Location l1 = SetCursor(p, a, b, c, d, e, 0);
+		d.getLoc().set(l1.getX(), l1.getY());
+		System.out.println("Where do you want to place " + e.getSkin() + ".");
+		Location l2 = SetCursor(p, a, b, c, d, e, 0);
+		e.getLoc().set(l2.getX(), l2.getY());
+		System.out.println("Where do you want to place " + a.getSkin() + ".");
+		Location l3 = SetCursor(p, a, b, c, d, e, 0);
+		a.getLoc().set(l3.getX(), l3.getY());
+		System.out.println("Where do you want to place " + b.getSkin() + ".");
+		Location l4 = SetCursor(p, a, b, c, d, e, 0);
+		b.getLoc().set(l4.getX(), l4.getY());
+		System.out.println("Where do you want to place " + c.getSkin() + ".");
+		Location l5 = SetCursor(p, a, b, c, d, e, 0);
+		c.getLoc().set(l5.getX(), l5.getY());
+		p.setShield();
+		p.increaseMovement(5);
+		p.cleanse();
+		p.addPermheal();
+		d.setShield();
+		d.increaseMovement(5);
+		d.cleanse();
+		d.addPermheal();
+		e.setShield();
+		e.increaseMovement(5);
+		e.cleanse();
+		e.addPermheal();
+		p.resetUlt();
+		System.out.println("\"Quantum shift engaged!\"");
 		System.out.println();
 	}
 }

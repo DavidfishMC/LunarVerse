@@ -109,6 +109,15 @@ public class Player {
 	boolean doubleJump = false;
 	boolean petal = false;
 	boolean expose = false;
+	boolean harmony = false;
+	boolean chaos = false;
+	boolean transcend = false;
+	boolean supress = false;
+	boolean fragMove = false;
+	boolean dagger = false;
+	boolean overheat = true;
+	boolean cogwork = false;
+	boolean clockwork = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -136,6 +145,13 @@ public class Player {
 	int yellowCharges = 1;
 	int smolluskDashes = 0;
 	int quincyAttacks = 0;
+	int balanceOrbs = 2;
+	int flashbang = 0;
+	int barrier = 0;
+	int supressBolt = 0;
+	int emp = 0;
+	int mochiMovement = 12;
+	int permHeal = 0;
 	double totalDamage = 0;
 	double critChance = 0;
 	double fulField = 0;
@@ -147,6 +163,7 @@ public class Player {
 	double ebbFlowDamage = 0;
 	double petalBlockade = 500;
 	double defaultCritChance = 0.1;
+	double orbCharges = 0;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
 	ArrayList<String> roles = new ArrayList<String>();
 	public static final String reset = "\u001B[0m";
@@ -216,6 +233,16 @@ public class Player {
 		Utility Rook4 = new Utility("Rook", l4, this, d, e, a, b, c);
 		GameSim.utility.add(Rook4);
 		Rook4.setDirection("down");
+	}
+	
+	public void setMochi(Player a, Player b, Player c, Player d, Player e) {
+		Utility Mochi = new Utility("Mochi", new Location(curLoc.getX(), curLoc.getY()), this, d, e, a, b, c);
+		GameSim.utility.add(Mochi);
+	}
+	
+	public void setSteam(Player a, Player b, Player c, Player d, Player e) {
+		Utility Steam = new Utility("Steam", curLoc, this, d, e, a, b, c);
+		GameSim.utility.add(Steam);
 	}
 	
 	public void setAb(String s) {
@@ -518,6 +545,166 @@ public class Player {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
 	}
 	
+	public void addPermheal() {
+		permHeal++;
+	}
+	
+	public void setClockwork(boolean b) {
+		clockwork = b;
+	}
+	
+	public boolean isClockwork() {
+		return clockwork;
+	}
+	
+	public void setCogwork(boolean b) {
+		cogwork = b;
+	}
+	
+	public boolean isCogwork() {
+		return cogwork;
+	}
+	
+	public void setOverheat(boolean b) {
+		overheat = b;
+	}
+	
+	public boolean isOverheat() {
+		return overheat;
+	}
+	
+	public void setDagger(boolean b) {
+		dagger = b;
+	}
+	
+	public boolean hasDagger() {
+		return dagger;
+	}
+	
+	public int getMochiMovement() {
+		return mochiMovement;
+	}
+	
+	public void increaseMochiMovement() {
+		mochiMovement++;
+	}
+	
+	public void mochiMove() {
+		if (!ultActive()) {
+			mochiMovement--;
+		}
+	}
+	
+	public void setFrag(boolean b) {
+		fragMove = b;
+	}
+	
+	public void setEMP() {
+		emp = 3;
+	}
+	
+	public int getEMP() {
+		return emp;
+	}
+	
+	public void reduceEMP() {
+		if (emp == 1) {
+			ultDown();
+			resetUlt();
+			if (health == 0) {
+				alive = false;
+				System.out.println(nameSkin + " is downed!");
+				resetQuincy();
+				turndead = GameSim.turns2;
+			}
+		}
+		if (emp != 0) {
+			emp--;
+		}
+	}
+	
+	public void setSupress(boolean b) {
+		supress = b;
+	}
+	
+	public void setFlash() {
+		flashbang = 1;
+	}
+	
+	public void setBarrier() {
+		barrier = 2;
+	}
+	
+	public void setSupressBolt() {
+		supressBolt = 3;
+	}
+	
+	public int getFlash(){
+		return flashbang;
+	}
+	
+	public int getBarrier() {
+		return barrier;
+	}
+	
+	public int getSupressBolt(){
+		return supressBolt;
+	}
+	
+	public boolean isSupressed() {
+		return supress;
+	}
+	
+	public void setTranscend(boolean b) {
+		transcend = b;
+	}
+	
+	public boolean isTranscend() {
+		return transcend;
+	}
+	
+	public void setHarmony(boolean b) {
+		harmony = b;
+	}
+	
+	public boolean getHarmony() {
+		return harmony;
+	}
+	
+	public void setChaos(boolean b) {
+		chaos = b;
+	}
+	
+	public void addOrbCharge() {
+		orbCharges = orbCharges + 0.5;
+	}
+	
+	public double getOrbCharges() {
+		return orbCharges;
+	}
+	
+	public void useOrbCharges() {
+		orbCharges = 0;
+	}
+	
+	public int getBalance() {
+		return balanceOrbs;
+	}
+	
+	public void addBalance() {
+		balanceOrbs++;
+		if (balanceOrbs > 2) {
+			balanceOrbs = 2;
+		}
+	}
+	
+	public void useBalance() {
+		balanceOrbs--;
+		if (balanceOrbs < 0) {
+			balanceOrbs = 0;
+		}
+	}
+	
 	public void addChance(double d) {
 		defaultCritChance = defaultCritChance + d;
 	}
@@ -589,6 +776,11 @@ public class Player {
 	}
 	
 	public void enable() {
+		if (isSupressed()) {
+			System.out.println("Cannot use passive skill while supressed!");
+			System.out.println();
+			return;
+		}
 		Scanner input = new Scanner(System.in);
 		if (name.equals("Courtney")) {
 			if (hover) {
@@ -1330,6 +1522,9 @@ public class Player {
 
 	public void resetDashes() {
 		dashes = 1;
+		if (emp > 0) {
+			dashes++;
+		}
 		if (charm.equals("Rhino")) {
 			dashes++;
 		}
@@ -1548,11 +1743,15 @@ public class Player {
 
 	public void resetMovement() {
 		movement = ogMovement;
+		mochiMovement = 12;
 		if (weary) {
 			movement = movement - 5;
 		}
 		if (charm.equals("Cheetah")) {
 			movement = movement + 3;
+		}
+		if (fragMove) {
+			movement--;
 		}
 	}
 	
@@ -1577,7 +1776,7 @@ public class Player {
 	}
 
 	public boolean ultReady() {
-		return orbCount >= ultCharge;
+		return orbCount >= ultCharge && !supress;
 	}
 
 	public void resetUlt() {
@@ -1695,6 +1894,14 @@ public class Player {
 			takeDamage(150);
 			this.randomKnockback();
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Mine") && GameSim.utility.get(j).isEnemy(this) && GameSim.utility.get(j).inRange(this, 0)) {
+				takeDamage(175);
+				GameSim.utility.get(j).getOwner().addDamage(175);
+				knockbacked(GameSim.utility.get(j).getLoc());
+				GameSim.utility.remove(j);
+			}
+		}
 		resetCover();
 		System.out.println(nameSkin + " has been knocked back.");
 	}
@@ -1772,6 +1979,9 @@ public class Player {
 	}
 
 	public void getOrb() {
+		if (isBrawler() && name.equals("Clementine")) {
+			return;
+		}
 		try {
 			String audio = "orbedit.wav";
 			Music victoryPlayer = new Music(audio, false);
@@ -1837,6 +2047,9 @@ public class Player {
 			System.out.println("Shield broken!");
 			shield = false;
 			return;
+		}
+		if (chaos) {
+			d = d * 1.1;
 		}
 		
 		for (int i = 0; i < effects.size(); i++) {
@@ -2006,6 +2219,13 @@ public class Player {
 			}
 		}
 		tookDamage = true;
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
+				if (health < (maxHealth * 0.1)) {
+					health = maxHealth * 0.1;
+				}
+			}
+		}
 		if (health < 0) {
 			health = 0;
 		}else if (electroField){
@@ -2049,6 +2269,19 @@ public class Player {
 				ultDown();
 				tire = false;
 				System.out.println("\"Hey, not cool man!\"");
+				return;
+			}
+			if (name.equals("Clementine") && isTank()) {
+				health = 800;
+				maxHealth = 800;
+				roles.clear();
+				roles.add("brawler");
+				System.out.println("\"You're gonna pay for destroying my tank!\"");
+				return;
+			}
+			if (name.equals("Deny")) {
+				alive = false;
+				System.out.println("\"I need a reboot over here!\"");
 				return;
 			}
 			alive = false;
@@ -2696,6 +2929,21 @@ public class Player {
 		System.out.println("\"Back like I never left!\"");
 		System.out.println();
 		turn = true;
+		alive = true;
+		for (int i = 0; i < effects.size(); i++) {
+			effects.get(i).setTurns(1);
+		}
+		reduceEffects();
+	}
+	
+	public void reviveDeny() {
+		health = maxHealth * 0.15;
+		ultActive = false;
+		emp = 0;
+		resetUlt();
+		System.out.println("\"Thanks for the reset! Resuming termination...\"");
+		System.out.println();
+		turn = true;
 		for (int i = 0; i < effects.size(); i++) {
 			effects.get(i).setTurns(1);
 		}
@@ -2832,9 +3080,21 @@ public class Player {
 				absorb2 = 0;
 			}
 			double e = (maxHealth * d) * absorb2;
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
+					e = e * 1.25;
+				}
+			}
+			for (int i = 0; i < permHeal; i++) {
+				e = e * 1.05;
+			}
+			if (dagger) {
+				e = e * 0.25;
+			}
 			if (Battlefield.endgame) {
 				e = e / 2;
 			}
+			e = Math.round(e * 10.0) / 10.0;
 			if (overHealth == 0) {
 				health = health + e;
 			}
@@ -2853,10 +3113,24 @@ public class Player {
 				absorb2 = 0.001;
 			}
 			double e = d * absorb2;
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
+					e = e * 1.25;
+				}
+			}
+			for (int i = 0; i < permHeal; i++) {
+				e = e * 1.05;
+			}
+			if (dagger) {
+				e = e * 0.25;
+			}
 			if (Battlefield.endgame) {
 				e = e / 2;
 			}
-			health = health + e;
+			e = Math.round(e * 10.0) / 10.0;
+			if (overHealth == 0) {
+				health = health + e;
+			}
 			System.out.println(nameSkin + " has healed for " + e);
 			if (health > maxHealth) {
 				health = maxHealth;
@@ -2874,9 +3148,21 @@ public class Player {
 				absorb2 = 0.001;
 			}
 			double e = (d * i) * absorb2;
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
+					e = e * 1.25;
+				}
+			}
+			for (int k = 0; k < permHeal; k++) {
+				e = e * 1.05;
+			}
+			if (dagger) {
+				e = e * 0.25;
+			}
 			if (Battlefield.endgame) {
 				e = e / 2;
 			}
+			e = Math.round(e * 10.0) / 10.0;
 			if (overHealth == 0) {
 				health = health + e;
 			}
@@ -2915,6 +3201,15 @@ public class Player {
 	public void reduceCooldown() {
 		if (cooldown != 0) {
 			cooldown--;
+		}
+		if (flashbang != 0) {
+			flashbang--;
+		}
+		if (barrier != 0) {
+			barrier--;
+		}
+		if (supressBolt != 0) {
+			supressBolt--;
 		}
 		if (cooldown == 0) {
 			wind = true;
@@ -3033,6 +3328,12 @@ public class Player {
 			if (shield) {
 				healthshow = "Health " + "\u001b[38;5;" + 51 + "m" + "💔" + reset;
 			}
+			if (harmony) {
+				healthshow = "Health " + "\u001b[38;5;" + 226 + "m" + "💔" + reset;
+			}
+			if (chaos) {
+				healthshow = "Health " + "\u001b[38;5;" + 129 + "m" + "💔" + reset;
+			}
 		} else {
 			if (protect < 1) {
 				healthshow = "Health " + bold + "\u001b[38;5;" + 247 + "m" + "❤️" + reset;
@@ -3042,6 +3343,12 @@ public class Player {
 			}
 			if (shield) {
 				healthshow = "Health " + bold + "\u001b[38;5;" + 51 + "m" + "❤️" + reset;
+			}
+			if (harmony) {
+				healthshow = "Health " + bold + "\u001b[38;5;" + 226 + "m" + "❤️" + reset;
+			}
+			if (chaos) {
+				healthshow = "Health " + bold + "\u001b[38;5;" + 129 + "m" + "❤️" + reset;
 			}
 		}
 		if (counter || reflection || (range < ogRange) || (sights > 0) || (range > ogRange)) {
@@ -3078,6 +3385,9 @@ public class Player {
 		if (ultActive()) {
 			ult = "Active";
 		}
+		if (supress) {
+			ult = "Supressed";
+		}
 
 		healthshow = healthshow + ": ";
 		weaponShow = weaponShow + ": ";
@@ -3104,8 +3414,15 @@ public class Player {
 		if (name.equals("Orchid")){
 			echoChargeShow = "\n" + "Petal Blockade " + "\u001b[38;5;" + 208 + "m" + "🌺" + reset + ": " + petalBlockade + "/" + "750.0";
 		}
+		if (name.equals("Everest")){
+			echoChargeShow = "\n" + "Balance Orbs " + "\u001b[38;5;" + 122 + "m" + "🫧" + reset + ": " + balanceOrbs + "/" + "2.";
+		}
 
-		if (name.equals("Angelos") && !isAlive()) {
+		if (name.equals("Clementine") && isBrawler()) {
+			return (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + charms + "\n"
+					+ weaponShow + weapon + "\n" + loc
+					+ curLoc + moveshow + move + dash + dashes + jump + jumps);
+		}else if (name.equals("Angelos") && !isAlive()) {
 			return "Ability: " + ability;
 		} else {
 			return (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + charms + "\n"
@@ -4138,6 +4455,50 @@ public class Player {
 				return ("\"We got them right where we want them.\"");
 			}
 		}
+		if (name.equals("Clementine")) {
+			if (randomNum == 1) {
+				return ("\"Dynamic reinforcement engaged.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Reinforcement coming right up!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Let's stay safe, shall we?\"");
+			}
+		}
+		if (name.equals("Rin")) {
+			if (randomNum == 1) {
+				return ("\"Caught out of position!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"No breathers for you!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Shouldn't have messed with us!\"");
+			}
+		}
+		if (name.equals("Victor")) {
+			if (randomNum == 1) {
+				return ("\"Fortifying!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"I shall stand strong!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Don't mess with the Steampunks!\"");
+			}
+		}
+		if (name.equals("Isabelle")) {
+			if (randomNum == 1) {
+				return ("\"Step inside, stay alive.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Stay near the immortality matrix!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Nobody leave this matrix!\"");
+			}
+		}
 		return "";
 	}
 
@@ -4766,6 +5127,20 @@ public class Player {
 				break;
 			case 3:
 				System.out.println(nameSkin + ": " + "\"It's fireball time.\"");
+				break;
+			}
+		}
+		if (name.equals("Deny")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Activating kill mode. That's a joke. Kill mode is default.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Clear the path ahead of us.\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Boss told me to leave no one standing.\"");
 				break;
 			}
 		}
@@ -6251,6 +6626,37 @@ public class Player {
 					break;
 				case "Orion":
 					System.out.println(nameSkin + ": " + "\"Orion, with me!\"");
+					break;
+				}
+			}
+			if (name.equals("Deny")) {
+				switch (name3) {
+				case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Use their power against them Lunar!\"");
+					break;
+				case "Pearl":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"If I was going against you, Smollusk wouldn't be able to do anything.\"");
+						System.out.println(responseName + ": " + "\"Don't you ever dare touch Smollusk!\"");
+					}
+					break;
+				case "Dimentio":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Boss, they will be supressed for us. Don't worry about it.\"");
+						System.out.println(responseName + ": " + "\"Good, I expect that from every one of my bots!\"");
+					}
+					break;
+				case "Cherry":
+					System.out.println(nameSkin + ": " + "\"So you got an EMP too huh. Let's see it Cherry.\"");
+					break;
+				case "Xara":
+					System.out.println(nameSkin + ": " + "\"Against my ideals, but good luck out there Xara.\"");
+					break;
+				case "Thunder":
+					System.out.println(nameSkin + ": " + "\"Show no mercy Thunder.\"");
+					break;
+				case "Echo":
+					System.out.println(nameSkin + ": " + "\"Let's see how good your sound technology is Echo.\"");
 					break;
 				}
 			}

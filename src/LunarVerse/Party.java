@@ -47,7 +47,6 @@ public class Party {
 			roster[i].setAttackOnce(false);
 			roster[i].setBumps(0);
 			roster[i].resetChance();
-			roster[i].resetDodge();
 			roster[i].setJing(false);
 			roster[i].resetStars();
 			roster[i].setNebula(false);
@@ -55,7 +54,13 @@ public class Party {
 			roster[i].checkOverhealth();
 			roster[i].setTremor(false);
 			roster[i].setTectonic(false);
+			roster[i].setSupress(false);
+			roster[i].setFrag(false);
 			roster[i].unhijack();
+			roster[i].setCogwork(false);
+			if (roster[i].getHarmony()) {
+				roster[i].heal(0.1);
+			}
 			if (roster[i].drillDashed()) {
 				roster[i].returnloc();
 				roster[i].setDrill(false);
@@ -125,6 +130,13 @@ public class Party {
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Rook") && GameSim.utility.get(j).owner(roster[i]) && !GameSim.utility.get(j).rookActive) {
 					GameSim.utility.get(j).setRookActive(true);
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Steam") && GameSim.utility.get(j).owner(roster[i])) {
+					if (GameSim.utility.get(j).getOwner().isClockwork()) {
+						GameSim.utility.get(j).steam();
+					}
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
@@ -333,6 +345,11 @@ public class Party {
 					roster[i].addTrash();
 				}
 			}
+			if(roster[i].getName().equals("Everest")) {
+				if (GameSim.turns2 % 2 == 0) {
+					roster[i].addBalance();
+				}
+			}
 			if(roster[i].getName().equals("Orchid") && !roster[i].petal) {
 				roster[i].chargeBlockade();
 			}
@@ -366,7 +383,10 @@ public class Party {
 			roster[i].setRally(false);
 			roster[i].setBee(false);
 			roster[i].resetQuincy();
+			roster[i].resetDodge();
+			roster[i].reduceEMP();
 			roster[i].setExpose(false);
+			roster[i].setClockwork(false);
 			if (roster[i].getHitDarkness()) {
 				roster[i].takeDamage(100);
 			}
@@ -427,7 +447,30 @@ public class Party {
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Mine") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.remove(j);
+					j--;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Smoke") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.remove(j);
+					j--;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Mochi") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.get(j).resetPounce();
+					GameSim.utility.get(j).resetDestroy();
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Steam") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.get(j).firework();
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).owner(roster[i])) {
 					GameSim.utility.remove(j);
 					j--;
 				}
