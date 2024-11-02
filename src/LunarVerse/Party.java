@@ -338,6 +338,10 @@ public class Party {
 			if(roster[i].getName().equals("Gates") && roster[i].ultActive()) {
 				roster[i].ultDown();
 			}
+			if(roster[i].getName().equals("Jazz") && roster[i].ultActive()) {
+				roster[i].ultDown();
+				roster[i].resetUlt();
+			}
 			if(roster[i].getName().equals("Millie")) {
 				roster[i].addDagger();
 				if (GameSim.turns2 % 2 == 0) {
@@ -387,6 +391,7 @@ public class Party {
 			roster[i].reduceEMP();
 			roster[i].setExpose(false);
 			roster[i].setClockwork(false);
+			roster[i].checkDecay();
 			if (roster[i].getHitDarkness()) {
 				roster[i].takeDamage(100);
 			}
@@ -407,9 +412,23 @@ public class Party {
 			if(roster[i].getName().equals("Drift") && roster[i].ultActive()) {
 				roster[i].setBumps(3);
 			}
+			for (Tile t: GameSim.b.getTiles()) {
+				if(roster[i].getLoc().eqLoc(t.getLoc())) {
+					if(t.getName().equals("Space")) {
+						roster[i].takeDamage(roster[i].getMaxHP() * 0.1);
+						System.out.println();
+					}
+				}
+			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Sphere") && GameSim.utility.get(j).owner(roster[i])) {
 					GameSim.utility.get(j).activateSphere();
+				}
+			}
+			for(int e = 0; e < GameSim.utility.size(); e++) {
+				if(GameSim.utility.get(e).getName().equals("Butterfly") && GameSim.utility.get(e).owner(roster[i])) {
+					GameSim.utility.remove(e);
+					e--;
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
@@ -453,6 +472,11 @@ public class Party {
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.get(j).setPhase();
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Smoke") && GameSim.utility.get(j).owner(roster[i])) {
 					GameSim.utility.remove(j);
 					j--;
@@ -470,9 +494,23 @@ public class Party {
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Peri") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.get(j).activatePeri();
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).owner(roster[i])) {
 					GameSim.utility.remove(j);
 					j--;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Sphere2") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.get(j).checkSphere();
+					if (GameSim.utility.get(j).getLoc().getX() > 41 || GameSim.utility.get(j).getLoc().getX() < 0 || GameSim.utility.get(j).getLoc().getY() > 41 || GameSim.utility.get(j).getLoc().getY() < 0) {
+						GameSim.utility.remove(j);
+						j--;
+					}
 				}
 			}
 			if(roster[i].getName().equals("Rhythm") && !roster[i].isDazed() && roster[i].isAlive()) {
@@ -500,6 +538,9 @@ public class Party {
 		turn = true;
 		for(int i = 0; i < 3; i++) {
 			if(roster[i].isIgnite()) {
+				for (int j = 0; j < roster[i].getFiretick(); j++) {
+					roster[i].takeDamage(5);
+				}
 				roster[i].takeDamage(175);
 				if(teamDown()) {
 					GameSim.game = false;
@@ -533,6 +574,7 @@ public class Party {
 			roster[0].setTurn();
 		}
 		getUpdates();
+		reduceTeamEffectsPre();
 	}
 	
 	public void checkDown() {
@@ -550,6 +592,12 @@ public class Party {
 	public void reduceTeamEffects() {
 		for(int i = 0; i < 3; i++) {
 			roster[i].reduceEffects();
+		}
+	}
+	
+	public void reduceTeamEffectsPre() {
+		for(int i = 0; i < 3; i++) {
+			roster[i].reduceEffectsPre();
 		}
 	}
 	

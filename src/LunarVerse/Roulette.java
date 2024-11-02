@@ -255,11 +255,7 @@ public class Roulette {
 		if(winner().equals(dealer)) {
 			player.takeDamage(1400);
 			dealer.addDamage(1400);
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect SolarIgnite = new Effect("stun", 0, 1);
-			e.add(SolarIgnite);
-			player.addEffects(e);
-			player.applyEffects();
+			player.stun(1);
 			System.out.println("\"Undefeated baby! Woooooo!\"");
 			System.out.println();
 		}else {

@@ -62,6 +62,7 @@ public class GameSim {
 		boolean play2 = true;
 		boolean play3 = true;
 		boolean play4 = true;
+		boolean play5 = true;
 		String tD;
 		int turns = 0;
 		//HP, Damage, Turn, Name, X, Y, Range, Movement, Ult
@@ -181,12 +182,12 @@ public class GameSim {
 				p6.setCharm(charm6);
 			}
 		}else {
-			p1 = new Player(1, 75, true, "Rin", 20, 20, 10, 10, 0);
+			p1 = new Player(10000, 75, true, "Thunder", 20, 20, 13, 10, 0);
 			p1.addRole("tank");
-			p3 = new Player(1000, 475, false, "Archer", 20, 20, 10, 10, 0);
-			p5 = new Player(1000, 175, false, "Mayhem", 20, 20, 11, 9, 0);
+			p3 = new Player(1000, 475, false, "Solar", 20, 20, 10, 10, 0);
+			p5 = new Player(1000, 175, false, "Folden", 20, 20, 11, 9, 0);
 			
-			p2 = new Player(10000, 250, false, "Chloe", 19, 19, 10, 10, 7);
+			p2 = new Player(10000, 250, false, "Isabelle", 19, 19, 10, 10, 7);
 			p4 = new Player(10000, 250, false, "Lunar", 22, 22, 10, 10, 0);
 			p6 = new Player(10000, 200, false, "Sammi", 23, 23, 10, 10, 7);
 			String skinName = "Sakura";
@@ -256,6 +257,31 @@ public class GameSim {
 		if (p6.getName().equals("Victor")) {
 			p6.setSteam(p1, p3, p5, p4, p2);
 		}
+		
+		if (p1.getName().equals("Jazz")) {
+			p1.setBubble(p2, p4, p6, p3, p5);
+		}
+		if (p3.getName().equals("Jazz")) {
+			p3.setBubble(p2, p4, p6, p1, p5);
+		}
+		if (p5.getName().equals("Jazz")) {
+			p5.setBubble(p2, p4, p6, p3, p1);
+		}
+		if (p2.getName().equals("Jazz")) {
+			p2.setBubble(p1, p3, p5, p4, p6);
+		}
+		if (p4.getName().equals("Jazz")) {
+			p4.setBubble(p1, p3, p5, p2, p6);
+		}
+		if (p6.getName().equals("Jazz")) {
+			p6.setBubble(p1, p3, p5, p4, p2);
+		}
+		p1.setPlayers(p2, p4, p6, p3, p5);
+		p3.setPlayers(p2, p4, p6, p1, p5);
+		p5.setPlayers(p2, p4, p6, p3, p1);
+		p2.setPlayers(p1, p3, p5, p4, p6);
+		p4.setPlayers(p1, p3, p5, p2, p6);
+		p6.setPlayers(p1, p3, p5, p4, p2);
 		b = new Battlefield("Nexus Village", p1, p3, p5, p2, p4, p6);
 		Party party1 = new Party(true, p1, p3, p5);
 		Party party2 = new Party(false, p2, p4, p6);
@@ -288,7 +314,9 @@ public class GameSim {
 			if(turns % 2 == 0) {
 				turns2++;
 			}
-			if(turns2 >= 10) {
+			if(turns2 >= 15) {
+				tD = bold + color + 17 + "m" + String.valueOf(turns2) + reset;
+			}else if(turns2 >= 10) {
 				tD = bold + color + 196 + "m" + String.valueOf(turns2) + reset;
 			}else if(turns2 >= 5) {
 				tD = bold + color + 214 + "m" + String.valueOf(turns2) + reset;
@@ -381,6 +409,9 @@ public class GameSim {
 						}
 						if (p1.getName().equals("Rin")) {
 							RinPassive(p1, p2, p4, p6, p3, p5);
+						}
+						if (p1.getName().equals("Jazz")) {
+							JazzPassive(p1);
 						}
 						ReviveDeny(p1, p3, p5);
 					}
@@ -538,238 +569,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p1.getName().equals("Lunar")) {
-												LunarAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Solar")) {
-												SolarAttack(p1, p2);
-											}
-											if(p1.getName().equals("Mack")) {
-												MackAttack(p1, p2);
-											}
-											if(p1.getName().equals("Finley")) {
-												FinleyAttack(p1, p2);
-											}
-											if(p1.getName().equals("Burt")) {
-												BurtAttack(p1, p2);
-											}
-											if(p1.getName().equals("Bolo")) {
-												BoloAttack(p1, p2);
-											}
-											if(p1.getName().equals("Dylan")) {
-												DylanAttack(p1, p2);
-											}
-											if(p1.getName().equals("Zero")) {
-												ZeroAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Eli")) {
-												EliAttack(p1, p2);
-											}
-											if(p1.getName().equals("Via")) {
-												ViaAttack(p1, p2, p4 ,p6);
-											}
-											if(p1.getName().equals("Louis")) {
-												LouisAttack(p1, p2);
-											}
-											if(p1.getName().equals("Alex")) {
-												AlexAttack(p1, p2);
-											}
-											if(p1.getName().equals("Orion")) {
-												OrionAttack(p1, p2);
-											}
-											if(p1.getName().equals("Kailani")) {
-												KailaniAttack(p1, p2);
-											}
-											if(p1.getName().equals("Ashley")) {
-												AshleyAttack(p1, p2);
-											}
-											if(p1.getName().equals("Rocco")) {
-												RoccoAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Sammi")) {
-												SammiAttack(p1, p2);
-											}
-											if(p1.getName().equals("Clara")) {
-												ClaraAttack(p1, p2);
-											}
-											if(p1.getName().equals("Thunder")) {
-												ThunderAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Aidan")) {
-												AidanAttack(p1, p2);
-											}
-											if(p1.getName().equals("Liam")) {
-												LiamAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Axol")) {
-												AxolAttack(p1, p2);
-											}
-											if(p1.getName().equals("Katrina")) {
-												KatrinaAttack(p1, p2);
-											}
-											if(p1.getName().equals("Midnite")) {
-												MidniteAttack(p1, p2);
-											}
-											if(p1.getName().equals("Xara")) {
-												XaraAttack(p1, p2);
-											}
-											if(p1.getName().equals("Kithara")) {
-												KitharaAttack(p1, p2);
-											}
-											if(p1.getName().equals("Anjelika")) {
-												AnjelikaAttack(p1, p2);
-											}
-											if(p1.getName().equals("Archer")) {
-												ArcherAttack(p1, p2);
-											}
-											if(p1.getName().equals("Tom")) {
-												TomAttack(p1, p2);
-											}
-											if(p1.getName().equals("Dimentio")) {
-												DimentioAttack(p1, p2);
-											}
-											if(p1.getName().equals("Grizz")) {
-												GrizzAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Evil")) {
-												EvilAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Mason")) {
-												MasonAttack(p1, p2);
-											}
-											if(p1.getName().equals("Airic")) {
-												AiricAttack(p1, p2);
-											}
-											if(p1.getName().equals("Julian")) {
-												JulianAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Gash")) {
-												GashAttack(p1, p2);
-											}
-											if(p1.getName().equals("Mayhem")) {
-												MayhemAttack(p1, p2);
-											}
-											if(p1.getName().equals("Gates")) {
-												Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
-												GatesAttack(p1, p2, l);
-											}
-											if(p1.getName().equals("Ayson")) {
-												AysonAttack(p1, p2);
-											}
-											if(p1.getName().equals("Chloe")) {
-												ChloeAttack(p1, p2, p3, p5);
-											}
-											if(p1.getName().equals("Hopper")) {
-												HopperAttack(p1, p2);
-											}
-											if(p1.getName().equals("Redgar")) {
-												RedgarAttack(p1, p2);
-											}
-											if(p1.getName().equals("Radar")) {
-												RadarAttack(p1, p2);
-											}
-											if(p1.getName().equals("Oona")) {
-												OonaAttack(p1, p2);
-											}
-											if(p1.getName().equals("Augie")) {
-												AugieAttack(p1, p2);
-											}
-											if(p1.getName().equals("Ruby")) {
-												RubyAttack(p1, p2);
-											}
-											if(p1.getName().equals("Norman")) {
-												NormanAttack(p1, p2, p3, p5);
-											}
-											if(p1.getName().equals("Chief")) {
-												ChiefAttack(p1, p2);
-											}
-											if(p1.getName().equals("Melony")) {
-												MelonyAttack(p1, p2);
-											}
-											if(p1.getName().equals("Echo")) {
-												EchoAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Rhythm")) {
-												RhythmAttack(p1, p2);
-											}
-											if(p1.getName().equals("Grenadine")) {
-												GrenadineAttack(p1, p2);
-											}
-											if(p1.getName().equals("Patitek")) {
-												PatitekAttack(p1, p2);
-											}
-											if(p1.getName().equals("Crystal")) {
-												CrystalAttack(p1, p2);
-											}
-											if(p1.getName().equals("Velvet")) {
-												VelvetAttack(p1, p2);
-											}
-											if(p1.getName().equals("Drift")) {
-												DriftAttack(p1, p2);
-											}
-											if(p1.getName().equals("Snowfall")) {
-												SnowfallAttack(p1, p2);
-											}
-											if(p1.getName().equals("Shutter")) {
-												ShutterAttack(p1, p2, p3, p5);
-											}
-											if(p1.getName().equals("Magnet")) {
-												MagnetAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Jing")) {
-												JingAttack(p1, p2);
-											}
-											if(p1.getName().equals("Folden")) {
-												FoldenAttack(p1, p2);
-											}
-											if(p1.getName().equals("Margo")) {
-												MargoAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Petra")) {
-												PetraAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Quincy")) {
-												QuincyAttack(p1, p2, p3, p5);
-											}
-											if(p1.getName().equals("Unice")) {
-												UniceAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Leaf")) {
-												LeafAttack(p1, p2);
-											}
-											if(p1.getName().equals("Courtney")) {
-												CourtneyAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Divine")) {
-												DivineAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Gambit")) {
-												GambitAttack(p1, p2, p3, p5);
-											}
-											if(p1.getName().equals("Cloud")) {
-												CloudAttack(p1, p2);
-											}
-											if(p1.getName().equals("Winnie")) {
-												WinnieAttack(p1, p2);
-											}
-											if(p1.getName().equals("Pearl")) {
-												PearlAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Andrew")) {
-												AndrewAttack(p1, p2, p3, p5);
-											}
-											if(p1.getName().equals("Orchid")) {
-												OrchidAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Clementine")) {
-												ClementineAttack(p1, p2);
-											}
-											if(p1.getName().equals("Rin")) {
-												RinAttack(p1, p2, p4, p6);
-											}
-											if(p1.getName().equals("Isabelle")) {
-												IsabelleAttack(p1, p2, p3, p5);
-											}
+											runAttacks(p1, p2, p4, p6, p3, p5);
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -779,237 +579,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p1.getName().equals("Lunar")) {
-												LunarAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Solar")) {
-												SolarAttack(p1, p4);
-											}
-											if(p1.getName().equals("Mack")) {
-												MackAttack(p1, p4);
-											}if(p1.getName().equals("Finley")) {
-												FinleyAttack(p1, p4);
-											}
-											if(p1.getName().equals("Burt")) {
-												BurtAttack(p1, p4);
-											}
-											if(p1.getName().equals("Bolo")) {
-												BoloAttack(p1, p4);
-											}
-											if(p1.getName().equals("Dylan")) {
-												DylanAttack(p1, p4);
-											}
-											if(p1.getName().equals("Zero")) {
-												ZeroAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Eli")) {
-												EliAttack(p1, p4);
-											}
-											if(p1.getName().equals("Via")) {
-												ViaAttack(p1, p4, p2 ,p6);
-											}
-											if(p1.getName().equals("Louis")) {
-												LouisAttack(p1, p4);
-											}
-											if(p1.getName().equals("Alex")) {
-												AlexAttack(p1, p4);
-											}
-											if(p1.getName().equals("Orion")) {
-												OrionAttack(p1, p4);
-											}
-											if(p1.getName().equals("Kailani")) {
-												KailaniAttack(p1, p4);
-											}
-											if(p1.getName().equals("Ashley")) {
-												AshleyAttack(p1, p4);
-											}
-											if(p1.getName().equals("Rocco")) {
-												RoccoAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Sammi")) {
-												SammiAttack(p1, p4);
-											}
-											if(p1.getName().equals("Clara")) {
-												ClaraAttack(p1, p4);
-											}
-											if(p1.getName().equals("Thunder")) {
-												ThunderAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Aidan")) {
-												AidanAttack(p1, p4);
-											}
-											if(p1.getName().equals("Liam")) {
-												LiamAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Axol")) {
-												AxolAttack(p1, p4);
-											}
-											if(p1.getName().equals("Katrina")) {
-												KatrinaAttack(p1, p4);
-											}
-											if(p1.getName().equals("Midnite")) {
-												MidniteAttack(p1, p4);
-											}
-											if(p1.getName().equals("Xara")) {
-												XaraAttack(p1, p4);
-											}
-											if(p1.getName().equals("Kithara")) {
-												KitharaAttack(p1, p4);
-											}
-											if(p1.getName().equals("Anjelika")) {
-												AnjelikaAttack(p1, p4);
-											}
-											if(p1.getName().equals("Archer")) {
-												ArcherAttack(p1, p4);
-											}
-											if(p1.getName().equals("Tom")) {
-												TomAttack(p1, p4);
-											}
-											if(p1.getName().equals("Dimentio")) {
-												DimentioAttack(p1, p4);
-											}
-											if(p1.getName().equals("Grizz")) {
-												GrizzAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Evil")) {
-												EvilAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Mason")) {
-												MasonAttack(p1, p4);
-											}
-											if(p1.getName().equals("Airic")) {
-												AiricAttack(p1, p4);
-											}
-											if(p1.getName().equals("Julian")) {
-												JulianAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Gash")) {
-												GashAttack(p1, p4);
-											}
-											if(p1.getName().equals("Mayhem")) {
-												MayhemAttack(p1, p4);
-											}
-											if(p1.getName().equals("Gates")) {
-												Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
-												GatesAttack(p1, p4, l);
-											}
-											if(p1.getName().equals("Ayson")) {
-												AysonAttack(p1, p4);
-											}
-											if(p1.getName().equals("Chloe")) {
-												ChloeAttack(p1, p4, p3, p5);
-											}
-											if(p1.getName().equals("Hopper")) {
-												HopperAttack(p1, p4);
-											}
-											if(p1.getName().equals("Redgar")) {
-												RedgarAttack(p1, p4);
-											}
-											if(p1.getName().equals("Radar")) {
-												RadarAttack(p1, p4);
-											}
-											if(p1.getName().equals("Oona")) {
-												OonaAttack(p1, p4);
-											}
-											if(p1.getName().equals("Augie")) {
-												AugieAttack(p1, p4);
-											}
-											if(p1.getName().equals("Ruby")) {
-												RubyAttack(p1, p4);
-											}
-											if(p1.getName().equals("Norman")) {
-												NormanAttack(p1, p4, p3, p5);
-											}
-											if(p1.getName().equals("Chief")) {
-												ChiefAttack(p1, p4);
-											}
-											if(p1.getName().equals("Melony")) {
-												MelonyAttack(p1, p4);
-											}
-											if(p1.getName().equals("Echo")) {
-												EchoAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Rhythm")) {
-												RhythmAttack(p1, p4);
-											}
-											if(p1.getName().equals("Grenadine")) {
-												GrenadineAttack(p1, p4);
-											}
-											if(p1.getName().equals("Patitek")) {
-												PatitekAttack(p1, p4);
-											}
-											if(p1.getName().equals("Crystal")) {
-												CrystalAttack(p1, p4);
-											}
-											if(p1.getName().equals("Velvet")) {
-												VelvetAttack(p1, p4);
-											}
-											if(p1.getName().equals("Drift")) {
-												DriftAttack(p1, p4);
-											}
-											if(p1.getName().equals("Snowfall")) {
-												SnowfallAttack(p1, p4);
-											}
-											if(p1.getName().equals("Shutter")) {
-												ShutterAttack(p1, p4, p3, p5);
-											}
-											if(p1.getName().equals("Magnet")) {
-												MagnetAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Jing")) {
-												JingAttack(p1, p4);
-											}
-											if(p1.getName().equals("Folden")) {
-												FoldenAttack(p1, p4);
-											}
-											if(p1.getName().equals("Margo")) {
-												MargoAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Petra")) {
-												PetraAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Quincy")) {
-												QuincyAttack(p1, p4, p3, p5);
-											}
-											if(p1.getName().equals("Unice")) {
-												UniceAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Leaf")) {
-												LeafAttack(p1, p4);
-											}
-											if(p1.getName().equals("Courtney")) {
-												CourtneyAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Divine")) {
-												DivineAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Gambit")) {
-												GambitAttack(p1, p4, p3, p5);
-											}
-											if(p1.getName().equals("Cloud")) {
-												CloudAttack(p1, p4);
-											}
-											if(p1.getName().equals("Winnie")) {
-												WinnieAttack(p1, p4);
-											}
-											if(p1.getName().equals("Pearl")) {
-												PearlAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Andrew")) {
-												AndrewAttack(p1, p4, p3, p5);
-											}
-											if(p1.getName().equals("Orchid")) {
-												OrchidAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Clementine")) {
-												ClementineAttack(p1, p4);
-											}
-											if(p1.getName().equals("Rin")) {
-												RinAttack(p1, p4, p2, p6);
-											}
-											if(p1.getName().equals("Isabelle")) {
-												IsabelleAttack(p1, p4, p3, p5);
-											}
+											runAttacks(p1, p4, p2, p6, p3, p5);
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -1019,238 +589,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p1.getName().equals("Lunar")) {
-												LunarAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Solar")) {
-												SolarAttack(p1, p6);
-											}
-											if(p1.getName().equals("Mack")) {
-												MackAttack(p1, p6);
-											}
-											if(p1.getName().equals("Finley")) {
-												FinleyAttack(p1, p6);
-											}
-											if(p1.getName().equals("Burt")) {
-												BurtAttack(p1, p6);
-											}
-											if(p1.getName().equals("Bolo")) {
-												BoloAttack(p1, p6);
-											}
-											if(p1.getName().equals("Dylan")) {
-												DylanAttack(p1, p6);
-											}
-											if(p1.getName().equals("Zero")) {
-												ZeroAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Eli")) {
-												EliAttack(p1, p6);
-											}
-											if(p1.getName().equals("Via")) {
-												ViaAttack(p1, p6, p4 ,p2);
-											}
-											if(p1.getName().equals("Louis")) {
-												LouisAttack(p1, p6);
-											}
-											if(p1.getName().equals("Alex")) {
-												AlexAttack(p1, p6);
-											}
-											if(p1.getName().equals("Orion")) {
-												OrionAttack(p1, p6);
-											}
-											if(p1.getName().equals("Kailani")) {
-												KailaniAttack(p1, p6);
-											}
-											if(p1.getName().equals("Ashley")) {
-												AshleyAttack(p1, p6);
-											}
-											if(p1.getName().equals("Rocco")) {
-												RoccoAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Sammi")) {
-												SammiAttack(p1, p6);
-											}
-											if(p1.getName().equals("Clara")) {
-												ClaraAttack(p1, p6);
-											}
-											if(p1.getName().equals("Thunder")) {
-												ThunderAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Aidan")) {
-												AidanAttack(p1, p6);
-											}
-											if(p1.getName().equals("Liam")) {
-												LiamAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Axol")) {
-												AxolAttack(p1, p6);
-											}
-											if(p1.getName().equals("Katrina")) {
-												KatrinaAttack(p1, p6);
-											}
-											if(p1.getName().equals("Midnite")) {
-												MidniteAttack(p1, p6);
-											}
-											if(p1.getName().equals("Xara")) {
-												XaraAttack(p1, p6);
-											}
-											if(p1.getName().equals("Kithara")) {
-												KitharaAttack(p1, p6);
-											}
-											if(p1.getName().equals("Anjelika")) {
-												AnjelikaAttack(p1, p6);
-											}
-											if(p1.getName().equals("Archer")) {
-												ArcherAttack(p1, p6);
-											}
-											if(p1.getName().equals("Tom")) {
-												TomAttack(p1, p6);
-											}
-											if(p1.getName().equals("Dimentio")) {
-												DimentioAttack(p1, p6);
-											}
-											if(p1.getName().equals("Grizz")) {
-												GrizzAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Evil")) {
-												EvilAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Mason")) {
-												MasonAttack(p1, p6);
-											}
-											if(p1.getName().equals("Airic")) {
-												AiricAttack(p1, p6);
-											}
-											if(p1.getName().equals("Julian")) {
-												JulianAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Gash")) {
-												GashAttack(p1, p6);
-											}
-											if(p1.getName().equals("Mayhem")) {
-												MayhemAttack(p1, p6);
-											}
-											if(p1.getName().equals("Gates")) {
-												Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
-												GatesAttack(p1, p6, l);
-											}
-											if(p1.getName().equals("Ayson")) {
-												AysonAttack(p1, p6);
-											}
-											if(p1.getName().equals("Chloe")) {
-												ChloeAttack(p1, p6, p3, p5);
-											}
-											if(p1.getName().equals("Hopper")) {
-												HopperAttack(p1, p6);
-											}
-											if(p1.getName().equals("Redgar")) {
-												RedgarAttack(p1, p6);
-											}
-											if(p1.getName().equals("Radar")) {
-												RadarAttack(p1, p6);
-											}
-											if(p1.getName().equals("Oona")) {
-												OonaAttack(p1, p6);
-											}
-											if(p1.getName().equals("Augie")) {
-												AugieAttack(p1, p6);
-											}
-											if(p1.getName().equals("Ruby")) {
-												RubyAttack(p1, p6);
-											}
-											if(p1.getName().equals("Norman")) {
-												NormanAttack(p1, p6, p3, p5);
-											}
-											if(p1.getName().equals("Chief")) {
-												ChiefAttack(p1, p6);
-											}
-											if(p1.getName().equals("Melony")) {
-												MelonyAttack(p1, p6);
-											}
-											if(p1.getName().equals("Echo")) {
-												EchoAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Rhythm")) {
-												RhythmAttack(p1, p6);
-											}
-											if(p1.getName().equals("Grenadine")) {
-												GrenadineAttack(p1, p6);
-											}
-											if(p1.getName().equals("Patitek")) {
-												PatitekAttack(p1, p6);
-											}
-											if(p1.getName().equals("Crystal")) {
-												CrystalAttack(p1, p6);
-											}
-											if(p1.getName().equals("Velvet")) {
-												VelvetAttack(p1, p6);
-											}
-											if(p1.getName().equals("Drift")) {
-												DriftAttack(p1, p6);
-											}
-											if(p1.getName().equals("Snowfall")) {
-												SnowfallAttack(p1, p6);
-											}
-											if(p1.getName().equals("Shutter")) {
-												ShutterAttack(p1, p6, p3, p5);
-											}
-											if(p1.getName().equals("Magnet")) {
-												MagnetAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Jing")) {
-												JingAttack(p1, p6);
-											}
-											if(p1.getName().equals("Folden")) {
-												FoldenAttack(p1, p6);
-											}
-											if(p1.getName().equals("Margo")) {
-												MargoAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Petra")) {
-												PetraAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Quincy")) {
-												QuincyAttack(p1, p6, p3, p5);
-											}
-											if(p1.getName().equals("Unice")) {
-												UniceAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Leaf")) {
-												LeafAttack(p1, p6);
-											}
-											if(p1.getName().equals("Courtney")) {
-												CourtneyAttack(p1, p6, p2, p4);
-											}
-											if(p1.getName().equals("Divine")) {
-												DivineAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Gambit")) {
-												GambitAttack(p1, p6, p3, p5);
-											}
-											if(p1.getName().equals("Cloud")) {
-												CloudAttack(p1, p6);
-											}
-											if(p1.getName().equals("Winnie")) {
-												WinnieAttack(p1, p6);
-											}
-											if(p1.getName().equals("Pearl")) {
-												PearlAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Andrew")) {
-												AndrewAttack(p1, p6, p3, p5);
-											}
-											if(p1.getName().equals("Orchid")) {
-												OrchidAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Clementine")) {
-												ClementineAttack(p1, p6);
-											}
-											if(p1.getName().equals("Rin")) {
-												RinAttack(p1, p6, p4, p2);
-											}
-											if(p1.getName().equals("Isabelle")) {
-												IsabelleAttack(p1, p6, p3, p5);
-											}
+											runAttacks(p1, p6, p4, p2, p3, p5);
 										}
 									}
 								}
@@ -1312,6 +651,9 @@ public class GameSim {
 						}
 						if (p3.getName().equals("Rin")) {
 							RinPassive(p3, p2, p4, p6, p1, p5);
+						}
+						if (p3.getName().equals("Jazz")) {
+							JazzPassive(p3);
 						}
 						ReviveDeny(p3, p1, p5);
 					}
@@ -1451,238 +793,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p3.getName().equals("Lunar")) {
-												LunarAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Solar")) {
-												SolarAttack(p3, p2);
-											}
-											if(p3.getName().equals("Mack")) {
-												MackAttack(p3, p2);
-											}
-											if(p3.getName().equals("Finley")) {
-												FinleyAttack(p3, p2);
-											}
-											if(p3.getName().equals("Burt")) {
-												BurtAttack(p3, p2);
-											}
-											if(p3.getName().equals("Bolo")) {
-												BoloAttack(p3, p2);
-											}
-											if(p3.getName().equals("Zero")) {
-												ZeroAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Dylan")) {
-												DylanAttack(p3, p2);
-											}
-											if(p3.getName().equals("Eli")) {
-												EliAttack(p3, p2);
-											}
-											if(p3.getName().equals("Via")) {
-												ViaAttack(p3, p2, p4 ,p6);
-											}
-											if(p3.getName().equals("Louis")) {
-												LouisAttack(p3, p2);
-											}
-											if(p3.getName().equals("Alex")) {
-												AlexAttack(p3, p2);
-											}
-											if(p3.getName().equals("Orion")) {
-												OrionAttack(p3, p2);
-											}
-											if(p3.getName().equals("Kailani")) {
-												KailaniAttack(p3, p2);
-											}
-											if(p3.getName().equals("Ashley")) {
-												AshleyAttack(p3, p2);
-											}
-											if(p3.getName().equals("Rocco")) {
-												RoccoAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Sammi")) {
-												SammiAttack(p3, p2);
-											}
-											if(p3.getName().equals("Clara")) {
-												ClaraAttack(p3, p2);
-											}
-											if(p3.getName().equals("Thunder")) {
-												ThunderAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Aidan")) {
-												AidanAttack(p3, p2);
-											}
-											if(p3.getName().equals("Liam")) {
-												LiamAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Axol")) {
-												AxolAttack(p3, p2);
-											}
-											if(p3.getName().equals("Katrina")) {
-												KatrinaAttack(p3, p2);
-											}
-											if(p3.getName().equals("Midnite")) {
-												MidniteAttack(p3, p2);
-											}
-											if(p3.getName().equals("Kithara")) {
-												KitharaAttack(p3, p2);
-											}
-											if(p3.getName().equals("Anjelika")) {
-												AnjelikaAttack(p3, p2);
-											}
-											if(p3.getName().equals("Xara")) {
-												XaraAttack(p3, p2);
-											}
-											if(p3.getName().equals("Archer")) {
-												ArcherAttack(p3, p2);
-											}
-											if(p3.getName().equals("Tom")) {
-												TomAttack(p3, p2);
-											}
-											if(p3.getName().equals("Dimentio")) {
-												DimentioAttack(p3, p2);
-											}
-											if(p3.getName().equals("Grizz")) {
-												GrizzAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Evil")) {
-												EvilAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Mason")) {
-												MasonAttack(p3, p2);
-											}
-											if(p3.getName().equals("Airic")) {
-												AiricAttack(p3, p2);
-											}
-											if(p3.getName().equals("Julian")) {
-												JulianAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Gash")) {
-												GashAttack(p3, p2);
-											}
-											if(p3.getName().equals("Mayhem")) {
-												MayhemAttack(p3, p2);
-											}
-											if(p3.getName().equals("Gates")) {
-												Location l = SetCursor(p3, p2, p4, p6, p1, p5, 0);
-												GatesAttack(p3, p2, l);
-											}
-											if(p3.getName().equals("Ayson")) {
-												AysonAttack(p3, p2);
-											}
-											if(p3.getName().equals("Chloe")) {
-												ChloeAttack(p3, p2, p1, p5);
-											}
-											if(p3.getName().equals("Hopper")) {
-												HopperAttack(p3, p2);
-											}
-											if(p3.getName().equals("Redgar")) {
-												RedgarAttack(p3, p2);
-											}
-											if(p3.getName().equals("Radar")) {
-												RadarAttack(p3, p2);
-											}
-											if(p3.getName().equals("Oona")) {
-												OonaAttack(p3, p2);
-											}
-											if(p3.getName().equals("Augie")) {
-												AugieAttack(p3, p2);
-											}
-											if(p3.getName().equals("Ruby")) {
-												RubyAttack(p3, p2);
-											}
-											if(p3.getName().equals("Norman")) {
-												NormanAttack(p3, p2, p1, p5);
-											}
-											if(p3.getName().equals("Chief")) {
-												ChiefAttack(p3, p2);
-											}
-											if(p3.getName().equals("Melony")) {
-												MelonyAttack(p3, p2);
-											}
-											if(p3.getName().equals("Echo")) {
-												EchoAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Rhythm")) {
-												RhythmAttack(p3, p2);
-											}
-											if(p3.getName().equals("Grenadine")) {
-												GrenadineAttack(p3, p2);
-											}
-											if(p3.getName().equals("Patitek")) {
-												PatitekAttack(p3, p2);
-											}
-											if(p3.getName().equals("Crystal")) {
-												CrystalAttack(p3, p2);
-											}
-											if(p3.getName().equals("Velvet")) {
-												VelvetAttack(p3, p2);
-											}
-											if(p3.getName().equals("Drift")) {
-												DriftAttack(p3, p2);
-											}
-											if(p3.getName().equals("Snowfall")) {
-												SnowfallAttack(p3, p2);
-											}
-											if(p3.getName().equals("Shutter")) {
-												ShutterAttack(p3, p2, p1, p5);
-											}
-											if(p3.getName().equals("Magnet")) {
-												MagnetAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Jing")) {
-												JingAttack(p3, p2);
-											}
-											if(p3.getName().equals("Folden")) {
-												FoldenAttack(p3, p2);
-											}
-											if(p3.getName().equals("Margo")) {
-												MargoAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Petra")) {
-												PetraAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Quincy")) {
-												QuincyAttack(p3, p2, p1, p5);
-											}
-											if(p3.getName().equals("Unice")) {
-												UniceAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Leaf")) {
-												LeafAttack(p3, p2);
-											}
-											if(p3.getName().equals("Courtney")) {
-												CourtneyAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Divine")) {
-												DivineAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Gambit")) {
-												GambitAttack(p3, p2, p1, p5);
-											}
-											if(p3.getName().equals("Cloud")) {
-												CloudAttack(p3, p2);
-											}
-											if(p3.getName().equals("Winnie")) {
-												WinnieAttack(p3, p2);
-											}
-											if(p3.getName().equals("Pearl")) {
-												PearlAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Andrew")) {
-												AndrewAttack(p3, p2, p1, p5);
-											}
-											if(p3.getName().equals("Orchid")) {
-												OrchidAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Clementine")) {
-												ClementineAttack(p3, p2);
-											}
-											if(p3.getName().equals("Rin")) {
-												RinAttack(p3, p2, p4, p6);
-											}
-											if(p3.getName().equals("Isabelle")) {
-												IsabelleAttack(p3, p2, p1, p5);
-											}
+											runAttacks(p3, p2, p4, p6, p1, p5);
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -1692,238 +803,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p3.getName().equals("Lunar")) {
-												LunarAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Solar")) {
-												SolarAttack(p3, p4);
-											}
-											if(p3.getName().equals("Mack")) {
-												MackAttack(p3, p4);
-											}
-											if(p3.getName().equals("Finley")) {
-												FinleyAttack(p3, p4);
-											}
-											if(p3.getName().equals("Burt")) {
-												BurtAttack(p3, p4);
-											}
-											if(p3.getName().equals("Bolo")) {
-												BoloAttack(p3, p4);
-											}
-											if(p3.getName().equals("Zero")) {
-												ZeroAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Dylan")) {
-												DylanAttack(p3, p4);
-											}
-											if(p3.getName().equals("Eli")) {
-												EliAttack(p3, p4);
-											}
-											if(p3.getName().equals("Via")) {
-												ViaAttack(p3, p4, p2 ,p6);
-											}
-											if(p3.getName().equals("Louis")) {
-												LouisAttack(p3, p4);
-											}
-											if(p3.getName().equals("Alex")) {
-												AlexAttack(p3, p4);
-											}
-											if(p3.getName().equals("Orion")) {
-												OrionAttack(p3, p4);
-											}
-											if(p3.getName().equals("Kailani")) {
-												KailaniAttack(p3, p4);
-											}
-											if(p3.getName().equals("Ashley")) {
-												AshleyAttack(p3, p4);
-											}
-											if(p3.getName().equals("Rocco")) {
-												RoccoAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Sammi")) {
-												SammiAttack(p3, p4);
-											}
-											if(p3.getName().equals("Clara")) {
-												ClaraAttack(p3, p4);
-											}
-											if(p3.getName().equals("Thunder")) {
-												ThunderAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Aidan")) {
-												AidanAttack(p3, p4);
-											}
-											if(p3.getName().equals("Liam")) {
-												LiamAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Axol")) {
-												AxolAttack(p3, p4);
-											}
-											if(p3.getName().equals("Katrina")) {
-												KatrinaAttack(p3, p4);
-											}
-											if(p3.getName().equals("Midnite")) {
-												MidniteAttack(p3, p4);
-											}
-											if(p3.getName().equals("Xara")) {
-												XaraAttack(p3, p4);
-											}
-											if(p3.getName().equals("Kithara")) {
-												KitharaAttack(p3, p4);
-											}
-											if(p3.getName().equals("Anjelika")) {
-												AnjelikaAttack(p3, p4);
-											}
-											if(p3.getName().equals("Archer")) {
-												ArcherAttack(p3, p4);
-											}
-											if(p3.getName().equals("Tom")) {
-												TomAttack(p3, p4);
-											}
-											if(p3.getName().equals("Dimentio")) {
-												DimentioAttack(p3, p4);
-											}
-											if(p3.getName().equals("Grizz")) {
-												GrizzAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Evil")) {
-												EvilAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Mason")) {
-												MasonAttack(p3, p4);
-											}
-											if(p3.getName().equals("Airic")) {
-												AiricAttack(p3, p4);
-											}
-											if(p3.getName().equals("Julian")) {
-												JulianAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Gash")) {
-												GashAttack(p3, p4);
-											}
-											if(p3.getName().equals("Mayhem")) {
-												MayhemAttack(p3, p4);
-											}
-											if(p3.getName().equals("Gates")) {
-												Location l = SetCursor(p3, p2, p4, p6, p1, p5, 0);
-												GatesAttack(p3, p4, l);
-											}
-											if(p3.getName().equals("Ayson")) {
-												AysonAttack(p3, p4);
-											}
-											if(p3.getName().equals("Chloe")) {
-												ChloeAttack(p3, p4, p1, p5);
-											}
-											if(p3.getName().equals("Hopper")) {
-												HopperAttack(p3, p4);
-											}
-											if(p3.getName().equals("Redgar")) {
-												RedgarAttack(p3, p4);
-											}
-											if(p3.getName().equals("Radar")) {
-												RadarAttack(p3, p4);
-											}
-											if(p3.getName().equals("Oona")) {
-												OonaAttack(p3, p4);
-											}
-											if(p3.getName().equals("Augie")) {
-												AugieAttack(p3, p4);
-											}
-											if(p3.getName().equals("Ruby")) {
-												RubyAttack(p3, p4);
-											}
-											if(p3.getName().equals("Norman")) {
-												NormanAttack(p3, p4, p1, p5);
-											}
-											if(p3.getName().equals("Chief")) {
-												ChiefAttack(p3, p4);
-											}
-											if(p3.getName().equals("Melony")) {
-												MelonyAttack(p3, p4);
-											}
-											if(p3.getName().equals("Echo")) {
-												EchoAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Rhythm")) {
-												RhythmAttack(p3, p4);
-											}
-											if(p3.getName().equals("Grenadine")) {
-												GrenadineAttack(p3, p4);
-											}
-											if(p3.getName().equals("Patitek")) {
-												PatitekAttack(p3, p4);
-											}
-											if(p3.getName().equals("Crystal")) {
-												CrystalAttack(p3, p4);
-											}
-											if(p3.getName().equals("Velvet")) {
-												VelvetAttack(p3, p4);
-											}
-											if(p3.getName().equals("Drift")) {
-												DriftAttack(p3, p4);
-											}
-											if(p3.getName().equals("Snowfall")) {
-												SnowfallAttack(p3, p4);
-											}
-											if(p3.getName().equals("Shutter")) {
-												ShutterAttack(p3, p4, p1, p5);
-											}
-											if(p3.getName().equals("Magnet")) {
-												MagnetAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Jing")) {
-												JingAttack(p3, p4);
-											}
-											if(p3.getName().equals("Folden")) {
-												FoldenAttack(p3, p4);
-											}
-											if(p3.getName().equals("Margo")) {
-												MargoAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Petra")) {
-												PetraAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Quincy")) {
-												QuincyAttack(p3, p4, p1, p5);
-											}
-											if(p3.getName().equals("Unice")) {
-												UniceAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Leaf")) {
-												LeafAttack(p3, p4);
-											}
-											if(p3.getName().equals("Courtney")) {
-												CourtneyAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Divine")) {
-												DivineAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Gambit")) {
-												GambitAttack(p3, p4, p1, p5);
-											}
-											if(p3.getName().equals("Cloud")) {
-												CloudAttack(p3, p4);
-											}
-											if(p3.getName().equals("Winnie")) {
-												WinnieAttack(p3, p4);
-											}
-											if(p3.getName().equals("Pearl")) {
-												PearlAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Andrew")) {
-												AndrewAttack(p3, p4, p1, p5);
-											}
-											if(p3.getName().equals("Orchid")) {
-												OrchidAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Clementine")) {
-												ClementineAttack(p3, p4);
-											}
-											if(p3.getName().equals("Rin")) {
-												RinAttack(p3, p4, p2, p6);
-											}
-											if(p3.getName().equals("Isabelle")) {
-												IsabelleAttack(p3, p4, p1, p5);
-											}
+											runAttacks(p3, p4, p2, p6, p1, p5);
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -1933,238 +813,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p3.getName().equals("Lunar")) {
-												LunarAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Solar")) {
-												SolarAttack(p3, p6);
-											}
-											if(p3.getName().equals("Mack")) {
-												MackAttack(p3, p6);
-											}
-											if(p3.getName().equals("Finley")) {
-												FinleyAttack(p3, p6);
-											}
-											if(p3.getName().equals("Burt")) {
-												BurtAttack(p3, p6);
-											}
-											if(p3.getName().equals("Bolo")) {
-												BoloAttack(p3, p6);
-											}
-											if(p3.getName().equals("Zero")) {
-												ZeroAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Dylan")) {
-												DylanAttack(p3, p6);
-											}
-											if(p3.getName().equals("Eli")) {
-												EliAttack(p3, p6);
-											}
-											if(p3.getName().equals("Via")) {
-												ViaAttack(p3, p6, p4 ,p2);
-											}
-											if(p3.getName().equals("Louis")) {
-												LouisAttack(p3, p6);
-											}
-											if(p3.getName().equals("Alex")) {
-												AlexAttack(p3, p6);
-											}
-											if(p3.getName().equals("Orion")) {
-												OrionAttack(p3, p6);
-											}
-											if(p3.getName().equals("Kailani")) {
-												KailaniAttack(p3, p6);
-											}
-											if(p3.getName().equals("Ashley")) {
-												AshleyAttack(p3, p6);
-											}
-											if(p3.getName().equals("Rocco")) {
-												RoccoAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Sammi")) {
-												SammiAttack(p3, p6);
-											}
-											if(p3.getName().equals("Clara")) {
-												ClaraAttack(p3, p6);
-											}
-											if(p3.getName().equals("Thunder")) {
-												ThunderAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Aidan")) {
-												AidanAttack(p3, p6);
-											}
-											if(p3.getName().equals("Liam")) {
-												LiamAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Axol")) {
-												AxolAttack(p3, p6);
-											}
-											if(p3.getName().equals("Katrina")) {
-												KatrinaAttack(p3, p6);
-											}
-											if(p3.getName().equals("Midnite")) {
-												MidniteAttack(p3, p6);
-											}
-											if(p3.getName().equals("Xara")) {
-												XaraAttack(p3, p6);
-											}
-											if(p3.getName().equals("Kithara")) {
-												KitharaAttack(p3, p6);
-											}
-											if(p3.getName().equals("Anjelika")) {
-												AnjelikaAttack(p3, p6);
-											}
-											if(p3.getName().equals("Archer")) {
-												ArcherAttack(p3, p6);
-											}
-											if(p3.getName().equals("Tom")) {
-												TomAttack(p3, p6);
-											}
-											if(p3.getName().equals("Dimentio")) {
-												DimentioAttack(p3, p6);
-											}
-											if(p3.getName().equals("Grizz")) {
-												GrizzAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Evil")) {
-												EvilAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Mason")) {
-												MasonAttack(p3, p6);
-											}
-											if(p3.getName().equals("Airic")) {
-												AiricAttack(p3, p6);
-											}
-											if(p3.getName().equals("Julian")) {
-												JulianAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Gash")) {
-												GashAttack(p3, p6);
-											}
-											if(p3.getName().equals("Mayhem")) {
-												MayhemAttack(p3, p6);
-											}
-											if(p3.getName().equals("Gates")) {
-												Location l = SetCursor(p3, p2, p4, p6, p1, p5, 0);
-												GatesAttack(p3, p6, l);
-											}
-											if(p3.getName().equals("Ayson")) {
-												AysonAttack(p3, p6);
-											}
-											if(p3.getName().equals("Chloe")) {
-												ChloeAttack(p3, p6, p1, p5);
-											}
-											if(p3.getName().equals("Hopper")) {
-												HopperAttack(p3, p6);
-											}
-											if(p3.getName().equals("Redgar")) {
-												RedgarAttack(p3, p6);
-											}
-											if(p3.getName().equals("Radar")) {
-												RadarAttack(p3, p6);
-											}
-											if(p3.getName().equals("Oona")) {
-												OonaAttack(p3, p6);
-											}
-											if(p3.getName().equals("Augie")) {
-												AugieAttack(p3, p6);
-											}
-											if(p3.getName().equals("Ruby")) {
-												RubyAttack(p3, p6);
-											}
-											if(p3.getName().equals("Norman")) {
-												NormanAttack(p3, p6, p1, p5);
-											}
-											if(p3.getName().equals("Chief")) {
-												ChiefAttack(p3, p6);
-											}
-											if(p3.getName().equals("Melony")) {
-												MelonyAttack(p3, p6);
-											}
-											if(p3.getName().equals("Echo")) {
-												EchoAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Rhythm")) {
-												RhythmAttack(p3, p6);
-											}
-											if(p3.getName().equals("Grenadine")) {
-												GrenadineAttack(p3, p6);
-											}
-											if(p3.getName().equals("Patitek")) {
-												PatitekAttack(p3, p6);
-											}
-											if(p3.getName().equals("Crystal")) {
-												CrystalAttack(p3, p6);
-											}
-											if(p3.getName().equals("Velvet")) {
-												VelvetAttack(p3, p6);
-											}
-											if(p3.getName().equals("Drift")) {
-												DriftAttack(p3, p6);
-											}
-											if(p3.getName().equals("Snowfall")) {
-												SnowfallAttack(p3, p6);
-											}
-											if(p3.getName().equals("Shutter")) {
-												ShutterAttack(p3, p6, p1, p5);
-											}
-											if(p3.getName().equals("Magnet")) {
-												MagnetAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Jing")) {
-												JingAttack(p3, p6);
-											}
-											if(p3.getName().equals("Folden")) {
-												FoldenAttack(p3, p6);
-											}
-											if(p3.getName().equals("Margo")) {
-												MargoAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Petra")) {
-												PetraAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Quincy")) {
-												QuincyAttack(p3, p6, p1, p5);
-											}
-											if(p3.getName().equals("Unice")) {
-												UniceAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Leaf")) {
-												LeafAttack(p3, p6);
-											}
-											if(p3.getName().equals("Courtney")) {
-												CourtneyAttack(p3, p6, p2, p4);
-											}
-											if(p3.getName().equals("Divine")) {
-												DivineAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Gambit")) {
-												GambitAttack(p3, p6, p1, p5);
-											}
-											if(p3.getName().equals("Cloud")) {
-												CloudAttack(p3, p6);
-											}
-											if(p3.getName().equals("Winnie")) {
-												WinnieAttack(p3, p6);
-											}
-											if(p3.getName().equals("Pearl")) {
-												PearlAttack(p3, p6, p2, p4);
-											}
-											if(p3.getName().equals("Andrew")) {
-												AndrewAttack(p3, p6, p1, p5);
-											}
-											if(p3.getName().equals("Orchid")) {
-												OrchidAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Clementine")) {
-												ClementineAttack(p3, p6);
-											}
-											if(p3.getName().equals("Rin")) {
-												RinAttack(p3, p6, p4, p2);
-											}
-											if(p3.getName().equals("Isabelle")) {
-												IsabelleAttack(p3, p6, p1, p5);
-											}
+											runAttacks(p3, p6, p4, p2, p1, p5);
 										}
 									}
 								}
@@ -2226,6 +875,9 @@ public class GameSim {
 						}
 						if (p5.getName().equals("Rin")) {
 							RinPassive(p5, p2, p4, p6, p3, p1);
+						}
+						if (p5.getName().equals("Jazz")) {
+							JazzPassive(p5);
 						}
 						ReviveDeny(p5, p3, p1);
 					}
@@ -2365,238 +1017,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p5.getName().equals("Lunar")) {
-												LunarAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Solar")) {
-												SolarAttack(p5, p2);
-											}
-											if(p5.getName().equals("Mack")) {
-												MackAttack(p5, p2);
-											}
-											if(p5.getName().equals("Finley")) {
-												FinleyAttack(p5, p2);
-											}
-											if(p5.getName().equals("Burt")) {
-												BurtAttack(p5, p2);
-											}
-											if(p5.getName().equals("Bolo")) {
-												BoloAttack(p5, p2);
-											}
-											if(p5.getName().equals("Zero")) {
-												ZeroAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Dylan")) {
-												DylanAttack(p5, p2);
-											}
-											if(p5.getName().equals("Eli")) {
-												EliAttack(p5, p2);
-											}
-											if(p5.getName().equals("Via")) {
-												ViaAttack(p5, p2, p4 ,p6);
-											}
-											if(p5.getName().equals("Louis")) {
-												LouisAttack(p5, p2);
-											}
-											if(p5.getName().equals("Alex")) {
-												AlexAttack(p5, p2);
-											}
-											if(p5.getName().equals("Orion")) {
-												OrionAttack(p5, p2);
-											}
-											if(p5.getName().equals("Kailani")) {
-												KailaniAttack(p5, p2);
-											}
-											if(p5.getName().equals("Ashley")) {
-												AshleyAttack(p5, p2);
-											}
-											if(p5.getName().equals("Rocco")) {
-												RoccoAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Sammi")) {
-												SammiAttack(p5, p2);
-											}
-											if(p5.getName().equals("Clara")) {
-												ClaraAttack(p5, p2);
-											}
-											if(p5.getName().equals("Thunder")) {
-												ThunderAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Aidan")) {
-												AidanAttack(p5, p2);
-											}
-											if(p5.getName().equals("Liam")) {
-												LiamAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Axol")) {
-												AxolAttack(p5, p2);
-											}
-											if(p5.getName().equals("Katrina")) {
-												KatrinaAttack(p5, p2);
-											}
-											if(p5.getName().equals("Midnite")) {
-												MidniteAttack(p5, p2);
-											}
-											if(p5.getName().equals("Xara")) {
-												XaraAttack(p5, p2);
-											}
-											if(p5.getName().equals("Kithara")) {
-												KitharaAttack(p5, p2);
-											}
-											if(p5.getName().equals("Anjelika")) {
-												AnjelikaAttack(p5, p2);
-											}
-											if(p5.getName().equals("Archer")) {
-												ArcherAttack(p5, p2);
-											}
-											if(p5.getName().equals("Tom")) {
-												TomAttack(p5, p2);
-											}
-											if(p5.getName().equals("Dimentio")) {
-												DimentioAttack(p5, p2);
-											}
-											if(p5.getName().equals("Grizz")) {
-												GrizzAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Evil")) {
-												EvilAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Mason")) {
-												MasonAttack(p5, p2);
-											}
-											if(p5.getName().equals("Airic")) {
-												AiricAttack(p5, p2);
-											}
-											if(p5.getName().equals("Julian")) {
-												JulianAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Gash")) {
-												GashAttack(p5, p2);
-											}
-											if(p5.getName().equals("Mayhem")) {
-												MayhemAttack(p5, p2);
-											}
-											if(p5.getName().equals("Gates")) {
-												Location l = SetCursor(p5, p2, p4, p6, p1, p3, 0);
-												GatesAttack(p5, p2, l);
-											}
-											if(p5.getName().equals("Ayson")) {
-												AysonAttack(p5, p2);
-											}
-											if(p5.getName().equals("Chloe")) {
-												ChloeAttack(p5, p2, p1, p3);
-											}
-											if(p5.getName().equals("Hopper")) {
-												HopperAttack(p5, p2);
-											}
-											if(p5.getName().equals("Redgar")) {
-												RedgarAttack(p5, p2);
-											}
-											if(p5.getName().equals("Radar")) {
-												RadarAttack(p5, p2);
-											}
-											if(p5.getName().equals("Oona")) {
-												OonaAttack(p5, p2);
-											}
-											if(p5.getName().equals("Augie")) {
-												AugieAttack(p5, p2);
-											}
-											if(p5.getName().equals("Ruby")) {
-												RubyAttack(p5, p2);
-											}
-											if(p5.getName().equals("Norman")) {
-												NormanAttack(p5, p2, p1, p3);
-											}
-											if(p5.getName().equals("Chief")) {
-												ChiefAttack(p5, p2);
-											}
-											if(p5.getName().equals("Melony")) {
-												MelonyAttack(p5, p2);
-											}
-											if(p5.getName().equals("Echo")) {
-												EchoAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Rhythm")) {
-												RhythmAttack(p5, p2);
-											}
-											if(p5.getName().equals("Grenadine")) {
-												GrenadineAttack(p5, p2);
-											}
-											if(p5.getName().equals("Patitek")) {
-												PatitekAttack(p5, p2);
-											}
-											if(p5.getName().equals("Crystal")) {
-												CrystalAttack(p5, p2);
-											}
-											if(p5.getName().equals("Velvet")) {
-												VelvetAttack(p5, p2);
-											}
-											if(p5.getName().equals("Drift")) {
-												DriftAttack(p5, p2);
-											}
-											if(p5.getName().equals("Snowfall")) {
-												SnowfallAttack(p5, p2);
-											}
-											if(p5.getName().equals("Shutter")) {
-												ShutterAttack(p5, p2, p1, p3);
-											}
-											if(p5.getName().equals("Magnet")) {
-												MagnetAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Jing")) {
-												JingAttack(p5, p2);
-											}
-											if(p5.getName().equals("Folden")) {
-												FoldenAttack(p5, p2);
-											}
-											if(p5.getName().equals("Margo")) {
-												MargoAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Petra")) {
-												PetraAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Quincy")) {
-												QuincyAttack(p5, p2, p1, p3);
-											}
-											if(p5.getName().equals("Unice")) {
-												UniceAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Leaf")) {
-												LeafAttack(p5, p2);
-											}
-											if(p5.getName().equals("Courtney")) {
-												CourtneyAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Divine")) {
-												DivineAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Gambit")) {
-												GambitAttack(p5, p2, p1, p3);
-											}
-											if(p5.getName().equals("Cloud")) {
-												CloudAttack(p5, p2);
-											}
-											if(p5.getName().equals("Winnie")) {
-												WinnieAttack(p5, p2);
-											}
-											if(p5.getName().equals("Pearl")) {
-												PearlAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Andrew")) {
-												AndrewAttack(p5, p2, p1, p3);
-											}
-											if(p5.getName().equals("Orchid")) {
-												OrchidAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Clementine")) {
-												ClementineAttack(p5, p2);
-											}
-											if(p5.getName().equals("Rin")) {
-												RinAttack(p5, p2, p4, p6);
-											}
-											if(p5.getName().equals("Isabelle")) {
-												IsabelleAttack(p5, p2, p1, p3);
-											}
+											runAttacks(p5, p2, p4, p6, p1, p3);
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -2606,238 +1027,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p5.getName().equals("Lunar")) {
-												LunarAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Solar")) {
-												SolarAttack(p5, p4);
-											}
-											if(p5.getName().equals("Mack")) {
-												MackAttack(p5, p4);
-											}
-											if(p5.getName().equals("Finley")) {
-												FinleyAttack(p5, p4);
-											}
-											if(p5.getName().equals("Burt")) {
-												BurtAttack(p5, p4);
-											}
-											if(p5.getName().equals("Bolo")) {
-												BoloAttack(p5, p4);
-											}
-											if(p5.getName().equals("Zero")) {
-												ZeroAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Dylan")) {
-												DylanAttack(p5, p4);
-											}
-											if(p5.getName().equals("Eli")) {
-												EliAttack(p5, p4);
-											}
-											if(p5.getName().equals("Via")) {
-												ViaAttack(p5, p4, p2 ,p6);
-											}
-											if(p5.getName().equals("Louis")) {
-												LouisAttack(p5, p4);
-											}
-											if(p5.getName().equals("Alex")) {
-												AlexAttack(p5, p4);
-											}
-											if(p5.getName().equals("Orion")) {
-												OrionAttack(p5, p4);
-											}
-											if(p5.getName().equals("Kailani")) {
-												KailaniAttack(p5, p4);
-											}
-											if(p5.getName().equals("Ashley")) {
-												AshleyAttack(p5, p4);
-											}
-											if(p5.getName().equals("Rocco")) {
-												RoccoAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Sammi")) {
-												SammiAttack(p5, p4);
-											}
-											if(p5.getName().equals("Clara")) {
-												ClaraAttack(p5, p4);
-											}
-											if(p5.getName().equals("Thunder")) {
-												ThunderAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Aidan")) {
-												AidanAttack(p5, p4);
-											}
-											if(p5.getName().equals("Liam")) {
-												LiamAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Axol")) {
-												AxolAttack(p5, p4);
-											}
-											if(p5.getName().equals("Katrina")) {
-												KatrinaAttack(p5, p4);
-											}
-											if(p5.getName().equals("Midnite")) {
-												MidniteAttack(p5, p4);
-											}
-											if(p5.getName().equals("Xara")) {
-												XaraAttack(p5, p4);
-											}
-											if(p5.getName().equals("Kithara")) {
-												KitharaAttack(p5, p4);
-											}
-											if(p5.getName().equals("Anjelika")) {
-												AnjelikaAttack(p5, p4);
-											}
-											if(p5.getName().equals("Archer")) {
-												ArcherAttack(p5, p4);
-											}
-											if(p5.getName().equals("Tom")) {
-												TomAttack(p5, p4);
-											}
-											if(p5.getName().equals("Dimentio")) {
-												DimentioAttack(p5, p4);
-											}
-											if(p5.getName().equals("Grizz")) {
-												GrizzAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Evil")) {
-												EvilAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Mason")) {
-												MasonAttack(p5, p4);
-											}
-											if(p5.getName().equals("Airic")) {
-												AiricAttack(p5, p4);
-											}
-											if(p5.getName().equals("Julian")) {
-												JulianAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Gash")) {
-												GashAttack(p5, p4);
-											}
-											if(p5.getName().equals("Mayhem")) {
-												MayhemAttack(p5, p4);
-											}
-											if(p5.getName().equals("Gates")) {
-												Location l = SetCursor(p5, p2, p4, p6, p1, p3, 0);
-												GatesAttack(p5, p4, l);
-											}
-											if(p5.getName().equals("Ayson")) {
-												AysonAttack(p5, p4);
-											}
-											if(p5.getName().equals("Chloe")) {
-												ChloeAttack(p5, p4, p1, p3);
-											}
-											if(p5.getName().equals("Hopper")) {
-												HopperAttack(p5, p4);
-											}
-											if(p5.getName().equals("Redgar")) {
-												RedgarAttack(p5, p4);
-											}
-											if(p5.getName().equals("Radar")) {
-												RadarAttack(p5, p4);
-											}
-											if(p5.getName().equals("Oona")) {
-												OonaAttack(p5, p4);
-											}
-											if(p5.getName().equals("Augie")) {
-												AugieAttack(p5, p4);
-											}
-											if(p5.getName().equals("Ruby")) {
-												RubyAttack(p5, p4);
-											}
-											if(p5.getName().equals("Norman")) {
-												NormanAttack(p5, p4, p1, p3);
-											}
-											if(p5.getName().equals("Chief")) {
-												ChiefAttack(p5, p4);
-											}
-											if(p5.getName().equals("Melony")) {
-												MelonyAttack(p5, p4);
-											}
-											if(p5.getName().equals("Echo")) {
-												EchoAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Rhythm")) {
-												RhythmAttack(p5, p4);
-											}
-											if(p5.getName().equals("Grenadine")) {
-												GrenadineAttack(p5, p4);
-											}
-											if(p5.getName().equals("Patitek")) {
-												PatitekAttack(p5, p4);
-											}
-											if(p5.getName().equals("Crystal")) {
-												CrystalAttack(p5, p4);
-											}
-											if(p5.getName().equals("Velvet")) {
-												VelvetAttack(p5, p4);
-											}
-											if(p5.getName().equals("Drift")) {
-												DriftAttack(p5, p4);
-											}
-											if(p5.getName().equals("Snowfall")) {
-												SnowfallAttack(p5, p4);
-											}
-											if(p5.getName().equals("Shutter")) {
-												ShutterAttack(p5, p4, p1, p3);
-											}
-											if(p5.getName().equals("Magnet")) {
-												MagnetAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Jing")) {
-												JingAttack(p5, p4);
-											}
-											if(p5.getName().equals("Folden")) {
-												FoldenAttack(p5, p4);
-											}
-											if(p5.getName().equals("Margo")) {
-												MargoAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Petra")) {
-												PetraAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Quincy")) {
-												QuincyAttack(p5, p4, p1, p3);
-											}
-											if(p5.getName().equals("Unice")) {
-												UniceAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Leaf")) {
-												LeafAttack(p5, p4);
-											}
-											if(p5.getName().equals("Courtney")) {
-												CourtneyAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Divine")) {
-												DivineAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Gambit")) {
-												GambitAttack(p5, p4, p1, p3);
-											}
-											if(p5.getName().equals("Cloud")) {
-												CloudAttack(p5, p4);
-											}
-											if(p5.getName().equals("Winnie")) {
-												WinnieAttack(p5, p4);
-											}
-											if(p5.getName().equals("Pearl")) {
-												PearlAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Andrew")) {
-												AndrewAttack(p5, p4, p1, p3);
-											}
-											if(p5.getName().equals("Orchid")) {
-												OrchidAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Clementine")) {
-												ClementineAttack(p5, p4);
-											}
-											if(p5.getName().equals("Rin")) {
-												RinAttack(p5, p4, p2, p6);
-											}
-											if(p5.getName().equals("Isabelle")) {
-												IsabelleAttack(p5, p4, p1, p3);
-											}
+											runAttacks(p5, p4, p2, p6, p1, p3);
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -2847,238 +1037,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p5.getName().equals("Lunar")) {
-												LunarAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Solar")) {
-												SolarAttack(p5, p6);
-											}
-											if(p5.getName().equals("Mack")) {
-												MackAttack(p5, p6);
-											}
-											if(p5.getName().equals("Finley")) {
-												FinleyAttack(p5, p6);
-											}
-											if(p5.getName().equals("Burt")) {
-												BurtAttack(p5, p6);
-											}
-											if(p5.getName().equals("Bolo")) {
-												BoloAttack(p5, p6);
-											}
-											if(p5.getName().equals("Zero")) {
-												ZeroAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Dylan")) {
-												DylanAttack(p5, p6);
-											}
-											if(p5.getName().equals("Eli")) {
-												EliAttack(p5, p6);
-											}
-											if(p5.getName().equals("Via")) {
-												ViaAttack(p5, p6, p4 ,p2);
-											}
-											if(p5.getName().equals("Louis")) {
-												LouisAttack(p5, p6);
-											}
-											if(p5.getName().equals("Alex")) {
-												AlexAttack(p5, p6);
-											}
-											if(p5.getName().equals("Orion")) {
-												OrionAttack(p5, p6);
-											}
-											if(p5.getName().equals("Kailani")) {
-												KailaniAttack(p5, p6);
-											}
-											if(p5.getName().equals("Ashley")) {
-												AshleyAttack(p5, p6);
-											}
-											if(p5.getName().equals("Rocco")) {
-												RoccoAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Sammi")) {
-												SammiAttack(p5, p6);
-											}
-											if(p5.getName().equals("Clara")) {
-												ClaraAttack(p5, p6);
-											}
-											if(p5.getName().equals("Thunder")) {
-												ThunderAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Aidan")) {
-												AidanAttack(p5, p6);
-											}
-											if(p5.getName().equals("Liam")) {
-												LiamAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Axol")) {
-												AxolAttack(p5, p6);
-											}
-											if(p5.getName().equals("Katrina")) {
-												KatrinaAttack(p5, p6);
-											}
-											if(p5.getName().equals("Midnite")) {
-												MidniteAttack(p5, p6);
-											}
-											if(p5.getName().equals("Xara")) {
-												XaraAttack(p5, p6);
-											}
-											if(p5.getName().equals("Kithara")) {
-												KitharaAttack(p5, p6);
-											}
-											if(p5.getName().equals("Anjelika")) {
-												AnjelikaAttack(p5, p6);
-											}
-											if(p5.getName().equals("Archer")) {
-												ArcherAttack(p5, p6);
-											}
-											if(p5.getName().equals("Tom")) {
-												TomAttack(p5, p6);
-											}
-											if(p5.getName().equals("Dimentio")) {
-												DimentioAttack(p5, p6);
-											}
-											if(p5.getName().equals("Grizz")) {
-												GrizzAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Evil")) {
-												EvilAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Mason")) {
-												MasonAttack(p5, p6);
-											}
-											if(p5.getName().equals("Airic")) {
-												AiricAttack(p5, p6);
-											}
-											if(p5.getName().equals("Julian")) {
-												JulianAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Gash")) {
-												GashAttack(p5, p6);
-											}
-											if(p5.getName().equals("Mayhem")) {
-												MayhemAttack(p5, p6);
-											}
-											if(p5.getName().equals("Gates")) {
-												Location l = SetCursor(p5, p2, p4, p6, p1, p3, 0);
-												GatesAttack(p5, p6, l);
-											}
-											if(p5.getName().equals("Ayson")) {
-												AysonAttack(p5, p6);
-											}
-											if(p5.getName().equals("Chloe")) {
-												ChloeAttack(p5, p6, p1, p3);
-											}
-											if(p5.getName().equals("Hopper")) {
-												HopperAttack(p5, p6);
-											}
-											if(p5.getName().equals("Redgar")) {
-												RedgarAttack(p5, p6);
-											}
-											if(p5.getName().equals("Radar")) {
-												RadarAttack(p5, p6);
-											}
-											if(p5.getName().equals("Oona")) {
-												OonaAttack(p5, p6);
-											}
-											if(p5.getName().equals("Augie")) {
-												AugieAttack(p5, p6);
-											}
-											if(p5.getName().equals("Ruby")) {
-												RubyAttack(p5, p6);
-											}
-											if(p5.getName().equals("Norman")) {
-												NormanAttack(p5, p6, p1, p3);
-											}
-											if(p5.getName().equals("Chief")) {
-												ChiefAttack(p5, p6);
-											}
-											if(p5.getName().equals("Melony")) {
-												MelonyAttack(p5, p6);
-											}
-											if(p5.getName().equals("Echo")) {
-												EchoAttack(p5, p6, p2, p4);
-											}
-											if(p5.getName().equals("Rhythm")) {
-												RhythmAttack(p5, p6);
-											}
-											if(p5.getName().equals("Grenadine")) {
-												GrenadineAttack(p5, p6);
-											}
-											if(p5.getName().equals("Patitek")) {
-												PatitekAttack(p5, p6);
-											}
-											if(p5.getName().equals("Crystal")) {
-												CrystalAttack(p5, p6);
-											}
-											if(p5.getName().equals("Velvet")) {
-												VelvetAttack(p5, p6);
-											}
-											if(p5.getName().equals("Drift")) {
-												DriftAttack(p5, p6);
-											}
-											if(p5.getName().equals("Snowfall")) {
-												SnowfallAttack(p5, p6);
-											}
-											if(p5.getName().equals("Shutter")) {
-												ShutterAttack(p5, p6, p1, p3);
-											}
-											if(p5.getName().equals("Magnet")) {
-												MagnetAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Jing")) {
-												JingAttack(p5, p6);
-											}
-											if(p5.getName().equals("Folden")) {
-												FoldenAttack(p5, p6);
-											}
-											if(p5.getName().equals("Margo")) {
-												MargoAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Petra")) {
-												PetraAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Quincy")) {
-												QuincyAttack(p5, p6, p1, p3);
-											}
-											if(p5.getName().equals("Unice")) {
-												UniceAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Leaf")) {
-												LeafAttack(p5, p6);
-											}
-											if(p5.getName().equals("Courtney")) {
-												CourtneyAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Divine")) {
-												DivineAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Gambit")) {
-												GambitAttack(p5, p6, p1, p3);
-											}
-											if(p5.getName().equals("Cloud")) {
-												CloudAttack(p5, p6);
-											}
-											if(p5.getName().equals("Winnie")) {
-												WinnieAttack(p5, p6);
-											}
-											if(p5.getName().equals("Pearl")) {
-												PearlAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Andrew")) {
-												AndrewAttack(p5, p6, p1, p3);
-											}
-											if(p5.getName().equals("Orchid")) {
-												OrchidAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Clementine")) {
-												ClementineAttack(p5, p6);
-											}
-											if(p5.getName().equals("Rin")) {
-												RinAttack(p5, p6, p4, p2);
-											}
-											if(p5.getName().equals("Isabelle")) {
-												IsabelleAttack(p5, p6, p1, p3);
-											}
+											runAttacks(p5, p6, p4, p2, p1, p3);
 										}
 									}
 								}
@@ -3123,6 +1082,21 @@ public class GameSim {
 					Music audioPlayer = new Music(audio2, false);
 					audioPlayer.play();
 					play4 = false;
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+			if(turns >= 29 && play5) {
+				try {
+					b.suddenDeath();
+					audioPlayer.stop();
+					String audio = "suddendeath.wav";
+					audioPlayer = new Music(audio, false);
+					audioPlayer.play();
+					String audio2 = "suddendeathline.wav";
+					Music audioPlayer = new Music(audio2, false);
+					audioPlayer.play();
+					play5 = false;
 				}catch (Exception e) {
 					System.out.println(e);
 				}
@@ -3208,6 +1182,9 @@ public class GameSim {
 						}
 						if (p2.getName().equals("Rin")) {
 							RinPassive(p2, p1, p3, p5, p4, p6);
+						}
+						if (p2.getName().equals("Jazz")) {
+							JazzPassive(p2);
 						}
 						ReviveDeny(p2, p4, p6);
 					}
@@ -3347,238 +1324,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p2.getName().equals("Lunar")) {
-												LunarAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Solar")) {
-												SolarAttack(p2, p1);
-											}
-											if(p2.getName().equals("Mack")) {
-												MackAttack(p2, p1);
-											}
-											if(p2.getName().equals("Finley")) {
-												FinleyAttack(p2, p1);
-											}
-											if(p2.getName().equals("Burt")) {
-												BurtAttack(p2, p1);
-											}
-											if(p2.getName().equals("Bolo")) {
-												BoloAttack(p2, p1);
-											}
-											if(p2.getName().equals("Zero")) {
-												ZeroAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Dylan")) {
-												DylanAttack(p2, p1);
-											}
-											if(p2.getName().equals("Eli")) {
-												EliAttack(p2, p1);
-											}
-											if(p2.getName().equals("Via")) {
-												ViaAttack(p2, p1, p3 ,p5);
-											}
-											if(p2.getName().equals("Louis")) {
-												LouisAttack(p2, p1);
-											}
-											if(p2.getName().equals("Alex")) {
-												AlexAttack(p2, p1);
-											}
-											if(p2.getName().equals("Orion")) {
-												OrionAttack(p2, p1);
-											}
-											if(p2.getName().equals("Kailani")) {
-												KailaniAttack(p2, p1);
-											}
-											if(p2.getName().equals("Ashley")) {
-												AshleyAttack(p2, p1);
-											}
-											if(p2.getName().equals("Rocco")) {
-												RoccoAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Sammi")) {
-												SammiAttack(p2, p1);
-											}
-											if(p2.getName().equals("Clara")) {
-												ClaraAttack(p2, p1);
-											}
-											if(p2.getName().equals("Thunder")) {
-												ThunderAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Aidan")) {
-												AidanAttack(p2, p1);
-											}
-											if(p2.getName().equals("Liam")) {
-												LiamAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Axol")) {
-												AxolAttack(p2, p1);
-											}
-											if(p2.getName().equals("Katrina")) {
-												KatrinaAttack(p2, p1);
-											}
-											if(p2.getName().equals("Midnite")) {
-												MidniteAttack(p2, p1);
-											}
-											if(p2.getName().equals("Xara")) {
-												XaraAttack(p2, p1);
-											}
-											if(p2.getName().equals("Kithara")) {
-												KitharaAttack(p2, p1);
-											}
-											if(p2.getName().equals("Anjelika")) {
-												AnjelikaAttack(p2, p1);
-											}
-											if(p2.getName().equals("Archer")) {
-												ArcherAttack(p2, p1);
-											}
-											if(p2.getName().equals("Tom")) {
-												TomAttack(p2, p1);
-											}
-											if(p2.getName().equals("Dimentio")) {
-												DimentioAttack(p2, p1);
-											}
-											if(p2.getName().equals("Grizz")) {
-												GrizzAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Evil")) {
-												EvilAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Mason")) {
-												MasonAttack(p2, p1);
-											}
-											if(p2.getName().equals("Airic")) {
-												AiricAttack(p2, p1);
-											}
-											if(p2.getName().equals("Julian")) {
-												JulianAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Gash")) {
-												GashAttack(p2, p1);
-											}
-											if(p2.getName().equals("Mayhem")) {
-												MayhemAttack(p2, p1);
-											}
-											if(p2.getName().equals("Gates")) {
-												Location l = SetCursor(p2, p1, p3, p5, p4, p6, 0);
-												GatesAttack(p2, p1, l);
-											}
-											if(p2.getName().equals("Ayson")) {
-												AysonAttack(p2, p1);
-											}
-											if(p2.getName().equals("Chloe")) {
-												ChloeAttack(p2, p1, p4, p6);
-											}
-											if(p2.getName().equals("Hopper")) {
-												HopperAttack(p2, p1);
-											}
-											if(p2.getName().equals("Redgar")) {
-												RedgarAttack(p2, p1);
-											}
-											if(p2.getName().equals("Radar")) {
-												RadarAttack(p2, p1);
-											}
-											if(p2.getName().equals("Oona")) {
-												OonaAttack(p2, p1);
-											}
-											if(p2.getName().equals("Augie")) {
-												AugieAttack(p2, p1);
-											}
-											if(p2.getName().equals("Ruby")) {
-												RubyAttack(p2, p1);
-											}
-											if(p2.getName().equals("Norman")) {
-												NormanAttack(p2, p1, p4, p6);
-											}
-											if(p2.getName().equals("Chief")) {
-												ChiefAttack(p2, p1);
-											}
-											if(p2.getName().equals("Melony")) {
-												MelonyAttack(p2, p1);
-											}
-											if(p2.getName().equals("Echo")) {
-												EchoAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Rhythm")) {
-												RhythmAttack(p2, p1);
-											}
-											if(p2.getName().equals("Grenadine")) {
-												GrenadineAttack(p2, p1);
-											}
-											if(p2.getName().equals("Patitek")) {
-												PatitekAttack(p2, p1);
-											}
-											if(p2.getName().equals("Crystal")) {
-												CrystalAttack(p2, p1);
-											}
-											if(p2.getName().equals("Velvet")) {
-												VelvetAttack(p2, p1);
-											}
-											if(p2.getName().equals("Drift")) {
-												DriftAttack(p2, p1);
-											}
-											if(p2.getName().equals("Snowfall")) {
-												SnowfallAttack(p2, p1);
-											}
-											if(p2.getName().equals("Shutter")) {
-												ShutterAttack(p2, p1, p4, p6);
-											}
-											if(p2.getName().equals("Magnet")) {
-												MagnetAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Jing")) {
-												JingAttack(p2, p1);
-											}
-											if(p2.getName().equals("Folden")) {
-												FoldenAttack(p2, p1);
-											}
-											if(p2.getName().equals("Margo")) {
-												MargoAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Petra")) {
-												PetraAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Quincy")) {
-												QuincyAttack(p2, p1, p4, p6);
-											}
-											if(p2.getName().equals("Unice")) {
-												UniceAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Leaf")) {
-												LeafAttack(p2, p1);
-											}
-											if(p2.getName().equals("Courtney")) {
-												CourtneyAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Divine")) {
-												DivineAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Gambit")) {
-												GambitAttack(p2, p1, p4, p6);
-											}
-											if(p2.getName().equals("Cloud")) {
-												CloudAttack(p2, p1);
-											}
-											if(p2.getName().equals("Winnie")) {
-												WinnieAttack(p2, p1);
-											}
-											if(p2.getName().equals("Pearl")) {
-												PearlAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Andrew")) {
-												AndrewAttack(p2, p1, p4, p6);
-											}
-											if(p2.getName().equals("Orchid")) {
-												OrchidAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Clementine")) {
-												ClementineAttack(p2, p1);
-											}
-											if(p2.getName().equals("Rin")) {
-												RinAttack(p2, p1, p3, p5);
-											}
-											if(p2.getName().equals("Isabelle")) {
-												IsabelleAttack(p2, p1, p4, p6);
-											}
+											runAttacks(p2, p1, p3, p5, p4, p6);
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -3588,238 +1334,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p2.getName().equals("Lunar")) {
-												LunarAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Solar")) {
-												SolarAttack(p2, p3);
-											}
-											if(p2.getName().equals("Mack")) {
-												MackAttack(p2, p3);
-											}
-											if(p2.getName().equals("Finley")) {
-												FinleyAttack(p2, p3);
-											}
-											if(p2.getName().equals("Burt")) {
-												BurtAttack(p2, p3);
-											}
-											if(p2.getName().equals("Bolo")) {
-												BoloAttack(p2, p3);
-											}
-											if(p2.getName().equals("Zero")) {
-												ZeroAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Dylan")) {
-												DylanAttack(p2, p3);
-											}
-											if(p2.getName().equals("Eli")) {
-												EliAttack(p2, p3);
-											}
-											if(p2.getName().equals("Via")) {
-												ViaAttack(p2, p3, p1 ,p5);
-											}
-											if(p2.getName().equals("Louis")) {
-												LouisAttack(p2, p3);
-											}
-											if(p2.getName().equals("Alex")) {
-												AlexAttack(p2, p3);
-											}
-											if(p2.getName().equals("Orion")) {
-												OrionAttack(p2, p3);
-											}
-											if(p2.getName().equals("Kailani")) {
-												KailaniAttack(p2, p3);
-											}
-											if(p2.getName().equals("Ashley")) {
-												AshleyAttack(p2, p3);
-											}
-											if(p2.getName().equals("Rocco")) {
-												RoccoAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Sammi")) {
-												SammiAttack(p2, p3);
-											}
-											if(p2.getName().equals("Clara")) {
-												ClaraAttack(p2, p3);
-											}
-											if(p2.getName().equals("Thunder")) {
-												ThunderAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Aidan")) {
-												AidanAttack(p2, p3);
-											}
-											if(p2.getName().equals("Liam")) {
-												LiamAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Axol")) {
-												AxolAttack(p2, p3);
-											}
-											if(p2.getName().equals("Katrina")) {
-												KatrinaAttack(p2, p3);
-											}
-											if(p2.getName().equals("Midnite")) {
-												MidniteAttack(p2, p3);
-											}
-											if(p2.getName().equals("Xara")) {
-												XaraAttack(p2, p3);
-											}
-											if(p2.getName().equals("Kithara")) {
-												KitharaAttack(p2, p3);
-											}
-											if(p2.getName().equals("Anjelika")) {
-												AnjelikaAttack(p2, p3);
-											}
-											if(p2.getName().equals("Archer")) {
-												ArcherAttack(p2, p3);
-											}
-											if(p2.getName().equals("Tom")) {
-												TomAttack(p2, p3);
-											}
-											if(p2.getName().equals("Dimentio")) {
-												DimentioAttack(p2, p3);
-											}
-											if(p2.getName().equals("Grizz")) {
-												GrizzAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Evil")) {
-												EvilAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Mason")) {
-												MasonAttack(p2, p3);
-											}
-											if(p2.getName().equals("Airic")) {
-												AiricAttack(p2, p3);
-											}
-											if(p2.getName().equals("Julian")) {
-												JulianAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Gash")) {
-												GashAttack(p2, p3);
-											}
-											if(p2.getName().equals("Mayhem")) {
-												MayhemAttack(p2, p3);
-											}
-											if(p2.getName().equals("Gates")) {
-												Location l = SetCursor(p2, p1, p3, p5, p4, p6, 0);
-												GatesAttack(p2, p3, l);
-											}
-											if(p2.getName().equals("Ayson")) {
-												AysonAttack(p2, p3);
-											}
-											if(p2.getName().equals("Chloe")) {
-												ChloeAttack(p2, p3, p4, p6);
-											}
-											if(p2.getName().equals("Hopper")) {
-												HopperAttack(p2, p3);
-											}
-											if(p2.getName().equals("Redgar")) {
-												RedgarAttack(p2, p3);
-											}
-											if(p2.getName().equals("Radar")) {
-												RadarAttack(p2, p3);
-											}
-											if(p2.getName().equals("Oona")) {
-												OonaAttack(p2, p3);
-											}
-											if(p2.getName().equals("Augie")) {
-												AugieAttack(p2, p3);
-											}
-											if(p2.getName().equals("Ruby")) {
-												RubyAttack(p2, p3);
-											}
-											if(p2.getName().equals("Norman")) {
-												NormanAttack(p2, p3, p4, p6);
-											}
-											if(p2.getName().equals("Chief")) {
-												ChiefAttack(p2, p3);
-											}
-											if(p2.getName().equals("Melony")) {
-												MelonyAttack(p2, p3);
-											}
-											if(p2.getName().equals("Echo")) {
-												EchoAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Rhythm")) {
-												RhythmAttack(p2, p3);
-											}
-											if(p2.getName().equals("Grenadine")) {
-												GrenadineAttack(p2, p3);
-											}
-											if(p2.getName().equals("Patitek")) {
-												PatitekAttack(p2, p3);
-											}
-											if(p2.getName().equals("Crystal")) {
-												CrystalAttack(p2, p3);
-											}
-											if(p2.getName().equals("Velvet")) {
-												VelvetAttack(p2, p3);
-											}
-											if(p2.getName().equals("Drift")) {
-												DriftAttack(p2, p3);
-											}
-											if(p2.getName().equals("Snowfall")) {
-												SnowfallAttack(p2, p3);
-											}
-											if(p2.getName().equals("Shutter")) {
-												ShutterAttack(p2, p3, p4, p6);
-											}
-											if(p2.getName().equals("Magnet")) {
-												MagnetAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Jing")) {
-												JingAttack(p2, p3);
-											}
-											if(p2.getName().equals("Folden")) {
-												FoldenAttack(p2, p3);
-											}
-											if(p2.getName().equals("Margo")) {
-												MargoAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Petra")) {
-												PetraAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Quincy")) {
-												QuincyAttack(p2, p3, p4, p6);
-											}
-											if(p2.getName().equals("Unice")) {
-												UniceAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Leaf")) {
-												LeafAttack(p2, p3);
-											}
-											if(p2.getName().equals("Courtney")) {
-												CourtneyAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Divine")) {
-												DivineAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Gambit")) {
-												GambitAttack(p2, p3, p4, p6);
-											}
-											if(p2.getName().equals("Cloud")) {
-												CloudAttack(p2, p3);
-											}
-											if(p2.getName().equals("Winnie")) {
-												WinnieAttack(p2, p3);
-											}
-											if(p2.getName().equals("Pearl")) {
-												PearlAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Andrew")) {
-												AndrewAttack(p2, p3, p4, p6);
-											}
-											if(p2.getName().equals("Orchid")) {
-												OrchidAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Clementine")) {
-												ClementineAttack(p2, p3);
-											}
-											if(p2.getName().equals("Rin")) {
-												RinAttack(p2, p3, p1, p5);
-											}
-											if(p2.getName().equals("Isabelle")) {
-												IsabelleAttack(p2, p3, p4, p6);
-											}
+											runAttacks(p2, p3, p1, p5, p4, p6);
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -3829,238 +1344,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p2.getName().equals("Lunar")) {
-												LunarAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Solar")) {
-												SolarAttack(p2, p5);
-											}
-											if(p2.getName().equals("Mack")) {
-												MackAttack(p2, p5);
-											}
-											if(p2.getName().equals("Finley")) {
-												FinleyAttack(p2, p5);
-											}
-											if(p2.getName().equals("Burt")) {
-												BurtAttack(p2, p5);
-											}
-											if(p2.getName().equals("Bolo")) {
-												BoloAttack(p2, p5);
-											}
-											if(p2.getName().equals("Zero")) {
-												ZeroAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Dylan")) {
-												DylanAttack(p2, p5);
-											}
-											if(p2.getName().equals("Eli")) {
-												EliAttack(p2, p5);
-											}
-											if(p2.getName().equals("Via")) {
-												ViaAttack(p2, p5, p3 ,p1);
-											}
-											if(p2.getName().equals("Louis")) {
-												LouisAttack(p2, p5);
-											}
-											if(p2.getName().equals("Alex")) {
-												AlexAttack(p2, p5);
-											}
-											if(p2.getName().equals("Orion")) {
-												OrionAttack(p2, p5);
-											}
-											if(p2.getName().equals("Kailani")) {
-												KailaniAttack(p2, p5);
-											}
-											if(p2.getName().equals("Ashley")) {
-												AshleyAttack(p2, p5);
-											}
-											if(p2.getName().equals("Rocco")) {
-												RoccoAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Sammi")) {
-												SammiAttack(p2, p5);
-											}
-											if(p2.getName().equals("Clara")) {
-												ClaraAttack(p2, p5);
-											}
-											if(p2.getName().equals("Thunder")) {
-												ThunderAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Aidan")) {
-												AidanAttack(p2, p5);
-											}
-											if(p2.getName().equals("Liam")) {
-												LiamAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Axol")) {
-												AxolAttack(p2, p5);
-											}
-											if(p2.getName().equals("Katrina")) {
-												KatrinaAttack(p2, p5);
-											}
-											if(p2.getName().equals("Midnite")) {
-												MidniteAttack(p2, p5);
-											}
-											if(p2.getName().equals("Xara")) {
-												XaraAttack(p2, p5);
-											}
-											if(p2.getName().equals("Kithara")) {
-												KitharaAttack(p2, p5);
-											}
-											if(p2.getName().equals("Anjelika")) {
-												AnjelikaAttack(p2, p5);
-											}
-											if(p2.getName().equals("Archer")) {
-												ArcherAttack(p2, p5);
-											}
-											if(p2.getName().equals("Tom")) {
-												TomAttack(p2, p5);
-											}
-											if(p2.getName().equals("Dimentio")) {
-												DimentioAttack(p2, p5);
-											}
-											if(p2.getName().equals("Grizz")) {
-												GrizzAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Evil")) {
-												EvilAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Mason")) {
-												MasonAttack(p2, p5);
-											}
-											if(p2.getName().equals("Airic")) {
-												AiricAttack(p2, p5);
-											}
-											if(p2.getName().equals("Julian")) {
-												JulianAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Gash")) {
-												GashAttack(p2, p5);
-											}
-											if(p2.getName().equals("Mayhem")) {
-												MayhemAttack(p2, p5);
-											}
-											if(p2.getName().equals("Gates")) {
-												Location l = SetCursor(p2, p1, p3, p5, p4, p6, 0);
-												GatesAttack(p2, p5, l);
-											}
-											if(p2.getName().equals("Ayson")) {
-												AysonAttack(p2, p5);
-											}
-											if(p2.getName().equals("Chloe")) {
-												ChloeAttack(p2, p5, p4, p6);
-											}
-											if(p2.getName().equals("Hopper")) {
-												HopperAttack(p2, p5);
-											}
-											if(p2.getName().equals("Redgar")) {
-												RedgarAttack(p2, p5);
-											}
-											if(p2.getName().equals("Radar")) {
-												RadarAttack(p2, p5);
-											}
-											if(p2.getName().equals("Oona")) {
-												OonaAttack(p2, p5);
-											}
-											if(p2.getName().equals("Augie")) {
-												AugieAttack(p2, p5);
-											}
-											if(p2.getName().equals("Ruby")) {
-												RubyAttack(p2, p5);
-											}
-											if(p2.getName().equals("Norman")) {
-												NormanAttack(p2, p5, p4, p6);
-											}
-											if(p2.getName().equals("Chief")) {
-												ChiefAttack(p2, p5);
-											}
-											if(p2.getName().equals("Melony")) {
-												MelonyAttack(p2, p5);
-											}
-											if(p2.getName().equals("Echo")) {
-												EchoAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Rhythm")) {
-												RhythmAttack(p2, p5);
-											}
-											if(p2.getName().equals("Grenadine")) {
-												GrenadineAttack(p2, p5);
-											}
-											if(p2.getName().equals("Patitek")) {
-												PatitekAttack(p2, p5);
-											}
-											if(p2.getName().equals("Crystal")) {
-												CrystalAttack(p2, p5);
-											}
-											if(p2.getName().equals("Velvet")) {
-												VelvetAttack(p2, p5);
-											}
-											if(p2.getName().equals("Drift")) {
-												DriftAttack(p2, p5);
-											}
-											if(p2.getName().equals("Snowfall")) {
-												SnowfallAttack(p2, p5);
-											}
-											if(p2.getName().equals("Shutter")) {
-												ShutterAttack(p2, p5, p4, p6);
-											}
-											if(p2.getName().equals("Magnet")) {
-												MagnetAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Jing")) {
-												JingAttack(p2, p5);
-											}
-											if(p2.getName().equals("Folden")) {
-												FoldenAttack(p2, p5);
-											}
-											if(p2.getName().equals("Margo")) {
-												MargoAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Petra")) {
-												PetraAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Quincy")) {
-												QuincyAttack(p2, p5, p4, p6);
-											}
-											if(p2.getName().equals("Unice")) {
-												UniceAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Leaf")) {
-												LeafAttack(p2, p5);
-											}
-											if(p2.getName().equals("Courtney")) {
-												CourtneyAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Divine")) {
-												DivineAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Gambit")) {
-												GambitAttack(p2, p5, p4, p6);
-											}
-											if(p2.getName().equals("Cloud")) {
-												CloudAttack(p2, p5);
-											}
-											if(p2.getName().equals("Winnie")) {
-												WinnieAttack(p2, p5);
-											}
-											if(p2.getName().equals("Pearl")) {
-												PearlAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Andrew")) {
-												AndrewAttack(p2, p5, p4, p6);
-											}
-											if(p2.getName().equals("Orchid")) {
-												OrchidAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Clementine")) {
-												ClementineAttack(p2, p5);
-											}
-											if(p2.getName().equals("Rin")) {
-												RinAttack(p2, p5, p3, p1);
-											}
-											if(p2.getName().equals("Isabelle")) {
-												IsabelleAttack(p2, p5, p4, p6);
-											}
+											runAttacks(p2, p5, p3, p1, p4, p6);
 										}
 									}
 								}
@@ -4122,6 +1406,9 @@ public class GameSim {
 						}
 						if (p4.getName().equals("Rin")) {
 							RinPassive(p4, p1, p3, p5, p2, p6);
+						}
+						if (p4.getName().equals("Jazz")) {
+							JazzPassive(p4);
 						}
 						ReviveDeny(p4, p2, p6);
 					}
@@ -4261,238 +1548,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p4.getName().equals("Lunar")) {
-												LunarAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Solar")) {
-												SolarAttack(p4, p1);
-											}
-											if(p4.getName().equals("Mack")) {
-												MackAttack(p4, p1);
-											}
-											if(p4.getName().equals("Finley")) {
-												FinleyAttack(p4, p1);
-											}
-											if(p4.getName().equals("Burt")) {
-												BurtAttack(p4, p1);
-											}
-											if(p4.getName().equals("Bolo")) {
-												BoloAttack(p4, p1);
-											}
-											if(p4.getName().equals("Zero")) {
-												ZeroAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Dylan")) {
-												DylanAttack(p4, p1);
-											}
-											if(p4.getName().equals("Eli")) {
-												EliAttack(p4, p1);
-											}
-											if(p4.getName().equals("Via")) {
-												ViaAttack(p4, p1, p3 ,p5);
-											}
-											if(p4.getName().equals("Louis")) {
-												LouisAttack(p4, p1);
-											}
-											if(p4.getName().equals("Alex")) {
-												AlexAttack(p4, p1);
-											}
-											if(p4.getName().equals("Orion")) {
-												OrionAttack(p4, p1);
-											}
-											if(p4.getName().equals("Kailani")) {
-												KailaniAttack(p4, p1);
-											}
-											if(p4.getName().equals("Ashley")) {
-												AshleyAttack(p4, p1);
-											}
-											if(p4.getName().equals("Rocco")) {
-												RoccoAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Sammi")) {
-												SammiAttack(p4, p1);
-											}
-											if(p4.getName().equals("Clara")) {
-												ClaraAttack(p4, p1);
-											}
-											if(p4.getName().equals("Thunder")) {
-												ThunderAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Aidan")) {
-												AidanAttack(p4, p1);
-											}
-											if(p4.getName().equals("Liam")) {
-												LiamAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Axol")) {
-												AxolAttack(p4, p1);
-											}
-											if(p4.getName().equals("Katrina")) {
-												KatrinaAttack(p4, p1);
-											}
-											if(p4.getName().equals("Midnite")) {
-												MidniteAttack(p4, p1);
-											}
-											if(p4.getName().equals("Xara")) {
-												XaraAttack(p4, p1);
-											}
-											if(p4.getName().equals("Kithara")) {
-												KitharaAttack(p4, p1);
-											}
-											if(p4.getName().equals("Anjelika")) {
-												AnjelikaAttack(p4, p1);
-											}
-											if(p4.getName().equals("Archer")) {
-												ArcherAttack(p4, p1);
-											}
-											if(p4.getName().equals("Tom")) {
-												TomAttack(p4, p1);
-											}
-											if(p4.getName().equals("Dimentio")) {
-												DimentioAttack(p4, p1);
-											}
-											if(p4.getName().equals("Grizz")) {
-												GrizzAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Evil")) {
-												EvilAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Mason")) {
-												MasonAttack(p4, p1);
-											}
-											if(p4.getName().equals("Airic")) {
-												AiricAttack(p4, p1);
-											}
-											if(p4.getName().equals("Julian")) {
-												JulianAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Gash")) {
-												GashAttack(p4, p1);
-											}
-											if(p4.getName().equals("Mayhem")) {
-												MayhemAttack(p4, p1);
-											}
-											if(p4.getName().equals("Gates")) {
-												Location l = SetCursor(p4, p1, p3, p5, p2, p6, 0);
-												GatesAttack(p4, p1, l);
-											}
-											if(p4.getName().equals("Ayson")) {
-												AysonAttack(p4, p1);
-											}
-											if(p4.getName().equals("Chloe")) {
-												ChloeAttack(p4, p1, p2, p6);
-											}
-											if(p4.getName().equals("Hopper")) {
-												HopperAttack(p4, p1);
-											}
-											if(p4.getName().equals("Redgar")) {
-												RedgarAttack(p4, p1);
-											}
-											if(p4.getName().equals("Radar")) {
-												RadarAttack(p4, p1);
-											}
-											if(p4.getName().equals("Oona")) {
-												OonaAttack(p4, p1);
-											}
-											if(p4.getName().equals("Augie")) {
-												AugieAttack(p4, p1);
-											}
-											if(p4.getName().equals("Ruby")) {
-												RubyAttack(p4, p1);
-											}
-											if(p4.getName().equals("Norman")) {
-												NormanAttack(p4, p1, p2, p6);
-											}
-											if(p4.getName().equals("Chief")) {
-												ChiefAttack(p4, p1);
-											}
-											if(p4.getName().equals("Melony")) {
-												MelonyAttack(p4, p1);
-											}
-											if(p4.getName().equals("Echo")) {
-												EchoAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Rhythm")) {
-												RhythmAttack(p4, p1);
-											}
-											if(p4.getName().equals("Grenadine")) {
-												GrenadineAttack(p4, p1);
-											}
-											if(p4.getName().equals("Patitek")) {
-												PatitekAttack(p4, p1);
-											}
-											if(p4.getName().equals("Crystal")) {
-												CrystalAttack(p4, p1);
-											}
-											if(p4.getName().equals("Velvet")) {
-												VelvetAttack(p4, p1);
-											}
-											if(p4.getName().equals("Drift")) {
-												DriftAttack(p4, p1);
-											}
-											if(p4.getName().equals("Snowfall")) {
-												SnowfallAttack(p4, p1);
-											}
-											if(p4.getName().equals("Shutter")) {
-												ShutterAttack(p4, p1, p2, p6);
-											}
-											if(p4.getName().equals("Magnet")) {
-												MagnetAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Jing")) {
-												JingAttack(p4, p1);
-											}
-											if(p4.getName().equals("Folden")) {
-												FoldenAttack(p4, p1);
-											}
-											if(p4.getName().equals("Margo")) {
-												MargoAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Petra")) {
-												PetraAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Quincy")) {
-												QuincyAttack(p4, p1, p2, p6);
-											}
-											if(p4.getName().equals("Unice")) {
-												UniceAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Leaf")) {
-												LeafAttack(p4, p1);
-											}
-											if(p4.getName().equals("Courtney")) {
-												CourtneyAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Divine")) {
-												DivineAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Gambit")) {
-												GambitAttack(p4, p1, p2, p6);
-											}
-											if(p4.getName().equals("Cloud")) {
-												CloudAttack(p4, p1);
-											}
-											if(p4.getName().equals("Winnie")) {
-												WinnieAttack(p4, p1);
-											}
-											if(p4.getName().equals("Pearl")) {
-												PearlAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Andrew")) {
-												AndrewAttack(p4, p1, p2, p6);
-											}
-											if(p4.getName().equals("Orchid")) {
-												OrchidAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Clementine")) {
-												ClementineAttack(p4, p1);
-											}
-											if(p4.getName().equals("Rin")) {
-												RinAttack(p4, p1, p3, p5);
-											}
-											if(p4.getName().equals("Isabelle")) {
-												IsabelleAttack(p4, p1, p2, p6);
-											}
+											runAttacks(p4, p1, p3, p5, p2, p6);
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -4502,238 +1558,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p4.getName().equals("Lunar")) {
-												LunarAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Solar")) {
-												SolarAttack(p4, p3);
-											}
-											if(p4.getName().equals("Mack")) {
-												MackAttack(p4, p3);
-											}
-											if(p4.getName().equals("Finley")) {
-												FinleyAttack(p4, p3);
-											}
-											if(p4.getName().equals("Burt")) {
-												BurtAttack(p4, p3);
-											}
-											if(p4.getName().equals("Bolo")) {
-												BoloAttack(p4, p3);
-											}
-											if(p4.getName().equals("Zero")) {
-												ZeroAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Dylan")) {
-												DylanAttack(p4, p3);
-											}
-											if(p4.getName().equals("Eli")) {
-												EliAttack(p4, p3);
-											}
-											if(p4.getName().equals("Via")) {
-												ViaAttack(p4, p3, p1 ,p5);
-											}
-											if(p4.getName().equals("Louis")) {
-												LouisAttack(p4, p3);
-											}
-											if(p4.getName().equals("Alex")) {
-												AlexAttack(p4, p3);
-											}
-											if(p4.getName().equals("Orion")) {
-												OrionAttack(p4, p3);
-											}
-											if(p4.getName().equals("Kailani")) {
-												KailaniAttack(p4, p3);
-											}
-											if(p4.getName().equals("Ashley")) {
-												AshleyAttack(p4, p3);
-											}
-											if(p4.getName().equals("Rocco")) {
-												RoccoAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Sammi")) {
-												SammiAttack(p4, p3);
-											}
-											if(p4.getName().equals("Clara")) {
-												ClaraAttack(p4, p3);
-											}
-											if(p4.getName().equals("Thunder")) {
-												ThunderAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Aidan")) {
-												AidanAttack(p4, p3);
-											}
-											if(p4.getName().equals("Liam")) {
-												LiamAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Axol")) {
-												AxolAttack(p4, p3);
-											}
-											if(p4.getName().equals("Katrina")) {
-												KatrinaAttack(p4, p3);
-											}
-											if(p4.getName().equals("Midnite")) {
-												MidniteAttack(p4, p3);
-											}
-											if(p4.getName().equals("Xara")) {
-												XaraAttack(p4, p3);
-											}
-											if(p4.getName().equals("Kithara")) {
-												KitharaAttack(p4, p3);
-											}
-											if(p4.getName().equals("Anjelika")) {
-												AnjelikaAttack(p4, p3);
-											}
-											if(p4.getName().equals("Archer")) {
-												ArcherAttack(p4, p3);
-											}
-											if(p4.getName().equals("Tom")) {
-												TomAttack(p4, p3);
-											}
-											if(p4.getName().equals("Dimentio")) {
-												DimentioAttack(p4, p3);
-											}
-											if(p4.getName().equals("Grizz")) {
-												GrizzAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Evil")) {
-												EvilAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Mason")) {
-												MasonAttack(p4, p3);
-											}
-											if(p4.getName().equals("Airic")) {
-												AiricAttack(p4, p3);
-											}
-											if(p4.getName().equals("Julian")) {
-												JulianAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Gash")) {
-												GashAttack(p4, p3);
-											}
-											if(p4.getName().equals("Mayhem")) {
-												MayhemAttack(p4, p3);
-											}
-											if(p4.getName().equals("Gates")) {
-												Location l = SetCursor(p4, p1, p3, p5, p2, p6, 0);
-												GatesAttack(p4, p3, l);
-											}
-											if(p4.getName().equals("Ayson")) {
-												AysonAttack(p4, p3);
-											}
-											if(p4.getName().equals("Chloe")) {
-												ChloeAttack(p4, p3, p2, p6);
-											}
-											if(p4.getName().equals("Hopper")) {
-												HopperAttack(p4, p3);
-											}
-											if(p4.getName().equals("Redgar")) {
-												RedgarAttack(p4, p3);
-											}
-											if(p4.getName().equals("Radar")) {
-												RadarAttack(p4, p3);
-											}
-											if(p4.getName().equals("Oona")) {
-												OonaAttack(p4, p3);
-											}
-											if(p4.getName().equals("Augie")) {
-												AugieAttack(p4, p3);
-											}
-											if(p4.getName().equals("Ruby")) {
-												RubyAttack(p4, p3);
-											}
-											if(p4.getName().equals("Norman")) {
-												NormanAttack(p4, p3, p2, p6);
-											}
-											if(p4.getName().equals("Chief")) {
-												ChiefAttack(p4, p3);
-											}
-											if(p4.getName().equals("Melony")) {
-												MelonyAttack(p4, p3);
-											}
-											if(p4.getName().equals("Echo")) {
-												EchoAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Rhythm")) {
-												RhythmAttack(p4, p3);
-											}
-											if(p4.getName().equals("Grenadine")) {
-												GrenadineAttack(p4, p3);
-											}
-											if(p4.getName().equals("Patitek")) {
-												PatitekAttack(p4, p3);
-											}
-											if(p4.getName().equals("Crystal")) {
-												CrystalAttack(p4, p3);
-											}
-											if(p4.getName().equals("Velvet")) {
-												VelvetAttack(p4, p3);
-											}
-											if(p4.getName().equals("Drift")) {
-												DriftAttack(p4, p3);
-											}
-											if(p4.getName().equals("Snowfall")) {
-												SnowfallAttack(p4, p3);
-											}
-											if(p4.getName().equals("Shutter")) {
-												ShutterAttack(p4, p3, p2, p6);
-											}
-											if(p4.getName().equals("Magnet")) {
-												MagnetAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Jing")) {
-												JingAttack(p4, p3);
-											}
-											if(p4.getName().equals("Folden")) {
-												FoldenAttack(p4, p3);
-											}
-											if(p4.getName().equals("Margo")) {
-												MargoAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Petra")) {
-												PetraAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Quincy")) {
-												QuincyAttack(p4, p3, p2, p6);
-											}
-											if(p4.getName().equals("Unice")) {
-												UniceAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Leaf")) {
-												LeafAttack(p4, p3);
-											}
-											if(p4.getName().equals("Courtney")) {
-												CourtneyAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Divine")) {
-												DivineAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Gambit")) {
-												GambitAttack(p4, p3, p2, p6);
-											}
-											if(p4.getName().equals("Cloud")) {
-												CloudAttack(p4, p3);
-											}
-											if(p4.getName().equals("Winnie")) {
-												WinnieAttack(p4, p3);
-											}
-											if(p4.getName().equals("Pearl")) {
-												PearlAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Andrew")) {
-												AndrewAttack(p4, p3, p2, p6);
-											}
-											if(p4.getName().equals("Orchid")) {
-												OrchidAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Clementine")) {
-												ClementineAttack(p4, p3);
-											}
-											if(p4.getName().equals("Rin")) {
-												RinAttack(p4, p3, p1, p5);
-											}
-											if(p4.getName().equals("Isabelle")) {
-												IsabelleAttack(p4, p3, p2, p6);
-											}
+											runAttacks(p4, p3, p1, p5, p2, p6);
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -4743,238 +1568,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p4.getName().equals("Lunar")) {
-												LunarAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Solar")) {
-												SolarAttack(p4, p5);
-											}
-											if(p4.getName().equals("Mack")) {
-												MackAttack(p4, p5);
-											}
-											if(p4.getName().equals("Finley")) {
-												FinleyAttack(p4, p5);
-											}
-											if(p4.getName().equals("Burt")) {
-												BurtAttack(p4, p5);
-											}
-											if(p4.getName().equals("Bolo")) {
-												BoloAttack(p4, p5);
-											}
-											if(p4.getName().equals("Zero")) {
-												ZeroAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Dylan")) {
-												DylanAttack(p4, p5);
-											}
-											if(p4.getName().equals("Eli")) {
-												EliAttack(p4, p5);
-											}
-											if(p4.getName().equals("Via")) {
-												ViaAttack(p4, p5, p3 ,p1);
-											}
-											if(p4.getName().equals("Louis")) {
-												LouisAttack(p4, p5);
-											}
-											if(p4.getName().equals("Alex")) {
-												AlexAttack(p4, p5);
-											}
-											if(p4.getName().equals("Orion")) {
-												OrionAttack(p4, p5);
-											}
-											if(p4.getName().equals("Kailani")) {
-												KailaniAttack(p4, p5);
-											}
-											if(p4.getName().equals("Ashley")) {
-												AshleyAttack(p4, p5);
-											}
-											if(p4.getName().equals("Rocco")) {
-												RoccoAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Sammi")) {
-												SammiAttack(p4, p5);
-											}
-											if(p4.getName().equals("Clara")) {
-												ClaraAttack(p4, p5);
-											}
-											if(p4.getName().equals("Thunder")) {
-												ThunderAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Aidan")) {
-												AidanAttack(p4, p5);
-											}
-											if(p4.getName().equals("Liam")) {
-												LiamAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Axol")) {
-												AxolAttack(p4, p5);
-											}
-											if(p4.getName().equals("Katrina")) {
-												KatrinaAttack(p4, p5);
-											}
-											if(p4.getName().equals("Midnite")) {
-												MidniteAttack(p4, p5);
-											}
-											if(p4.getName().equals("Xara")) {
-												XaraAttack(p4, p5);
-											}
-											if(p4.getName().equals("Kithara")) {
-												KitharaAttack(p4, p5);
-											}
-											if(p4.getName().equals("Anjelika")) {
-												AnjelikaAttack(p4, p5);
-											}
-											if(p4.getName().equals("Archer")) {
-												ArcherAttack(p4, p5);
-											}
-											if(p4.getName().equals("Tom")) {
-												TomAttack(p4, p5);
-											}
-											if(p4.getName().equals("Dimentio")) {
-												DimentioAttack(p4, p5);
-											}
-											if(p4.getName().equals("Grizz")) {
-												GrizzAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Evil")) {
-												EvilAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Mason")) {
-												MasonAttack(p4, p5);
-											}
-											if(p4.getName().equals("Airic")) {
-												AiricAttack(p4, p5);
-											}
-											if(p4.getName().equals("Julian")) {
-												JulianAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Gash")) {
-												GashAttack(p4, p5);
-											}
-											if(p4.getName().equals("Mayhem")) {
-												MayhemAttack(p4, p5);
-											}
-											if(p4.getName().equals("Gates")) {
-												Location l = SetCursor(p4, p1, p3, p5, p2, p6, 0);
-												GatesAttack(p4, p5, l);
-											}
-											if(p4.getName().equals("Ayson")) {
-												AysonAttack(p4, p5);
-											}
-											if(p4.getName().equals("Chloe")) {
-												ChloeAttack(p4, p5, p2, p6);
-											}
-											if(p4.getName().equals("Hopper")) {
-												HopperAttack(p4, p5);
-											}
-											if(p4.getName().equals("Redgar")) {
-												RedgarAttack(p4, p5);
-											}
-											if(p4.getName().equals("Radar")) {
-												RadarAttack(p4, p5);
-											}
-											if(p4.getName().equals("Oona")) {
-												OonaAttack(p4, p5);
-											}
-											if(p4.getName().equals("Augie")) {
-												AugieAttack(p4, p5);
-											}
-											if(p4.getName().equals("Ruby")) {
-												RubyAttack(p4, p5);
-											}
-											if(p4.getName().equals("Norman")) {
-												NormanAttack(p4, p5, p2, p6);
-											}
-											if(p4.getName().equals("Chief")) {
-												ChiefAttack(p4, p5);
-											}
-											if(p4.getName().equals("Melony")) {
-												MelonyAttack(p4, p5);
-											}
-											if(p4.getName().equals("Echo")) {
-												EchoAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Rhythm")) {
-												RhythmAttack(p4, p5);
-											}
-											if(p4.getName().equals("Grenadine")) {
-												GrenadineAttack(p4, p5);
-											}
-											if(p4.getName().equals("Patitek")) {
-												PatitekAttack(p4, p5);
-											}
-											if(p4.getName().equals("Crystal")) {
-												CrystalAttack(p4, p5);
-											}
-											if(p4.getName().equals("Velvet")) {
-												VelvetAttack(p4, p5);
-											}
-											if(p4.getName().equals("Drift")) {
-												DriftAttack(p4, p5);
-											}
-											if(p4.getName().equals("Snowfall")) {
-												SnowfallAttack(p4, p5);
-											}
-											if(p4.getName().equals("Shutter")) {
-												ShutterAttack(p4, p5, p2, p6);
-											}
-											if(p4.getName().equals("Magnet")) {
-												MagnetAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Jing")) {
-												JingAttack(p4, p5);
-											}
-											if(p4.getName().equals("Folden")) {
-												FoldenAttack(p4, p5);
-											}
-											if(p4.getName().equals("Margo")) {
-												MargoAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Petra")) {
-												PetraAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Quincy")) {
-												QuincyAttack(p4, p5, p2, p6);
-											}
-											if(p4.getName().equals("Unice")) {
-												UniceAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Leaf")) {
-												LeafAttack(p4, p5);
-											}
-											if(p4.getName().equals("Courtney")) {
-												CourtneyAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Divine")) {
-												DivineAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Gambit")) {
-												GambitAttack(p4, p5, p2, p6);
-											}
-											if(p4.getName().equals("Cloud")) {
-												CloudAttack(p4, p5);
-											}
-											if(p4.getName().equals("Winnie")) {
-												WinnieAttack(p4, p5);
-											}
-											if(p4.getName().equals("Pearl")) {
-												PearlAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Andrew")) {
-												AndrewAttack(p4, p5, p2, p6);
-											}
-											if(p4.getName().equals("Orchid")) {
-												OrchidAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Clementine")) {
-												ClementineAttack(p4, p5);
-											}
-											if(p4.getName().equals("Rin")) {
-												RinAttack(p4, p5, p3, p1);
-											}
-											if(p4.getName().equals("Isabelle")) {
-												IsabelleAttack(p4, p5, p2, p6);
-											}
+											runAttacks(p4, p5, p3, p1, p2, p6);
 										}
 									}
 								}
@@ -5036,6 +1630,9 @@ public class GameSim {
 						}
 						if (p6.getName().equals("Rin")) {
 							RinPassive(p6, p1, p3, p5, p4, p2);
+						}
+						if (p6.getName().equals("Jazz")) {
+							JazzPassive(p6);
 						}
 						ReviveDeny(p6, p2, p4);
 					}
@@ -5175,238 +1772,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p6.getName().equals("Lunar")) {
-												LunarAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Solar")) {
-												SolarAttack(p6, p1);
-											}
-											if(p6.getName().equals("Mack")) {
-												MackAttack(p6, p1);
-											}
-											if(p6.getName().equals("Finley")) {
-												FinleyAttack(p6, p1);
-											}
-											if(p6.getName().equals("Burt")) {
-												BurtAttack(p6, p1);
-											}
-											if(p6.getName().equals("Bolo")) {
-												BoloAttack(p6, p1);
-											}
-											if(p6.getName().equals("Zero")) {
-												ZeroAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Dylan")) {
-												DylanAttack(p6, p1);
-											}
-											if(p6.getName().equals("Eli")) {
-												EliAttack(p6, p1);
-											}
-											if(p6.getName().equals("Via")) {
-												ViaAttack(p6, p1, p3 ,p5);
-											}
-											if(p6.getName().equals("Louis")) {
-												LouisAttack(p6, p1);
-											}
-											if(p6.getName().equals("Alex")) {
-												AlexAttack(p6, p1);
-											}
-											if(p6.getName().equals("Orion")) {
-												OrionAttack(p6, p1);
-											}
-											if(p6.getName().equals("Kailani")) {
-												KailaniAttack(p6, p1);
-											}
-											if(p6.getName().equals("Ashley")) {
-												AshleyAttack(p6, p1);
-											}
-											if(p6.getName().equals("Rocco")) {
-												RoccoAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Sammi")) {
-												SammiAttack(p6, p1);
-											}
-											if(p6.getName().equals("Clara")) {
-												ClaraAttack(p6, p1);
-											}
-											if(p6.getName().equals("Thunder")) {
-												ThunderAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Aidan")) {
-												AidanAttack(p6, p1);
-											}
-											if(p6.getName().equals("Liam")) {
-												LiamAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Axol")) {
-												AxolAttack(p6, p1);
-											}
-											if(p6.getName().equals("Katrina")) {
-												KatrinaAttack(p6, p1);
-											}
-											if(p6.getName().equals("Midnite")) {
-												MidniteAttack(p6, p1);
-											}
-											if(p6.getName().equals("Xara")) {
-												XaraAttack(p6, p1);
-											}
-											if(p6.getName().equals("Kithara")) {
-												KitharaAttack(p6, p1);
-											}
-											if(p6.getName().equals("Anjelika")) {
-												AnjelikaAttack(p6, p1);
-											}
-											if(p6.getName().equals("Archer")) {
-												ArcherAttack(p6, p1);
-											}
-											if(p6.getName().equals("Tom")) {
-												TomAttack(p6, p1);
-											}
-											if(p6.getName().equals("Dimentio")) {
-												DimentioAttack(p6, p1);
-											}
-											if(p6.getName().equals("Grizz")) {
-												GrizzAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Evil")) {
-												EvilAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Mason")) {
-												MasonAttack(p6, p1);
-											}
-											if(p6.getName().equals("Airic")) {
-												AiricAttack(p6, p1);
-											}
-											if(p6.getName().equals("Julian")) {
-												JulianAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Gash")) {
-												GashAttack(p6, p1);
-											}
-											if(p6.getName().equals("Mayhem")) {
-												MayhemAttack(p6, p1);
-											}
-											if(p6.getName().equals("Gates")) {
-												Location l = SetCursor(p6, p1, p3, p5, p2, p4, 0);
-												GatesAttack(p6, p1, l);
-											}
-											if(p6.getName().equals("Ayson")) {
-												AysonAttack(p6, p1);
-											}
-											if(p6.getName().equals("Chloe")) {
-												ChloeAttack(p6, p1, p2, p4);
-											}
-											if(p6.getName().equals("Hopper")) {
-												HopperAttack(p6, p1);
-											}
-											if(p6.getName().equals("Redgar")) {
-												RedgarAttack(p6, p1);
-											}
-											if(p6.getName().equals("Radar")) {
-												RadarAttack(p6, p1);
-											}
-											if(p6.getName().equals("Oona")) {
-												OonaAttack(p6, p1);
-											}
-											if(p6.getName().equals("Augie")) {
-												AugieAttack(p6, p1);
-											}
-											if(p6.getName().equals("Ruby")) {
-												RubyAttack(p6, p1);
-											}
-											if(p6.getName().equals("Norman")) {
-												NormanAttack(p6, p1, p2, p4);
-											}
-											if(p6.getName().equals("Chief")) {
-												ChiefAttack(p6, p1);
-											}
-											if(p6.getName().equals("Melony")) {
-												MelonyAttack(p6, p1);
-											}
-											if(p6.getName().equals("Echo")) {
-												EchoAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Rhythm")) {
-												RhythmAttack(p6, p1);
-											}
-											if(p6.getName().equals("Grenadine")) {
-												GrenadineAttack(p6, p1);
-											}
-											if(p6.getName().equals("Patitek")) {
-												PatitekAttack(p6, p1);
-											}
-											if(p6.getName().equals("Crystal")) {
-												CrystalAttack(p6, p1);
-											}
-											if(p6.getName().equals("Velvet")) {
-												VelvetAttack(p6, p1);
-											}
-											if(p6.getName().equals("Drift")) {
-												DriftAttack(p6, p1);
-											}
-											if(p6.getName().equals("Snowfall")) {
-												SnowfallAttack(p6, p1);
-											}
-											if(p6.getName().equals("Shutter")) {
-												ShutterAttack(p6, p1, p2, p4);
-											}
-											if(p6.getName().equals("Magnet")) {
-												MagnetAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Jing")) {
-												JingAttack(p6, p1);
-											}
-											if(p6.getName().equals("Folden")) {
-												FoldenAttack(p6, p1);
-											}
-											if(p6.getName().equals("Margo")) {
-												MargoAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Petra")) {
-												PetraAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Quincy")) {
-												QuincyAttack(p6, p1, p2, p4);
-											}
-											if(p6.getName().equals("Unice")) {
-												UniceAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Leaf")) {
-												LeafAttack(p6, p1);
-											}
-											if(p6.getName().equals("Courtney")) {
-												CourtneyAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Divine")) {
-												DivineAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Gambit")) {
-												GambitAttack(p6, p1, p2, p4);
-											}
-											if(p6.getName().equals("Cloud")) {
-												CloudAttack(p6, p1);
-											}
-											if(p6.getName().equals("Winnie")) {
-												WinnieAttack(p6, p1);
-											}
-											if(p6.getName().equals("Pearl")) {
-												PearlAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Andrew")) {
-												AndrewAttack(p6, p1, p2, p4);
-											}
-											if(p6.getName().equals("Orchid")) {
-												OrchidAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Clementine")) {
-												ClementineAttack(p6, p1);
-											}
-											if(p6.getName().equals("Rin")) {
-												RinAttack(p6, p1, p3, p5);
-											}
-											if(p6.getName().equals("Isabelle")) {
-												IsabelleAttack(p6, p1, p2, p4);
-											}
+											runAttacks(p6, p1, p3, p5, p2, p4);
 										}
 									}
 									if(attackResponse.equals("2")) {
@@ -5416,238 +1782,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p6.getName().equals("Lunar")) {
-												LunarAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Solar")) {
-												SolarAttack(p6, p3);
-											}
-											if(p6.getName().equals("Mack")) {
-												MackAttack(p6, p3);
-											}
-											if(p6.getName().equals("Finley")) {
-												FinleyAttack(p6, p3);
-											}
-											if(p6.getName().equals("Burt")) {
-												BurtAttack(p6, p3);
-											}
-											if(p6.getName().equals("Bolo")) {
-												BoloAttack(p6, p3);
-											}
-											if(p6.getName().equals("Zero")) {
-												ZeroAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Dylan")) {
-												DylanAttack(p6, p3);
-											}
-											if(p6.getName().equals("Eli")) {
-												EliAttack(p6, p3);
-											}
-											if(p6.getName().equals("Via")) {
-												ViaAttack(p6, p3, p1 ,p5);
-											}
-											if(p6.getName().equals("Louis")) {
-												LouisAttack(p6, p3);
-											}
-											if(p6.getName().equals("Alex")) {
-												AlexAttack(p6, p3);
-											}
-											if(p6.getName().equals("Orion")) {
-												OrionAttack(p6, p3);
-											}
-											if(p6.getName().equals("Kailani")) {
-												KailaniAttack(p6, p3);
-											}
-											if(p6.getName().equals("Ashley")) {
-												AshleyAttack(p6, p3);
-											}
-											if(p6.getName().equals("Rocco")) {
-												RoccoAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Sammi")) {
-												SammiAttack(p6, p3);
-											}
-											if(p6.getName().equals("Clara")) {
-												ClaraAttack(p6, p3);
-											}
-											if(p6.getName().equals("Thunder")) {
-												ThunderAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Aidan")) {
-												AidanAttack(p6, p3);
-											}
-											if(p6.getName().equals("Liam")) {
-												LiamAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Axol")) {
-												AxolAttack(p6, p3);
-											}
-											if(p6.getName().equals("Katrina")) {
-												KatrinaAttack(p6, p3);
-											}
-											if(p6.getName().equals("Midnite")) {
-												MidniteAttack(p6, p3);
-											}
-											if(p6.getName().equals("Xara")) {
-												XaraAttack(p6, p3);
-											}
-											if(p6.getName().equals("Kithara")) {
-												KitharaAttack(p6, p3);
-											}
-											if(p6.getName().equals("Anjelika")) {
-												AnjelikaAttack(p6, p3);
-											}
-											if(p6.getName().equals("Archer")) {
-												ArcherAttack(p6, p3);
-											}
-											if(p6.getName().equals("Tom")) {
-												TomAttack(p6, p3);
-											}
-											if(p6.getName().equals("Dimentio")) {
-												DimentioAttack(p6, p3);
-											}
-											if(p6.getName().equals("Grizz")) {
-												GrizzAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Evil")) {
-												EvilAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Mason")) {
-												MasonAttack(p6, p3);
-											}
-											if(p6.getName().equals("Airic")) {
-												AiricAttack(p6, p3);
-											}
-											if(p6.getName().equals("Julian")) {
-												JulianAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Gash")) {
-												GashAttack(p6, p3);
-											}
-											if(p6.getName().equals("Mayhem")) {
-												MayhemAttack(p6, p3);
-											}
-											if(p6.getName().equals("Gates")) {
-												Location l = SetCursor(p6, p1, p3, p5, p2, p4, 0);
-												GatesAttack(p6, p3, l);
-											}
-											if(p6.getName().equals("Ayson")) {
-												AysonAttack(p6, p3);
-											}
-											if(p6.getName().equals("Chloe")) {
-												ChloeAttack(p6, p3, p2, p4);
-											}
-											if(p6.getName().equals("Hopper")) {
-												HopperAttack(p6, p3);
-											}
-											if(p6.getName().equals("Redgar")) {
-												RedgarAttack(p6, p3);
-											}
-											if(p6.getName().equals("Radar")) {
-												RadarAttack(p6, p3);
-											}
-											if(p6.getName().equals("Oona")) {
-												OonaAttack(p6, p3);
-											}
-											if(p6.getName().equals("Augie")) {
-												AugieAttack(p6, p3);
-											}
-											if(p6.getName().equals("Ruby")) {
-												RubyAttack(p6, p3);
-											}
-											if(p6.getName().equals("Norman")) {
-												NormanAttack(p6, p3, p2, p4);
-											}
-											if(p6.getName().equals("Chief")) {
-												ChiefAttack(p6, p3);
-											}
-											if(p6.getName().equals("Melony")) {
-												MelonyAttack(p6, p3);
-											}
-											if(p6.getName().equals("Echo")) {
-												EchoAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Rhythm")) {
-												RhythmAttack(p6, p3);
-											}
-											if(p6.getName().equals("Grenadine")) {
-												GrenadineAttack(p6, p3);
-											}
-											if(p6.getName().equals("Patitek")) {
-												PatitekAttack(p6, p3);
-											}
-											if(p6.getName().equals("Crystal")) {
-												CrystalAttack(p6, p3);
-											}
-											if(p6.getName().equals("Velvet")) {
-												VelvetAttack(p6, p3);
-											}
-											if(p6.getName().equals("Drift")) {
-												DriftAttack(p6, p3);
-											}
-											if(p6.getName().equals("Snowfall")) {
-												SnowfallAttack(p6, p3);
-											}
-											if(p6.getName().equals("Shutter")) {
-												ShutterAttack(p6, p3, p2, p4);
-											}
-											if(p6.getName().equals("Magnet")) {
-												MagnetAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Jing")) {
-												JingAttack(p6, p3);
-											}
-											if(p6.getName().equals("Folden")) {
-												FoldenAttack(p6, p3);
-											}
-											if(p6.getName().equals("Margo")) {
-												MargoAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Petra")) {
-												PetraAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Quincy")) {
-												QuincyAttack(p6, p3, p2, p4);
-											}
-											if(p6.getName().equals("Unice")) {
-												UniceAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Leaf")) {
-												LeafAttack(p6, p3);
-											}
-											if(p6.getName().equals("Courtney")) {
-												CourtneyAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Divine")) {
-												DivineAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Gambit")) {
-												GambitAttack(p6, p3, p2, p4);
-											}
-											if(p6.getName().equals("Cloud")) {
-												CloudAttack(p6, p3);
-											}
-											if(p6.getName().equals("Winnie")) {
-												WinnieAttack(p6, p3);
-											}
-											if(p6.getName().equals("Pearl")) {
-												PearlAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Andrew")) {
-												AndrewAttack(p6, p3, p2, p4);
-											}
-											if(p6.getName().equals("Orchid")) {
-												OrchidAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Clementine")) {
-												ClementineAttack(p6, p3);
-											}
-											if(p6.getName().equals("Rin")) {
-												RinAttack(p6, p3, p1, p5);
-											}
-											if(p6.getName().equals("Isabelle")) {
-												IsabelleAttack(p6, p3, p2, p4);
-											}
+											runAttacks(p6, p3, p1, p5, p2, p4);
 										}
 									}
 									if(attackResponse.equals("3")) {
@@ -5657,238 +1792,7 @@ public class GameSim {
 											System.out.println();
 										}else {
 											weaponFX();
-											if(p6.getName().equals("Lunar")) {
-												LunarAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Solar")) {
-												SolarAttack(p6, p5);
-											}
-											if(p6.getName().equals("Mack")) {
-												MackAttack(p6, p5);
-											}
-											if(p6.getName().equals("Finley")) {
-												FinleyAttack(p6, p5);
-											}
-											if(p6.getName().equals("Burt")) {
-												BurtAttack(p6, p5);
-											}
-											if(p6.getName().equals("Bolo")) {
-												BoloAttack(p6, p5);
-											}
-											if(p6.getName().equals("Zero")) {
-												ZeroAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Dylan")) {
-												DylanAttack(p6, p5);
-											}
-											if(p6.getName().equals("Eli")) {
-												EliAttack(p6, p5);
-											}
-											if(p6.getName().equals("Via")) {
-												ViaAttack(p6, p5, p3 ,p1);
-											}
-											if(p6.getName().equals("Louis")) {
-												LouisAttack(p6, p5);
-											}
-											if(p6.getName().equals("Alex")) {
-												AlexAttack(p6, p5);
-											}
-											if(p6.getName().equals("Orion")) {
-												OrionAttack(p6, p5);
-											}
-											if(p6.getName().equals("Kailani")) {
-												KailaniAttack(p6, p5);
-											}
-											if(p6.getName().equals("Ashley")) {
-												AshleyAttack(p6, p5);
-											}
-											if(p6.getName().equals("Rocco")) {
-												RoccoAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Sammi")) {
-												SammiAttack(p6, p5);
-											}
-											if(p6.getName().equals("Clara")) {
-												ClaraAttack(p6, p5);
-											}
-											if(p6.getName().equals("Thunder")) {
-												ThunderAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Aidan")) {
-												AidanAttack(p6, p5);
-											}
-											if(p6.getName().equals("Liam")) {
-												LiamAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Axol")) {
-												AxolAttack(p6, p5);
-											}
-											if(p6.getName().equals("Katrina")) {
-												KatrinaAttack(p6, p5);
-											}
-											if(p6.getName().equals("Midnite")) {
-												MidniteAttack(p6, p5);
-											}
-											if(p6.getName().equals("Xara")) {
-												XaraAttack(p6, p5);
-											}
-											if(p6.getName().equals("Kithara")) {
-												KitharaAttack(p6, p5);
-											}
-											if(p6.getName().equals("Anjelika")) {
-												AnjelikaAttack(p6, p5);
-											}
-											if(p6.getName().equals("Archer")) {
-												ArcherAttack(p6, p5);
-											}
-											if(p6.getName().equals("Tom")) {
-												TomAttack(p6, p5);
-											}
-											if(p6.getName().equals("Dimentio")) {
-												DimentioAttack(p6, p5);
-											}
-											if(p6.getName().equals("Grizz")) {
-												GrizzAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Evil")) {
-												EvilAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Mason")) {
-												MasonAttack(p6, p5);
-											}
-											if(p6.getName().equals("Airic")) {
-												AiricAttack(p6, p5);
-											}
-											if(p6.getName().equals("Julian")) {
-												JulianAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Gash")) {
-												GashAttack(p6, p5);
-											}
-											if(p6.getName().equals("Mayhem")) {
-												MayhemAttack(p6, p5);
-											}
-											if(p6.getName().equals("Gates")) {
-												Location l = SetCursor(p6, p1, p3, p5, p2, p4, 0);
-												GatesAttack(p6, p5, l);
-											}
-											if(p6.getName().equals("Ayson")) {
-												AysonAttack(p6, p5);
-											}
-											if(p6.getName().equals("Chloe")) {
-												ChloeAttack(p6, p5, p2, p4);
-											}
-											if(p6.getName().equals("Hopper")) {
-												HopperAttack(p6, p5);
-											}
-											if(p6.getName().equals("Redgar")) {
-												RedgarAttack(p6, p5);
-											}
-											if(p6.getName().equals("Radar")) {
-												RadarAttack(p6, p5);
-											}
-											if(p6.getName().equals("Oona")) {
-												OonaAttack(p6, p5);
-											}
-											if(p6.getName().equals("Augie")) {
-												AugieAttack(p6, p5);
-											}
-											if(p6.getName().equals("Ruby")) {
-												RubyAttack(p6, p5);
-											}
-											if(p6.getName().equals("Norman")) {
-												NormanAttack(p6, p5, p2, p4);
-											}
-											if(p6.getName().equals("Chief")) {
-												ChiefAttack(p6, p5);
-											}
-											if(p6.getName().equals("Melony")) {
-												MelonyAttack(p6, p5);
-											}
-											if(p6.getName().equals("Echo")) {
-												EchoAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Rhythm")) {
-												RhythmAttack(p6, p5);
-											}
-											if(p6.getName().equals("Grenadine")) {
-												GrenadineAttack(p6, p5);
-											}
-											if(p6.getName().equals("Patitek")) {
-												PatitekAttack(p6, p5);
-											}
-											if(p6.getName().equals("Crystal")) {
-												CrystalAttack(p6, p5);
-											}
-											if(p6.getName().equals("Velvet")) {
-												VelvetAttack(p6, p5);
-											}
-											if(p6.getName().equals("Drift")) {
-												DriftAttack(p6, p5);
-											}
-											if(p6.getName().equals("Snowfall")) {
-												SnowfallAttack(p6, p5);
-											}
-											if(p6.getName().equals("Shutter")) {
-												ShutterAttack(p6, p5, p2, p4);
-											}
-											if(p6.getName().equals("Magnet")) {
-												MagnetAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Jing")) {
-												JingAttack(p6, p5);
-											}
-											if(p6.getName().equals("Folden")) {
-												FoldenAttack(p6, p5);
-											}
-											if(p6.getName().equals("Margo")) {
-												MargoAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Petra")) {
-												PetraAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Quincy")) {
-												QuincyAttack(p6, p5, p2, p4);
-											}
-											if(p6.getName().equals("Unice")) {
-												UniceAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Leaf")) {
-												LeafAttack(p6, p5);
-											}
-											if(p6.getName().equals("Courtney")) {
-												CourtneyAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Divine")) {
-												DivineAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Gambit")) {
-												GambitAttack(p6, p5, p2, p4);
-											}
-											if(p6.getName().equals("Cloud")) {
-												CloudAttack(p6, p5);
-											}
-											if(p6.getName().equals("Winnie")) {
-												WinnieAttack(p6, p5);
-											}
-											if(p6.getName().equals("Pearl")) {
-												PearlAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Andrew")) {
-												AndrewAttack(p6, p5, p2, p4);
-											}
-											if(p6.getName().equals("Orchid")) {
-												OrchidAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Clementine")) {
-												ClementineAttack(p6, p5);
-											}
-											if(p6.getName().equals("Rin")) {
-												RinAttack(p6, p5, p3, p1);
-											}
-											if(p6.getName().equals("Isabelle")) {
-												IsabelleAttack(p6, p5, p2, p4);
-											}
+											runAttacks(p6, p5, p3, p1, p2, p4);
 										}
 									}
 								}
@@ -6180,9 +2084,252 @@ public class GameSim {
 	        }
 	    });
 	}
-	
+
 	public static void runAttacks(Player p, Player a, Player b, Player c, Player d, Player e) {
-		
+		if(p.getName().equals("Lunar")) {
+			LunarAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Solar")) {
+			SolarAttack(p, a);
+		}
+		if(p.getName().equals("Mack")) {
+			MackAttack(p, a);
+		}
+		if(p.getName().equals("Finley")) {
+			FinleyAttack(p, a);
+		}
+		if(p.getName().equals("Burt")) {
+			BurtAttack(p, a);
+		}
+		if(p.getName().equals("Bolo")) {
+			BoloAttack(p, a);
+		}
+		if(p.getName().equals("Dylan")) {
+			DylanAttack(p, a);
+		}
+		if(p.getName().equals("Zero")) {
+			ZeroAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Eli")) {
+			EliAttack(p, a);
+		}
+		if(p.getName().equals("Via")) {
+			ViaAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Louis")) {
+			LouisAttack(p, a);
+		}
+		if(p.getName().equals("Alex")) {
+			AlexAttack(p, a);
+		}
+		if(p.getName().equals("Orion")) {
+			OrionAttack(p, a);
+		}
+		if(p.getName().equals("Kailani")) {
+			KailaniAttack(p,a);
+		}
+		if(p.getName().equals("Ashley")) {
+			AshleyAttack(p, a);
+		}
+		if(p.getName().equals("Rocco")) {
+			RoccoAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Sammi")) {
+			SammiAttack(p, a);
+		}
+		if(p.getName().equals("Clara")) {
+			ClaraAttack(p, a);
+		}
+		if(p.getName().equals("Thunder")) {
+			ThunderAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Aidan")) {
+			AidanAttack(p, a);
+		}
+		if(p.getName().equals("Liam")) {
+			LiamAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Axol")) {
+			AxolAttack(p, a);
+		}
+		if(p.getName().equals("Katrina")) {
+			KatrinaAttack(p, a);
+		}
+		if(p.getName().equals("Midnite")) {
+			MidniteAttack(p, a);
+		}
+		if(p.getName().equals("Xara")) {
+			XaraAttack(p, a);
+		}
+		if(p.getName().equals("Kithara")) {
+			KitharaAttack(p, a);
+		}
+		if(p.getName().equals("Anjelika")) {
+			AnjelikaAttack(p, a);
+		}
+		if(p.getName().equals("Archer")) {
+			ArcherAttack(p, a);
+		}
+		if(p.getName().equals("Tom")) {
+			TomAttack(p, a);
+		}
+		if(p.getName().equals("Dimentio")) {
+			DimentioAttack(p, a);
+		}
+		if(p.getName().equals("Grizz")) {
+			GrizzAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Evil")) {
+			EvilAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Mason")) {
+			MasonAttack(p, a);
+		}
+		if(p.getName().equals("Airic")) {
+			AiricAttack(p, a);
+		}
+		if(p.getName().equals("Julian")) {
+			JulianAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Gash")) {
+			GashAttack(p, a);
+		}
+		if(p.getName().equals("Mayhem")) {
+			MayhemAttack(p, a);
+		}
+		if(p.getName().equals("Gates")) {
+			Location l = SetCursor(p, a, b, c, d, e, 0);
+			GatesAttack(p, a, l);
+		}
+		if(p.getName().equals("Ayson")) {
+			AysonAttack(p, a);
+		}
+		if(p.getName().equals("Chloe")) {
+			ChloeAttack(p, a, d, e);
+		}
+		if(p.getName().equals("Hopper")) {
+			HopperAttack(p, a);
+		}
+		if(p.getName().equals("Redgar")) {
+			RedgarAttack(p, a);
+		}
+		if(p.getName().equals("Radar")) {
+			RadarAttack(p, a);
+		}
+		if(p.getName().equals("Oona")) {
+			OonaAttack(p, a);
+		}
+		if(p.getName().equals("Augie")) {
+			AugieAttack(p, a);
+		}
+		if(p.getName().equals("Ruby")) {
+			RubyAttack(p, a);
+		}
+		if(p.getName().equals("Norman")) {
+			NormanAttack(p, a, d, e);
+		}
+		if(p.getName().equals("Chief")) {
+			ChiefAttack(p, a);
+		}
+		if(p.getName().equals("Melony")) {
+			MelonyAttack(p, a);
+		}
+		if(p.getName().equals("Echo")) {
+			EchoAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Rhythm")) {
+			RhythmAttack(p, a);
+		}
+		if(p.getName().equals("Grenadine")) {
+			GrenadineAttack(p, a);
+		}
+		if(p.getName().equals("Patitek")) {
+			PatitekAttack(p, a);
+		}
+		if(p.getName().equals("Crystal")) {
+			CrystalAttack(p, a);
+		}
+		if(p.getName().equals("Velvet")) {
+			VelvetAttack(p, a);
+		}
+		if(p.getName().equals("Drift")) {
+			DriftAttack(p, a);
+		}
+		if(p.getName().equals("Snowfall")) {
+			SnowfallAttack(p, a);
+		}
+		if(p.getName().equals("Shutter")) {
+			ShutterAttack(p, a, d, e);
+		}
+		if(p.getName().equals("Magnet")) {
+			MagnetAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Jing")) {
+			JingAttack(p, a);
+		}
+		if(p.getName().equals("Folden")) {
+			FoldenAttack(p, a);
+		}
+		if(p.getName().equals("Margo")) {
+			MargoAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Petra")) {
+			PetraAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Quincy")) {
+			QuincyAttack(p, a);
+		}
+		if(p.getName().equals("Unice")) {
+			UniceAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Leaf")) {
+			LeafAttack(p, a);
+		}
+		if(p.getName().equals("Courtney")) {
+			CourtneyAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Divine")) {
+			DivineAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Gambit")) {
+			GambitAttack(p, a, d, e);
+		}
+		if(p.getName().equals("Cloud")) {
+			CloudAttack(p, a);
+		}
+		if(p.getName().equals("Winnie")) {
+			WinnieAttack(p, a);
+		}
+		if(p.getName().equals("Pearl")) {
+			PearlAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Andrew")) {
+			AndrewAttack(p, a, d, e);
+		}
+		if(p.getName().equals("Orchid")) {
+			OrchidAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Clementine")) {
+			ClementineAttack(p, a);
+		}
+		if(p.getName().equals("Rin")) {
+			RinAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Isabelle")) {
+			IsabelleAttack(p, a, d, e);
+		}
+		if(p.getName().equals("Lumiere")) {
+			LumiereAttack(p, a);
+		}
+		if(p.getName().equals("Willow")) {
+			WillowAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Jazz")) {
+			JazzAttack(p, a, b, c);
+		}
+		if(p.getName().equals("Harper")) {
+			HarperAttack(p, a);
+		}
 	}
 	
 	public static void runAbilities(Player p, Player a, Player b, Player c, Player d, Player e) {
@@ -6491,9 +2638,35 @@ public class GameSim {
 			Location l = SetCursor(p, a, b, c, d, e, 6);
 			IsabelleAbility(p, a, b, c, d, e, l);
 		}
+		if(p.getName().equals("Lumiere")) {
+			LumiereAbility(p, a, b, c, d, e);
+		}
+		if(p.getName().equals("Willow")) {
+			WillowAbility(p, d, e);
+		}
+		if(p.getName().equals("Jazz")) {
+			JazzAbility(p, a, b, c);
+		}
+		if(p.getName().equals("Harper")) {
+			Location l = SetCursor(p, a, b, c, d, e, 5);
+			HarperAbility(p, a, b ,c, l);
+		}
 	}
 	
 	public static void runUltimates(Player p, Player a, Player b, Player c, Player d, Player e, Party one, Party two) {
+		if(p.getName().equals("Harper")) {
+			Location l = SetCursor(p, a, b, c, d, e, 12);
+			HarperUltimate(p, a, b, c, d, e, l);
+		}
+		if(p.getName().equals("Jazz")) {
+			JazzUltimate(p, a, b, c);
+		}
+		if(p.getName().equals("Willow")) {
+			WillowUltimate(p);
+		}
+		if(p.getName().equals("Lumiere")) {
+			LumiereUltimate(p, a, b, c, d, e);
+		}
 		if(p.getName().equals("Isabelle")) {
 			IsabelleUltimate(p, a, b, c, d, e);
 		}
@@ -6819,6 +2992,25 @@ public class GameSim {
         }
 	}
 	
+	public static void deathWillowUltimate(Player p) {
+		ultimateFX();
+		Player a = p.getPlayers().get(0);
+		Player b = p.getPlayers().get(1);
+		Player c = p.getPlayers().get(2);
+		Player d = p.getPlayers().get(3);
+		Player e = p.getPlayers().get(4);
+		p.setMovementCurrent(15);
+		Movement(p, a, b, c, d, e);
+		Utility Support = new Utility("Spirit", new Location(14, 19), p, p, p, a, b, c);
+		utility.add(Support);
+		Utility Support2 = new Utility("Spirit", new Location(14, 23), p, p, p, a, b, c);
+		utility.add(Support2);
+		Utility Support3 = new Utility("Spirit", new Location(28, 19), p, p, p, a, b, c);
+		utility.add(Support3);
+		Utility Support4 = new Utility("Spirit", new Location(28, 23), p, p, p, a, b, c);
+		utility.add(Support4);
+	}
+	
 	public static void EverestPassive(Player p, Player a, Player b) {
 		if (p.getBalance() == 0) {
 			System.out.println("I do not have any Balance Orbs right now.");
@@ -7001,6 +3193,32 @@ public class GameSim {
 				}
 			}
 		}
+	}
+	
+	public static void JazzPassive(Player p) {
+		if (p.isSupressed()) {
+			System.out.println("Cannot use passive skill while supressed!");
+			System.out.println();
+			return;
+		}
+		Utility u = null;
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Bubble") && GameSim.utility.get(j).owner(p)) {
+				u = utility.get(j);
+			}
+		}
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: Change Radius");
+		System.out.println("2: Recall Bubble");
+		System.out.print("What do you want to do with the Kinetic Bubble: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			u.changeSize();
+		}
+		if(targetResponse.equals("2")) {
+			u.returnBubble();
+		}
+		System.out.println();
 	}
 	
 	public static Player CharacterSelection(Player p, String name, boolean start, int x, int y) {
@@ -7845,7 +4063,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Everest":
-			  p = new Player(2275, 150, start, name, x, y, 10, 10, 6);
+			  p = new Player(2275, 150, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Everest", "#66F0B2", "#5671F5", "#2A134E");
 			  p.skin(name);
 			  p.setC(214);
@@ -7901,6 +4119,49 @@ public class GameSim {
 			  p.addRole("support");
 			  p.addRole("engineer");
 		    break;
+		  case "Lumiere":
+			  p = new Player(2375, 275, start, name, x, y, 9, 9, 7);
+			  name = p.getGradientName("Lumière", "#73EEDC", "#67AAF9", "#9BBDF9");
+			  p.skin(name);
+			  p.setC(121);
+			  System.out.println("\"My light will set the stage.\"");
+			  System.out.println();
+			  p.addRole("brawler");
+			  p.addRole("support");
+			  p.addRole("engineer");
+		    break;
+		  case "Willow":
+			  p = new Player(2325, 225, start, name, x, y, 10, 12, 6);
+			  name = p.getGradientName("Willow", "#E35BF9", "#6D33B4");
+			  p.skin(name);
+			  p.setC(201);
+			  System.out.println("\"It’s never over until it’s over.\"");
+			  System.out.println();
+			  p.addRole("dive");
+			  p.addRole("brawler");
+			  p.addRole("support");
+		    break;
+		  case "Jazz":
+			  p = new Player(3800, 75, start, name, x, y, 11, 10, 5);
+			  name = p.getGradientName("Jazz", "#5D737E", "#4C5454");
+			  p.skin(name);
+			  p.setC(7);
+			  System.out.println("\"All forces unleashed!\"");
+			  System.out.println();
+			  p.addRole("dive");
+			  p.addRole("tank");
+			  p.addRole("engineer");
+		    break;
+		  case "Harper":
+			  p = new Player(2400, 250, start, name, x, y, 13, 8, 7);
+			  name = p.getGradientName("Harper", "#FE4E00", "#F9627D", "#5B3758");
+			  p.skin(name);
+			  p.setC(202);
+			  System.out.println("\"This town ain’t big enough for them.\"");
+			  System.out.println();
+			  p.addRole("brawler");
+			  p.addRole("engineer");
+		    break;
 		}
 		return p;
 	}
@@ -7939,8 +4200,10 @@ public class GameSim {
 	}
 	
 	public static void Jump(Player p, Player a, Player b, Location l, Player e1, Player e2, Player e3) {
+		p.resetCover();
 		boolean umbrella = false;
 		boolean mochi = false;
+		boolean peri = false;
 		Scanner input = new Scanner(System.in);
 		int jumpD = 6;
 		if (p.getName().equals("Unice")) {
@@ -7953,6 +4216,11 @@ public class GameSim {
 		}
 		for(int q = 0; q < GameSim.utility.size(); q++) {
 			if(GameSim.utility.get(q).getName().equals("Mochi") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc())) {
+				mochi = true;
+			}
+		}
+		for(int q = 0; q < GameSim.utility.size(); q++) {
+			if(GameSim.utility.get(q).getName().equals("Peri") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc())) {
 				mochi = true;
 			}
 		}
@@ -7971,7 +4239,7 @@ public class GameSim {
 		}
 		
 		if (!p.isHoverDashing() && !p.hasDoubleJumped() && !p.getName().equals("Courtney")) {
-			if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && !umbrella && !mochi && !p.getName().equals("Gambit")) {
+			if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && ! peri && !umbrella && !mochi && !p.getName().equals("Gambit")) {
 				System.out.println("Nothing in range to use a jump with!");
 				System.out.println();
 				return;
@@ -7998,8 +4266,12 @@ public class GameSim {
 				return;
 			}
 		}
-		
-		if(mochi && p.canJump()) {
+		if(peri && p.canJump()) {
+			int d = p.getLoc().distance(l);
+			p.increaseTotalMovement(d);
+			p.getLoc().set(l.getX(), l.getY());
+			p.useJump();
+		}else if(mochi && p.canJump()) {
 			int d = p.getLoc().distance(l);
 			p.increaseTotalMovement(d);
 			p.getLoc().set(l.getX(), l.getY());
@@ -8063,6 +4335,11 @@ public class GameSim {
 				}
 			}else {
 				p.resetCover();
+			}
+		}
+		for(int q = 0; q < GameSim.utility.size(); q++) {
+			if(GameSim.utility.get(q).getName().equals("Peri") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc())&& p.getCover().equals("None")) {
+				p.setCover("Partial");
 			}
 		}
 		for(int i = 0; i < orbs.size(); i++) {
@@ -8190,6 +4467,12 @@ public class GameSim {
 					p.resetCover();
 				}
 			}
+			for(int q = 0; q < GameSim.utility.size(); q++) {
+				if(GameSim.utility.get(q).getName().equals("Peri") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc())&& p.getCover().equals("None")) {
+					p.setCover("Partial");
+					break;
+				}
+			}
 			for(int i = 0; i < orbs.size(); i++) {
 				if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
 					p.getOrb();
@@ -8296,6 +4579,12 @@ public class GameSim {
 			}
 			if (e.getName().equals("Pearl")) {
 				e.smolluskDash();
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Peri") && GameSim.utility.get(j).owner(e) && p.inRange(GameSim.utility.get(j).getLoc(), 12)) {
+					p.takeDamage(275);
+					GameSim.utility.get(j).getOwner().addDamage(275);
+				}
 			}
 		}
 		if(dashPlayers.size() > 0) {
@@ -8494,11 +4783,54 @@ public class GameSim {
 				}
 			}
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Dynamite") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && (p.canDash() || p.isHoverDashing())) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Dynamite has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Dynamite destroyed.");
+				}
+				p.useDash();
+				for(int q = 0; q < GameSim.utility.size(); q++) {
+					if(GameSim.utility.get(q).getName().equals("Peri") && GameSim.utility.get(j).owner(GameSim.utility.get(j).getOwner()) && p.inRange(GameSim.utility.get(j).getLoc(), 12)) {
+						p.takeDamage(275);
+						GameSim.utility.get(q).getOwner().addDamage(275);
+					}
+				}
+				try {
+					String audio = "dash.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Peri") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && (p.canDash() || p.isHoverDashing())) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Peri has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Peri destroyed.");
+				}
+				p.useDash();
+				try {
+					String audio = "dash.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
 		
 		System.out.println();
 	}
 	
 	public static void Movement(Player p, Player a, Player z, Player c, Player d, Player e) {
+		p.resetCover();
 		for(int i = 0; i < orbs.size(); i++) {
 			if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
 				p.getOrb();
@@ -8517,6 +4849,12 @@ public class GameSim {
 				}
 			}else {
 				p.resetCover();
+			}
+		}
+		for(int q = 0; q < GameSim.utility.size(); q++) {
+			if(GameSim.utility.get(q).getName().equals("Peri") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc()) && p.getCover().equals("None")) {
+				p.setCover("Partial");
+				break;
 			}
 		}
 		if(p.isParalyzed() && !p.isHoverDashing()) {
@@ -8655,10 +4993,7 @@ public class GameSim {
 					}
 					for(int j = 0; j < GameSim.utility.size(); j++) {
 						if(GameSim.utility.get(j).getName().equals("Flame") && GameSim.utility.get(j).isEnemy(p) && GameSim.utility.get(j).inRange(p, 5) && !p.isIgnite()) {
-							ArrayList<Effect> e4 = new ArrayList<Effect>();
-							Effect SolarIgnite = new Effect("ignite", 0, 2);
-							e4.add(SolarIgnite);
-							p.addEffects(e4);
+							p.ignite(2);
 						}
 					}
 					for(int j = 0; j < GameSim.utility.size(); j++) {
@@ -8734,8 +5069,8 @@ public class GameSim {
 								p.takeDamage(a.getDamage() * 0.9);
 								a.addDamage(a.getDamage() * 0.9);
 								if(a.getName().equals("Zero") && rand <= 0.3) {
-									p.addEffects(e1);
-									p.applyEffects();
+									p.ignite(1);
+									p.daze(1);
 								}
 							}
 							a.useSight();
@@ -8745,8 +5080,8 @@ public class GameSim {
 								p.takeDamage(z.getDamage() * 0.9);
 								z.addDamage(z.getDamage() * 0.9);
 								if(z.getName().equals("Zero") && rand <= 0.3) {
-									p.addEffects(e1);
-									p.applyEffects();
+									p.ignite(1);
+									p.daze(1);
 								}
 							}
 							z.useSight();
@@ -8756,8 +5091,8 @@ public class GameSim {
 								p.takeDamage(c.getDamage() * 0.9);
 								c.addDamage(c.getDamage() * 0.9);
 								if(c.getName().equals("Zero") && rand <= 0.3) {
-									p.addEffects(e1);
-									p.applyEffects();
+									p.ignite(1);
+									p.daze(1);
 								}
 							}
 							c.useSight();
@@ -8791,11 +5126,7 @@ public class GameSim {
 						if (p.getLoc().eqLoc(a.getLoc())) {
 							a.knockbacked(new Location(p.getLoc().getX() + hor, p.getLoc().getY() + ver));
 							bumped = true;
-							ArrayList<Effect> e4 = new ArrayList<Effect>();
-							Effect ViaVulnerable = new Effect("vulnerable", 0.05, 1);
-							e4.add(ViaVulnerable);
-							a.addEffects(e4);
-							a.applyEffects();
+							a.vulnerable(0.05, 1);
 							if (p.ultActive()) {
 								a.takeDamage(175);
 								p.addDamage(175);
@@ -8804,11 +5135,7 @@ public class GameSim {
 						if (p.getLoc().eqLoc(z.getLoc())) {
 							z.knockbacked(new Location(p.getLoc().getX() + hor, p.getLoc().getY() + ver));
 							bumped = true;
-							ArrayList<Effect> e4 = new ArrayList<Effect>();
-							Effect ViaVulnerable = new Effect("vulnerable", 0.05, 1);
-							e4.add(ViaVulnerable);
-							z.addEffects(e4);
-							z.applyEffects();
+							z.vulnerable(0.05, 1);
 							if (p.ultActive()) {
 								z.takeDamage(175);
 								p.addDamage(175);
@@ -8817,11 +5144,7 @@ public class GameSim {
 						if (p.getLoc().eqLoc(c.getLoc())) {
 							c.knockbacked(new Location(p.getLoc().getX() + hor, p.getLoc().getY() + ver));
 							bumped = true;
-							ArrayList<Effect> e4 = new ArrayList<Effect>();
-							Effect ViaVulnerable = new Effect("vulnerable", 0.05, 1);
-							e4.add(ViaVulnerable);
-							c.addEffects(e4);
-							c.applyEffects();
+							c.vulnerable(0.05, 1);
 							if (p.ultActive()) {
 								c.takeDamage(175);
 								p.addDamage(175);
@@ -8855,6 +5178,12 @@ public class GameSim {
 						p.resetCover();
 					}
 				}
+				for(int q = 0; q < GameSim.utility.size(); q++) {
+					if(GameSim.utility.get(q).getName().equals("Peri") && GameSim.utility.get(q).isAlly(p) && p.getLoc().eqLoc(GameSim.utility.get(q).getLoc()) && p.getCover().equals("None")) {
+						p.setCover("Partial");
+						break;
+					}
+				}
 				for(int i = 0; i < utility.size(); i++) {
 					if(p.getLoc().eqLoc(utility.get(i).getLoc())) {
 						if(utility.get(i).getName().equals("Swiftwing") && utility.get(i).owner(p) && !utility.get(i).getPickUp()) {
@@ -8882,6 +5211,16 @@ public class GameSim {
 							}
 							break;
 						}
+						if(utility.get(i).getName().equals("Spirit") && utility.get(i).owner(p) && !utility.get(i).getPickUp()) {
+							utility.get(i).pickedUp();
+							p.pickupSpirit();
+							break;
+						}
+						if(utility.get(i).getName().equals("Butterfly") && utility.get(i).isEnemy(p) && !utility.get(i).getPickUp()) {
+							utility.get(i).pickedUp();
+							p.poison(0.2, 1);
+							break;
+						}
 						if(utility.get(i).getName().equals("Crane") && utility.get(i).isAlly(p) && !utility.get(i).getPickUp()) {
 							System.out.println("Got a crane!");
 							utility.get(i).getOwner().increaseDPSNum(5);
@@ -8890,11 +5229,7 @@ public class GameSim {
 						}
 						if(utility.get(i).getName().equals("Nebula") && utility.get(i).isEnemy(p) && !utility.get(i).getPickUp()) {
 							p.takeDamage(50);
-							ArrayList<Effect> e2 = new ArrayList<Effect>();
-							Effect RoccoParalyze = new Effect("blind", 0.05, 1);
-							e2.add(RoccoParalyze);
-							p.addEffects(e2);
-							p.applyEffects();
+							p.blind(0.05, 1);
 							utility.get(i).getOwner().addDamage(50);
 							utility.get(i).pickedUp();
 							break;
@@ -9005,6 +5340,9 @@ public class GameSim {
 			e = 6;
 			d = 0;
 		}
+		if(turns2 >= 15) {
+			e = 10;
+		}
 		if (reduceSpawn) {
 			d = d / 2;
 			e = e / 2;
@@ -9114,13 +5452,9 @@ public class GameSim {
 	}
 	
 	public static void LunarAbility(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect LunarPower = new Effect("power", 0.3, 2);
+		p.power(0.2, 2);
 		p.heal(0.2);
 		p.addHealing(p.getMaxHP() * 0.2);
-		e.add(LunarPower);
-		p.addEffects(e);
-		p.applyEffects();
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -9168,19 +5502,12 @@ public class GameSim {
 	
 	public static void SolarAttack(Player p, Player a) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SolarIgnite = new Effect("ignite", 0, 2);
-		e.add(SolarIgnite);
-		a.addEffects(e);
+		a.ignite(2);
 		System.out.println();
 	}
 	
 	public static void SolarAbility(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SolarProtect = new Effect("protect", 0.5, 3);
-		e.add(SolarProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.5, 2);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -9188,15 +5515,6 @@ public class GameSim {
 	
 	public static void SolarUltimate(Player p, Player a, Player b, Player c) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SolarIgnite = new Effect("ignite", 0, 2);
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		Effect SolarIgnite2 = new Effect("ignite", 0, 2);
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect SolarIgnite3 = new Effect("ignite", 0, 2);
-		e.add(SolarIgnite);
-		e2.add(SolarIgnite2);
-		e3.add(SolarIgnite3);
 		System.out.println("1: " + a.getName() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP());
 		System.out.println("2: " + b.getName() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP());
 		System.out.println("3: " + c.getName() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP());
@@ -9205,12 +5523,9 @@ public class GameSim {
 		if(targetResponse.equals("1")) {
 			a.takeDamage(700);
 			p.addDamage(700);
-			a.addEffects(e);
-			a.applyEffects();
-			b.addEffects(e2);
-			b.applyEffects();
-			c.addEffects(e3);
-			c.applyEffects();
+			a.ignite(2);
+			b.ignite(2);
+			c.ignite(2);
 			p.heal(0.2);
 			p.addHealing(p.getMaxHP() * 0.2);
 			p.resetUlt();
@@ -9218,12 +5533,9 @@ public class GameSim {
 		if(targetResponse.equals("2")) {
 			b.takeDamage(700);
 			p.addDamage(700);
-			b.addEffects(e);
-			b.applyEffects();
-			a.addEffects(e2);
-			a.applyEffects();
-			c.addEffects(e3);
-			c.applyEffects();
+			a.ignite(2);
+			b.ignite(2);
+			c.ignite(2);
 			p.heal(0.2);
 			p.addHealing(p.getMaxHP() * 0.2);
 			p.resetUlt();
@@ -9231,12 +5543,9 @@ public class GameSim {
 		if(targetResponse.equals("3")) {
 			c.takeDamage(700);
 			p.addDamage(700);
-			c.addEffects(e);
-			c.applyEffects();
-			a.addEffects(e2);
-			a.applyEffects();
-			b.addEffects(e3);
-			b.applyEffects();
+			a.ignite(2);
+			b.ignite(2);
+			c.ignite(2);
 			p.heal(0.2);
 			p.addHealing(p.getMaxHP() * 0.2);
 			p.resetUlt();
@@ -9250,11 +5559,7 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect MackDaze = new Effect("daze", 0, 1);
-			e.add(MackDaze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.daze(1);
 		}
 		System.out.println();
 	}
@@ -9303,11 +5608,7 @@ public class GameSim {
 			p.resetAttack();
 			double rand = Math.random();
 			if(rand <= 0.1) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect MackDaze = new Effect("daze", 0, 1);
-				e.add(MackDaze);
-				a.addEffects(e);
-				a.applyEffects();
+				a.daze(1);
 			}
 		}
 		if(p.inRange(b)) {
@@ -9315,11 +5616,7 @@ public class GameSim {
 			p.resetAttack();
 			double rand = Math.random();
 			if(rand <= 0.1) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect MackDaze = new Effect("daze", 0, 1);
-				e.add(MackDaze);
-				b.addEffects(e);
-				b.applyEffects();
+				b.daze(1);
 			}
 		}
 		if(p.inRange(c)) {
@@ -9327,11 +5624,7 @@ public class GameSim {
 			p.resetAttack();
 			double rand = Math.random();
 			if(rand <= 0.1) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect MackDaze = new Effect("daze", 0, 1);
-				e.add(MackDaze);
-				c.addEffects(e);
-				c.applyEffects();
+				c.daze(1);
 			}
 		}
 		p.setCooldown(3);
@@ -9341,14 +5634,9 @@ public class GameSim {
 	}
 	
 	public static void MackUltimate(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MackProtect = new Effect("protect", 0.3, 4);
-		Effect MackPower = new Effect("power", 0.4, 3);
 		p.setSights(3);
-		e.add(MackPower);
-		e.add(MackProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.power(0.4, 3);
+		p.protect(0.3, 3);
 		p.resetUlt();
 		System.out.println("\"Dalton! Rip them apart!\"");
 		System.out.println();
@@ -9478,56 +5766,29 @@ public class GameSim {
 	
 	public static void CherryAbility(Player p, Player a, Player b, Player c) {
 		if(p.ultActive()) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			ArrayList<Effect> e2 = new ArrayList<Effect>();
-			ArrayList<Effect> e3 = new ArrayList<Effect>();
-			Effect CherryWeaken = new Effect("weak", 0.4, 1);
-			Effect CherryWeaken2 = new Effect("weak", 0.4, 1);
-			Effect CherryWeaken3 = new Effect("weak", 0.4, 1);
-			Effect CherryDaze = new Effect("daze", 0, 1);
-			Effect CherryDaze2 = new Effect("daze", 0, 1);
-			Effect CherryDaze3 = new Effect("daze", 0, 1);
-			e.add(CherryWeaken);
-			e.add(CherryDaze);
-			e2.add(CherryWeaken2);
-			e2.add(CherryDaze2);
-			e3.add(CherryWeaken3);
-			e3.add(CherryDaze3);
-			a.addEffects(e);
-			a.applyEffects();
-			b.addEffects(e2);
-			b.applyEffects();
-			c.addEffects(e3);
-			c.applyEffects();
+			a.weak(0.4, 1);
+			a.daze(1);
+			b.weak(0.4, 1);
+			b.daze(1);
+			c.weak(0.4, 1);
+			c.daze(1);
 			p.setCooldown(3);
 			System.out.println(p.voiceline());
 			System.out.println();
 		}else {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			ArrayList<Effect> e2 = new ArrayList<Effect>();
-			ArrayList<Effect> e3 = new ArrayList<Effect>();
-			Effect CherryWeaken = new Effect("weak", 0.3, 1);
-			Effect CherryWeaken2 = new Effect("weak", 0.3, 1);
-			Effect CherryWeaken3 = new Effect("weak", 0.3, 1);
-			e.add(CherryWeaken);
-			e2.add(CherryWeaken2);
-			e3.add(CherryWeaken3);
 			if(!a.inRange(p, 15) && !b.inRange(p, 15) && !c.inRange(p, 15)) {
 				System.out.println("No targets in range!");
 				System.out.println();
 				return;
 			}
 			if(a.inRange(p, 15)) {
-				a.addEffects(e);
-				a.applyEffects();
+				a.weak(0.3, 1);
 			}
 			if(b.inRange(p, 15)) {
-				b.addEffects(e2);
-				b.applyEffects();
+				b.weak(0.3, 1);
 			}
 			if(c.inRange(p, 15)) {
-				c.addEffects(e3);
-				c.applyEffects();
+				c.weak(0.3, 1);
 			}
 			p.setCooldown(3);
 			System.out.println(p.voiceline());
@@ -9538,33 +5799,24 @@ public class GameSim {
 	public static void CherryUltimate(Player p) {
 		p.setUlt();
 		p.setMaxHP(3300);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 1, 100);
-		e.add(MidnitePower);
-		p.addEffects(e);
-		p.applyEffects();
+		p.power(1, 100);
 		System.out.println("\"We fight on my terms now!\"");
 		System.out.println();
 	}
 	
 	public static void FinleyAttack(Player p, Player a) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect FinleyStun = new Effect("stun", 0, 1);
-		e.add(FinleyStun);
 		if(a.inRange(p, 2)) {
 			p.attack(a);
 			p.resetAttack();
 			p.attack(a);
 			double rand = Math.random();
 			if(rand <= 0.1) {
-				a.addEffects(e);
-				a.applyEffects();
+				a.stun(1);
 			}
 		}else {
 			double rand = Math.random();
 			if(rand <= 0.05) {
-				a.addEffects(e);
-				a.applyEffects();
+				a.stun(1);
 			}
 			p.attack(a);
 		}
@@ -9573,15 +5825,6 @@ public class GameSim {
 	
 	public static void FinleyAbility(Player p, Player a, Player b, Player c) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect FinleyVulnerable = new Effect("vulnerable", 0.1, 1);
-		Effect FinleyVulnerable2 = new Effect("vulnerable", 0.1, 1);
-		Effect FinleyVulnerable3 = new Effect("vulnerable", 0.1, 1);
-		e.add(FinleyVulnerable);
-		e2.add(FinleyVulnerable2);
-		e3.add(FinleyVulnerable3);
 		if(!p.inRange(a, 20) && !p.inRange(b, 20) && !p.inRange(c, 20)) {
 			System.out.println("No targets in range!");
 			System.out.println();
@@ -9608,19 +5851,16 @@ public class GameSim {
 			if(p.inRange(a, 20)) {
 				a.takeDamage(200);
 				p.addDamage(200);
-				a.addEffects(e);
-				a.applyEffects();
+				a.vulnerable(0.1, 1);
 				if(b.inRange(a, 3)) {
 					b.takeDamage(200);
 					p.addDamage(200);
-					b.addEffects(e2);
-					b.applyEffects();
+					b.vulnerable(0.1, 1);
 				}
 				if(c.inRange(a, 3)) {
 					c.takeDamage(200);
 					p.addDamage(200);
-					c.addEffects(e3);
-					c.applyEffects();
+					c.vulnerable(0.1, 1);
 				}
 				p.setCooldown(3);
 			}else {
@@ -9633,19 +5873,16 @@ public class GameSim {
 			if(p.inRange(b, 20)) {
 				b.takeDamage(200);
 				p.addDamage(200);
-				b.addEffects(e);
-				b.applyEffects();
+				b.vulnerable(0.1, 1);
 				if(a.inRange(b, 3)) {
 					a.takeDamage(200);
 					p.addDamage(200);
-					a.addEffects(e2);
-					a.applyEffects();
+					a.vulnerable(0.1, 1);
 				}
 				if(c.inRange(b, 3)) {
 					c.takeDamage(200);
 					p.addDamage(200);
-					c.addEffects(e3);
-					c.applyEffects();
+					c.vulnerable(0.1, 1);
 				}
 				p.setCooldown(3);
 			}else {
@@ -9658,19 +5895,16 @@ public class GameSim {
 			if(p.inRange(c, 20)) {
 				c.takeDamage(200);
 				p.addDamage(200);
-				c.addEffects(e2);
-				c.applyEffects();
+				c.vulnerable(0.1, 1);
 				if(a.inRange(c, 3)) {
 					a.takeDamage(200);
 					p.addDamage(200);
-					a.addEffects(e);
-					a.applyEffects();
+					a.vulnerable(0.1, 1);
 				}
 				if(b.inRange(c, 3)) {
 					b.takeDamage(200);
 					p.addDamage(200);
-					b.addEffects(e3);
-					b.applyEffects();
+					b.vulnerable(0.1, 1);
 				}
 				p.setCooldown(3);
 			}else {
@@ -9720,11 +5954,7 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.15) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("paralyze", 0, 1);
-			e.add(BurtParalyze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.paralyze(1);
 		}
 		System.out.println();
 	}
@@ -9737,6 +5967,8 @@ public class GameSim {
 		e.add(BurtReflect);
 		p.addEffects(e);
 		p.applyEffects();
+		p.protect(0.5, 1);
+		p.reflect(1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -9779,13 +6011,8 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BoloParalyze = new Effect("paralyze", 0, 1);
-			Effect BoloIgnite = new Effect("ignite", 0, 1);
-			e.add(BoloParalyze);
-			e.add(BoloIgnite);
-			a.addEffects(e);
-			a.applyEffects();
+			a.paralyze(1);
+			a.ignite(1);
 		}
 		System.out.println();
 	}
@@ -9895,23 +6122,16 @@ public class GameSim {
 	public static void DylanAttack(Player p, Player a) {
 		System.out.println();
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect DylanIgnite = new Effect("ignite", 0, 1);
-		Effect DylanFreeze = new Effect("freeze", 0, 1);
 		System.out.print("Would you like to use fire or ice: ");
 		String attackResponse = input.next();
 		if(attackResponse.equals("f")) {
 			p.attack(a);
-			e.add(DylanIgnite);
-			a.addEffects(e);
-			a.applyEffects();
+			a.ignite(1);
 		}else {
 			p.attack(a);
 			double rand = Math.random();
 			if(rand <= 0.4) {
-				e.add(DylanFreeze);
-				a.addEffects(e);
-				a.applyEffects();
+				a.freeze(1);
 			}
 		}
 		System.out.println();
@@ -9919,9 +6139,6 @@ public class GameSim {
 	
 	public static void DylanAbility(Player p, Player a, Player b, Player c) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect DylanVulnerable = new Effect("vulnerable", 0.1, 1);
-		e.add(DylanVulnerable);
 		if(!p.inRange(a, 15) && !p.inRange(b, 15) && !p.inRange(c, 15)) {
 			System.out.println("No targets in range!");
 			System.out.println();
@@ -9948,8 +6165,7 @@ public class GameSim {
 			if(p.inRange(a)) {
 				a.takeDamage(350);
 				p.addDamage(350);
-				a.addEffects(e);
-				a.applyEffects();
+				a.vulnerable(0.1, 1);
 				if (a.isIgnite() || a.isFreezed()) {
 					a.takeDamage(100);
 					p.addDamage(100);
@@ -9965,8 +6181,7 @@ public class GameSim {
 			if(p.inRange(b)) {
 				b.takeDamage(350);
 				p.addDamage(350);
-				b.addEffects(e);
-				b.applyEffects();
+				b.vulnerable(0.1, 1);
 				if (b.isIgnite() || b.isFreezed()) {
 					b.takeDamage(100);
 					p.addDamage(100);
@@ -9982,8 +6197,7 @@ public class GameSim {
 			if(p.inRange(c)) {
 				c.takeDamage(350);
 				p.addDamage(350);
-				c.addEffects(e);
-				c.applyEffects();
+				c.vulnerable(0.1, 1);
 				if (c.isIgnite() || c.isFreezed()) {
 					c.takeDamage(100);
 					p.addDamage(100);
@@ -10000,42 +6214,15 @@ public class GameSim {
 	}
 	
 	public static void DylanUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect DylanPower = new Effect("power", 0.25, 1);
-		Effect DylanPower2 = new Effect("power", 0.25, 1);
-		Effect DylanPower3 = new Effect("power", 0.25, 1);
-		e1.add(DylanPower);
-		e2.add(DylanPower2);
-		e3.add(DylanPower3);
-		p.addEffects(e1);
-		p.applyEffects();
-		d.addEffects(e2);
-		d.applyEffects();
-		e.addEffects(e3);
-		e.applyEffects();
-		ArrayList<Effect> e12 = new ArrayList<Effect>();
-		ArrayList<Effect> e22 = new ArrayList<Effect>();
-		ArrayList<Effect> e32 = new ArrayList<Effect>();
-		Effect DylanIgnite = new Effect("ignite", 0, 2);
-		Effect DylanIgnite2 = new Effect("ignite", 0, 2);
-		Effect DylanIgnite3 = new Effect("ignite", 0, 2);
-		Effect DylanFreeeze = new Effect("freeze", 0, 1);
-		Effect DylanFreeeze2 = new Effect("freeze", 0, 1);
-		Effect DylanFreeeze3 = new Effect("freeze", 0, 1);
-		e12.add(DylanIgnite);
-		e12.add(DylanFreeeze);
-		e22.add(DylanIgnite2);
-		e22.add(DylanFreeeze2);
-		e32.add(DylanIgnite3);
-		e32.add(DylanFreeeze3);
-		a.addEffects(e12);
-		a.applyEffects();
-		b.addEffects(e22);
-		b.applyEffects();
-		c.addEffects(e32);
-		c.applyEffects();
+		p.power(0.25, 1);
+		d.power(0.25, 1);
+		e.power(0.25, 1);
+		a.ignite(2);
+		a.freeze(1);
+		b.ignite(2);
+		b.freeze(1);
+		c.ignite(2);
+		c.freeze(1);
 		p.resetUlt();
 		System.out.println("\"Rolling a Nat20 is your only hope now!\"");
 		System.out.println();
@@ -10059,15 +6246,6 @@ public class GameSim {
 	}
 	
 	public static void ZeroAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ZeroPower = new Effect("power", 0.1, 1);
-		Effect ZeroPower2 = new Effect("power", 0.1, 1);
-		Effect ZeroPower3 = new Effect("power", 0.1, 1);
-		e.add(ZeroPower);
-		e2.add(ZeroPower2);
-		e3.add(ZeroPower3);
 		p.cleanse();
 		a.cleanse();
 		b.cleanse();
@@ -10077,12 +6255,9 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.1);
 		p.addHealing(a.getMaxHP() * 0.1);
 		p.addHealing(b.getMaxHP() * 0.1);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.power(0.1, 1);
+		a.power(0.1, 1);
+		b.power(0.1, 1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -10164,15 +6339,10 @@ public class GameSim {
 	
 	public static void MaxAbility(Player p, Player a, Player b) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxPower = new Effect("power", 0.3, 1);
-		Effect MaxProtect = new Effect("protect", 0.2, 2);
-		e.add(MaxPower);
-		e.add(MaxProtect);
 		if(!a.isAlive() && !b.isAlive()) {
 			p.cleanse();
-			p.addEffects(e);
-			p.applyEffects();
+			p.power(0.3, 1);
+			p.protect(0.2, 1);
 			p.setCooldown(3);
 			System.out.println("\"Finally, I can start thinking about myself.\"");
 			System.out.println();
@@ -10184,14 +6354,14 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			a.cleanse();
-			a.addEffects(e);
-			a.applyEffects();
+			a.power(0.3, 1);
+			a.protect(0.2, 1);
 			p.setCooldown(3);
 		}
 		if(targetResponse.equals("2")) {
 			b.cleanse();
-			b.addEffects(e);
-			b.applyEffects();
+			b.power(0.3, 1);
+			b.protect(0.2, 1);
 			p.setCooldown(3);
 		}
 		System.out.println(p.voiceline());
@@ -10220,21 +6390,9 @@ public class GameSim {
 			p.addDamage(750);
 			p.resetUlt();
 		}
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect MaxParalyze = new Effect("paralyze", 0, 2);
-		Effect MaxParalyze2 = new Effect("paralyze", 0, 2);
-		Effect MaxParalyze3 = new Effect("paralyze", 0, 2);
-		e.add(MaxParalyze);
-		e2.add(MaxParalyze2);
-		e3.add(MaxParalyze3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.paralyze(2);
+		b.paralyze(2);
+		c.paralyze(2);
 		System.out.println();
 		System.out.println("\"You will fail like my creation did!\"");
 		System.out.println();
@@ -10243,11 +6401,6 @@ public class GameSim {
 	public static void EliAttack(Player p, Player a) {
 		System.out.println();
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect EliFreeze = new Effect("freeze", 0, 1);
-		Effect EliParalyze = new Effect("paralyze", 0, 1);
-		Effect EliVulnerable = new Effect("vulnerable", 0.25, 2);
-		Effect EliBlind = new Effect("blind", 0.3, 2);
 		System.out.println("1: Little Buddy");
 		System.out.println("2: Medium Buddy");
 		System.out.println("3: Big Buddy");
@@ -10256,83 +6409,53 @@ public class GameSim {
 		if(targetResponse.equals("1")) {
 			p.attack(a);
 			double rand = Math.random();
-			if(rand <= 0.1) {
-				e.add(EliParalyze);
-				e.add(EliFreeze);
-				a.addEffects(e);
-				a.applyEffects();
+			if(rand <= 0.2) {
+				a.paralyze(1);
+				a.freeze(1);
 			}
 		}
 		if(targetResponse.equals("2")) {
 			p.attack(a);
 			double rand = Math.random();
-			if(rand <= 0.15) {
-				e.add(EliVulnerable);
-				a.addEffects(e);
-				a.applyEffects();
+			if(rand <= 0.2) {
+				a.vulnerable(0.25, 2);
 			}
 		}
 		if(targetResponse.equals("3")) {
 			p.attack(a);
 			double rand = Math.random();
-			if(rand <= 0.15) {
-				e.add(EliBlind);
-				a.addEffects(e);
-				a.applyEffects();
+			if(rand <= 0.2) {
+				a.blind(0.3, 2);
 			}
 		}
 		System.out.println();
 	}
 	
 	public static void EliAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect EliRegen = new Effect("heal", 0.15, 2);
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		Effect EliRegen2 = new Effect("heal", 0.15, 2);
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect EliRegen3 = new Effect("heal", 0.15, 2);
 		p.addHealing(p.getMaxHP() * 0.3);
 		p.addHealing(a.getMaxHP() * 0.3);
 		p.addHealing(b.getMaxHP() * 0.3);
-		e.add(EliRegen);
-		e2.add(EliRegen2);
-		e3.add(EliRegen3);
-		p.addEffects(e);
-		a.addEffects(e2);
-		b.addEffects(e3);
+		p.regen(0.15, 2);
+		a.regen(0.15, 2);
+		b.regen(0.15, 2);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
 	
 	public static void EliUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect EliRegen = new Effect("heal", 0.2, 2);
-		Effect EliPower = new Effect("power", 0.35, 1);
-		Effect EliRegen2 = new Effect("heal", 0.2, 2);
-		Effect EliPower2 = new Effect("power", 0.35, 1);
-		Effect EliRegen3 = new Effect("heal", 0.2, 2);
-		Effect EliPower3 = new Effect("power", 0.35, 1);
-		p.addHealing(p.getMaxHP() * 0.8);
-		p.addHealing(a.getMaxHP() * 0.8);
-		p.addHealing(b.getMaxHP() * 0.8);
-		e.add(EliRegen);
-		e.add(EliPower);
-		e2.add(EliRegen2);
-		e2.add(EliPower2);
-		e3.add(EliRegen3);
-		e3.add(EliPower3);
+		p.addHealing(p.getMaxHP() * 0.4);
+		p.addHealing(a.getMaxHP() * 0.4);
+		p.addHealing(b.getMaxHP() * 0.4);
 		p.cleanse();
 		a.cleanse();
 		b.cleanse();
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.power(0.35, 1);
+		p.regen(0.2, 2);
+		a.power(0.35, 1);
+		a.regen(0.2, 2);
+		b.power(0.35, 1);
+		b.regen(0.2, 2);
 		p.resetUlt();
 		System.out.println("\"Time to make a splash!\"");
 		System.out.println();
@@ -10342,11 +6465,7 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect ViaParalyze = new Effect("paralyze", 0, 1);
-			e.add(ViaParalyze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.paralyze(1);
 		}
 		Location l = a.getLoc();
 		Location ln = new Location(l.getX() + 3, l.getY());
@@ -10377,29 +6496,17 @@ public class GameSim {
 		}
 		if(a.inRange(l, 8) && a.isAlive() && !a.isFortified()) {
 			a.getLoc().set(l.getX(), l.getY());
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
-			e.add(ViaVulnerable);
-			a.addEffects(e);
-			a.applyEffects();
+			a.vulnerable(0.1, 1);
 			a.resetCover();
 		}
 		if(b.inRange(l, 8) && b.isAlive() && !b.isFortified()) {
 			b.getLoc().set(l.getX(), l.getY());
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
-			e.add(ViaVulnerable);
-			b.addEffects(e);
-			b.applyEffects();
+			b.vulnerable(0.1, 1);
 			b.resetCover();
 		}
 		if(c.inRange(l, 8) && c.isAlive() && !c.isFortified()) {
 			c.getLoc().set(l.getX(), l.getY());
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect ViaVulnerable = new Effect("vulnerable", 0.1, 1);
-			e.add(ViaVulnerable);
-			c.addEffects(e);
-			c.applyEffects();
+			c.vulnerable(0.1, 1);
 			c.resetCover();
 		}
 		p.setCooldown(4);
@@ -10409,32 +6516,13 @@ public class GameSim {
 	}
 	
 	public static void ViaUltimate(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> d = new ArrayList<Effect>();
-		Effect e4 = new Effect("power", 0.5, 1);
-		d.add(e4);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ViaParalyze = new Effect("paralyze", 0, 2);
-		Effect ViaParalyze2 = new Effect("paralyze", 0, 2);
-		Effect ViaParalyze3 = new Effect("paralyze", 0, 2);
-		Effect ViaDaze = new Effect("daze", 0, 2);
-		Effect ViaDaze2 = new Effect("daze", 0, 2);
-		Effect ViaDaze3 = new Effect("daze", 0, 2);
-		e.add(ViaParalyze);
-		e2.add(ViaParalyze2);
-		e3.add(ViaParalyze3);
-		e.add(ViaDaze);
-		e2.add(ViaDaze2);
-		e3.add(ViaDaze3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
-		p.addEffects(d);
-		p.applyEffects();
+		p.power(0.5, 1);
+		a.paralyze(2);
+		a.daze(2);
+		b.paralyze(2);
+		b.daze(2);
+		c.paralyze(2);
+		c.daze(2);
 		p.resetUlt();
 		System.out.println("\"Killer Wail incoming!\"");
 		System.out.println();
@@ -10450,39 +6538,24 @@ public class GameSim {
 	
 	public static void LouisAbility(Player p, Player a, Player b, Player c) {
 		Location l = p.getLoc();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LouisVulnerable = new Effect("vulnerable", 0.2, 1);
-		Effect LouisVulnerable2 = new Effect("vulnerable", 0.2, 1);
-		Effect LouisVulnerable3 = new Effect("vulnerable", 0.2, 1);
-		Effect LouisFreeze = new Effect("freeze", 0, 1);
-		Effect LouisFreeze2 = new Effect("freeze", 0, 1);
-		Effect LouisFreeze3 = new Effect("freeze", 0, 1);
-		e.add(LouisFreeze);
-		e2.add(LouisFreeze2);
-		e3.add(LouisFreeze3);
-		e.add(LouisVulnerable);
-		e2.add(LouisVulnerable2);
-		e3.add(LouisVulnerable3);
 		if(!a.inRange(p) && !b.inRange(p) && !c.inRange(p)) {
 			System.out.println("No targets in range!");
 			System.out.println();
 			return;
 		}
 		if(a.inRange(l)) {
-			a.addEffects(e);
-			a.applyEffects();
+			a.freeze(1);
+			a.vulnerable(0.2, 1);
 			a.knockbacked(p.getLoc());
 		}
 		if(b.inRange(l)) {
-			b.addEffects(e2);
-			b.applyEffects();
+			b.freeze(1);
+			b.vulnerable(0.2, 1);
 			b.knockbacked(p.getLoc());
 		}
 		if(c.inRange(l)) {
-			c.addEffects(e3);
-			c.applyEffects();
+			c.freeze(1);
+			c.vulnerable(0.2, 1);
 			c.knockbacked(p.getLoc());
 		}
 		p.setCooldown(3);
@@ -10521,9 +6594,6 @@ public class GameSim {
 	}
 	
 	public static void AlexAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
 		ArrayList<Integer> list = new ArrayList<Integer>();
         for (int i=1; i<6; i++) list.add(i);
         Collections.shuffle(list);
@@ -10544,36 +6614,21 @@ public class GameSim {
         		b.cleanse();
         	}
         	if(list.get(i) == 3) {
-        		Effect AlexRefine = new Effect("refine", 0, 2);
-        		Effect AlexRefine2 = new Effect("refine", 0, 2);
-        		Effect AlexRefine3 = new Effect("refine", 0, 2);
-        		e.add(AlexRefine);
-        		e2.add(AlexRefine2);
-        		e3.add(AlexRefine3);
+        		p.refine(2);
+        		a.refine(2);
+        		b.refine(2);
         	}
         	if(list.get(i) == 4) {
-        		Effect AlexRefine = new Effect("power", 0.1, 2);
-        		Effect AlexRefine2 = new Effect("power", 0.1, 2);
-        		Effect AlexRefine3 = new Effect("power", 0.1, 2);
-        		e.add(AlexRefine);
-        		e2.add(AlexRefine2);
-        		e3.add(AlexRefine3);
+        		p.power(0.1, 2);
+        		a.power(0.1, 2);
+        		b.power(0.1, 2);
         	}
         	if(list.get(i) == 5) {
-        		Effect AlexRefine = new Effect("protect", 0.2, 3);
-        		Effect AlexRefine2 = new Effect("protect", 0.2, 3);
-        		Effect AlexRefine3 = new Effect("protect", 0.2, 3);
-        		e.add(AlexRefine);
-        		e2.add(AlexRefine2);
-        		e3.add(AlexRefine3);
+        		p.protect(0.2, 2);
+        		a.protect(0.2, 2);
+        		b.protect(0.2, 2);
         	}
         }
-        p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
         p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -10581,11 +6636,7 @@ public class GameSim {
 	
 	public static void AlexUltimate(Player p) {
 		p.setUlt();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AlexProtect = new Effect("protect", 0.35, 30);
-		e.add(AlexProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.35, 100);
 		System.out.println("\"I always come back.\"");
 		System.out.println();
 	}
@@ -10613,11 +6664,7 @@ public class GameSim {
 		}
 		double rand = Math.random();
 		if(rand <= 0.15) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect OrionDaze = new Effect("daze", 0, 1);
-			e.add(OrionDaze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.daze(1);
 		}
 		System.out.println();
 	}
@@ -10649,27 +6696,12 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.15);
 		p.addHealing(a.getMaxHP() * 0.15);
 		p.addHealing(b.getMaxHP() * 0.15);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect OrionProtect = new Effect("protect", 0.35, 2);
-		Effect OrionProtect2 = new Effect("protect", 0.35, 2);
-		Effect OrionProtect3 = new Effect("protect", 0.35, 2);
-		Effect OrionPower = new Effect("power", 0.25, 1);
-		Effect OrionPower2 = new Effect("power", 0.25, 1);
-		Effect OrionPower3 = new Effect("power", 0.25, 1);
-		e.add(OrionProtect);
-		e2.add(OrionProtect2);
-		e3.add(OrionProtect3);
-		e.add(OrionPower);
-		e2.add(OrionPower2);
-		e3.add(OrionPower3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.protect(0.35, 1);
+		p.power(0.25, 1);
+		a.protect(0.35, 1);
+		a.power(0.25, 1);
+		b.protect(0.35, 1);
+		b.power(0.25, 1);
 		p.resetUlt();
 		System.out.println("\"Show them that we aren't backing down!\"");
 		System.out.println();
@@ -10679,11 +6711,7 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.15) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect MackDaze = new Effect("daze", 0, 1);
-			e.add(MackDaze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.daze(1);
 		}
 		System.out.println();
 	}
@@ -10764,11 +6792,7 @@ public class GameSim {
 		c.takeDamage(550);
 		p.addDamage(550);
 		c.knockbacked(c.getLoc());
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect KailaniProtect = new Effect("protect", 0.25, 3);
-		e.add(KailaniProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.25, 2);
 		p.resetUlt();
 		System.out.println("\"Flood their victory out of here!\"");
 		System.out.println();
@@ -10776,11 +6800,7 @@ public class GameSim {
 	
 	public static void AshleyAttack(Player p, Player a) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AshleyPoison = new Effect("poison", 0.35, 1);
-		e.add(AshleyPoison);
-		a.addEffects(e);
-		a.applyEffects();
+		a.poison(0.35, 1);
 		System.out.println();
 	}
 	
@@ -10794,75 +6814,33 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.15);
 		p.addHealing(d.getMaxHP() * 0.15);
 		p.addHealing(e.getMaxHP() * 0.15);
-		ArrayList<Effect> f = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("weak", 0.15, 1);
-		Effect CherryWeaken2 = new Effect("weak", 0.15, 1);
-		Effect CherryWeaken3 = new Effect("weak", 0.15, 1);
-		f.add(CherryWeaken);
-		e2.add(CherryWeaken2);
-		e3.add(CherryWeaken3);
-		a.addEffects(f);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.weak(0.15, 1);
+		b.weak(0.15, 1);
+		c.weak(0.15, 1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
 	
 	public static void AshleyUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		ArrayList<Effect> e4 = new ArrayList<Effect>();
-		ArrayList<Effect> e5 = new ArrayList<Effect>();
-		ArrayList<Effect> e6 = new ArrayList<Effect>();
-		Effect EliPower = new Effect("power", 0.15, 2);
-		Effect EliPower2 = new Effect("power", 0.15, 2);
-		Effect EliPower3 = new Effect("power", 0.15, 2);
-		Effect AshleyProtect = new Effect("protect", 0.1, 3);
-		Effect AshleyProtect2 = new Effect("protect", 0.1, 3);
-		Effect AshleyProtect3 = new Effect("protect", 0.1, 3);
-		Effect AshleyPoison = new Effect("poison", 0.3, 2);
-		Effect AshleyPoison2 = new Effect("poison", 0.3, 2);
-		Effect AshleyPoison3 = new Effect("poison", 0.3, 2);
-		Effect AshleyBlind = new Effect("blind", 0.3, 2);
-		Effect AshleyBlind2 = new Effect("blind", 0.3, 2);
-		Effect AshleyBlind3 = new Effect("blind", 0.3, 2);
+		p.power(0.15, 2);
+		d.power(0.15, 2);
+		e.power(0.15, 2);
+		p.protect(0.1, 2);
+		d.protect(0.1, 2);
+		e.protect(0.1, 2);
+		a.poison(0.3, 2);
+		a.blind(0.3, 2);
+		b.poison(0.3, 2);
+		b.blind(0.3, 2);
+		c.poison(0.3, 2);
+		c.blind(0.3, 2);
 		p.heal(0.25);
 		d.heal(0.25);
 		e.heal(0.25);
 		p.addHealing(p.getMaxHP() * 0.25);
 		p.addHealing(d.getMaxHP() * 0.25);
 		p.addHealing(e.getMaxHP() * 0.25);
-		e1.add(EliPower);
-		e1.add(AshleyProtect);
-		e5.add(EliPower2);
-		e5.add(AshleyProtect2);
-		e6.add(EliPower3);
-		e6.add(AshleyProtect3);
-		e2.add(AshleyPoison);
-		e2.add(AshleyBlind);
-		e3.add(AshleyPoison2);
-		e3.add(AshleyBlind2);
-		e4.add(AshleyPoison3);
-		e4.add(AshleyBlind3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
-		c.addEffects(e4);
-		c.applyEffects();
-		d.addEffects(e5);
-		d.applyEffects();
-		e.addEffects(e6);
-		e.applyEffects();
 		p.resetUlt();
 		System.out.println("\"The magical tree has our backs!\"");
 		System.out.println();
@@ -10904,11 +6882,7 @@ public class GameSim {
 	public static void BedrockAbility(Player p) {
 		p.heal(0.10);
 		p.addHealing(p.getMaxHP() * 0.10);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect BedrockProtect = new Effect("protect", 0.70, 2);
-		e.add(BedrockProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.7, 1);
 		p.setCooldown(4);
 		System.out.println("\"...\"");
 		System.out.println();
@@ -10916,80 +6890,43 @@ public class GameSim {
 	
 	public static void BedrockUltimate(Player p) {
 		p.setUlt();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AlexProtect = new Effect("sight", 1, 30);
-		e.add(AlexProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.sightsee(1, 100);
 		p.setMovement(9);
 		System.out.println("\"... ... ...!\"");
 		System.out.println();
 	}
 	
 	public static void RoccoAttack(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect RoccoBlind = new Effect("blind", 0.1, 1);
-		Effect RoccoBlind2 = new Effect("blind", 0.1, 1);
-		Effect RoccoBlind3 = new Effect("blind", 0.1, 1);
-		Effect RoccoIgnite = new Effect("ignite", 0, 1);
-		Effect RoccoIgnite2 = new Effect("ignite", 0, 1);
-		Effect RoccoIgnite3 = new Effect("ignite", 0, 1);
 		p.attack(a);
-		e.add(RoccoBlind);
-		e.add(RoccoIgnite);
-		e2.add(RoccoBlind2);
-		e2.add(RoccoIgnite2);
-		e3.add(RoccoBlind3);
-		e3.add(RoccoIgnite3);
-		a.addEffects(e);
-		a.applyEffects();
+		a.blind(0.1, 1);
+		a.ignite(1);
 		if(a.inRange(b, 5)) {
 			double rand = Math.random();
 			if(rand <= 0.1) {
-				b.addEffects(e2);
-				b.applyEffects();
+				b.blind(0.1, 1);
+				b.ignite(1);
 			}
 		}
 		if(a.inRange(c, 5)) {
 			double rand = Math.random();
 			if(rand <= 0.1) {
-				c.addEffects(e3);
-				c.applyEffects();
+				c.blind(0.1, 1);
+				c.ignite(1);
 			}
 		}
 		System.out.println();
 	}
 	
 	public static void RoccoAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LouisVulnerable = new Effect("vulnerable", 0.1, 1);
-		Effect LouisVulnerable2 = new Effect("vulnerable", 0.1, 1);
-		Effect LouisVulnerable3 = new Effect("vulnerable", 0.1, 1);
-		Effect LouisFreeze = new Effect("weak", 0.1, 1);
-		Effect LouisFreeze2 = new Effect("weak", 0.1, 1);
-		Effect LouisFreeze3 = new Effect("weak", 0.1, 1);
-		Effect RoccoParalyze = new Effect("paralyze", 0, 1);
-		Effect RoccoParalyze2 = new Effect("paralyze", 0, 1);
-		Effect RoccoParalyze3 = new Effect("paralyze", 0, 1);
-		e.add(LouisFreeze);
-		e2.add(LouisFreeze2);
-		e3.add(LouisFreeze3);
-		e.add(LouisVulnerable);
-		e2.add(LouisVulnerable2);
-		e3.add(LouisVulnerable3);
-		e.add(RoccoParalyze);
-		e2.add(RoccoParalyze2);
-		e3.add(RoccoParalyze3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.vulnerable(0.1, 1);
+		a.weak(0.1, 1);
+		a.paralyze(1);
+		b.vulnerable(0.1, 1);
+		b.weak(0.1, 1);
+		b.paralyze(1);
+		c.vulnerable(0.1, 1);
+		c.weak(0.1, 1);
+		c.paralyze(1);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -11066,11 +7003,7 @@ public class GameSim {
 		}
 		if(targetResponse.equals("1")) {
 			if(result.equals("draw")) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoIgnite = new Effect("poison", 0.5, 3);
-				e.add(RoccoIgnite);
-				a.addEffects(e);
-				a.applyEffects();
+				a.poison(0.5, 3);
 				System.out.println("You and Rocco tied.");
 				System.out.println("\"The poison trap is a classic. Good Choice!\"");
 				System.out.println();
@@ -11087,11 +7020,7 @@ public class GameSim {
 		}
 		if(targetResponse.equals("2")) {
 			if(result.equals("draw")) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoIgnite = new Effect("poison", 0.5, 3);
-				e.add(RoccoIgnite);
-				b.addEffects(e);
-				b.applyEffects();
+				b.poison(0.5, 3);
 				System.out.println("You and Rocco tied.");
 				System.out.println("\"The poison trap is a classic. Good Choice!\"");
 				System.out.println();
@@ -11109,11 +7038,7 @@ public class GameSim {
 		}
 		if(targetResponse.equals("3")) {
 			if(result.equals("draw")) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoIgnite = new Effect("poison", 0.5, 3);
-				e.add(RoccoIgnite);
-				c.addEffects(e);
-				c.applyEffects();
+				c.poison(0.5, 3);
 				System.out.println("\"The poison trap is a classic. Good Choice!\"");
 				System.out.println();
 				p.resetUlt();
@@ -11132,13 +7057,8 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.4) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect SammiIgnite = new Effect("ignite", 0, 1);
-			Effect SammiPoison = new Effect("poison", 0.3, 1);
-			e.add(SammiIgnite);
-			e.add(SammiPoison);
-			a.addEffects(e);
-			a.applyEffects();
+			a.ignite(1);
+			a.poison(0.3, 1);
 		}
 		System.out.println();
 	}
@@ -11153,16 +7073,10 @@ public class GameSim {
 	public static void SammiUltimate(Player p) {
 		p.setRange(200);
 		p.cleanse();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SammiPower = new Effect("power", 0.5, 2);
-		Effect SammiProtect = new Effect("protect", 0.3, 2);
-		Effect SammiRegen = new Effect("heal", 0.1, 2);
 		p.addHealing(p.getMaxHP() * 0.2);
-		e.add(SammiRegen);
-		e.add(SammiProtect);
-		e.add(SammiPower);
-		p.addEffects(e);
-		p.applyEffects();
+		p.power(0.5, 2);
+		p.protect(0.3, 2);
+		p.heal(0.1, 2);
 		p.resetUlt();
 		System.out.println("\"Locking in. It's over for them now.\"");
 		System.out.println();
@@ -11172,11 +7086,7 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.08) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("paralyze", 0, 1);
-			e.add(BurtParalyze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.paralyze(1);
 		}
 		System.out.println();
 	}
@@ -11191,15 +7101,11 @@ public class GameSim {
 	}
 	
 	public static void ClaraUltimate(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect ClaraProtect = new Effect("power", 0.25, 1);
-		e.add(ClaraProtect);
-		p.addEffects(e);
-		p.applyEffects();
 		p.increaseMovement(14);
 		p.addDashes(4);
 		p.addJumps(4);
 		p.setUlt();
+		p.power(0.25, 1);
 		p.resetUlt();
 		System.out.println("\"Hold on, let me cook.\"");
 		System.out.println();
@@ -11221,13 +7127,8 @@ public class GameSim {
 	
 	public static void ThunderAbility(Player p) {
 		p.setThunder(true);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect ThunderCounter = new Effect("counter", 0, 2);
-		Effect ThunderCounter2 = new Effect("protect", 0.5, 2);
-		e.add(ThunderCounter);
-		e.add(ThunderCounter2);
-		p.addEffects(e);
-		p.applyEffects();
+		p.counter(1);
+		p.protect(0.5, 1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -11266,9 +7167,6 @@ public class GameSim {
 	public static void AidanAttack(Player p, Player a) {
 		System.out.println();
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AidanParalyze = new Effect("paralyze", 0, 1);
-		Effect AidanDaze = new Effect("daze", 0, 1);
 		System.out.println("1: Striker Assault Rifle");
 		System.out.println("2: Frenzy Auto Shotgun");
 		System.out.println("3: Reaper Sniper Rifle");
@@ -11278,9 +7176,7 @@ public class GameSim {
 			p.attack(a);
 			double rand = Math.random();
 			if(rand <= 0.2) {
-				e.add(AidanDaze);
-				a.addEffects(e);
-				a.applyEffects();
+				a.daze(1);
 			}
 		}
 		if(targetResponse.equals("2")) {
@@ -11297,17 +7193,13 @@ public class GameSim {
 				p.addDamage(175);
 				double rand = Math.random();
 				if(rand <= 0.1) {
-					e.add(AidanParalyze);
-					a.addEffects(e);
-					a.applyEffects();
+					a.paralyze(1);
 				}
 			}else {
 				p.attack(a);
 				double rand = Math.random();
 				if(rand <= 0.1) {
-					e.add(AidanParalyze);
-					a.addEffects(e);
-					a.applyEffects();
+					a.paralyze(1);
 				}
 			}
 		}
@@ -11336,21 +7228,15 @@ public class GameSim {
 	}
 	
 	public static void AidanUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		ArrayList<Effect> e4 = new ArrayList<Effect>();
-		ArrayList<Effect> e5 = new ArrayList<Effect>();
-		ArrayList<Effect> e6 = new ArrayList<Effect>();
-		Effect AidanRefine = new Effect("refine", 0, 2);
-		Effect AidanRefine2 = new Effect("refine", 0, 2);
-		Effect AidanRefine3 = new Effect("refine", 0, 2);
-		Effect AidanVulnerable = new Effect("vulnerable", 0.1, 2);
-		Effect AidanVulnerable2 = new Effect("vulnerable", 0.1, 2);
-		Effect AidanVulnerable3 = new Effect("vulnerable", 0.1, 2);
-		Effect AidanWeak = new Effect("weak", 0.3, 1);
-		Effect AidanWeak2 = new Effect("weak", 0.3, 1);
-		Effect AidanWeak3 = new Effect("weak", 0.3, 1);
+		p.refine(1);
+		d.refine(1);
+		e.refine(1);
+		a.vulnerable(0.1, 2);
+		a.weak(0.3, 1);
+		b.vulnerable(0.1, 2);
+		b.weak(0.3, 1);
+		c.vulnerable(0.1, 2);
+		c.weak(0.3, 1);
 		p.heal(0.10);
 		d.heal(0.10);
 		e.heal(0.10);
@@ -11361,27 +7247,6 @@ public class GameSim {
 		b.takeDamage(250);
 		c.takeDamage(250);
 		p.addDamage(750);
-		e1.add(AidanRefine);
-		e5.add(AidanRefine2);
-		e6.add(AidanRefine3);
-		e2.add(AidanVulnerable);
-		e2.add(AidanWeak);
-		e3.add(AidanVulnerable2);
-		e3.add(AidanWeak2);
-		e4.add(AidanVulnerable3);
-		e4.add(AidanWeak3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
-		c.addEffects(e4);
-		c.applyEffects();
-		d.addEffects(e5);
-		d.applyEffects();
-		e.addEffects(e6);
-		e.applyEffects();
 		p.resetUlt();
 		System.out.println("\"It's the final ring now!\"");
 		System.out.println();
@@ -11391,11 +7256,7 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect LiamIgnite = new Effect("ignite", 0, 1);
-			e.add(LiamIgnite);
-			a.addEffects(e);
-			a.applyEffects();
+			a.ignite(1);
 			a.knockbacked(p.getLoc());
 		}
 		if(a.inRange(b, 3)) {
@@ -11403,11 +7264,7 @@ public class GameSim {
 			p.addDamage(200);
 			double rand2 = Math.random();
 			if(rand2 <= 0.1) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect LiamIgnite = new Effect("ignite", 0, 1);
-				e.add(LiamIgnite);
-				b.addEffects(e);
-				b.applyEffects();
+				b.ignite(1);
 				b.knockbacked(p.getLoc());
 			}
 		}
@@ -11416,11 +7273,7 @@ public class GameSim {
 			p.addDamage(200);
 			double rand3 = Math.random();
 			if(rand3 <= 0.1) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect LiamIgnite = new Effect("ignite", 0, 1);
-				e.add(LiamIgnite);
-				c.addEffects(e);
-				c.applyEffects();
+				c.ignite(1);
 				c.knockbacked(p.getLoc());
 			}
 		}
@@ -11428,24 +7281,12 @@ public class GameSim {
 	}
 	
 	public static void LiamAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LiamProtect = new Effect("protect", 0.4, 2);
-		Effect LiamProtect2 = new Effect("protect", 0.4, 2);
-		Effect LiamProtect3 = new Effect("protect", 0.4, 2);
-		e.add(LiamProtect);
-		e2.add(LiamProtect2);
-		e3.add(LiamProtect3);
 		p.cleanse();
 		a.cleanse();
 		b.cleanse();
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.protect(0.4, 1);
+		a.protect(0.4, 1);
+		b.protect(0.4, 1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -11576,30 +7417,14 @@ public class GameSim {
 	
 	public static void AxolAttack(Player p, Player a) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AshleyPoison = new Effect("poison", 0.1, 1);
-		e.add(AshleyPoison);
-		a.addEffects(e);
-		a.applyEffects();
+		a.poison(0.1, 1);
 		System.out.println();
 	}
 	
 	public static void AxolAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect AxolMend = new Effect("mend", 0.8, 2);
-		Effect AxolMend2 = new Effect("mend", 0.8, 2);
-		Effect AxolMend3 = new Effect("mend", 0.8, 2);
-		e.add(AxolMend);
-		e2.add(AxolMend2);
-		e3.add(AxolMend3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.mend(0.8, 2);
+		a.mend(0.8, 2);
+		b.mend(0.8, 2);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -11619,11 +7444,7 @@ public class GameSim {
 	
 	public static void KatrinaAttack(Player p, Player a) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect KatrinaWeaken = new Effect("weak", 0.15, 1);
-		e.add(KatrinaWeaken);
-		a.addEffects(e);
-		a.applyEffects();
+		a.weak(0.15, 1);
 		System.out.println();
 	}
 	
@@ -11663,27 +7484,12 @@ public class GameSim {
 	}
 	
 	public static void KatrinaUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect KatrinaPower = new Effect("power", 0.35, 1);
-		Effect KatrinaPower2 = new Effect("power", 0.35, 1);
-		Effect KatrinaPower3 = new Effect("power", 0.35, 1);
-		Effect KatrinaRefine = new Effect("refine", 0, 2);
-		Effect KatrinaRefine2 = new Effect("refine", 0, 2);
-		Effect KatrinaRefine3 = new Effect("refine", 0, 2);
-		e.add(KatrinaPower);
-		e.add(KatrinaRefine);
-		e2.add(KatrinaPower2);
-		e2.add(KatrinaRefine2);
-		e3.add(KatrinaPower3);
-		e3.add(KatrinaRefine3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.power(0.35, 1);
+		p.refine(1);
+		a.power(0.35, 1);
+		a.refine(1);
+		b.power(0.35, 1);
+		b.refine(1);
 		p.heal(0.5);
 		a.heal(0.5);
 		b.heal(0.5);
@@ -11700,31 +7506,15 @@ public class GameSim {
 		a.knockbacked(p.getLoc());
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect MackDaze = new Effect("daze", 0, 1);
-			e.add(MackDaze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.daze(1);
 		}
 		System.out.println();
 	}
 	
 	public static void MidniteAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 0.2, 1);
-		Effect MidnitePower2 = new Effect("power", 0.2, 1);
-		Effect MidnitePower3 = new Effect("power", 0.2, 1);
-		e1.add(MidnitePower);
-		e2.add(MidnitePower2);
-		e3.add(MidnitePower3);
-		p.addEffects(e1);
-		d.addEffects(e2);
-		e.addEffects(e3);
-		p.applyEffects();
-		d.applyEffects();
-		e.applyEffects();
+		p.power(0.2, 1);
+		d.power(0.2, 1);
+		e.power(0.2, 1);
 		if(p.inRange(a)) {
 			a.takeDamage(125);
 			p.addDamage(125);
@@ -11755,18 +7545,11 @@ public class GameSim {
 	}
 	
 	public static void MidniteUltimate(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
 		p.cleanse();
-		Effect MidniteProtect = new Effect("protect", 1, 3);
-		Effect MidniteRefine = new Effect("refine", 0, 3);
-		Effect MidniteFortify = new Effect("fortify", 0, 3);
-		Effect MidnitePower = new Effect("power", 1, 2);
-		e.add(MidniteProtect);
-		e.add(MidniteRefine);
-		e.add(MidniteFortify);
-		e.add(MidnitePower);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(1, 2);
+		p.refine(2);
+		p.fortify(2);
+		p.power(1, 2);
 		p.resetUlt();
 		System.out.println("\"This will be your last haunt!\"");
 		System.out.println();
@@ -11774,37 +7557,18 @@ public class GameSim {
 	
 	public static void XaraAttack(Player p, Player a) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect XaraVulnerable = new Effect("vulnerable", 0.10, 1);
-		e.add(XaraVulnerable);
-		a.addEffects(e);
-		a.applyEffects();
+		a.vulnerable(0.1, 1);
 		System.out.println();
 	}
 	
 	public static void XaraAbility(Player p, Player a, Player b) {
 		p.setSights(1);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LiamProtect = new Effect("protect", 0.2, 3);
-		Effect LiamProtect2 = new Effect("protect", 0.2, 3);
-		Effect LiamProtect3 = new Effect("protect", 0.2, 3);
-		Effect ChloeFortify = new Effect("fortify", 0, 3);
-		Effect ChloeFortify2 = new Effect("fortify", 0, 3);
-		Effect ChloeFortify3 = new Effect("fortify", 0, 3);
-		e.add(LiamProtect);
-		e2.add(LiamProtect2);
-		e3.add(LiamProtect3);
-		e.add(ChloeFortify);
-		e2.add(ChloeFortify2);
-		e3.add(ChloeFortify3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.protect(0.2, 2);
+		p.fortify(2);
+		a.protect(0.2, 2);
+		a.fortify(2);
+		b.protect(0.2, 2);
+		b.fortify(2);
 		p.heal(0.05);
 		p.addHealing(p.getMaxHP() * 0.05);
 		p.setCooldown(4);
@@ -11817,21 +7581,9 @@ public class GameSim {
 		b.takeDamage(300);
 		c.takeDamage(300);
 		p.addDamage(900);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect BedrockStun = new Effect("stun", 0, 1);
-		Effect BedrockStun2 = new Effect("stun", 0, 1);
-		Effect BedrockStun3 = new Effect("stun", 0, 1);
-		e.add(BedrockStun);
-		e2.add(BedrockStun2);
-		e3.add(BedrockStun3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.stun(1);
+		b.stun(1);
+		c.stun(1);
 		p.resetUlt();
 		System.out.println("\"Enemy team is down for maintenance.\"");
 		System.out.println();
@@ -11848,54 +7600,27 @@ public class GameSim {
 	}
 	
 	public static void KitharaAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect KitharaProtect = new Effect("protect", 0.8, 2);
-		Effect KitharaProtect2 = new Effect("protect", 1, 2);
-		Effect KitharaProtect3 = new Effect("protect", 1, 2);
-		e.add(KitharaProtect);
-		e2.add(KitharaProtect2);
-		e3.add(KitharaProtect3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.protect(0.8, 1);
+		a.protect(1, 2);
+		b.protect(1, 2);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
 	
 	public static void KitharaUltimate(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect KitharaWeak = new Effect("weak", 0.35, 2);
-		Effect KitharaWeak2 = new Effect("weak", 0.35, 2);
-		Effect KitharaWeak3 = new Effect("weak", 0.35, 2);
-		Effect KitharaIgnite = new Effect("ignite", 0, 2);
-		Effect KitharaIgnite2 = new Effect("ignite", 0, 2);
-		Effect KitharaIgnite3 = new Effect("ignite", 0, 2);
 		a.takeDamage(300);
 		p.addDamage(300);
 		b.takeDamage(300);
 		p.addDamage(300);
 		c.takeDamage(300);
 		p.addDamage(300);
-		e.add(KitharaWeak);
-		e.add(KitharaIgnite);
-		e2.add(KitharaWeak2);
-		e2.add(KitharaIgnite2);
-		e3.add(KitharaWeak3);
-		e3.add(KitharaIgnite3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.weak(0.35, 2);
+		a.ignite(2);
+		b.weak(0.35, 2);
+		b.ignite(2);
+		c.weak(0.35, 2);
+		c.ignite(2);
 		a.knockbacked(a.getLoc());
 		b.knockbacked(b.getLoc());
 		c.knockbacked(c.getLoc());
@@ -11927,45 +7652,29 @@ public class GameSim {
 		}
 		double rand = Math.random();
 		if(rand <= 0.15) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect AnjelikaBlind = new Effect("blind", 0.3, 1);
-			e.add(AnjelikaBlind);
-			a.addEffects(e);
-			a.applyEffects();
+			a.blind(0.3, 1);
 		}
 		System.out.println();
 	}
 	
 	public static void AnjelikaAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("ignite", 0, 1);
-		Effect CherryWeaken2 = new Effect("ignite", 0, 1);
-		Effect CherryWeaken3 = new Effect("ignite", 0, 1);
-		e.add(CherryWeaken);
-		e2.add(CherryWeaken2);
-		e3.add(CherryWeaken3);
 		if(!a.inRange(p, 10) && !b.inRange(p, 10) && !c.inRange(p, 10)) {
 			System.out.println("No targets in range!");
 			System.out.println();
 			return;
 		}
 		if(a.inRange(p, 10)) {
-			a.addEffects(e);
-			a.applyEffects();
+			a.ignite(1);
 			a.takeDamage(a.getMaxHP() * 0.1);
 			p.addDamage(a.getMaxHP() * 0.10);
 		}
 		if(b.inRange(p, 10)) {
-			b.addEffects(e2);
-			b.applyEffects();
+			b.ignite(1);
 			b.takeDamage(b.getMaxHP() * 0.1);
 			p.addDamage(b.getMaxHP() * 0.10);
 		}
 		if(c.inRange(p, 10)) {
-			c.addEffects(e3);
-			c.applyEffects();
+			c.ignite(1);
 			c.takeDamage(c.getMaxHP() * 0.1);
 			p.addDamage(c.getMaxHP() * 0.10);
 		}
@@ -11976,70 +7685,42 @@ public class GameSim {
 	
 	public static void AnjelikaUltimate(Player p) {
 		p.cleanse();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AnjelikaProtect = new Effect("protect", 0.3, 4);
-		Effect AnjelikaRefine = new Effect("refine", 0, 4);
-		Effect AnjelikaPower = new Effect("power", 0.3, 3);
-		Effect AnjelikaHeal = new Effect("heal", 0.1, 3);
 		p.addHealing(p.getMaxHP() * 0.3);
-		e.add(AnjelikaProtect);
-		e.add(AnjelikaHeal);
-		e.add(AnjelikaPower);
-		e.add(AnjelikaRefine);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.3, 3);
+		p.refine(3);
+		p.power(0.3, 3);
+		p.heal(0.1, 3);
 		p.resetUlt();
 		System.out.println("\"See you in heaven!\"");
 		System.out.println();
 	}
 	
 	public static void ArcherAttack(Player p, Player a) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AidanParalyze = new Effect("paralyze", 0, 1);
 		if(p.overRange(a, 14)) {
 			p.attack(a);
 			a.takeDamage(225);
 			p.addDamage(225);
 			double rand = Math.random();
 			if(rand <= 0.1) {
-				e.add(AidanParalyze);
-				a.addEffects(e);
-				a.applyEffects();
+				a.paralyze(1);
 			}
 		}else {
 			p.attack(a);
 			double rand = Math.random();
 			if(rand <= 0.1) {
-				e.add(AidanParalyze);
-				a.addEffects(e);
-				a.applyEffects();
+				a.paralyze(1);
 			}
 		}
 		System.out.println();
 	}
 	
 	public static void ArcherAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 0.15, 1);
-		Effect MidnitePower2 = new Effect("power", 0.15, 1);
-		Effect MidnitePower3 = new Effect("power", 0.15, 1);
-		Effect ArcherSight = new Effect("sight", 0.25, 1);
-		Effect ArcherSight2 = new Effect("sight", 0.25, 1);
-		Effect ArcherSight3 = new Effect("sight", 0.25, 1);
-		e1.add(MidnitePower);
-		e2.add(MidnitePower2);
-		e3.add(MidnitePower3);
-		e1.add(ArcherSight);
-		e2.add(ArcherSight2);
-		e3.add(ArcherSight3);
-		p.addEffects(e1);
-		a.addEffects(e2);
-		b.addEffects(e3);
-		p.applyEffects();
-		a.applyEffects();
-		b.applyEffects();
+		p.power(0.15, 1);
+		p.sightsee(0.25, 1);
+		a.power(0.15, 1);
+		a.sightsee(0.25, 1);
+		b.power(0.15, 1);
+		b.sightsee(0.25, 1);
 		p.increaseMovement(3);
 		a.increaseMovement(3);
 		b.increaseMovement(3);
@@ -12049,39 +7730,18 @@ public class GameSim {
 	}
 	
 	public static void ArcherUltimate(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ArcherWeak = new Effect("weak", 0.15, 1);
-		Effect ArcherWeak2 = new Effect("weak", 0.15, 1);
-		Effect ArcherWeak3 = new Effect("weak", 0.15, 1);
-		Effect ArcherVulnerable = new Effect("vulnerable", 0.1, 1);
-		Effect ArcherVulnerable2 = new Effect("vulnerable", 0.1, 1);
-		Effect ArcherVulnerable3 = new Effect("vulnerable", 0.1, 1);
-		Effect ArcherIgnite = new Effect("ignite", 0, 1);
-		Effect ArcherIgnite2 = new Effect("ignite", 0, 1);
-		Effect ArcherIgnite3 = new Effect("ignite", 0, 1);
-		Effect ArcherPoison = new Effect("poison", 0.15, 1);
-		Effect ArcherPoison2 = new Effect("poison", 0.15, 1);
-		Effect ArcherPoison3 = new Effect("poison", 0.15, 1);
-		e.add(ArcherWeak);
-		e.add(ArcherVulnerable);
-		e.add(ArcherIgnite);
-		e.add(ArcherPoison);
-		e2.add(ArcherWeak2);
-		e2.add(ArcherVulnerable2);
-		e2.add(ArcherIgnite2);
-		e2.add(ArcherPoison2);
-		e3.add(ArcherWeak3);
-		e3.add(ArcherVulnerable3);
-		e3.add(ArcherIgnite3);
-		e3.add(ArcherPoison3);
-		a.addEffects(e);
-		b.addEffects(e2);
-		c.addEffects(e3);
-		a.applyEffects();
-		b.applyEffects();
-		c.applyEffects();
+		a.weak(0.15, 1);
+		a.vulnerable(0.1, 1);
+		a.ignite(1);
+		a.poison(0.15, 1);
+		b.weak(0.15, 1);
+		b.vulnerable(0.1, 1);
+		b.ignite(1);
+		b.poison(0.15, 1);
+		c.weak(0.15, 1);
+		c.vulnerable(0.1, 1);
+		c.ignite(1);
+		c.poison(0.15, 1);
 		a.takeDamage(225);
 		b.takeDamage(225);
 		c.takeDamage(225);
@@ -12095,25 +7755,15 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.10) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("paralyze", 0, 1);
-			Effect TomVulnerable = new Effect("vulnerable", 0.1, 1);
-			e.add(BurtParalyze);
-			e.add(TomVulnerable);
-			a.addEffects(e);
-			a.applyEffects();
+			a.paralyze(1);
+			a.vulnerable(0.1, 1);
 		}
 		System.out.println();
 	}
 	
 	public static void TomAbility(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect TomMend = new Effect("mend", 1.25, 2);
-		Effect TomProtect = new Effect("protect", 0.55, 3);
-		e.add(TomMend);
-		e.add(TomProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.mend(1.25, 2);
+		p.protect(0.55, 2);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -12147,19 +7797,12 @@ public class GameSim {
 		}
 		double rand = Math.random();
 		if(rand <= 0.10) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("freeze", 0, 1);
-			e.add(BurtParalyze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.freeze(1);
 		}
 		System.out.println();
 	}
 	
 	public static void DimentioAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect DimentioStun = new Effect("stun", 0, 1);
-		e.add(DimentioStun);
 		Scanner input = new Scanner(System.in);
 		System.out.println("1: " + a.getName() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP());
 		System.out.println("2: " + b.getName() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP());
@@ -12173,8 +7816,7 @@ public class GameSim {
 				System.out.println();
 				return;
 			}
-			a.addEffects(e);
-			a.applyEffects();
+			a.stun(1);
 			a.takeDamage(a.getMaxHP() * 0.1);
 			p.addDamage(a.getMaxHP() * 0.1);
 			p.setCooldown(4);
@@ -12187,8 +7829,7 @@ public class GameSim {
 				System.out.println();
 				return;
 			}
-			b.addEffects(e);
-			b.applyEffects();
+			b.stun(1);
 			b.takeDamage(b.getMaxHP() * 0.1);
 			p.addDamage(b.getMaxHP() * 0.1);
 			p.setCooldown(4);
@@ -12201,8 +7842,7 @@ public class GameSim {
 				System.out.println();
 				return;
 			}
-			c.addEffects(e);
-			c.applyEffects();
+			c.stun(1);
 			c.takeDamage(c.getMaxHP() * 0.1);
 			p.addDamage(c.getMaxHP() * 0.1);
 			p.setCooldown(4);
@@ -12213,15 +7853,9 @@ public class GameSim {
 	
 	public static void DimentioUltimate(Player p) {
 		p.setUlt();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect DimentioProtect = new Effect("protect", 0.1, 100);
-		Effect DimentioHeal = new Effect("heal", 0.1, 100);
-		Effect DimentioPower = new Effect("refine", 0, 100);
-		e.add(DimentioProtect);
-		e.add(DimentioHeal);
-		e.add(DimentioPower);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.1, 100);
+		p.heal(0.1, 100);
+		p.refine(100);
 		System.out.println("\"I'm now the most powerful VIRUS in the digital world!\"");
 		System.out.println();
 	}
@@ -12250,31 +7884,19 @@ public class GameSim {
 		p.increaseMovement(5);
 		a.increaseMovement(5);
 		b.increaseMovement(5);
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", d, 2);
-		Effect MidnitePower2 = new Effect("power", d, 2);
-		Effect MidnitePower3 = new Effect("power", d, 2);
-		e1.add(MidnitePower);
-		e2.add(MidnitePower2);
-		e3.add(MidnitePower3);
-		p.addEffects(e1);
-		a.addEffects(e2);
-		b.addEffects(e3);
-		p.applyEffects();
-		a.applyEffects();
-		b.applyEffects();
+		p.power(d, 2);
+		a.power(d, 2);
+		b.power(d, 2);
 		if(p.getHealth() < (p.getMaxHP() * 0.5)) {
-			p.heal(0.2);
+			p.heal(d);
 			p.addHealing(p.getMaxHP() * d);
 		}
 		if(a.getHealth() < (a.getMaxHP() * 0.5)) {
-			a.heal(0.2);
+			a.heal(d);
 			p.addHealing(a.getMaxHP() * d);
 		}
 		if(b.getHealth() < (b.getMaxHP() * 0.5)) {
-			b.heal(0.2);
+			b.heal(d);
 			p.addHealing(b.getMaxHP() * d);
 		}
 		p.setCooldown(4);
@@ -12286,12 +7908,8 @@ public class GameSim {
 		p.setUlt();
 		p.increaseMaxHP(p.getMaxHP() * 0.35);
 		p.addHealing(p.getMaxHP() * 0.35);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect DimentioProtect = new Effect("power", 0.4, 100);
-		e.add(DimentioProtect);
-		p.addEffects(e);
-		p.applyEffects();
-		System.out.println("\"This is a growth industry!\"");
+		p.power(0.4,  100);
+		System.out.println("\"This is a GROWTH industry!\"");
 		System.out.println();
 	}
 	
@@ -12299,13 +7917,8 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("paralyze", 0, 1);
-			Effect EvilIgnite = new Effect("ignite", 0, 1);
-			e.add(BurtParalyze);
-			e.add(EvilIgnite);
-			a.addEffects(e);
-			a.applyEffects();
+			a.paralyze(1);
+			a.ignite(1);
 		}
 		if(a.inRange(b, 3)) {
 			b.knockbacked(p.getLoc());
@@ -12317,11 +7930,7 @@ public class GameSim {
 	}
 	
 	public static void EvilAbility(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect DimentioProtect = new Effect("protect", 0.6, 2);
-		e.add(DimentioProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.6, 1);
 		p.setSights(3);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
@@ -12335,21 +7944,9 @@ public class GameSim {
 		p.addDamage(a.getMaxHP() * 0.2);
 		p.addDamage(b.getMaxHP() * 0.2);
 		p.addDamage(c.getMaxHP() * 0.2);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SolarIgnite = new Effect("ignite", 0, 2);
-		e.add(SolarIgnite);
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		Effect SolarIgnite2 = new Effect("ignite", 0, 2);
-		e2.add(SolarIgnite2);
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect SolarIgnite3 = new Effect("ignite", 0, 2);
-		e3.add(SolarIgnite3);
-		a.addEffects(e);
-		b.addEffects(e2);
-		c.addEffects(e3);
-		a.applyEffects();
-		b.applyEffects();
-		c.applyEffects();
+		a.ignite(2);
+		b.ignite(2);
+		c.ignite(2);
 		p.resetUlt();
 		System.out.println("\"The Roche Limit approaches, and so will your fates!\"");
 		System.out.println();
@@ -12365,33 +7962,21 @@ public class GameSim {
 	}
 	
 	public static void MasonAbility(Player p, Player a, Player b, Player c, Location l) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("daze", 0, 1);
-		Effect CherryWeaken2 = new Effect("daze", 0, 1);
-		Effect CherryWeaken3 = new Effect("daze", 0, 1);
-		e.add(CherryWeaken);
-		e2.add(CherryWeaken2);
-		e3.add(CherryWeaken3);
 
 		if(a.inRange(l, 5)) {
 			a.takeDamage(300);
 			p.addDamage(300);
-			a.addEffects(e);
-			a.applyEffects();
+			a.daze(1);
 		}
 		if(b.inRange(l, 5)) {
 			b.takeDamage(300);
 			p.addDamage(300);
-			b.addEffects(e2);
-			b.applyEffects();
+			b.daze(1);
 		}
 		if(c.inRange(l, 5)) {
 			c.takeDamage(300);
 			p.addDamage(300);
-			c.addEffects(e3);
-			c.applyEffects();
+			c.daze(1);
 		}
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
@@ -12415,18 +8000,10 @@ public class GameSim {
 			c.knockbacked(p.getLoc());
 		}
 		if(p.inRange(d)) {
-			ArrayList<Effect> e1 = new ArrayList<Effect>();
-			Effect SolarProtect = new Effect("protect", 0.1, 3);
-			e1.add(SolarProtect);
-			d.addEffects(e1);
-			d.applyEffects();
+			d.protect(0.1, 2);
 		}
 		if(p.inRange(e)) {
-			ArrayList<Effect> e1 = new ArrayList<Effect>();
-			Effect SolarProtect = new Effect("protect", 0.1, 3);
-			e1.add(SolarProtect);
-			e.addEffects(e1);
-			e.applyEffects();
+			e.protect(0.1, 2);
 		}
 		p.resetUlt();
 		System.out.println("\"Tech Terror in the house!\"");
@@ -12437,29 +8014,20 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.05) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("paralyze", 0, 1);
-			Effect AiricDaze = new Effect("daze", 0, 1);
-			e.add(BurtParalyze);
-			e.add(AiricDaze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.paralyze(1);
+			a.daze(1);
 		}
 		System.out.println();
 	}
 	
 	public static void AiricAbility(Player p, Player a, Player b, Location l) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxPower = new Effect("power", 0.15, 1);
-		Effect MaxPower2 = new Effect("power", 0.05, 1);
 		if(!p.inReach(l, 30)) {
 			System.out.println("Can't send the portal that far!");
 			System.out.println();
 			return;
 		}
 		if(!a.isAlive() && !b.isAlive()) {
-			e.add(MaxPower2);
 			p.getLoc().set(l.getX(), l.getY());
 			for(int i = 0; i < orbs.size(); i++) {
 				if(p.getLoc().eqLoc(orbs.get(i).getLoc()) && !p.ultReady()) {
@@ -12477,14 +8045,12 @@ public class GameSim {
 					}
 				}
 			}
-			p.addEffects(e);
-			p.applyEffects();
+			p.power(0.05, 1);
 			p.setCooldown(3);
 			System.out.println("\"Oh hell naw I'm outta here.\"");
 			System.out.println();
 			return;
 		}
-		e.add(MaxPower);
 		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
 		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
 		System.out.print("Who do you want to transport: ");
@@ -12507,8 +8073,7 @@ public class GameSim {
 					}
 				}
 			}
-			a.addEffects(e);
-			a.applyEffects();
+			a.power(0.15,  1);
 			p.setCooldown(3);
 		}
 		if(targetResponse.equals("2")) {
@@ -12529,8 +8094,7 @@ public class GameSim {
 					}
 				}
 			}
-			b.addEffects(e);
-			b.applyEffects();
+			b.power(0.15,  1);
 			p.setCooldown(3);
 		}
 		System.out.println(p.voiceline());
@@ -12538,12 +8102,6 @@ public class GameSim {
 	}
 	
 	public static void AiricUltimate(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		Effect AiricProtect = new Effect("protect", 0.5, 2);
-		Effect AiricVulnerable = new Effect("vulnerable", 0.2, 1);
-		e.add(AiricProtect);
-		e2.add(AiricVulnerable);
 		Scanner input = new Scanner(System.in);
 		System.out.println("1: " + a.getName() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP());
 		System.out.println("2: " + b.getName() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP());
@@ -12559,10 +8117,8 @@ public class GameSim {
 			p.increaseTotalMovement(d);
 			p.getLoc().set(l2.getX(), l2.getY());
 			a.getLoc().set(l1.getX(), l1.getY());
-			p.addEffects(e);
-			p.applyEffects();
-			a.addEffects(e2);
-			a.applyEffects();
+			p.protect(0.5, 1);
+			a.vulnerable(0.2, 1);
 			p.resetUlt();
 		}
 		if(targetResponse.equals("2")) {
@@ -12574,10 +8130,8 @@ public class GameSim {
 			p.increaseTotalMovement(d);
 			p.getLoc().set(l2.getX(), l2.getY());
 			b.getLoc().set(l1.getX(), l1.getY());
-			p.addEffects(e);
-			p.applyEffects();
-			b.addEffects(e2);
-			b.applyEffects();
+			p.protect(0.5, 1);
+			b.vulnerable(0.2, 1);
 			p.resetUlt();
 		}
 		if(targetResponse.equals("3")) {
@@ -12589,10 +8143,8 @@ public class GameSim {
 			p.increaseTotalMovement(d);
 			p.getLoc().set(l2.getX(), l2.getY());
 			c.getLoc().set(l1.getX(), l1.getY());
-			p.addEffects(e);
-			p.applyEffects();
-			c.addEffects(e2);
-			c.applyEffects();
+			p.protect(0.5, 1);
+			c.vulnerable(0.2, 1);
 			p.resetUlt();
 		}
 		System.out.println();
@@ -12604,28 +8156,16 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand > -1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect EvilIgnite = new Effect("ignite", 0, 1);
-			e.add(EvilIgnite);
-			a.addEffects(e);
-			a.applyEffects();
+			a.ignite(1);
 			p.addDamage(175);
 		}
 		if(a.inRange(b, 5)) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect EvilIgnite = new Effect("ignite", 0, 1);
-			e.add(EvilIgnite);
-			b.addEffects(e);
-			b.applyEffects();
+			b.ignite(1);
 			b.takeDamage(100);
 			p.addDamage(100);
 		}
 		if(a.inRange(c, 5)) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect EvilIgnite = new Effect("ignite", 0, 1);
-			e.add(EvilIgnite);
-			c.addEffects(e);
-			c.applyEffects();
+			c.ignite(1);
 			c.takeDamage(100);
 			p.addDamage(100);
 		}
@@ -12634,11 +8174,7 @@ public class GameSim {
 	
 	public static void JulianAbility(Player p) {
 		p.increaseMovement(7);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SolarProtect = new Effect("protect", 0.8, 2);
-		e.add(SolarProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.8, 1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -12672,51 +8208,23 @@ public class GameSim {
 	
 	public static void GashAttack(Player p, Player a) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		Effect GashVulnerable = new Effect("vulnerable", 0.05, 1);
-		Effect GashPower = new Effect("power", 0.1, 2);
-		e.add(GashPower);
-		e2.add(GashVulnerable);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
+		p.power(0.1, 2);
+		a.vulnerable(0.05, 1);
 		System.out.println();
 	}
 	
 	public static void GashAbility(Player p, Player a, Player b) {
 		if(p.inRange(a, 3)) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect GashProtect = new Effect("protect", 0.5, 3);
-			e.add(GashProtect);
-			a.addEffects(e);
-			a.applyEffects();	
+			a.protect(0.5, 2);	
 		}else {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect GashProtect = new Effect("protect", 0.25, 3);
-			e.add(GashProtect);
-			a.addEffects(e);
-			a.applyEffects();	
+			a.protect(0.25, 2);
 		}
 		if(p.inRange(b, 3)) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect GashProtect = new Effect("protect", 0.5, 3);
-			e.add(GashProtect);
-			b.addEffects(e);
-			b.applyEffects();	
+			b.protect(0.5, 2);		
 		}else {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect GashProtect = new Effect("protect", 0.25, 3);
-			e.add(GashProtect);
-			b.addEffects(e);
-			b.applyEffects();	
+			b.protect(0.25, 2);		
 		}
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect GashProtect = new Effect("protect", 0.25, 3);
-		e.add(GashProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.25, 2);	
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -12768,22 +8276,13 @@ public class GameSim {
 		a.knockbacked(p.getLoc());
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect MackDaze = new Effect("daze", 0, 1);
-			e.add(MackDaze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.daze(1);
 		}
 		System.out.println();
 	}
 	
 	public static void MayhemAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("weak", 1, 1);
-		Effect MayhemVulnerable = new Effect("vulnerable", 0.3, 1);
-		e.add(CherryWeaken);
-		e.add(MayhemVulnerable);
-		if(!a.inRange(p, 12) && !b.inRange(p, 12) && !c.inRange(p, 12)) {
+		if(!a.inRange(p) && !b.inRange(p) && !c.inRange(p)) {
 			System.out.println("No targets in range!");
 			System.out.println();
 			return;
@@ -12795,9 +8294,9 @@ public class GameSim {
 		System.out.print("Who do you want to throw the darkmess puddle on: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
-			if(p.inRange(a, 12)) {
-				a.addEffects(e);
-				a.applyEffects();
+			if(p.inRange(a)) {
+				a.weak(1, 1);
+				a.vulnerable(0.3, 1);
 				p.setCooldown(3);
 				System.out.println(p.voiceline());
 				System.out.println();
@@ -12807,9 +8306,9 @@ public class GameSim {
 			}
 		}
 		if(targetResponse.equals("2")) {
-			if(p.inRange(b, 12)) {
-				b.addEffects(e);
-				b.applyEffects();
+			if(p.inRange(b)) {
+				b.weak(1, 1);
+				b.vulnerable(0.3, 1);
 				p.setCooldown(3);
 				System.out.println(p.voiceline());
 				System.out.println();
@@ -12819,9 +8318,9 @@ public class GameSim {
 			}
 		}
 		if(targetResponse.equals("3")) {
-			if(p.inRange(c, 12)) {
-				c.addEffects(e);
-				c.applyEffects();
+			if(p.inRange(c)) {
+				c.weak(1, 1);
+				c.vulnerable(0.3, 1);
 				p.setCooldown(3);
 				System.out.println(p.voiceline());
 				System.out.println();
@@ -12836,13 +8335,8 @@ public class GameSim {
 		p.setUlt();
 		p.increaseMaxHP(p.getMaxHP() * 0.4);
 		p.addHealing(p.getMaxHP() * 0.4);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect DimentioProtect = new Effect("protect", 0.2, 100);
-		Effect MayhemFortify = new Effect("fortify", 0, 100);
-		e.add(DimentioProtect);
-		e.add(MayhemFortify);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.2, 100);
+		p.fortify(100);
 		System.out.println("\"Good day to cause some Mayhem!\"");
 		System.out.println();
 	}
@@ -12863,13 +8357,9 @@ public class GameSim {
 	
 	public static void GatesAbility(Player p, Player a, Player b) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxProtect = new Effect("fortify", 0, 2);
-		e.add(MaxProtect);
 		if(!a.isAlive() && !b.isAlive()) {
 			p.setShield();
-			p.addEffects(e);
-			p.applyEffects();
+			p.fortify(1);
 			p.setCooldown(1);
 			System.out.println("\"Send in your worst now!\"");
 			System.out.println();
@@ -12881,14 +8371,12 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			a.setShield();
-			a.addEffects(e);
-			a.applyEffects();
+			a.fortify(1);
 			p.setCooldown(1);
 		}
 		if(targetResponse.equals("2")) {
 			b.setShield();
-			b.addEffects(e);
-			b.applyEffects();
+			b.fortify(1);
 			p.setCooldown(1);
 		}
 		System.out.println(p.voiceline());
@@ -12933,37 +8421,22 @@ public class GameSim {
 	}
 	
 	public static void AudreyAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("weak", 0.5, 1);
-		Effect CherryWeaken2 = new Effect("weak", 0.5, 1);
-		Effect CherryWeaken3 = new Effect("weak", 0.5, 1);
-		Effect AudreyVulnerable = new Effect("vulnerable", 0.3, 1);
-		Effect AudreyVulnerable2 = new Effect("vulnerable", 0.3, 1);
-		Effect AudreyVulnerable3 = new Effect("vulnerable", 0.3, 1);
-		e.add(CherryWeaken);
-		e2.add(CherryWeaken2);
-		e3.add(CherryWeaken3);
-		e.add(AudreyVulnerable);
-		e2.add(AudreyVulnerable2);
-		e3.add(AudreyVulnerable3);
 		if(!a.inRange(p, 10) && !b.inRange(p, 10) && !c.inRange(p, 10)) {
 			System.out.println("No targets in range!");
 			System.out.println();
 			return;
 		}
 		if(a.inRange(p, 10)) {
-			a.addEffects(e);
-			a.applyEffects();
+			a.weak(0.5, 1);
+			a.vulnerable(0.3, 1);
 		}
 		if(b.inRange(p, 10)) {
-			b.addEffects(e2);
-			b.applyEffects();
+			b.weak(0.5, 1);
+			b.vulnerable(0.3, 1);
 		}
 		if(c.inRange(p, 10)) {
-			c.addEffects(e3);
-			c.applyEffects();
+			c.weak(0.5, 1);
+			c.vulnerable(0.3, 1);
 		}
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
@@ -12972,11 +8445,6 @@ public class GameSim {
 	
 	public static void AudreyUltimate(Player p, Player a, Player b) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxPower = new Effect("power", 0.75, 1);
-		Effect MaxProtect = new Effect("protect", 0.5, 2);
-		e.add(MaxPower);
-		e.add(MaxProtect);
 		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
 		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
 		System.out.println("3: " + p.getSkin() +b.showHP() +  p.getHealth() + "/" + p.getMaxHP() + ".");
@@ -12991,8 +8459,8 @@ public class GameSim {
 			}else {
 				a.heal(0.5);
 				a.addHealing(a.getMaxHP() * 0.5);
-				a.addEffects(e);
-				a.applyEffects();
+				a.protect(0.5, 1);
+				a.power(0.75, 1);
 				p.resetUlt();
 				System.out.println("\"You're unstoppable now!\"");
 			}
@@ -13007,8 +8475,8 @@ public class GameSim {
 			}else {
 				b.heal(0.5);
 				b.addHealing(b.getMaxHP() * 0.5);
-				b.addEffects(e);
-				b.applyEffects();
+				b.protect(0.5, 1);
+				b.power(0.75, 1);
 				p.resetUlt();
 				System.out.println("\"You're unstoppable now!\"");
 			}
@@ -13016,8 +8484,8 @@ public class GameSim {
 		if(targetResponse.equals("3")) {
 			p.heal(0.5);
 			p.addHealing(p.getMaxHP() * 0.5);
-			p.addEffects(e);
-			p.applyEffects();
+			p.protect(0.5, 1);
+			p.power(0.75, 1);
 			p.resetUlt();
 			System.out.println("\"Energized again!\"");
 		}
@@ -13065,23 +8533,13 @@ public class GameSim {
         double rand = Math.random();
         if(score > 7) {
         	if(rand <= 0.4) {
-    			ArrayList<Effect> e = new ArrayList<Effect>();
-    			Effect BurtParalyze = new Effect("freeze", 0, 1);
-    			Effect AiricDaze = new Effect("daze", 0, 1);
-    			e.add(BurtParalyze);
-    			e.add(AiricDaze);
-    			a.addEffects(e);
-    			a.applyEffects();
+        		a.freeze(1);
+    			a.daze(1);
     		}
         }else {
         	if(rand <= 0.08) {
-    			ArrayList<Effect> e = new ArrayList<Effect>();
-    			Effect BurtParalyze = new Effect("freeze", 0, 1);
-    			Effect AiricDaze = new Effect("daze", 0, 1);
-    			e.add(BurtParalyze);
-    			e.add(AiricDaze);
-    			a.addEffects(e);
-    			a.applyEffects();
+    			a.freeze(1);
+    			a.daze(1);
     		}
         }
 		System.out.println();
@@ -13091,42 +8549,15 @@ public class GameSim {
 		p.increaseMovement(5);
 		d.increaseMovement(5);
 		e.increaseMovement(5);
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		ArrayList<Effect> e4 = new ArrayList<Effect>();
-		ArrayList<Effect> e5 = new ArrayList<Effect>();
-		ArrayList<Effect> e6 = new ArrayList<Effect>();
-		Effect EliPower = new Effect("power", 0.1, 1);
-		Effect EliPower2 = new Effect("power", 0.1, 1);
-		Effect EliPower3 = new Effect("power", 0.1, 1);
-		Effect AshleyPoison = new Effect("weary", 0, 1);
-		Effect AshleyPoison2 = new Effect("weary", 0, 1);
-		Effect AshleyPoison3 = new Effect("weary", 0, 1);
-		Effect AshleyBlind = new Effect("weak", 0.1, 1);
-		Effect AshleyBlind2 = new Effect("weak", 0.1, 1);
-		Effect AshleyBlind3 = new Effect("weak", 0.1, 1);
-		e1.add(EliPower);
-		e5.add(EliPower2);
-		e6.add(EliPower3);
-		e2.add(AshleyPoison);
-		e2.add(AshleyBlind);
-		e3.add(AshleyPoison2);
-		e3.add(AshleyBlind2);
-		e4.add(AshleyPoison3);
-		e4.add(AshleyBlind3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
-		c.addEffects(e4);
-		c.applyEffects();
-		d.addEffects(e5);
-		d.applyEffects();
-		e.addEffects(e6);
-		e.applyEffects();
+		p.power(0.1, 1);
+		d.power(0.1, 1);
+		e.power(0.1, 1);
+		a.weary(1);
+		a.weak(0.1,  1);
+		b.weary(1);
+		b.weak(0.1,  1);
+		c.weary(1);
+		c.weak(0.1,  1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -13134,9 +8565,6 @@ public class GameSim {
 	
 	public static void AysonUltimate(Player p, Player a, Player b, Player c) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AysonStun = new Effect("stun", 0, 1);
-		e.add(AysonStun);
 		System.out.println("1: " + a.getName() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP());
 		System.out.println("2: " + b.getName() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP());
 		System.out.println("3: " + c.getName() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP());
@@ -13145,22 +8573,19 @@ public class GameSim {
 		if(targetResponse.equals("1")) {
 			a.takeDamage(800);
 			p.addDamage(800);
-			a.addEffects(e);
-			a.applyEffects();
+			a.stun(1);
 			p.resetUlt();
 		}
 		if(targetResponse.equals("2")) {
 			b.takeDamage(800);
 			p.addDamage(800);
-			b.addEffects(e);
-			b.applyEffects();
+			b.stun(1);
 			p.resetUlt();
 		}
 		if(targetResponse.equals("3")) {
 			c.takeDamage(800);
 			p.addDamage(800);
-			c.addEffects(e);
-			c.applyEffects();
+			c.stun(1);
 			p.resetUlt();
 		}
 		System.out.println();
@@ -13170,16 +8595,8 @@ public class GameSim {
 	
 	public static void ChloeAttack(Player p, Player a, Player b, Player c) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		Effect ChloePower = new Effect("power", 0.05, 1);
-		Effect ChloePower2 = new Effect("power", 0.05, 1);
-		e.add(ChloePower);
-		e2.add(ChloePower2);
-		b.addEffects(e);
-		b.applyEffects();
-		c.addEffects(e2);
-		c.applyEffects();
+		b.power(0.05, 1);
+		c.power(0.05, 1);
 		System.out.println();
 	}
 	
@@ -13190,54 +8607,24 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.2);
 		p.addHealing(a.getMaxHP() * 0.2);
 		p.addHealing(b.getMaxHP() * 0.2);
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeMend = new Effect("mend", 0.5, 1);
-		Effect ChloeMend2 = new Effect("mend", 0.5, 1);
-		Effect ChloeMend3 = new Effect("mend", 0.5, 1);
-		Effect ChloeFortify = new Effect("fortify", 0, 2);
-		Effect ChloeFortify2 = new Effect("fortify", 0, 2);
-		Effect ChloeFortify3 = new Effect("fortify", 0, 2);
-		e1.add(ChloeMend);
-		e1.add(ChloeFortify);
-		e2.add(ChloeMend2);
-		e2.add(ChloeFortify2);
-		e3.add(ChloeMend3);
-		e3.add(ChloeFortify3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.mend(0.5, 1);
+		p.fortify(1);
+		a.mend(0.5, 1);
+		a.fortify(1);
+		b.mend(0.5, 1);
+		b.fortify(1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
 	
 	public static void ChloeUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeProtect = new Effect("protect", 0.4, 3);
-		Effect ChloeProtect2 = new Effect("protect", 0.4, 3);
-		Effect ChloeProtect3 = new Effect("protect", 0.4, 3);
-		Effect ChloePower = new Effect("power", 0.6, 2);
-		Effect ChloePower2 = new Effect("power", 0.6, 2);
-		Effect ChloePower3 = new Effect("power", 0.6, 2);
-		e.add(ChloeProtect);
-		e.add(ChloePower2);
-		e2.add(ChloeProtect2);
-		e2.add(ChloePower);
-		e3.add(ChloeProtect3);
-		e3.add(ChloePower3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.protect(0.4, 2);
+		p.power(0.6, 2);
+		a.protect(0.4, 2);
+		a.power(0.6, 2);
+		b.protect(0.4, 2);
+		b.power(0.6, 2);
 		p.resetUlt();
 		System.out.println("\"If you need something done right, do it yourself!\"");
 		System.out.println();
@@ -13245,11 +8632,7 @@ public class GameSim {
 	
 	public static void HopperAttack(Player p, Player a) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AshleyPoison = new Effect("poison", 0.2, 1);
-		e.add(AshleyPoison);
-		a.addEffects(e);
-		a.applyEffects();
+		a.poison(0.2, 1);
 		System.out.println();
 	}
 	
@@ -13279,28 +8662,14 @@ public class GameSim {
 	}
 	
 	public static void HopperUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect HopperReflect = new Effect("reflection", 0, 3);
-		Effect HopperProtect = new Effect("protect", 0.5, 3);
-		Effect HopperHeal = new Effect("heal", 0.1, 3);
-		Effect HopperHeal2 = new Effect("heal", 0.1, 3);
-		Effect HopperHeal3 = new Effect("heal", 0.1, 3);
-		e1.add(HopperReflect);
-		e1.add(HopperProtect);
-		e1.add(HopperHeal);
-		e2.add(HopperHeal2);
-		e3.add(HopperHeal3);
 		p.addHealing(p.getMaxHP() * 0.3);
 		p.addHealing(a.getMaxHP() * 0.3);
 		p.addHealing(b.getMaxHP() * 0.3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.reflect(2);
+		p.protect(0.5, 2);
+		p.heal(0.1, 3);
+		a.heal(0.1, 3);
+		b.heal(0.1, 3);
 		p.resetUlt();
 		System.out.println("\"For the Crusaders!\"");
 		System.out.println();
@@ -13310,13 +8679,8 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("paralyze", 0, 1);
-			Effect EvilIgnite = new Effect("blind", 0.2, 1);
-			e.add(BurtParalyze);
-			e.add(EvilIgnite);
-			a.addEffects(e);
-			a.applyEffects();
+			a.blind(0.2, 1);
+			a.paralyze(1);
 		}
 		if(p.ultActive()) {
 			p.increaseDPSNum(10);
@@ -13335,21 +8699,9 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.2);
 		p.addHealing(a.getMaxHP() * 0.2);
 		p.addHealing(b.getMaxHP() * 0.2);
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect RedgarRefine = new Effect("refine", 0, 3);
-		Effect RedgarRefine2 = new Effect("refine", 0, 3);
-		Effect RedgarRefine3 = new Effect("refine", 0, 3);
-		e1.add(RedgarRefine);
-		e2.add(RedgarRefine2);
-		e3.add(RedgarRefine3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.refine(2);
+		a.refine(2);
+		b.refine(2);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -13387,27 +8739,12 @@ public class GameSim {
 	}
 	
 	public static void RadarAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("daze", 0, 1);
-		Effect CherryWeaken2 = new Effect("daze", 0, 1);
-		Effect CherryWeaken3 = new Effect("daze", 0, 1);
-		Effect AudreyVulnerable = new Effect("weary", 0, 1);
-		Effect AudreyVulnerable2 = new Effect("weary", 0, 1);
-		Effect AudreyVulnerable3 = new Effect("weary", 0, 1);
-		e.add(CherryWeaken);
-		e2.add(CherryWeaken2);
-		e3.add(CherryWeaken3);
-		e.add(AudreyVulnerable);
-		e2.add(AudreyVulnerable2);
-		e3.add(AudreyVulnerable3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.daze(1);
+		a.weary(1);
+		b.daze(1);
+		b.weary(1);
+		c.daze(1);
+		c.weary(1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -13477,11 +8814,6 @@ public class GameSim {
 	}
 	
 	public static void OonaAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("blind", 0.75, 1);
-		Effect MayhemVulnerable = new Effect("daze", 0, 1);
-		e.add(CherryWeaken);
-		e.add(MayhemVulnerable);
 		Scanner input = new Scanner(System.in);
 		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP());
 		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP());
@@ -13489,22 +8821,22 @@ public class GameSim {
 		System.out.print("Who do you want to throw the VR Goggles on: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
-			a.addEffects(e);
-			a.applyEffects();
+			a.blind(0.75, 1);
+			a.daze(1);
 			p.setCooldown(3);
 			System.out.println(p.voiceline());
 			System.out.println();
 		}
 		if(targetResponse.equals("2")) {
-			b.addEffects(e);
-			b.applyEffects();
+			b.blind(0.75, 1);
+			b.daze(1);
 			p.setCooldown(3);
 			System.out.println(p.voiceline());
 			System.out.println();
 		}
 		if(targetResponse.equals("3")) {
-			c.addEffects(e);
-			c.applyEffects();
+			c.blind(0.75, 1);
+			c.daze(1);
 			p.setCooldown(3);
 			System.out.println(p.voiceline());
 			System.out.println();
@@ -13515,33 +8847,15 @@ public class GameSim {
 	}
 	
 	public static void OonaUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeProtect = new Effect("protect", 0.1, 100);
-		Effect ChloeProtect2 = new Effect("protect", 0.1, 100);
-		Effect ChloeProtect3 = new Effect("protect", 0.1, 100);
-		Effect ChloePower = new Effect("power", 0.1, 100);
-		Effect ChloePower2 = new Effect("power", 0.1, 100);
-		Effect ChloePower3 = new Effect("power", 0.1, 100);
-		Effect OonaHeal = new Effect("heal", 0.1, 100);
-		Effect OonaHeal2 = new Effect("heal", 0.1, 100);
-		Effect OonaHeal3 = new Effect("heal", 0.1, 100);
-		e.add(ChloeProtect);
-		e.add(ChloePower2);
-		e.add(OonaHeal);
-		e2.add(ChloeProtect2);
-		e2.add(ChloePower);
-		e2.add(OonaHeal2);
-		e3.add(ChloeProtect3);
-		e3.add(ChloePower3);
-		e3.add(OonaHeal3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.protect(0.1, 100);
+		p.power(0.1, 100);
+		p.heal(0.1, 100);
+		a.protect(0.1, 100);
+		a.power(0.1, 100);
+		a.heal(0.1, 100);
+		b.protect(0.1, 100);
+		b.power(0.1, 100);
+		b.heal(0.1, 100);
 		p.resetUlt();
 		System.out.println("\"Welcome to my World!\"");
 		System.out.println();
@@ -13554,21 +8868,9 @@ public class GameSim {
 	}
 	
 	public static void AugieAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LiamProtect = new Effect("sight", 0.75, 2);
-		Effect LiamProtect2 = new Effect("sight", 0.75, 2);
-		Effect LiamProtect3 = new Effect("sight", 0.75, 2);
-		e.add(LiamProtect);
-		e2.add(LiamProtect2);
-		e3.add(LiamProtect3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.sightsee(0.75, 2);
+		a.sightsee(0.75, 2);
+		b.sightsee(0.75, 2);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -13651,15 +8953,9 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.75) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect RubyBlind = new Effect("blind", 0.05, 1);
-			Effect RubyVulnerable = new Effect("vulnerable", 0.05, 1);
-			Effect RubyWeak = new Effect("weak", 0.05, 1);
-			e.add(RubyWeak);
-			e.add(RubyVulnerable);
-			e.add(RubyBlind);
-			a.addEffects(e);
-			a.applyEffects();
+			a.blind(0.05, 1);
+			a.vulnerable(0.05, 1);
+			a.weak(0.05,  1);
 		}
 		System.out.println();
 	}
@@ -13675,24 +8971,12 @@ public class GameSim {
 	}
 	
 	public static void RubyUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeProtect = new Effect("protect", 1, 2);
-		Effect ChloeProtect2 = new Effect("protect", 1, 2);
-		Effect ChloeProtect3 = new Effect("protect", 1, 2);
-		e.add(ChloeProtect);
-		e2.add(ChloeProtect2);
-		e3.add(ChloeProtect3);
-		p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
 		p.resetCooldown();
 		a.resetCooldown();
 		b.resetCooldown();
+		p.protect(1, 1);
+		a.protect(1, 1);
+		b.protect(1, 1);
 		p.resetUlt();
 		System.out.println("\"Gamemode Creative activated!\"");
 		System.out.println();
@@ -13710,27 +8994,12 @@ public class GameSim {
 	}
 	
 	public static void NormanAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LouisVulnerable = new Effect("poison", 1, 1);
-		Effect LouisVulnerable2 = new Effect("poison", 1, 1);
-		Effect LouisVulnerable3 = new Effect("poison", 1, 1);
-		Effect LouisFreeze = new Effect("blind", 0.5, 1);
-		Effect LouisFreeze2 = new Effect("blind", 0.5, 1);
-		Effect LouisFreeze3 = new Effect("blind", 0.5, 1);
-		e.add(LouisFreeze);
-		e2.add(LouisFreeze2);
-		e3.add(LouisFreeze3);
-		e.add(LouisVulnerable);
-		e2.add(LouisVulnerable2);
-		e3.add(LouisVulnerable3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.poison(1,  1);
+		a.blind(0.5, 1);
+		b.poison(1,  1);
+		b.blind(0.5, 1);
+		c.poison(1,  1);
+		c.blind(0.5, 1);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -13738,31 +9007,25 @@ public class GameSim {
 	
 	public static void NormanUltimate(Player p, Player a, Player b) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxPower = new Effect("power", 2.5, 1);
-		e.add(MaxPower);
 		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
 		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
 		System.out.println("3: " + p.getSkin() +b.showHP() +  p.getHealth() + "/" + p.getMaxHP() + ".");
 		System.out.print("Who do you want to be able to one punch: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
-			a.addEffects(e);
-			a.applyEffects();
+			a.power(2.5, 1);
 			p.resetUlt();
 			System.out.println();
 			System.out.println("\"You have one turn kill now!\"");
 		}
 		if(targetResponse.equals("2")) {
-			b.addEffects(e);
-			b.applyEffects();
+			b.power(2.5, 1);
 			p.resetUlt();
 			System.out.println();
 			System.out.println("\"You have one turn kill now!\"");
 		}
 		if(targetResponse.equals("3")) {
-			p.addEffects(e);
-			p.applyEffects();
+			p.power(2.5, 1);
 			p.resetUlt();
 			System.out.println("\"Why did I give myself this power?\"");
 		}
@@ -13775,28 +9038,16 @@ public class GameSim {
 		p.attack(b);
 		p.resetAttack();
 		p.attack(c);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LouisFreeze = new Effect("ignite", 0, 1);
-		Effect LouisFreeze2 = new Effect("ignite", 0, 1);
-		Effect LouisFreeze3 = new Effect("ignite", 0, 1);
-		e.add(LouisFreeze);
-		e2.add(LouisFreeze2);
-		e3.add(LouisFreeze3);
 		if (p.inRange(a)) {
-			a.addEffects(e);
-			a.applyEffects();
+			a.ignite(1);
 			p.addDamage(175);
 		}
 		if (p.inRange(b)) {
-			b.addEffects(e2);
-			b.applyEffects();
+			b.ignite(1);
 			p.addDamage(175);
 		}
 		if (p.inRange(c)) {
-			c.addEffects(e3);
-			c.applyEffects();
+			c.ignite(1);
 			p.addDamage(175);
 		}
 		if(p.ultActive()) {
@@ -13808,26 +9059,16 @@ public class GameSim {
 	}
 	
 	public static void JesseAbility(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxPower = new Effect("power", 2, 1);
-		Effect MaxProtect = new Effect("protect", 0.7, 2);
-		e.add(MaxPower);
-		e.add(MaxProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.power(2, 1);
+		p.protect(0.7, 1);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
 	
 	public static void JesseUltimate(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MaxPower = new Effect("power", 3, 1);
-		Effect MaxProtect = new Effect("protect", 0.9, 2);
-		e.add(MaxPower);
-		e.add(MaxProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.power(3,  1);
+		p.protect(0.9, 1);
 		p.setUlt();
 		p.resetUlt();
 		System.out.println("\"Rise from the depths of hell Ignis!\"");
@@ -13857,11 +9098,7 @@ public class GameSim {
 		}
 		double rand = Math.random();
 		if(rand <= 0.05) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect OrionDaze = new Effect("daze", 0, 1);
-			e.add(OrionDaze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.daze(1);
 		}
 		System.out.println();
 	}
@@ -13885,43 +9122,28 @@ public class GameSim {
 	}
 	
 	public static void ChiefUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect BedrockStun = new Effect("stun", 0, 1);
-		Effect BedrockStun2 = new Effect("stun", 0, 1);
-		Effect BedrockStun3 = new Effect("stun", 0, 1);
-		e1.add(BedrockStun);
-		e2.add(BedrockStun2);
-		e3.add(BedrockStun3);
 		if(a.inRange(p, 3)) {
-			a.addEffects(e1);
-			a.applyEffects();
+			a.stun(1);
 		}else if(p.inRange(a)){
 			double rand = Math.random();
 			if(rand <= 0.75) {
-				a.addEffects(e1);
-				a.applyEffects();
+				a.stun(1);
 			}
 		}
 		if(b.inRange(p, 3)) {
-			b.addEffects(e2);
-			b.applyEffects();
+			b.stun(1);
 		}else if(p.inRange(b)) {
 			double rand = Math.random();
 			if(rand <= 0.75) {
-				b.addEffects(e2);
-				b.applyEffects();
+				b.stun(1);
 			}
 		}
 		if(c.inRange(p, 3)) {
-			c.addEffects(e3);
-			c.applyEffects();
+			c.stun(1);
 		}else if(p.inRange(c)) {
 			double rand = Math.random();
 			if(rand <= 0.75) {
-				c.addEffects(e3);
-				c.applyEffects();
+				c.stun(1);
 			}
 		}
 		if(p.getHealth() < (p.getMaxHP() * 0.25)) {
@@ -13969,35 +9191,20 @@ public class GameSim {
 			if(p.inRange(a)) {
 				p.attack(a);
 				a.knockbacked(p.getLoc());
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect CherryWeaken = new Effect("weak", 0.1, 1);
-				Effect CherryDaze = new Effect("poison", 0.1, 1);
-				e.add(CherryWeaken);
-				e.add(CherryDaze);
-				a.addEffects(e);
-				a.applyEffects();
+				a.weak(0.1,  1);
+				a.poison(0.1,  1);
 			}
 			if(p.inRange(b)) {
 				p.attack(b);
 				b.knockbacked(p.getLoc());
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect CherryWeaken = new Effect("weak", 0.1, 1);
-				Effect CherryDaze = new Effect("poison", 0.1, 1);
-				e.add(CherryWeaken);
-				e.add(CherryDaze);
-				b.addEffects(e);
-				b.applyEffects();
+				b.weak(0.1,  1);
+				b.poison(0.1,  1);
 			}
 			if(p.inRange(c)) {
 				p.attack(c);
 				c.knockbacked(p.getLoc());
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect CherryWeaken = new Effect("weak", 0.1, 1);
-				Effect CherryDaze = new Effect("poison", 0.1, 1);
-				e.add(CherryWeaken);
-				e.add(CherryDaze);
-				c.addEffects(e);
-				c.applyEffects();
+				c.weak(0.1,  1);
+				c.poison(0.1,  1);
 			}
 		}
 		if(targetResponse.equals("1")) {
@@ -14050,27 +9257,15 @@ public class GameSim {
 	}
 	
 	public static void AngelosAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 0.1, 1);
-		Effect MidnitePower2 = new Effect("power", 0.1, 1);
-		Effect MidnitePower3 = new Effect("power", 0.1, 1);
-		e1.add(MidnitePower);
-		e2.add(MidnitePower2);
-		e3.add(MidnitePower3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
 		p.setShield();
 		a.setShield();
 		b.setShield();
 		p.cleanse();
 		a.cleanse();
 		b.cleanse();
+		p.power(0.1, 1);
+		a.power(0.1, 1);
+		b.power(0.1, 1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -14232,21 +9427,6 @@ public class GameSim {
 	}
 	
 	public static void MelonyUltimate(Player p, Player a, Player b, Player c, Location l) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LouisVulnerable = new Effect("vulnerable", 0.15, 1);
-		Effect LouisVulnerable2 = new Effect("vulnerable", 0.15, 1);
-		Effect LouisVulnerable3 = new Effect("vulnerable", 0.15, 1);
-		Effect LouisFreeze = new Effect("weak", 0.15, 1);
-		Effect LouisFreeze2 = new Effect("weak", 0.15, 1);
-		Effect LouisFreeze3 = new Effect("weak", 0.15, 1);
-		e.add(LouisFreeze);
-		e2.add(LouisFreeze2);
-		e3.add(LouisFreeze3);
-		e.add(LouisVulnerable);
-		e2.add(LouisVulnerable2);
-		e3.add(LouisVulnerable3);
 		if(!p.inReach(l, 10)) {
 			System.out.println("Can't send Howler that far!");
 			System.out.println();
@@ -14262,20 +9442,20 @@ public class GameSim {
 		if(a.inRange(l, 6)) {
 			a.takeDamage(250);
 			p.addDamage(250);
-			a.addEffects(e);
-			a.applyEffects();
+			a.weak(0.15, 1);
+			a.vulnerable(0.15, 1);
 		}
 		if(b.inRange(l, 6)) {
 			b.takeDamage(250);
 			p.addDamage(250);
-			b.addEffects(e2);
-			b.applyEffects();
+			b.weak(0.15, 1);
+			b.vulnerable(0.15, 1);
 		}
 		if(c.inRange(l, 6)) {
 			c.takeDamage(250);
 			p.addDamage(250);
-			c.addEffects(e3);
-			c.applyEffects();
+			c.weak(0.15, 1);
+			c.vulnerable(0.15, 1);
 		}
 		p.resetUlt();
 		if(first) {
@@ -14504,30 +9684,18 @@ public class GameSim {
 	}
 	
 	public static void RhythmUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect AidanRefine = new Effect("refine", 0, 2);
-		Effect AidanRefine2 = new Effect("refine", 0, 2);
-		Effect AidanRefine3 = new Effect("refine", 0, 2);
 		p.cleanse();
 		a.cleanse();
 		b.cleanse();
 		p.increaseMovement(3);
 		a.increaseMovement(3);
 		b.increaseMovement(3);
-		e1.add(AidanRefine);
-		e2.add(AidanRefine2);
-		e3.add(AidanRefine3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
 		p.setHeartburn();
 		a.setHeartburn();
 		b.setHeartburn();
+		p.refine(1);
+		a.refine(1);
+		b.refine(1);
 		p.resetUlt();
 		System.out.println("\"Time to break this and them down!\"");
 		System.out.println();
@@ -14563,30 +9731,14 @@ public class GameSim {
 	
 	public static void PatitekAttack(Player p, Player a) {
 		p.attack(a);
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect SolarProtect = new Effect("protect", 0.05, 2);
-		e.add(SolarProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.05,1);
 		System.out.println();
 	}
 	
 	public static void PatitekAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeMend = new Effect("fortify", 0.5, 2);
-		Effect ChloeMend2 = new Effect("fortify", 0.5, 2);
-		Effect ChloeMend3 = new Effect("fortify", 0.5, 2);
-		e1.add(ChloeMend);
-		e2.add(ChloeMend2);
-		e3.add(ChloeMend3);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.fortify(1);
+		a.fortify(1);
+		b.fortify(1);
 		p.setSights(2);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
@@ -14594,15 +9746,10 @@ public class GameSim {
 	}
 	
 	public static void PatitekUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		Effect HopperReflect = new Effect("reflection", 0, 2);
-		Effect HopperProtect = new Effect("protect", 0.5, 2);
-		e1.add(HopperReflect);
-		e1.add(HopperProtect);
-		p.addEffects(e1);
-		p.applyEffects();
 		a.giveTacCharge();
 		b.giveTacCharge();
+		p.reflect(1);
+		p.protect(0.5,1);
 		p.resetUlt();
 		System.out.println("\"No falling down on my watch!\"");
 		System.out.println();
@@ -14880,11 +10027,7 @@ public class GameSim {
 		double rand = Math.random();
 		double rand2 = Math.random();
 		if(rand2 <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect LiamIgnite = new Effect("ignite", 0, 1);
-			e.add(LiamIgnite);
-			a.addEffects(e);
-			a.applyEffects();
+			a.ignite(1);
 		}
 		if(rand <= 0.3) {
 			a.knockbacked(p.getLoc());
@@ -14915,13 +10058,8 @@ public class GameSim {
 		a.knockbacked(p.getLoc());
 		double rand = Math.random();
 		if(rand <= 0.15) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect RubyBlind = new Effect("freeze", 0.05, 1);
-			Effect RubyVulnerable = new Effect("weary", 0.05, 1);
-			e.add(RubyVulnerable);
-			e.add(RubyBlind);
-			a.addEffects(e);
-			a.applyEffects();
+			a.freeze(1);
+			a.weary(1);
 		}
 		System.out.println();
 	}
@@ -14935,45 +10073,27 @@ public class GameSim {
 	}
 	
 	public static void SnowfallUltimate(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LouisVulnerable = new Effect("vulnerable", 0.15, 2);
-		Effect LouisVulnerable2 = new Effect("vulnerable", 0.15, 2);
-		Effect LouisVulnerable3 = new Effect("vulnerable", 0.15, 2);
-		Effect LouisFreeze = new Effect("freeze", 0.15, 1);
-		Effect LouisFreeze2 = new Effect("freeze", 0.15, 1);
-		Effect LouisFreeze3 = new Effect("freeze", 0.15, 1);
-		Effect LouisWeary = new Effect("weary", 0.15, 2);
-		Effect LouisWeary2 = new Effect("weary", 0.15, 2);
-		Effect LouisWeary3 = new Effect("weary", 0.15, 2);
-		e.add(LouisFreeze);
-		e2.add(LouisFreeze2);
-		e3.add(LouisFreeze3);
-		e.add(LouisWeary);
-		e2.add(LouisWeary2);
-		e3.add(LouisWeary3);
 		if(a.inRange(p, 6)) {
-			e.add(LouisVulnerable);
+			a.vulnerable(0.15, 2);
 			a.takeDamage(275);
 		}
 		if(b.inRange(p, 6)) {
-			e2.add(LouisVulnerable2);
+			b.vulnerable(0.15, 2);
 			b.takeDamage(275);
 		}
 		if(c.inRange(p, 6)) {
-			e3.add(LouisVulnerable3);
+			c.vulnerable(0.15, 2);
 			c.takeDamage(275);
 		}
-		a.addEffects(e);
-		a.applyEffects();
 		a.takeDamage(275);
-		b.addEffects(e2);
-		b.applyEffects();
 		b.takeDamage(275);
-		c.addEffects(e3);
-		c.applyEffects();
 		c.takeDamage(275);
+		a.freeze(1);
+		a.weary(2);
+		b.freeze(1);
+		b.weary(2);
+		c.freeze(1);
+		c.weary(2);
 		p.resetUlt();
 		if (p.getFrost()) {
 			p.permaFrost();
@@ -14984,21 +10104,9 @@ public class GameSim {
 	}
 	
 	public static void ShutterAttack(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect AxolMend = new Effect("mend", 0.5, 1);
-		Effect AxolMend2 = new Effect("mend", 0.5, 1);
-		Effect AxolMend3 = new Effect("mend", 0.5, 1);
-		e.add(AxolMend);
-		e2.add(AxolMend2);
-		e3.add(AxolMend3);
-		p.addEffects(e);
-		p.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		p.mend(0.5,1);
+		b.mend(0.5,1);
+		c.mend(0.5,1);
 		p.attack(a);
 		p.setChance(0.03);
 		b.setChance(0.03);
@@ -15015,33 +10123,15 @@ public class GameSim {
 	}
 	
 	public static void ShutterUltimate(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ViaParalyze = new Effect("paralyze", 0, 1);
-		Effect ViaParalyze2 = new Effect("paralyze", 0, 1);
-		Effect ViaParalyze3 = new Effect("paralyze", 0, 1);
-		Effect ViaDaze = new Effect("daze", 0, 1);
-		Effect ViaDaze2 = new Effect("daze", 0, 1);
-		Effect ViaDaze3 = new Effect("daze", 0, 1);
-		Effect ShutterBlind = new Effect("blind", 0.8, 1);
-		Effect ShutterBlind2 = new Effect("blind", 0.8, 1);
-		Effect ShutterBlind3 = new Effect("blind", 0.8, 1);
-		e.add(ViaParalyze);
-		e2.add(ViaParalyze2);
-		e3.add(ViaParalyze3);
-		e.add(ViaDaze);
-		e2.add(ViaDaze2);
-		e3.add(ViaDaze3);
-		e.add(ShutterBlind);
-		e2.add(ShutterBlind2);
-		e3.add(ShutterBlind3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.paralyze(1);
+		a.daze(1);
+		a.blind(0.8, 1);
+		b.paralyze(1);
+		b.daze(1);
+		b.blind(0.8, 1);
+		c.paralyze(1);
+		c.daze(1);
+		c.blind(0.8, 1);
 		p.resetUlt();
 		System.out.println("\"Smile!\"");
 		System.out.println();
@@ -15055,11 +10145,7 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect MackDaze = new Effect("daze", 0, 1);
-			e.add(MackDaze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.daze(1);
 		}
 		if(a.inRange(b, 5)) {
 			b.takeDamage(75);
@@ -15147,27 +10233,12 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.2);
 		p.addHealing(d.getMaxHP() * 0.2);
 		p.addHealing(e.getMaxHP() * 0.2);
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ChloeMend = new Effect("protect", 0.2, 3);
-		Effect ChloeMend2 = new Effect("protect", 0.2, 3);
-		Effect ChloeMend3 = new Effect("protect", 0.2, 3);
-		Effect ChloeFortify = new Effect("heal", 0.1, 2);
-		Effect ChloeFortify2 = new Effect("heal", 0.1, 2);
-		Effect ChloeFortify3 = new Effect("heal", 0.1, 2);
-		e1.add(ChloeMend);
-		e1.add(ChloeFortify);
-		e2.add(ChloeMend2);
-		e2.add(ChloeFortify2);
-		e3.add(ChloeMend3);
-		e3.add(ChloeFortify3);
-		p.addEffects(e1);
-		p.applyEffects();
-		d.addEffects(e2);
-		d.applyEffects();
-		e.addEffects(e3);
-		e.applyEffects();
+		p.protect(0.2,2);
+		p.heal(0.1,2);
+		d.protect(0.2,2);
+		d.heal(0.1,2);
+		e.protect(0.2,2);
+		e.heal(0.1,2);
 		for(int i = 0; i < 15; i++) {
 			int randomX = (int)(Math.random() * (28 - 13 + 1)) + 13;
 			int randomY = (int)(Math.random() * (28 - 13 + 1)) + 13;
@@ -15211,24 +10282,12 @@ public class GameSim {
 			p.addDamage(300);
 			c.takeDamage(300);
 			p.addDamage(300);
-			ArrayList<Effect> e1 = new ArrayList<Effect>();
-			ArrayList<Effect> e2 = new ArrayList<Effect>();
-			ArrayList<Effect> e3 = new ArrayList<Effect>();
-			Effect LouisFreeze = new Effect("ignite", 0, 1);
-			Effect LouisFreeze2 = new Effect("ignite", 0, 1);
-			Effect LouisFreeze3 = new Effect("ignite", 0, 1);
-			e1.add(LouisFreeze);
-			e2.add(LouisFreeze2);
-			e3.add(LouisFreeze3);
-			a.addEffects(e1);
-			a.applyEffects();
 			p.addDamage(175);
-			b.addEffects(e2);
-			b.applyEffects();
 			p.addDamage(175);
-			c.addEffects(e3);
-			c.applyEffects();
 			p.addDamage(175);
+			a.ignite(1);
+			b.ignite(1);
+			c.ignite(1);
 			p.useDragon();
 			System.out.println();
 			System.out.println("\"Release the Origami Dragons!\"");
@@ -15246,21 +10305,9 @@ public class GameSim {
 			d.increaseMovement(3);
 			e.cleanse();
 			e.increaseMovement(3);
-			ArrayList<Effect> e1 = new ArrayList<Effect>();
-			ArrayList<Effect> e2 = new ArrayList<Effect>();
-			ArrayList<Effect> e3 = new ArrayList<Effect>();
-			Effect LouisFreeze = new Effect("mend", 0.5, 2);
-			Effect LouisFreeze2 = new Effect("mend", 0.5, 2);
-			Effect LouisFreeze3 = new Effect("mend", 0.5, 2);
-			e1.add(LouisFreeze);
-			e2.add(LouisFreeze2);
-			e3.add(LouisFreeze3);
-			p.addEffects(e1);
-			p.applyEffects();
-			d.addEffects(e2);
-			d.applyEffects();
-			e.addEffects(e3);
-			e.applyEffects();
+			p.mend(0.5,2);
+			d.mend(0.5,2);
+			e.mend(0.5,2);
 			p.useButterfly();
 			System.out.println();
 			System.out.println("\"Release the Origami Butterflies!\"");
@@ -15275,21 +10322,9 @@ public class GameSim {
 			a.knockbacked(p.getLoc());
 			b.knockbacked(p.getLoc());
 			c.knockbacked(p.getLoc());
-			ArrayList<Effect> e1 = new ArrayList<Effect>();
-			ArrayList<Effect> e2 = new ArrayList<Effect>();
-			ArrayList<Effect> e3 = new ArrayList<Effect>();
-			Effect LouisFreeze = new Effect("daze", 0.5, 1);
-			Effect LouisFreeze2 = new Effect("daze", 0.5, 1);
-			Effect LouisFreeze3 = new Effect("daze", 0.5, 1);
-			e1.add(LouisFreeze);
-			e2.add(LouisFreeze2);
-			e3.add(LouisFreeze3);
-			a.addEffects(e1);
-			a.applyEffects();
-			b.addEffects(e2);
-			b.applyEffects();
-			c.addEffects(e3);
-			c.applyEffects();
+			a.daze(1);
+			b.daze(1);
+			c.daze(1);
 			p.useTank();
 			System.out.println();
 			System.out.println("\"Release the Origami Tank!\"");
@@ -15473,6 +10508,26 @@ public class GameSim {
 					j--;
 				}
 			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Dynamite") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 3)) {
+					GameSim.utility.get(j).takeHit();
+					System.out.println("Enemy Dynamite has " + GameSim.utility.get(j).getHealth() + " more health left.");
+					if (GameSim.utility.get(j).getHealth() <= 0) {
+						GameSim.utility.remove(j);
+						System.out.println("Enemy Dynamite destroyed.");
+					}
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Peri") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 3)) {
+					GameSim.utility.get(j).takeHit();
+					System.out.println("Enemy Peri has " + GameSim.utility.get(j).getHealth() + " more health left.");
+					if (GameSim.utility.get(j).getHealth() <= 0) {
+						GameSim.utility.remove(j);
+						System.out.println("Enemy Peri destroyed.");
+					}
+				}
+			}
 			p.useFuel(p.getLoc().distance(l) * 50);
 			System.out.println(p.voiceline());
 			System.out.println();
@@ -15592,6 +10647,20 @@ public class GameSim {
 				j--;
 			}
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Dynamite") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Dynamite destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Peri") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Peri destroyed.");
+				j--;
+			}
+		}
 		p.resetUlt();
 		p.useFuel(p.getLoc().distance(l) * 100);
 		System.out.println("\"Open up the sky!\"");
@@ -15641,24 +10710,12 @@ public class GameSim {
 		p.increaseMovement(move);
 		a.increaseMovement(move);
 		b.increaseMovement(move);
-		Effect AlexRefine12 = new Effect("power", power, 1);
-		Effect AlexRefine22 = new Effect("power", power, 1);
-		Effect AlexRefine32 = new Effect("power", power, 1);
-		e.add(AlexRefine12);
-		e2.add(AlexRefine22);
-		e3.add(AlexRefine32);
-		Effect AlexRefine1 = new Effect("protect", protect, 2);
-		Effect AlexRefine21 = new Effect("protect", protect, 2);
-		Effect AlexRefine31 = new Effect("protect", protect, 2);
-		e.add(AlexRefine1);
-		e2.add(AlexRefine21);
-		e3.add(AlexRefine31);
-        p.addEffects(e);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.power(power, 1);
+		p.protect(protect, 1);
+		a.power(power, 1);
+		a.protect(protect, 1);
+		b.power(power, 1);
+		b.protect(protect, 1);
         p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -15728,59 +10785,35 @@ public class GameSim {
 		}
 		
 		if (weak > 0) {
-			Effect AlexRefine = new Effect("weak", weak, 1);
-			Effect AlexRefine2 = new Effect("weak", weak, 1);
-			Effect AlexRefine3 = new Effect("weak", weak, 1);
-			e.add(AlexRefine);
-			e2.add(AlexRefine2);
-			e3.add(AlexRefine3);
+			a.weak(weak, 1);
+			b.weak(weak, 1);
+			c.weak(weak, 1);
 		}
 		if (poison > 0) {
-			Effect AlexRefine = new Effect("poison", poison, 1);
-			Effect AlexRefine2 = new Effect("poison", poison, 1);
-			Effect AlexRefine3 = new Effect("poison", poison, 1);
-			e.add(AlexRefine);
-			e2.add(AlexRefine2);
-			e3.add(AlexRefine3);
+			a.poison(poison, 1);
+			b.poison(poison, 1);
+			c.poison(poison, 1);
 		}
 		if (vulnerable > 0) {
-			Effect AlexRefine = new Effect("vulnerable ", vulnerable , 1);
-			Effect AlexRefine2 = new Effect("vulnerable ", vulnerable , 1);
-			Effect AlexRefine3 = new Effect("vulnerable ", vulnerable , 1);
-			e.add(AlexRefine);
-			e2.add(AlexRefine2);
-			e3.add(AlexRefine3);
+			a.vulnerable(vulnerable, 1);
+			b.vulnerable(vulnerable, 1);
+			c.vulnerable(vulnerable, 1);
 		}
 		if (blind > 0) {
-			Effect AlexRefine = new Effect("blind", blind, 1);
-			Effect AlexRefine2 = new Effect("blind", blind, 1);
-			Effect AlexRefine3 = new Effect("blind", blind, 1);
-			e.add(AlexRefine);
-			e2.add(AlexRefine2);
-			e3.add(AlexRefine3);
+			a.blind(blind, 1);
+			b.blind(blind, 1);
+			c.blind(blind, 1);
 		}
 		if(paralyze) {
-			Effect AlexRefine = new Effect("paralyze", blind, 1);
-			Effect AlexRefine2 = new Effect("paralyze", blind, 1);
-			Effect AlexRefine3 = new Effect("paralyze", blind, 1);
-			e.add(AlexRefine);
-			e2.add(AlexRefine2);
-			e3.add(AlexRefine3);
+			a.paralyze(1);
+			b.paralyze(1);
+			c.paralyze(1);
 		}
 		if(daze) {
-			Effect AlexRefine = new Effect("daze", blind, 1);
-			Effect AlexRefine2 = new Effect("daze", blind, 1);
-			Effect AlexRefine3 = new Effect("daze", blind, 1);
-			e.add(AlexRefine);
-			e2.add(AlexRefine2);
-			e3.add(AlexRefine3);
+			a.daze(1);
+			b.daze(1);
+			c.daze(1);
 		}
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
 		p.resetUlt();
 		System.out.println("\"These drinks are on the HOUSE!\"");
 		System.out.println();
@@ -15883,17 +10916,9 @@ public class GameSim {
 							e.cleanse();
 						}
 					}else {
-						ArrayList<Effect> e2 = new ArrayList<Effect>();
-						Effect LunarPower = new Effect("power", 0.5, 1);
-						e2.add(LunarPower);
-						d.addEffects(e2);
-						d.applyEffects();
+						d.power(0.5, 1);
 						if (p.getMedic()) {
-							ArrayList<Effect> e22 = new ArrayList<Effect>();
-							Effect LunarPower2 = new Effect("power", 0.5, 1);
-							e22.add(LunarPower2);
-							e.addEffects(e22);
-							e.applyEffects();
+							e.power(0.5, 1);
 						}
 					}
 					p.setAttacked();
@@ -15915,17 +10940,9 @@ public class GameSim {
 							d.cleanse();
 						}
 					}else {
-						ArrayList<Effect> e2 = new ArrayList<Effect>();
-						Effect LunarPower = new Effect("power", 0.5, 1);
-						e2.add(LunarPower);
-						e.addEffects(e2);
-						e.applyEffects();
+						e.power(0.5, 1);
 						if (p.getMedic()) {
-							ArrayList<Effect> e22 = new ArrayList<Effect>();
-							Effect LunarPower2 = new Effect("power", 0.5, 1);
-							e22.add(LunarPower2);
-							d.addEffects(e22);
-							d.applyEffects();
+							d.power(0.5, 1);
 						}
 					}
 					p.setAttacked();
@@ -15991,11 +11008,7 @@ public class GameSim {
 				System.out.println();
 			}
 		}else {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect DimentioPower = new Effect("refine", 0, 100);
-			e.add(DimentioPower);
-			p.addEffects(e);
-			p.applyEffects();
+			p.refine(100);
 			p.setMedic();
 			p.setRes(true);
 			System.out.println("\"Here comes the Intensive Care Unit!\"");
@@ -16029,15 +11042,6 @@ public class GameSim {
 	
 	public static void PetraAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect FinleyVulnerable = new Effect("protect", 0.25, 2);
-		Effect FinleyVulnerable2 = new Effect("protect", 0.25, 2);
-		Effect FinleyVulnerable3 = new Effect("protect", 0.25, 2);
-		e1.add(FinleyVulnerable);
-		e2.add(FinleyVulnerable2);
-		e3.add(FinleyVulnerable3);
 		if(!p.inRange(a, 25) && !p.inRange(b, 25) && !p.inRange(c, 25)) {
 			System.out.println("No targets in range!");
 			System.out.println();
@@ -16066,12 +11070,9 @@ public class GameSim {
 				p.addDashes(1);
 				p.increaseMovement(4);
 				p.getLoc().set(a.getLoc().getX(), a.getLoc().getY());
-				p.addEffects(e1);
-				p.applyEffects();
-				d.addEffects(e2);
-				d.applyEffects();
-				e.addEffects(e3);
-				e.applyEffects();
+				p.protect(0.25,1);
+				d.protect(0.25,1);
+				e.protect(0.25,1);
 				System.out.println(p.voiceline());
 				p.setCooldown(3);
 			}else {
@@ -16086,12 +11087,9 @@ public class GameSim {
 				p.addDashes(1);
 				p.increaseMovement(4);
 				p.getLoc().set(b.getLoc().getX(), b.getLoc().getY());
-				p.addEffects(e1);
-				p.applyEffects();
-				d.addEffects(e2);
-				d.applyEffects();
-				e.addEffects(e3);
-				e.applyEffects();
+				p.protect(0.25,1);
+				d.protect(0.25,1);
+				e.protect(0.25,1);
 				System.out.println(p.voiceline());
 				p.setCooldown(3);
 			}else {
@@ -16106,12 +11104,9 @@ public class GameSim {
 				p.addDashes(1);
 				p.increaseMovement(4);
 				p.getLoc().set(c.getLoc().getX(), c.getLoc().getY());
-				p.addEffects(e1);
-				p.applyEffects();
-				d.addEffects(e2);
-				d.applyEffects();
-				e.addEffects(e3);
-				e.applyEffects();
+				p.protect(0.25,1);
+				d.protect(0.25,1);
+				e.protect(0.25,1);
 				System.out.println(p.voiceline());
 				p.setCooldown(3);
 			}else {
@@ -16144,31 +11139,19 @@ public class GameSim {
 				a.knockbacked(l);
 				a.knockbacked(l);
 				a.knockbacked(l);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				a.addEffects(e1);
-				a.applyEffects();
+				a.paralyze(1);
 			}
 			if(b1.getLoc().getY() >= 14 && b1.getLoc().getY() <= 27) {
 				b1.knockbacked(l2);
 				b1.knockbacked(l2);
 				b1.knockbacked(l2);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				b1.addEffects(e1);
-				b1.applyEffects();
+				b1.paralyze(1);
 			}
 			if(c.getLoc().getY() >= 14 && c.getLoc().getY() <= 27) {
 				c.knockbacked(l3);
 				c.knockbacked(l3);
 				c.knockbacked(l3);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				c.addEffects(e1);
-				c.applyEffects();
+				c.paralyze(1);
 			}
 		}
 		if(targetResponse.equals("2")) {
@@ -16179,31 +11162,19 @@ public class GameSim {
 				a.knockbacked(l);
 				a.knockbacked(l);
 				a.knockbacked(l);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				a.addEffects(e1);
-				a.applyEffects();
+				a.paralyze(1);
 			}
 			if(b1.getLoc().getY() >= 14 && b1.getLoc().getY() <= 27) {
 				b1.knockbacked(l2);
 				b1.knockbacked(l2);
 				b1.knockbacked(l2);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				b1.addEffects(e1);
-				b1.applyEffects();
+				b1.paralyze(1);
 			}
 			if(c.getLoc().getY() >= 14 && c.getLoc().getY() <= 27) {
 				c.knockbacked(l3);
 				c.knockbacked(l3);
 				c.knockbacked(l3);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				c.addEffects(e1);
-				c.applyEffects();
+				c.paralyze(1);
 			}
 		}
 		if(targetResponse.equals("4")) {
@@ -16214,31 +11185,19 @@ public class GameSim {
 				a.knockbacked(l);
 				a.knockbacked(l);
 				a.knockbacked(l);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				a.addEffects(e1);
-				a.applyEffects();
+				a.paralyze(1);
 			}
 			if(b1.getLoc().getX() >= 14 && b1.getLoc().getX() <= 27) {
 				b1.knockbacked(l2);
 				b1.knockbacked(l2);
 				b1.knockbacked(l2);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				b1.addEffects(e1);
-				b1.applyEffects();
+				b1.paralyze(1);
 			}
 			if(c.getLoc().getX() >= 14 && c.getLoc().getX() <= 27) {
 				c.knockbacked(l3);
 				c.knockbacked(l3);
 				c.knockbacked(l3);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				c.addEffects(e1);
-				c.applyEffects();
+				c.paralyze(1);
 			}
 		}
 		if(targetResponse.equals("3")) {
@@ -16249,37 +11208,22 @@ public class GameSim {
 				a.knockbacked(l);
 				a.knockbacked(l);
 				a.knockbacked(l);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				a.addEffects(e1);
-				a.applyEffects();
+				a.paralyze(1);
 			}
 			if(b1.getLoc().getX() >= 14 && b1.getLoc().getX() <= 27) {
 				b1.knockbacked(l2);
 				b1.knockbacked(l2);
 				b1.knockbacked(l2);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				b1.addEffects(e1);
-				b1.applyEffects();
+				b1.paralyze(1);
 			}
 			if(c.getLoc().getX() >= 14 && c.getLoc().getX() <= 27) {
 				c.knockbacked(l3);
 				c.knockbacked(l3);
 				c.knockbacked(l3);
-				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect HopperReflect = new Effect("paralyze", 0.5, 1);
-				e1.add(HopperReflect);
-				c.addEffects(e1);
-				c.applyEffects();
+				c.paralyze(1);
 			}
 		}
 		Battlefield.temple = false;
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		Effect HopperReflect = new Effect("power", 0.5, 1);
-		e1.add(HopperReflect);
 		p.cleanse();
 		p.heal(0.1);
 		d.cleanse();
@@ -16289,14 +11233,13 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.1);
 		p.addHealing(d.getMaxHP() * 0.1);
 		p.addHealing(e.getMaxHP() * 0.1);
-		p.addEffects(e1);
-		p.applyEffects();
+		p.power(0.5, 1);
 		p.resetUlt();
 		System.out.println("\"Yall better run for the hills!\"");
 		System.out.println();
 	}
 	
-	public static void QuincyAttack(Player p, Player a, Player b, Player c) {
+	public static void QuincyAttack(Player p, Player a) {
 		p.attack(a);
 		a.knockbacked(p.getLoc());
 		if (p.getDamage() > 225) {
@@ -16353,17 +11296,7 @@ public class GameSim {
 	}
 	
 	public static void QuincyUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect HopperProtect = new Effect("protect", 0.5, 2);
-		Effect HopperHeal = new Effect("fortify", 0.1, 2);
-		Effect HopperHeal2 = new Effect("fortify", 0.1, 2);
-		Effect HopperHeal3 = new Effect("fortify", 0.1, 2);
-		e1.add(HopperProtect);
-		e1.add(HopperHeal);
-		e2.add(HopperHeal2);
-		e3.add(HopperHeal3);
+		p.protect(0.5,1);
 		p.setRally(true);
 		p.cleanse();
 		p.heal(0.1);
@@ -16373,20 +11306,16 @@ public class GameSim {
 			a.heal(0.15);
 			p.addHealing(a.getMaxHP() * 0.15);
 			a.increaseMovement(3);
-			a.addEffects(e2);
-			a.applyEffects();
+			a.fortify(1);
 		}
 		if (p.inRange(b)) {
 			b.cleanse();
 			b.heal(0.15);
 			p.addHealing(b.getMaxHP() * 0.15);
 			b.increaseMovement(3);
-			b.addEffects(e3);
-			b.applyEffects();
+			b.fortify(1);
 		}
 		p.addHealing(p.getMaxHP() * 0.1);
-		p.addEffects(e1);
-		p.applyEffects();
 		p.resetUlt();
 		System.out.println("\"We have a royal decree to make!\"");
 		System.out.println();
@@ -16437,19 +11366,12 @@ public class GameSim {
 	
 	public static void UniceUltimate(Player p) {
 		p.setUlt();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 0.5, 30);
-		e.add(MidnitePower);
-		p.addEffects(e);
-		p.applyEffects();
+		p.power(0.5, 100);
 		System.out.println("\"Rain on me, Tsunami.\"");
 		System.out.println();
 	}
 	
 	public static void FlorAttack(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
 		if(!p.inRange(a) && !p.inRange(b) && !p.inRange(c)) {
 			System.out.println("No targets in range!");
 			System.out.println();
@@ -16457,30 +11379,18 @@ public class GameSim {
 		}
 		if(p.inRange(a)){
 			p.attack(a);
-			Effect FlorPoison = new Effect("poison", 0.05, 1);
-			Effect FlorBlind = new Effect("blind", 0.05, 1);
-			e.add(FlorPoison);
-			e.add(FlorBlind);
-			a.addEffects(e);
-			a.applyEffects();
+			a.blind(0.05, 1);
+			a.poison(0.05, 1);
 		}
 		if(p.inRange(b)){
 			p.attack(b);
-			Effect FlorPoison = new Effect("poison", 0.05, 1);
-			Effect FlorBlind = new Effect("blind", 0.05, 1);
-			e2.add(FlorPoison);
-			e2.add(FlorBlind);
-			b.addEffects(e2);
-			b.applyEffects();
+			b.blind(0.05, 1);
+			b.poison(0.05, 1);
 		}
 		if(p.inRange(c)){
 			p.attack(c);
-			Effect FlorPoison = new Effect("poison", 0.05, 1);
-			Effect FlorBlind = new Effect("blind", 0.05, 1);
-			e3.add(FlorPoison);
-			e3.add(FlorBlind);
-			c.addEffects(e3);
-			c.applyEffects();
+			c.blind(0.05, 1);
+			c.poison(0.05, 1);
 		}
 		System.out.println();
 	}
@@ -16506,27 +11416,12 @@ public class GameSim {
 	}
 	
 	public static void FlorUltimate(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect HopperHeal = new Effect("protect", 0.3, 2);
-		Effect HopperHeal2 = new Effect("protect", 0.3, 2);
-		Effect HopperHeal3 = new Effect("protect", 0.3, 2);
-		Effect HopperHeal1 = new Effect("counter", 0.3, 2);
-		Effect HopperHeal21 = new Effect("counter", 0.3, 2);
-		Effect HopperHeal31 = new Effect("counter", 0.3, 2);
-		e1.add(HopperHeal);
-		e2.add(HopperHeal2);
-		e3.add(HopperHeal3);
-		e1.add(HopperHeal1);
-		e2.add(HopperHeal21);
-		e3.add(HopperHeal31);
-		p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
-		b.applyEffects();
+		p.protect(0.3,1);
+		p.counter(1);
+		a.protect(0.3,1);
+		a.counter(1);
+		b.protect(0.3,1);
+		b.counter(1);
 		p.setBee(true);
 		a.setBee(true);
 		b.setBee(true);
@@ -16573,21 +11468,9 @@ public class GameSim {
 	}
 	
 	public static void YuriAbility(Player p, Player a, Player b) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect ArcherSight = new Effect("sight", 0.25, 1);
-		Effect ArcherSight2 = new Effect("sight", 0.25, 1);
-		Effect ArcherSight3 = new Effect("sight", 0.25, 1);
-		e1.add(ArcherSight);
-		e2.add(ArcherSight2);
-		e3.add(ArcherSight3);
-		p.addEffects(e1);
-		a.addEffects(e2);
-		b.addEffects(e3);
-		p.applyEffects();
-		a.applyEffects();
-		b.applyEffects();
+		p.sightsee(0.25, 1);
+		a.sightsee(0.25, 1);
+		b.sightsee(0.25, 1);
 		p.heal(0.1);
 		a.heal(0.1);
 		b.heal(0.1);
@@ -16757,31 +11640,19 @@ public class GameSim {
 			if(targetResponse.equals("1")) {
 				a.takeDamage(250);
 				p.addDamage(250);
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect AshleyPoison = new Effect("poison", 0.15, 1);
-				e.add(AshleyPoison);
-				a.addEffects(e);
-				a.applyEffects();
+				a.poison(0.15, 1);
 				p.useTrash();
 			}
 			if(targetResponse.equals("2")) {
 				b.takeDamage(250);
 				p.addDamage(250);
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect AshleyPoison = new Effect("poison", 0.15, 1);
-				e.add(AshleyPoison);
-				b.addEffects(e);
-				b.applyEffects();
+				b.poison(0.15, 1);
 				p.useTrash();
 			}
 			if(targetResponse.equals("3")) {
 				c.takeDamage(250);
 				p.addDamage(250);
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect AshleyPoison = new Effect("poison", 0.15, 1);
-				e.add(AshleyPoison);
-				c.addEffects(e);
-				c.applyEffects();
+				c.poison(0.15, 1);
 				p.useTrash();
 			}
 			if(targetResponse.equals("c")) {
@@ -16807,21 +11678,9 @@ public class GameSim {
 	}
 	
 	public static void LeafAbility(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LouisFreeze = new Effect("weary", 0, 1);
-		Effect LouisFreeze2 = new Effect("weary", 0, 1);
-		Effect LouisFreeze3 = new Effect("weary", 0, 1);
-		e.add(LouisFreeze);
-		e2.add(LouisFreeze2);
-		e3.add(LouisFreeze3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.weary(1);
+		b.weary(1);
+		c.weary(1);
 		a.setTremor(true);
 		b.setTremor(true);
 		c.setTremor(true);
@@ -16831,21 +11690,9 @@ public class GameSim {
 	}
 	
 	public static void LeafUltimate(Player p, Player a, Player b, Player c, Location l) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect CherryDaze = new Effect("daze", 0, 1);
-		Effect CherryDaze2 = new Effect("daze", 0, 1);
-		Effect CherryDaze3 = new Effect("daze", 0, 1);
-		e.add(CherryDaze);
-		e2.add(CherryDaze2);
-		e3.add(CherryDaze3);
-		a.addEffects(e);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.daze(1);
+		b.daze(1);
+		c.daze(1);
 		a.knockbacked(l);
 		a.knockbacked(l);
 		b.knockbacked(l);
@@ -16920,11 +11767,7 @@ public class GameSim {
 				p.attack(c);
 			}
 			if (rand3 < 0.1) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect LunarPower = new Effect("power", 0.1, 1);
-				e.add(LunarPower);
-				p.addEffects(e);
-				p.applyEffects();
+				p.power(0.1, 1);
 			}
 		}
 		System.out.println();
@@ -17012,20 +11855,15 @@ public class GameSim {
 			System.out.println("\"Consider that a checkmate!\"");
 		}
 		System.out.println();
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
 		for(int j = 0; j < utility.size(); j++) {
 			if(utility.get(j).getName().equals("Rook") && utility.get(j).owner(p) && utility.get(j).rookActive()) {
 				if (a.getLoc().eqLoc(utility.get(j).getLoc())) {
 					a.heal(0.1);
-					Effect AlexRefine12 = new Effect("power", 0.1, 1);
-					e2.add(AlexRefine12);
+					a.power(0.1, 1);
 				}
 				if (b.getLoc().eqLoc(utility.get(j).getLoc())) {
 					b.heal(0.1);
-					Effect AlexRefine12 = new Effect("power", 0.1, 1);
-					e3.add(AlexRefine12);
+					b.power(0.1, 1);
 				}
 			}
 		}
@@ -17035,18 +11873,10 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.1);
 		p.addHealing(a.getMaxHP() * 0.1);
 		p.addHealing(b.getMaxHP() * 0.1);
-		Effect AlexRefine12 = new Effect("power", 0.1, 1);
-		Effect AlexRefine22 = new Effect("power", 0.1, 1);
-		Effect AlexRefine32 = new Effect("power", 0.1, 1);
-		e1.add(AlexRefine12);
-		e2.add(AlexRefine22);
-		e3.add(AlexRefine32);
-        p.addEffects(e1);
-		p.applyEffects();
-		a.addEffects(e2);
-		a.applyEffects();
-		b.addEffects(e3);
 		b.applyEffects();
+		p.power(0.1, 1);
+		a.power(0.1, 1);
+		b.power(0.1, 1);
         p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -17118,11 +11948,7 @@ public class GameSim {
 			double rand = Math.random();
 			p.attack(a);
 			if (rand < 0.15) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect LunarPower = new Effect("blind", 0.05, 1);
-				e.add(LunarPower);
-				a.addEffects(e);
-				a.applyEffects();
+				a.blind(0.05, 1);
 			}
 		}
 		System.out.println();
@@ -17172,13 +11998,8 @@ public class GameSim {
 				System.out.println();
 			}
 		}else {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect DimentioPower = new Effect("mend", 0.5, 100);
-			Effect DimentioPower2 = new Effect("sight", 1, 100);
-			e.add(DimentioPower);
-			e.add(DimentioPower2);
-			p.addEffects(e);
-			p.applyEffects();
+			p.mend(0.5,100);
+			p.sightsee(1, 100);
 			p.setDarkness();
 			a.setHitDarkness();
 			b.setHitDarkness();
@@ -17202,11 +12023,7 @@ public class GameSim {
 			a.takeDamage(50);
 			p.addDamage(50);
 			if (rand < 0.15) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect EvilIgnite = new Effect("ignite", 0, 1);
-				e.add(EvilIgnite);
-				a.addEffects(e);
-				a.applyEffects();
+				a.ignite(1);
 			}
 			break;
 		case "Blue":
@@ -17218,11 +12035,7 @@ public class GameSim {
 			a.takeDamage(50);
 			p.addDamage(50);
 			if (rand < 0.25) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect EvilIgnite = new Effect("freeze", 0, 1);
-				e.add(EvilIgnite);
-				a.addEffects(e);
-				a.applyEffects();
+				a.freeze(1);
 			}
 			break;
 		case "Yellow":
@@ -17233,11 +12046,7 @@ public class GameSim {
 			p.useYellow();
 			a.takeDamage(50);
 			p.addDamage(50);
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect EvilIgnite = new Effect("blind", 0.15, 1);
-			e.add(EvilIgnite);
-			a.addEffects(e);
-			a.applyEffects();
+			a.blind(0.15, 1);
 			break;
 		case "Orange":
 			if (p.getRed() == 0 || p.getYellow() == 0) {
@@ -17248,11 +12057,7 @@ public class GameSim {
 			p.useYellow();
 			a.takeDamage(75);
 			p.addDamage(75);
-			ArrayList<Effect> e1 = new ArrayList<Effect>();
-			Effect EvilIgnite1 = new Effect("weak", 0.25, 1);
-			e1.add(EvilIgnite1);
-			a.addEffects(e1);
-			a.applyEffects();
+			a.weak(0.25, 1);
 			break;
 		case "Green":
 			if (p.getBlue() == 0 || p.getYellow() == 0) {
@@ -17263,11 +12068,7 @@ public class GameSim {
 			p.useYellow();
 			a.takeDamage(75);
 			p.addDamage(75);
-			ArrayList<Effect> e11 = new ArrayList<Effect>();
-			Effect EvilIgnite11 = new Effect("poison", 0.25, 1);
-			e11.add(EvilIgnite11);
-			a.addEffects(e11);
-			a.applyEffects();
+			a.poison(0.25, 1);
 			break;
 		case "Purple":
 			if (p.getRed() == 0 || p.getBlue() == 0) {
@@ -17299,21 +12100,9 @@ public class GameSim {
 				break;
 			}
 			p.useRed();
-			ArrayList<Effect> e1 = new ArrayList<Effect>();
-			ArrayList<Effect> e2 = new ArrayList<Effect>();
-			ArrayList<Effect> e3 = new ArrayList<Effect>();
-			Effect ChloeMend = new Effect("power", 0.15, 1);
-			Effect ChloeMend2 = new Effect("power", 0.15, 1);
-			Effect ChloeMend3 = new Effect("power", 0.15, 1);
-			e1.add(ChloeMend);
-			e2.add(ChloeMend2);
-			e3.add(ChloeMend3);
-			p.addEffects(e1);
-			p.applyEffects();
-			d.addEffects(e2);
-			d.applyEffects();
-			e.addEffects(e3);
-			e.applyEffects();
+			p.power(0.15, 1);
+			d.power(0.15, 1);
+			e.power(0.15, 1);
 			break;
 		case "Blue":
 			if (p.getBlue() == 0) {
@@ -17389,27 +12178,15 @@ public class GameSim {
 	
 	public static void PearlAttack(Player p, Player a, Player b, Player c) {
 		p.attack(a);
-		ArrayList<Effect> e11 = new ArrayList<Effect>();
-		Effect EvilIgnite11 = new Effect("poison", 0.15, 1);
-		e11.add(EvilIgnite11);
-		a.addEffects(e11);
-		a.applyEffects();
+		a.poison(0.15, 1);
 		if (p.hasEnhance()) {
 			if(a.inRange(b, 7)) {
 				p.attack(b);
-				ArrayList<Effect> e111 = new ArrayList<Effect>();
-				Effect EvilIgnite111 = new Effect("poison", 0.15, 1);
-				e111.add(EvilIgnite111);
-				b.addEffects(e111);
-				b.applyEffects();
+				b.poison(0.15, 1);
 			}
 			if(a.inRange(c, 7)) {
 				p.attack(c);
-				ArrayList<Effect> e1111 = new ArrayList<Effect>();
-				Effect EvilIgnite1111 = new Effect("poison", 0.15, 1);
-				e1111.add(EvilIgnite1111);
-				c.addEffects(e1111);
-				c.applyEffects();
+				c.poison(0.15, 1);
 			}
 		}
 		System.out.println();
@@ -17590,21 +12367,9 @@ public class GameSim {
 	}
 	
 	public static void OrchidAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect CherryWeaken = new Effect("freeze", 0, 1);
-		Effect CherryWeaken2 = new Effect("freeze", 0, 1);
-		Effect CherryWeaken3 = new Effect("freeze", 0, 1);
-		e1.add(CherryWeaken);
-		e2.add(CherryWeaken2);
-		e3.add(CherryWeaken3);
-		a.addEffects(e1);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.freeze(1);
+		b.freeze(1);
+		c.freeze(1);
 		a.setExpose(true);
 		b.setExpose(true);
 		c.setExpose(true);
@@ -17620,21 +12385,9 @@ public class GameSim {
 	}
 	
 	public static void OrchidUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect HopperHeal = new Effect("vulnerable", 0.05, 4);
-		Effect HopperHeal2 = new Effect("vulnerable", 0.05, 4);
-		Effect HopperHeal3 = new Effect("vulnerable", 0.05, 4);
-		e1.add(HopperHeal);
-		e2.add(HopperHeal2);
-		e3.add(HopperHeal3);
-		a.addEffects(e1);
-		a.applyEffects();
-		b.addEffects(e2);
-		b.applyEffects();
-		c.addEffects(e3);
-		c.applyEffects();
+		a.vulnerable(0.05, 4);
+		b.vulnerable(0.05, 4);
+		c.vulnerable(0.05, 4);
 		p.setChance(1);
 		d.setChance(1);
 		e.setChance(1);
@@ -17683,11 +12436,7 @@ public class GameSim {
 					p.attack(a);
 					double rand = Math.random();
 					if(rand <= 0.05) {
-						ArrayList<Effect> e = new ArrayList<Effect>();
-						Effect MackDaze = new Effect("daze", 0, 1);
-						e.add(MackDaze);
-						a.addEffects(e);
-						a.applyEffects();
+						a.daze(1);
 					}
 				}else {
 					System.out.println();
@@ -17700,11 +12449,7 @@ public class GameSim {
 					p.attack(b);
 					double rand = Math.random();
 					if(rand <= 0.05) {
-						ArrayList<Effect> e = new ArrayList<Effect>();
-						Effect MackDaze = new Effect("daze", 0, 1);
-						e.add(MackDaze);
-						a.addEffects(e);
-						a.applyEffects();
+						b.daze(1);
 					}
 				}else {
 					System.out.println();
@@ -17717,11 +12462,7 @@ public class GameSim {
 					p.attack(c);
 					double rand = Math.random();
 					if(rand <= 0.05) {
-						ArrayList<Effect> e = new ArrayList<Effect>();
-						Effect MackDaze = new Effect("daze", 0, 1);
-						e.add(MackDaze);
-						a.addEffects(e);
-						a.applyEffects();
+						c.daze(1);
 					}
 				}else {
 					System.out.println();
@@ -17758,11 +12499,7 @@ public class GameSim {
 						p.attack(a);
 						double rand = Math.random();
 						if(rand <= 0.05) {
-							ArrayList<Effect> e = new ArrayList<Effect>();
-							Effect MackDaze = new Effect("daze", 0, 1);
-							e.add(MackDaze);
-							a.addEffects(e);
-							a.applyEffects();
+							a.daze(1);
 						}
 					}
 					p.useOrbCharges();
@@ -17778,11 +12515,7 @@ public class GameSim {
 						p.attack(b);
 						double rand = Math.random();
 						if(rand <= 0.05) {
-							ArrayList<Effect> e = new ArrayList<Effect>();
-							Effect MackDaze = new Effect("daze", 0, 1);
-							e.add(MackDaze);
-							b.addEffects(e);
-							b.applyEffects();
+							b.daze(1);
 						}
 					}
 					p.useOrbCharges();
@@ -17799,11 +12532,7 @@ public class GameSim {
 						p.attack(c);
 						double rand = Math.random();
 						if(rand <= 0.05) {
-							ArrayList<Effect> e = new ArrayList<Effect>();
-							Effect MackDaze = new Effect("daze", 0, 1);
-							e.add(MackDaze);
-							c.addEffects(e);
-							c.applyEffects();
+							c.daze(1);
 						}
 					}
 					p.useOrbCharges();
@@ -17870,11 +12599,7 @@ public class GameSim {
 	}
 	
 	public static void EverestUltimate(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AlexProtect = new Effect("sight", 1, 2);
-		e.add(AlexProtect);
-		p.addEffects(e);
-		p.applyEffects();
+		p.sightsee(1, 2);
 		p.setDodge(100);
 		p.setTranscend(true);
 		p.resetUlt();
@@ -17886,21 +12611,13 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("paralyze", 0, 1);
-			e.add(BurtParalyze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.paralyze(1);
 		}
 		if (p.isBrawler()) {
 			p.attack(a);
 			double rand2 = Math.random();
 			if(rand2 <= 0.1) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect BurtParalyze = new Effect("paralyze", 0, 1);
-				e.add(BurtParalyze);
-				a.addEffects(e);
-				a.applyEffects();
+				a.paralyze(1);
 			}
 		}
 		System.out.println();
@@ -17936,21 +12653,9 @@ public class GameSim {
 			health = health - newHealth;
 		}
 		p.increaseHP(health);
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect LiamProtect = new Effect("protect", 0.25, 2);
-		Effect LiamProtect2 = new Effect("protect", 0.25, 2);
-		Effect LiamProtect3 = new Effect("protect", 0.25, 2);
-		e1.add(LiamProtect);
-		e2.add(LiamProtect2);
-		e3.add(LiamProtect3);
-		p.addEffects(e1);
-		p.applyEffects();
-		d.addEffects(e2);
-		d.applyEffects();
-		e.addEffects(e3);
-		e.applyEffects();
+		p.protect(0.25,1);
+		d.protect(0.25,1);
+		e.protect(0.25,1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -18070,21 +12775,21 @@ public class GameSim {
 			Location l = SetCursor(p, a, b, c, d, e, 4);
 			if (a.inRange(l, 4)) {
 				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect AnjelikaBlind = new Effect("blind", 0.3, 1);
+				Effect AnjelikaBlind = new Effect("blind", 0.25, 1);
 				e1.add(AnjelikaBlind);
 				a.addEffects(e1);
 				a.applyEffects();
 			}
 			if (b.inRange(l, 4)) {
 				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect AnjelikaBlind = new Effect("blind", 0.3, 1);
+				Effect AnjelikaBlind = new Effect("blind", 0.25, 1);
 				e1.add(AnjelikaBlind);
 				b.addEffects(e1);
 				b.applyEffects();
 			}
 			if (c.inRange(l, 4)) {
 				ArrayList<Effect> e1 = new ArrayList<Effect>();
-				Effect AnjelikaBlind = new Effect("blind", 0.3, 1);
+				Effect AnjelikaBlind = new Effect("blind", 0.25, 1);
 				e1.add(AnjelikaBlind);
 				c.addEffects(e1);
 				c.applyEffects();
@@ -18127,11 +12832,7 @@ public class GameSim {
 	}
 	
 	public static void DenyUltimate(Player p, Player a, Player b, Player c) {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		Effect AlexProtect = new Effect("power", 0.25, 3);
-		e1.add(AlexProtect);
-		p.addEffects(e1);
-		p.applyEffects();
+		p.power(0.25, 3);
 		p.setUlt();
 		p.setEMP();
 		a.setSupress(true);
@@ -18145,11 +12846,7 @@ public class GameSim {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.25) {
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect BurtParalyze = new Effect("ignite", 0, 1);
-			e.add(BurtParalyze);
-			a.addEffects(e);
-			a.applyEffects();
+			a.ignite(1);
 		}
 		ArrayList<Location> validTargets = new ArrayList<>();
 
@@ -18184,22 +12881,14 @@ public class GameSim {
         		p.attack(b);
         		double rand3 = Math.random();
         		if(rand3 <= 0.25) {
-        			ArrayList<Effect> e = new ArrayList<Effect>();
-        			Effect BurtParalyze = new Effect("ignite", 0, 1);
-        			e.add(BurtParalyze);
-        			b.addEffects(e);
-        			b.applyEffects();
+        			b.ignite(1);
         		}
         	}
         	if (c.getLoc().eqLoc(l)) {
         		p.attack(c);
         		double rand3 = Math.random();
         		if(rand3 <= 0.25) {
-        			ArrayList<Effect> e = new ArrayList<Effect>();
-        			Effect BurtParalyze = new Effect("ignite", 0, 1);
-        			e.add(BurtParalyze);
-        			c.addEffects(e);
-        			c.applyEffects();
+        			c.ignite(1);
         		}
         	}
         }
@@ -18296,21 +12985,9 @@ public class GameSim {
 	
 	public static void RinUltimate(Player p, Player a, Player b) {
 		p.setUlt();
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect AlexProtect = new Effect("power", 0.15, 100);
-		e.add(AlexProtect);
-		p.addEffects(e);
-		p.applyEffects();
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		Effect AlexProtect1 = new Effect("power", 0.15, 100);
-		e1.add(AlexProtect1);
-		a.addEffects(e1);
-		a.applyEffects();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		Effect AlexProtect2 = new Effect("power", 0.15, 100);
-		e2.add(AlexProtect2);
-		b.addEffects(e2);
-		b.applyEffects();
+		p.power(0.15, 100);
+		a.power(0.15, 100);
+		b.power(0.15, 100);
 		System.out.println("\"Mochi and I, we are unstoppable!\"");
 		System.out.println();
 	}
@@ -18417,15 +13094,9 @@ public class GameSim {
 	}
 	
 	public static void VictorAbility(Player p) {
-		ArrayList<Effect> e = new ArrayList<Effect>();
-		Effect MidniteProtect = new Effect("protect", 0.5, 3);
-		Effect MidniteRefine = new Effect("refine", 0, 3);
-		Effect MidniteFortify = new Effect("fortify", 0, 3);
-		e.add(MidniteProtect);
-		e.add(MidniteRefine);
-		e.add(MidniteFortify);
-		p.addEffects(e);
-		p.applyEffects();
+		p.protect(0.5,2);
+		p.refine(2);
+		p.fortify(2);
 		p.setCogwork(true);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
@@ -18529,6 +13200,411 @@ public class GameSim {
 		e.addPermheal();
 		p.resetUlt();
 		System.out.println("\"Quantum shift engaged!\"");
+		System.out.println();
+	}
+	
+	public static void LumiereAttack(Player p, Player a) {
+		p.attack(a);
+		a.blind(0.1, 1);
+		System.out.println();
+	}
+	
+	public static void LumiereAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: Left");
+		System.out.println("2: Right");
+		System.out.println("3: Up");
+		System.out.println("4: Down");
+		System.out.println("Which direction do you want to send the Sphère in: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			System.out.println("1: Bright");
+			System.out.println("2: Shadow");
+			System.out.println("Which Sphère do you want to make: ");
+			String targetResponse2 = input.next();
+			if (targetResponse2.equals("1")) {
+				Utility Sphere = new Utility("Sphere2", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+				utility.add(Sphere);
+				p.setCooldown(2);
+				System.out.println(p.voiceline());
+				Sphere.setDirection("left");
+			}
+			if (targetResponse2.equals("2")) {
+				Utility Sphere = new Utility("Sphere2", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+				utility.add(Sphere);
+				p.setCooldown(2);
+				System.out.println(p.voiceline());
+				Sphere.setDirection("left");
+				Sphere.setSphere(false);
+			}
+		}
+		if(targetResponse.equals("2")) {
+			System.out.println("1: Bright");
+			System.out.println("2: Shadow");
+			System.out.println("Which Sphère do you want to make: ");
+			String targetResponse2 = input.next();
+			if (targetResponse2.equals("1")) {
+				Utility Sphere = new Utility("Sphere2", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+				utility.add(Sphere);
+				p.setCooldown(2);
+				System.out.println(p.voiceline());
+				Sphere.setDirection("right");
+			}
+			if (targetResponse2.equals("2")) {
+				Utility Sphere = new Utility("Sphere2", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+				utility.add(Sphere);
+				p.setCooldown(2);
+				System.out.println(p.voiceline());
+				Sphere.setDirection("right");
+				Sphere.setSphere(false);
+			}
+		}
+		if(targetResponse.equals("3")) {
+			System.out.println("1: Bright");
+			System.out.println("2: Shadow");
+			System.out.println("Which Sphère do you want to make: ");
+			String targetResponse2 = input.next();
+			if (targetResponse2.equals("1")) {
+				Utility Sphere = new Utility("Sphere2", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+				utility.add(Sphere);
+				p.setCooldown(2);
+				System.out.println(p.voiceline());
+				Sphere.setDirection("up");
+			}
+			if (targetResponse2.equals("2")) {
+				Utility Sphere = new Utility("Sphere2", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+				utility.add(Sphere);
+				p.setCooldown(2);
+				System.out.println(p.voiceline());
+				Sphere.setDirection("up");
+				Sphere.setSphere(false);
+			}
+		}
+		if(targetResponse.equals("4")) {
+			System.out.println("1: Bright");
+			System.out.println("2: Shadow");
+			System.out.println("Which Sphère do you want to make: ");
+			String targetResponse2 = input.next();
+			if (targetResponse2.equals("1")) {
+				Utility Sphere = new Utility("Sphere2", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+				utility.add(Sphere);
+				p.setCooldown(2);
+				System.out.println(p.voiceline());
+				Sphere.setDirection("down");
+			}
+			if (targetResponse2.equals("2")) {
+				Utility Sphere = new Utility("Sphere2", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+				utility.add(Sphere);
+				p.setCooldown(2);
+				System.out.println(p.voiceline());
+				Sphere.setDirection("down");
+				Sphere.setSphere(false);
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void LumiereUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).owner(p)) {
+				GameSim.utility.remove(j);
+			}
+		}
+		Utility Eclipse = new Utility("Eclipse", new Location(p.getLoc().getX(), p.getLoc().getY()), p, d, e, a, b, c);
+		utility.add(Eclipse);
+		p.resetUlt();
+		System.out.println("\"Witness the dawn and dusk of battle!\"");
+		System.out.println();
+	}
+	
+	public static void WillowAttack(Player p, Player a, Player b, Player c) {
+		a.resetCover();
+		p.attack(a);
+		for(int i = 0; i < 5; i++) {
+			int randomX = (int)(Math.random() * ((a.getLoc().getX() + 3) - (a.getLoc().getX() - 5) + 1)) + (a.getLoc().getX() - 3);
+			int randomY = (int)(Math.random() * ((a.getLoc().getY() + 3) - (a.getLoc().getY() - 5) + 1)) + (a.getLoc().getY() - 3);
+			Location l = new Location(randomX, randomY);
+			Utility Sensor = new Utility("Butterfly", l, p, p, p, a, b, c);
+			utility.add(Sensor);
+		}
+		a.knockbacked(p.getLoc());
+		System.out.println();
+	}
+	
+	public static void WillowAbility(Player p, Player a, Player b) {
+		p.cleanse();
+		a.cleanse();
+		b.cleanse();
+		p.refine(1);
+		a.refine(1);
+		b.refine(1);
+		p.setOverhealth(400);
+		a.setOverhealth(400);
+		b.setOverhealth(400);
+		p.addHealing(1200);;
+		p.setCooldown(4);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void WillowUltimate(Player p) {
+		p.setUlt();
+		p.increaseDPSNum(125);
+		p.setLife();
+		p.increaseMovement(7);
+		Utility Sphere = new Utility("Respawn", new Location(p.getLoc().getX(), p.getLoc().getY()), p, p, p, p, p, p);
+		utility.add(Sphere);
+		System.out.println("\"Enough hiding, let's do this!\"");
+		System.out.println();
+	}
+	
+	public static void JazzAttack(Player p, Player a, Player b, Player c) {
+		if (a.inRange(b, 4) || a.inRange(c, 4)) {
+			p.attack(a);
+			p.attack(a);
+			double rand = Math.random();
+			if(rand <= 0.1) {
+				a.daze(1);
+			}
+			if (a.inRange(b, 4)) {
+				p.attack(b);
+				double rand2 = Math.random();
+				if(rand2 <= 0.1) {
+					b.daze(1);
+				}
+			}
+			if (a.inRange(c, 4)) {
+				p.attack(c);
+				double rand3 = Math.random();
+				if(rand3 <= 0.1) {
+					c.daze(1);
+				}
+			}
+		}else {
+			p.attack(a);
+			p.attack(a);
+			p.attack(a);
+			p.attack(a);
+			double rand = Math.random();
+			if(rand <= 0.1) {
+				a.daze(1);
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void JazzAbility(Player p, Player a, Player b, Player c) {
+		Scanner input = new Scanner(System.in);
+		if(!p.inRange(a, 15) && !p.inRange(b, 15) && !p.inRange(c, 15)) {
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
+		String range = "No";
+		if(p.inRange(a, 15)) {
+			range = "Yes";
+		}
+		String range2 = "No";
+		if(p.inRange(b, 15)) {
+			range2 = "Yes";
+		}
+		String range3 = "No";
+		if(p.inRange(c, 15)) {
+			range3 = "Yes";
+		}
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ".");
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ".");
+		System.out.println("Where do you want to Potential Jump towards: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if(p.inRange(a, 15)) {
+				a.resetCover();
+				int d = p.getLoc().distance(a.getLoc());
+				p.increaseTotalMovement(d);
+				Location l = new Location(p.getLoc().getX(), p.getLoc().getY());
+				p.getLoc().set(a.getLoc().getX(), a.getLoc().getY());
+				if(b.inRange(a, 4)) {
+					b.knockbacked(l);
+				}
+				if(c.inRange(a, 4)) {
+					c.knockbacked(l);
+				}
+				if(b.inRange(a, 4)) {
+					b.knockbacked(l);
+				}
+				if(c.inRange(a, 4)) {
+					c.knockbacked(l);
+				}
+				p.setCooldown(3);
+				System.out.println(p.voiceline());
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("2")) {
+			if(p.inRange(b, 15)) {
+				b.resetCover();
+				int d = p.getLoc().distance(b.getLoc());
+				p.increaseTotalMovement(d);
+				Location l = new Location(p.getLoc().getX(), p.getLoc().getY());
+				p.getLoc().set(b.getLoc().getX(), b.getLoc().getY());
+				if(a.inRange(b, 4)) {
+					a.knockbacked(l);
+				}
+				if(c.inRange(b, 4)) {
+					c.knockbacked(l);
+				}
+				if(a.inRange(b, 4)) {
+					a.knockbacked(l);
+				}
+				if(c.inRange(b, 4)) {
+					c.knockbacked(l);
+				}
+				p.setCooldown(3);
+				System.out.println(p.voiceline());
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("3")) {
+			if(p.inRange(c, 15)) {
+				c.resetCover();
+				int d = p.getLoc().distance(c.getLoc());
+				p.increaseTotalMovement(d);
+				Location l = new Location(p.getLoc().getX(), p.getLoc().getY());
+				p.getLoc().set(c.getLoc().getX(), c.getLoc().getY());
+				if(a.inRange(c, 4)) {
+					a.knockbacked(l);
+				}
+				if(b.inRange(c, 4)) {
+					b.knockbacked(l);
+				}
+				if(a.inRange(c, 4)) {
+					a.knockbacked(l);
+				}
+				if(b.inRange(c, 4)) {
+					b.knockbacked(l);
+				}
+				p.setCooldown(3);
+				System.out.println(p.voiceline());
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void JazzUltimate(Player p, Player a, Player b, Player c) {
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Bubble") && GameSim.utility.get(j).owner(p)) {
+				GameSim.utility.get(j).setForce();
+			}
+		}
+		Player stunTarget = null;
+		Player dazeTarget = null;
+		Player paralyzeTarget = null;
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.print("Select a target to be stunned: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			stunTarget = a;
+		}
+		if(targetResponse.equals("2")) {
+			stunTarget = b;
+		}
+		if(targetResponse.equals("3")) {
+			stunTarget = c;
+		}
+		System.out.println();
+		System.out.print("Select a different target to be dazed: ");
+		String targetResponse2 = input.next();
+		if(targetResponse2.equals("1")) {
+			dazeTarget = a;
+		}
+		if(targetResponse2.equals("2")) {
+			dazeTarget = b;
+		}
+		if(targetResponse2.equals("3")) {
+			dazeTarget = c;
+		}
+		System.out.println();
+		System.out.print("Select a different target to be paralyzed: ");
+		String targetResponse3 = input.next();
+		if(targetResponse3.equals("1")) {
+			paralyzeTarget = a;
+		}
+		if(targetResponse3.equals("2")) {
+			paralyzeTarget = b;
+		}
+		if(targetResponse3.equals("3")) {
+			paralyzeTarget = c;
+		}
+		if (stunTarget != null && paralyzeTarget != null && dazeTarget != null) {
+			stunTarget.stun(1);
+			paralyzeTarget.paralyze(1);
+			dazeTarget.daze(1);
+			p.setUlt();
+			System.out.println("\"I hope they like Jazz!\"");
+			System.out.println();
+		}
+	}
+	
+	public static void HarperAttack(Player p, Player a) {
+		p.attack(a);
+		if (p.getLoc().getX() > a.getLoc().getX()) {
+			p.getLoc().adjust(2, 0);
+		}else if (p.getLoc().getX() < a.getLoc().getX()){
+			p.getLoc().adjust(-2, 0);
+		}
+		if (p.getLoc().getY() > a.getLoc().getY()) {
+			p.getLoc().adjust(0, 2);
+		}else if (p.getLoc().getY() < a.getLoc().getY()){
+			p.getLoc().adjust(0, -2);
+		}
+		if (p.inRange(a, 3)) {
+			a.knockbacked(p.getLoc());
+		}
+		System.out.println();
+	}
+	
+	public static void HarperAbility(Player p, Player a, Player b, Player c, Location l) {
+		if(!p.inRange(l)) {
+			System.out.println("Can't throw the dynamite that far!");
+			System.out.println();
+			return;
+		}
+		Utility Dynamite = new Utility("Dynamite", l, p, p, p, a, b, c);
+		utility.add(Dynamite);
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void HarperUltimate(Player p, Player a, Player b, Player c, Player d, Player e, Location l) {
+		if(!p.inRange(l)) {
+			System.out.println("Can't send Peri that far!");
+			System.out.println();
+			return;
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Peri") && GameSim.utility.get(j).owner(p)) {
+				GameSim.utility.remove(j);
+			}
+		}
+		Utility Peri = new Utility("Peri", l, p, d, e, a, b, c);
+		utility.add(Peri);
+		p.resetUlt();
+		System.out.println("\"Peri this you filthy casuals!\"");
 		System.out.println();
 	}
 }

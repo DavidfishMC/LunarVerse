@@ -11,6 +11,7 @@ public class Utility {
 	String name;
 	int health = 0;
 	int ogHealth = 0;
+	int size = 3;
 	ArrayList<Player> allies = new ArrayList<Player>();
 	ArrayList<Player> enemies = new ArrayList<Player>();
 	ArrayList<Player> trapped = new ArrayList<Player>();
@@ -22,6 +23,8 @@ public class Utility {
 	boolean rookActive = true;
 	boolean pounced = false;
 	boolean destroy = false;
+	boolean bright = true;
+	boolean eclipse = true;
 	String gemstone = "iron";
 	String direction = "";
 	String color = "";
@@ -48,6 +51,12 @@ public class Utility {
 		if (s.equals("Turret")) {
 			health = 1;
 			ogHealth = 1;
+		}
+		if (s.equals("Dynamite")) {
+			health = 2;
+		}
+		if (s.equals("Peri")) {
+			health = 3;
 		}
 		if (s.equals("Iron")) {
 			for (Player e: enemies) {
@@ -78,6 +87,10 @@ public class Utility {
 		direction = s;
 	}
 	
+	public boolean getSphere() {
+		return bright;
+	}
+	
 	public void setRookActive(boolean b) {
 		rookActive = b;
 	}
@@ -88,6 +101,12 @@ public class Utility {
 	
 	public void setColor(String s) {
 		color = s;
+	}
+	
+	public void setForce() {
+			for (Player p: enemies) {
+				p.getLoc().set(loc.getX(), loc.getY());
+			}
 	}
 	
 	public Player getTarget() {
@@ -165,31 +184,19 @@ public class Utility {
 		if (a.isAlive() && a.inRange(loc, 15)) {
 			smallest = a.getLoc().distanceTo(loc);
 			if (owner.getUltcharge() >= 7) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoParalyze = new Effect("ignite", 0, 2);
-				e.add(RoccoParalyze);
-				a.addEffects(e);
-				a.applyEffects();
+				a.ignite(2);
 			}
 		}
 		if (b.isAlive() && a.inRange(loc, 15)) {
 			smallest2 = b.getLoc().distanceTo(loc);
 			if (owner.getUltcharge() >= 7) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoParalyze = new Effect("ignite", 0, 2);
-				e.add(RoccoParalyze);
-				b.addEffects(e);
-				b.applyEffects();
+				a.ignite(2);
 			}
 		}
 		if (c.isAlive() && a.inRange(loc, 15)) {
 			smallest3 = c.getLoc().distanceTo(loc);
 			if (owner.getUltcharge() >= 7) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoParalyze = new Effect("ignite", 0, 2);
-				e.add(RoccoParalyze);
-				c.addEffects(e);
-				c.applyEffects();
+				a.ignite(2);
 			}
 		}
 		if (smallest == 10000 && smallest2 == 10000 && smallest3 == 10000) {
@@ -248,11 +255,7 @@ public class Utility {
 			if (p.inRange(loc, 6)) {
 				p.takeDamage(200);
 				owner.addDamage(200);
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoParalyze = new Effect("paralyze", 0, 1);
-				e.add(RoccoParalyze);
-				p.addEffects(e);
-				p.applyEffects();
+				p.paralyze(1);
 			}
 		}
 	}
@@ -285,11 +288,7 @@ public class Utility {
 				if (owner.inRange(p)) {
 					p.takeDamage(175);
 					owner.addDamage(175);
-					ArrayList<Effect> e = new ArrayList<Effect>();
-					Effect RoccoParalyze = new Effect("weak", 0.1, 1);
-					e.add(RoccoParalyze);
-					p.addEffects(e);
-					p.applyEffects();
+					p.weak(0.1, 1);
 				}
 			}
 			owner.getLoc().set(loc.getX(), loc.getY());
@@ -299,11 +298,7 @@ public class Utility {
 				if (owner.inRange(p)) {
 					p.takeDamage(175);
 					owner.addDamage(175);
-					ArrayList<Effect> e = new ArrayList<Effect>();
-					Effect RoccoParalyze = new Effect("weak", 0.1, 1);
-					e.add(RoccoParalyze);
-					p.addEffects(e);
-					p.applyEffects();
+					p.weak(0.1, 1);
 				}
 			}
 		}
@@ -315,11 +310,7 @@ public class Utility {
 				if (p.inRange(loc, 0)) {
 					p.takeDamage(p.getMaxHP() * 0.35);
 					owner.addDamage(p.getMaxHP() * 0.35);
-					ArrayList<Effect> e = new ArrayList<Effect>();
-					Effect RoccoParalyze = new Effect("stun", 0, 2);
-					e.add(RoccoParalyze);
-					p.addEffects(e);
-					p.applyEffects();
+					p.stun(2);
 				}else if (p.inRange(loc, 5)) {
 					p.takeDamage(p.getMaxHP() * 0.35);
 					owner.addDamage(p.getMaxHP() * 0.35);
@@ -334,11 +325,7 @@ public class Utility {
 				if (p.inRange(loc, 0)) {
 					p.takeDamage(p.getMaxHP() * 0.35);
 					owner.addDamage(p.getMaxHP() * 0.35);
-					ArrayList<Effect> e = new ArrayList<Effect>();
-					Effect RoccoParalyze = new Effect("stun", 0, 2);
-					e.add(RoccoParalyze);
-					p.addEffects(e);
-					p.applyEffects();
+					p.stun(2);
 				}else if (p.inRange(loc, 8)) {
 					p.takeDamage(p.getMaxHP() * 0.35);
 					owner.addDamage(p.getMaxHP() * 0.35);
@@ -356,11 +343,7 @@ public class Utility {
 	public void activateFulmination() {
 		for (Player p: enemies) {
 			if (p.inRange(loc, 8)) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoParalyze = new Effect("paralyze", 0, 1);
-				e.add(RoccoParalyze);
-				p.addEffects(e);
-				p.applyEffects();
+				p.paralyze(1);
 			}
 		}
 	}
@@ -444,24 +427,12 @@ public class Utility {
 	public void activateStone() {
 		for (Player p: allies) {
 			if (gemstone.equals("emerald") && p.inRange(loc, 4)) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect SolarProtect = new Effect("protect", 0.1, 2);
-				e.add(SolarProtect);
-				p.addEffects(e);
-				p.applyEffects();
+				p.protect(0.1, 1);
 			}else if (gemstone.equals("diamond") && p.inRange(loc, 6)) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect SolarProtect = new Effect("protect", 0.1, 2);
-				e.add(SolarProtect);
-				p.addEffects(e);
-				p.applyEffects();
+				p.protect(0.1, 1);
 				p.increaseMovement(2);
 			}if (gemstone.equals("kunzite") && p.inRange(loc, 8)) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect SolarProtect = new Effect("protect", 0.1, 2);
-				e.add(SolarProtect);
-				p.addEffects(e);
-				p.applyEffects();
+				p.protect(0.1, 1);
 				p.increaseMovement(2);
 				p.heal(0.05);
 				owner.addHealing(p.getMaxHP() * 0.05);
@@ -497,17 +468,11 @@ public class Utility {
 		}
 		for (Player p: allies) {
 			if (p.inRange(loc, range)) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect SolarProtect = new Effect("sight", 0.15, 2);
-				Effect SolarProtect2 = new Effect("refine", 0.15, 2);
 				if (owner.ultActive) {
-					Effect SolarProtect3 = new Effect("protect", 0.2, 2);
-					e.add(SolarProtect3);
+					p.protect(0.2,1);
 				}
-				e.add(SolarProtect);
-				e.add(SolarProtect2);
-				p.addEffects(e);
-				p.applyEffects();
+				p.sightsee(0.15,2);
+				p.refine(2);
 			}
 		}
 	}
@@ -539,11 +504,7 @@ public class Utility {
 			loc.adjust(0, 4);
 			if (loc.getY() == 27) {
 				for (Player p: allies) {
-					ArrayList<Effect> e = new ArrayList<Effect>();
-					Effect RoccoParalyze = new Effect("power", 0.15, 1);
-					e.add(RoccoParalyze);
-					p.addEffects(e);
-					p.applyEffects();
+					p.power(0.15, 1);
 				}
 				direction = "done";
 			}
@@ -551,11 +512,7 @@ public class Utility {
 			loc.adjust(0, -4);
 			if (loc.getY() == 11) {
 				for (Player p: allies) {
-					ArrayList<Effect> e = new ArrayList<Effect>();
-					Effect RoccoParalyze = new Effect("power", 0.15, 1);
-					e.add(RoccoParalyze);
-					p.addEffects(e);
-					p.applyEffects();
+					p.power(0.15, 1);
 				}
 				direction = "done";
 			}
@@ -576,20 +533,12 @@ public class Utility {
 			break;
 		case "Green":
 			for (Player p: enemies) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoParalyze = new Effect("vulnerable", 0.25, 2);
-				e.add(RoccoParalyze);
-				p.addEffects(e);
-				p.applyEffects();
+				p.vulnerable(0.25, 2);
 			}
 			break;
 		case "Purple":
 			for (Player p: enemies) {
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoParalyze = new Effect("daze", 0.15, 1);
-				e.add(RoccoParalyze);
-				p.addEffects(e);
-				p.applyEffects();
+				p.daze(1);
 			}
 			break;
 		}
@@ -616,11 +565,7 @@ public class Utility {
 			if (this.inRange(target, 3)) {
 				target.takeDamage(200);
 				owner.addDamage(200);
-				ArrayList<Effect> e = new ArrayList<Effect>();
-				Effect RoccoParalyze = new Effect("freeze", 0.15, 1);
-				e.add(RoccoParalyze);
-				target.addEffects(e);
-				target.applyEffects();
+				target.freeze(1);
 				target = null;
 				System.out.println("\"Freeze, monkey style!\"");
 				return;
@@ -907,6 +852,19 @@ public class Utility {
 				return;
 			}
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Peri") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().eqLoc(loc)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Peri has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Peri destroyed.");
+				}
+				destroy = true;
+				System.out.println("\"Good work Mochi!\"");
+				return;
+			}
+		}
 	}
 	
 	public void returnTo() {
@@ -914,16 +872,49 @@ public class Utility {
 		System.out.println("\"Back to me Mochi!\"");
 	}
 	
+	public void returnBubble() {
+		loc.set(owner.getLoc().getX(), owner.getLoc().getY());
+		System.out.println("\"Kinetic Bubble has returned!\"");
+		if (owner.ultActive()) {
+			setForce();
+		}
+	}
+	
+	public int getSize() {
+		return size;
+	}
+	
+	public void changeSize() {
+	    Scanner input = new Scanner(System.in);
+	    int number = 0;
+	    boolean valid = false;
+
+	    while (!valid) {
+	        System.out.print("What size do you want to change the bubble to (3 - 15): ");
+	        if (input.hasNextInt()) {
+	            number = input.nextInt();
+	            if (number >= 3 && number <= 15) {
+	                valid = true;
+	            } else {
+	                System.out.println("Invalid size. Please enter a number between 3 and 15.");
+	            }
+	        } else {
+	            System.out.println("Invalid input. Please enter a valid integer.");
+	            input.next(); // Clear the invalid input
+	        }
+	    }
+
+	    size = number;
+	    System.out.print("Kinetic Bubble radius changed to " + size);
+	}
+
+	
 	public void firework() {
 		int randomNum = (int) (Math.random() * (2 - 0 + 0)) + 0;
 		Player target = enemies.get(randomNum);
 		if (owner.inRange(target)) {
 			target.resetCover();
-			ArrayList<Effect> e = new ArrayList<Effect>();
-			Effect SolarProtect = new Effect("weak", 0.15, 1);
-			e.add(SolarProtect);
-			target.addEffects(e);
-			target.applyEffects();
+			target.weak(0.15,1);
 			System.out.println(target.getSkin() + " was fireworked!");
 		}
 	}
@@ -934,6 +925,184 @@ public class Utility {
 				e.knockbacked(owner.getLoc());
 			}
 		}
+	}
+	
+	public void setSphere(boolean b) {
+		bright = b;
+	}
+	
+	public boolean isEclipse() {
+		return eclipse;
+	}
+	
+	public void checkSphere() {
+		if (bright) {
+			for (Player e: allies) {
+				if (e.inRange(loc, 4)) {
+					e.heal(0.05);
+					owner.addHealing(e.getMaxHP() * 0.05);
+				}
+			}
+		}else {
+			for (Player e: enemies) {
+				if (e.inRange(loc, 4)) {
+					e.takeDamage(200);
+					owner.addDamage(200);
+				}
+			}
+		}
+		if (direction.equals("left")) {
+			loc.adjust(-6, 0);
+		}
+		if (direction.equals("right")) {
+			loc.adjust(6, 0);
+		}
+		if (direction.equals("up")) {
+			loc.adjust(0, -6);
+		}
+		if (direction.equals("down")) {
+			loc.adjust(0, 6);
+		}
+	}
+	
+	public void setPhase() {
+		eclipse = !eclipse;
+	}
+	
+	public void activateDynamite() {
+		System.out.println("Dyanmite blasted!");
+		for (Player p: enemies) {
+			if (!p.isIgnite()) {
+				p.ignite(2);
+				owner.addDamage(350);
+			}else {
+				p.addFiretick();
+				owner.addDamage(25);
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Sensor") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy sound sensor destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Sphere") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Symphony Sphere has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Symphony Sphere destroyed.");
+				}
+			}
+		}
+		
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Gemstone") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Gemstone Lode has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Gemstone Lode destroyed.");
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Field") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Electromagnetic field destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Umbrella") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Umbrella destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Pylon") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Honey Pylon destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Turret") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Turret has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.get(j).deactivate();
+					System.out.println("Enemy Turret deactivated.");
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Pawn") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Pawn destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Mural") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Mural destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Sock") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Sock Monkey destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Support") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Sockyman Support destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Matrix") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Immortality Matrix destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Dynamite") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Dynamite has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Dynamite destroyed.");
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Peri") && (GameSim.utility.get(j).owner(enemies.get(0)) || GameSim.utility.get(j).owner(enemies.get(1)) || GameSim.utility.get(j).owner(enemies.get(2))) && GameSim.utility.get(j).getLoc().inRange(loc, 5)) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Peri has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Peri destroyed.");
+				}
+			}
+		}
+	}
+	
+	public void activatePeri() {
+		for (Player p: enemies) {
+			if (p.inRange(loc, 12)) {
+				p.resetCover();
+			}
+		}
+		owner.setShield();
 	}
 
 }

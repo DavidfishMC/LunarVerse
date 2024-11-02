@@ -118,6 +118,7 @@ public class Player {
 	boolean overheat = true;
 	boolean cogwork = false;
 	boolean clockwork = false;
+	boolean periCounter = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -152,6 +153,8 @@ public class Player {
 	int emp = 0;
 	int mochiMovement = 12;
 	int permHeal = 0;
+	int safe = 0;
+	int firetick = 0;
 	double totalDamage = 0;
 	double critChance = 0;
 	double fulField = 0;
@@ -166,6 +169,7 @@ public class Player {
 	double orbCharges = 0;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
 	ArrayList<String> roles = new ArrayList<String>();
+	ArrayList<Player> players = new ArrayList<Player>();
 	public static final String reset = "\u001B[0m";
 	static final String bold = "\u001b[1m";
 	int cNum = 0;
@@ -213,6 +217,13 @@ public class Player {
 		if (name.equals("Orchid")){
 			setCooldown(2);
 		}
+		if (name.equals("Lumiere")) {
+			ArrayList<Effect> e = new ArrayList<Effect>();
+			Effect AxolMend = new Effect("mend", 0.5, 100);
+			e.add(AxolMend);
+			addEffects(e);
+			applyEffects();
+		}
 		smolluskSkin = getGradientName("Smollusk", "#5C5C5C", "#ACD2D2", "#5C5C5C");
 	}
 	
@@ -243,6 +254,11 @@ public class Player {
 	public void setSteam(Player a, Player b, Player c, Player d, Player e) {
 		Utility Steam = new Utility("Steam", curLoc, this, d, e, a, b, c);
 		GameSim.utility.add(Steam);
+	}
+	
+	public void setBubble(Player a, Player b, Player c, Player d, Player e) {
+		Utility Bubble = new Utility("Bubble", new Location(curLoc.getX(), curLoc.getY()), this, d, e, a, b, c);
+		GameSim.utility.add(Bubble);
 	}
 	
 	public void setAb(String s) {
@@ -545,6 +561,27 @@ public class Player {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
 	}
 	
+	public void addFiretick() {
+		firetick = firetick + 5;
+		System.out.println(nameSkin + " has been incinerated.");
+	}
+	
+	public int getFiretick() {
+		return firetick;
+	}
+	
+	public ArrayList<Player> getPlayers(){
+		return players;
+	}
+	
+	public void setPlayers(Player a, Player b, Player c, Player d, Player e) {
+		players.add(a);
+		players.add(b);
+		players.add(c);
+		players.add(d);
+		players.add(e);
+	}
+	
 	public void addPermheal() {
 		permHeal++;
 	}
@@ -616,6 +653,11 @@ public class Player {
 				System.out.println(nameSkin + " is downed!");
 				resetQuincy();
 				turndead = GameSim.turns2;
+				for(int j = 0; j < GameSim.utility.size(); j++) {
+					if(GameSim.utility.get(j).owner(this)) {
+						GameSim.utility.remove(j);
+					}
+				}
 			}
 		}
 		if (emp != 0) {
@@ -819,6 +861,14 @@ public class Player {
 			}else {
 				System.out.println(nameSkin + "'s petal blockade is out.");
 				petal = true;
+			}
+		}
+		if (name.equals("Harper")) {
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Dynamite") && GameSim.utility.get(j).owner(this)) {
+					GameSim.utility.get(j).activateDynamite();
+					GameSim.utility.remove(j);
+				}
 			}
 		}
 		System.out.println();
@@ -1046,8 +1096,16 @@ public class Player {
 	}
 	
 	public void setOverhealth(double d) {
+		if (name.equals("Willow") && ultActive()) {
+			return;
+		}
 		health = health + d;
 		overHealth = overHealth + d;
+	}
+	
+	public void removeOverhealth() {
+		health = health - overHealth;
+		overHealth = 0;
 	}
 	
 	public void checkOverhealth() {
@@ -1057,6 +1115,46 @@ public class Player {
 		overHealth = overHealth - (overHealth * 0.1);
 		if (overHealth < 0) {
 			overHealth = 0;
+		}
+	}
+	
+	public void checkDecay() {
+		if (name.equals("Willow") && ultActive() && safe < 4 && isAlive()) {
+			health = health - (maxHealth * 0.25);
+			if (health <= 0) {
+				if (maxHealth == 1600) {
+					health = 0;
+					try {
+						String audio = "downed.wav";
+						Music victoryPlayer = new Music(audio, false);
+						victoryPlayer.play();
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+					alive = false;
+					System.out.println(nameSkin + " is downed!");
+					resetQuincy();
+					turndead = GameSim.turns2;
+					for(int j = 0; j < GameSim.utility.size(); j++) {
+						if(GameSim.utility.get(j).owner(this)) {
+							GameSim.utility.remove(j);
+						}
+					}
+					return;
+				}
+				health = saveHealth;
+				maxHealth = 2325;
+				resetUlt();
+				ultDown();
+				damage = damage - 125;
+				System.out.println("\"Woah, let's not do that again!\"");
+				for(int j = 0; j < GameSim.utility.size(); j++) {
+					if(GameSim.utility.get(j).getName().equals("Respawn") && GameSim.utility.get(j).owner(this)) {
+						curLoc.set(GameSim.utility.get(j).getLoc().getX(), GameSim.utility.get(j).getLoc().getY());
+						GameSim.utility.remove(j);
+					}
+				}
+			}
 		}
 	}
 	
@@ -1104,6 +1202,13 @@ public class Player {
 	
 	public void pickupStar() {
 		starCount++;
+	}
+	
+	public void pickupSpirit() {
+		safe++;
+		if (safe == 4) {
+			System.out.println("\"I think I'll stay around a bit longer!\"");
+		}
 	}
 	
 	public void resetStars() {
@@ -1206,6 +1311,12 @@ public class Player {
 		saveHealth = health;
 		health = 600;
 		maxHealth = 600;
+	}
+	
+	public void setLife() {
+		saveHealth = health;
+		health = 1000;
+		maxHealth = 1000;
 	}
 	
 	public void setBumps(int i) {
@@ -1735,6 +1846,7 @@ public class Player {
 	public void resetAttack() {
 		attacked = false;
 		attackOnce = false;
+		periCounter = false;
 	}
 
 	public boolean isParalyzed() {
@@ -1761,6 +1873,10 @@ public class Player {
 
 	public void setMovement(int i) {
 		ogMovement = i;
+	}
+	
+	public void setMovementCurrent(int i) {
+		movement = i;
 	}
 	
 	public void increaseOgMovement(int i) {
@@ -2023,15 +2139,8 @@ public class Player {
 	}
 	
 	public void callField() {
-		ArrayList<Effect> e1 = new ArrayList<Effect>();
-		ArrayList<Effect> e2 = new ArrayList<Effect>();
-		ArrayList<Effect> e3 = new ArrayList<Effect>();
-		Effect MidnitePower = new Effect("power", 0.1, 1);
-		Effect ArcherSight = new Effect("sight", 0.1, 1);
-		e1.add(MidnitePower);
-		e1.add(ArcherSight);
-		addEffects(e1);
-		applyEffects();
+		power(0.1,1);
+		sightsee(0.1,1);
 	}
 
 	public void takeDamage(double d) {
@@ -2106,6 +2215,20 @@ public class Player {
 				}else {
 					d = d * 0.7;
 				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && !tectonic && GameSim.utility.get(j).isEclipse()) {
+				if (tremor) {
+					d = d * 0.9;
+				}else {
+					d = d * 0.8;
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isEnemy(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && !GameSim.utility.get(j).isEclipse()) {
+				d = d * 1.2;
 			}
 		}
 		for(int j = 0; j < GameSim.utility.size(); j++) {
@@ -2271,6 +2394,29 @@ public class Player {
 				System.out.println("\"Hey, not cool man!\"");
 				return;
 			}
+			if (name.equals("Willow") && !ultActive && ultReady()) {
+				health = 1600;
+				maxHealth = 1600;
+				setUlt();
+				GameSim.deathWillowUltimate(this);
+				System.out.println("\"You thought it was over didn't ya!?\"");
+				return;
+			}
+			if (name.equals("Willow") && ultActive && maxHealth == 1000) {
+				health = saveHealth;
+				maxHealth = 2325;
+				resetUlt();
+				ultDown();
+				damage = damage - 125;
+				System.out.println("\"Woah, let's not do that again!\"");
+				for(int j = 0; j < GameSim.utility.size(); j++) {
+					if(GameSim.utility.get(j).getName().equals("Respawn") && GameSim.utility.get(j).owner(this)) {
+						curLoc.set(GameSim.utility.get(j).getLoc().getX(), GameSim.utility.get(j).getLoc().getY());
+						GameSim.utility.remove(j);
+					}
+				}
+				return;
+			}
 			if (name.equals("Clementine") && isTank()) {
 				health = 800;
 				maxHealth = 800;
@@ -2286,7 +2432,12 @@ public class Player {
 			}
 			alive = false;
 			for(int j = 0; j < GameSim.utility.size(); j++) {
-				if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(this)) {
+				if(GameSim.utility.get(j).owner(this)) {
+					GameSim.utility.remove(j);
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Bubble") && GameSim.utility.get(j).owner(this)) {
 					GameSim.utility.remove(j);
 				}
 			}
@@ -2323,9 +2474,24 @@ public class Player {
 			System.out.println("\"Hey, not cool man!\"");
 			return;
 		}
+		if (name.equals("Willow") && ultActive && maxHealth == 1000) {
+			health = saveHealth;
+			maxHealth = 2325;
+			resetUlt();
+			ultDown();
+			damage = damage - 125;
+			System.out.println("\"Woah, let's not do that again!\"");
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Respawn") && GameSim.utility.get(j).owner(this)) {
+					curLoc.set(GameSim.utility.get(j).getLoc().getX(), GameSim.utility.get(j).getLoc().getY());
+					GameSim.utility.remove(j);
+				}
+			}
+			return;
+		}
 		alive = false;
 		for(int j = 0; j < GameSim.utility.size(); j++) {
-			if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(this)) {
+			if(GameSim.utility.get(j).owner(this)) {
 				GameSim.utility.remove(j);
 			}
 		}
@@ -2358,6 +2524,23 @@ public class Player {
 	public int skinC() {
 		return cNum;
 	}
+	
+	public boolean sameSide(Player p, Player a) {
+		if (p.getName().equals("Jazz")) {
+			return true;
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Bubble")) {
+				if (p.inRange(GameSim.utility.get(j).getLoc(), GameSim.utility.get(j).getSize()) && !a.inRange(GameSim.utility.get(j).getLoc(), GameSim.utility.get(j).getSize())) {
+					return false;
+				}
+				if (!p.inRange(GameSim.utility.get(j).getLoc(), GameSim.utility.get(j).getSize()) && a.inRange(GameSim.utility.get(j).getLoc(), GameSim.utility.get(j).getSize())) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	public void attack(Player p) {
 		if (!p.isAlive()) {
@@ -2365,6 +2548,10 @@ public class Player {
 		}
 		if(p.returnPat() != null && p.returnPat().isAlive() && p.returnPat().inRange(p, 1)) {
 			p = p.returnPat();
+		}
+		if (!sameSide(this, p)) {
+			this.setAttacked();
+			return;
 		}
 		double c = 0;
 		int randomNum = (int) (Math.random() * (10 - (-10) + 1)) + -10;
@@ -2380,8 +2567,27 @@ public class Player {
 			check = check + 0.025;
 		}
 		check = check + critChance;
+		if (name.equals("Harper") && this.overRange(p, 12)) {
+			check = check + 0.35;
+		}
+		if (name.equals("Harper") && !this.overRange(p, 8)) {
+			check = -1;
+		}
 		if (rand2 <= check) {
-			c = damage * 0.25;
+			if (name.equals("Harper")) {
+				movement = movement + 2;
+				c = damage * 0.5;
+			}else {
+				c = damage * 0.25;
+			}
+		}
+		
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Peri") && GameSim.utility.get(j).owner(p) && this.inRange(GameSim.utility.get(j).getLoc(), 12) && !periCounter) {
+				periCounter = true;
+				takeDamage(275);
+				GameSim.utility.get(j).getOwner().addDamage(275);
+			}
 		}
 
 		if (p.getName().equals("Bedrock") && p.ultActive() && p.inRange(this)) {
@@ -2546,6 +2752,10 @@ public class Player {
 	public void increaseDPSNum(double d) {
 		damage = damage + d;
 	}
+	
+	public void decreaseDPSNum(double d) {
+		damage = damage + d;
+	}
 
 	public void addEffects(ArrayList<Effect> e) {
 		if (!isAlive()) {
@@ -2570,6 +2780,10 @@ public class Player {
 			}
 		}
 		for (int i = 0; i < e.size(); i++) {
+			String s = e.get(i).getTurns() + " turn(s).";
+			if (e.get(i).getTurns() > 20) {
+				s = "the rest of the game.";
+			}
 			if (heartburn) {
 				e.get(i).increaseTurns();
 			}
@@ -2664,7 +2878,7 @@ public class Player {
 			}
 			if (e.get(i).getName().equals("refine") && !refined) {
 				refined = true;
-				System.out.println(nameSkin + " has been refined for " + e.get(i).getTurns() + " turn(s).");
+				System.out.println(nameSkin + " has been refined for " + s);
 			}
 			if (e.get(i).getName().equals("counter") && counter) {
 				for (int j = 0; j < effects.size(); j++) {
@@ -2691,7 +2905,7 @@ public class Player {
 			if (e.get(i).getName().equals("mend") && !mend) {
 				mend = true;
 				System.out.println(nameSkin + " is now mending by " + e.get(i).getIncrease() * 100 + "% for "
-						+ e.get(i).getTurns() + " turn(s).");
+						+ s);
 			}
 			if (e.get(i).getName().equals("fortify") && fortify) {
 				for (int j = 0; j < effects.size(); j++) {
@@ -2704,7 +2918,7 @@ public class Player {
 			}
 			if (e.get(i).getName().equals("fortify") && !fortify) {
 				fortify = true;
-				System.out.println(nameSkin + " is fortified for " + e.get(i).getTurns() + " turn(s).");
+				System.out.println(nameSkin + " is fortified for " + s);
 			}
 			if (e.get(i).getName().equals("weary") && weary) {
 				for (int j = 0; j < effects.size(); j++) {
@@ -2736,15 +2950,19 @@ public class Player {
 	public void applyEffects() {
 		for (int i = 0; i < effects.size(); i++) {
 			Effect e = effects.get(i);
+			String s = effects.get(i).getTurns() + " turn(s).";
+			if (effects.get(i).getTurns() > 20) {
+				s = "the rest of the game.";
+			}
 			if (e.getName().equals("power") && !e.isUsed()) {
 				damage = damage + (ogDamage * e.getIncrease());
 				System.out.println(nameSkin + " has been powered by " + effects.get(i).getIncrease() * 100 + "% for "
-						+ effects.get(i).getTurns() + " turn(s).");
+						+ s);
 			}
 			if (e.getName().equals("protect") && !e.isUsed()) {
 				protect = protect - e.getIncrease();
 				System.out.println(nameSkin + " has been protected by " + effects.get(i).getIncrease() * 100 + "% for "
-						+ effects.get(i).getTurns() + " turn(s).");
+						+ s);
 			}
 			if (e.getName().equals("weak") && !e.isUsed()) {
 				damage = damage - (ogDamage * e.getIncrease());
@@ -2769,7 +2987,7 @@ public class Player {
 			if (e.getName().equals("sight") && !e.isUsed()) {
 				range = range + (ogRange * e.getIncrease());
 				System.out.println(nameSkin + " is now sightseeing by " + effects.get(i).getIncrease() * 100 + "% for "
-						+ effects.get(i).getTurns() + " turn(s).");
+						+ s);
 			}
 			e.used();
 		}
@@ -2778,16 +2996,15 @@ public class Player {
 	public void reduceEffects() {
 		for (int i = 0; i < effects.size(); i++) {
 			Effect e = effects.get(i);
-			e.reduceTurns();
+			if (e.getName().equals("power") || e.getName().equals("posion") || e.getName().equals("blind") || e.getName().equals("vulnerable") || e.getName().equals("weak") || e.getName().equals("ignite") ||
+					e.getName().equals("daze") || e.getName().equals("stun") || e.getName().equals("paralyze") || e.getName().equals("freeze") || e.getName().equals("mend") || e.getName().equals("sight") ||
+					e.getName().equals("weary")) {
+				e.reduceTurns();
+			}
 			if (e.getTurns() <= 0) {
 				if (e.getName().equals("power")) {
 					damage = damage - (ogDamage * e.getIncrease());
 					System.out.println(nameSkin + " is no longer powered.");
-					i--;
-				}
-				if (e.getName().equals("protect")) {
-					protect = protect + e.getIncrease();
-					System.out.println(nameSkin + " is no longer protected.");
 					i--;
 				}
 				if (e.getName().equals("poison")) {
@@ -2830,14 +3047,51 @@ public class Player {
 					System.out.println(nameSkin + " is no longer paralyzed.");
 					i--;
 				}
-				if (e.getName().equals("reflection")) {
-					reflection = false;
-					System.out.println(nameSkin + " is no longer reflecting.");
-					i--;
-				}
 				if (e.getName().equals("freeze")) {
 					freezed = false;
 					System.out.println(nameSkin + " is no longer freezed.");
+					i--;
+				}
+				if (e.getName().equals("mend")) {
+					mend = false;
+					System.out.println(nameSkin + " is no longer mending.");
+					i--;
+				}
+				if (e.getName().equals("sight")) {
+					range = range - (ogRange * e.getIncrease());
+					System.out.println(nameSkin + " is no longer sightseeing.");
+					i--;
+				}
+				if (e.getName().equals("heal")) {
+					range = range - (ogRange * e.getIncrease());
+					System.out.println(nameSkin + " is no longer regenerating.");
+					i--;
+				}
+				if (e.getName().equals("weary")) {
+					weary = false;
+					System.out.println(nameSkin + " is no longer weary.");
+					i--;
+				}
+				effects.remove(e);
+			}
+		}
+	}
+	
+	public void reduceEffectsPre() {
+		for (int i = 0; i < effects.size(); i++) {
+			Effect e = effects.get(i);
+			if (e.getName().equals("protect") || e.getName().equals("reflection") || e.getName().equals("refine") || e.getName().equals("counter") || e.getName().equals("fortify")) {
+				e.reduceTurns();
+			}
+			if (e.getTurns() <= 0) {
+				if (e.getName().equals("protect")) {
+					protect = protect + e.getIncrease();
+					System.out.println(nameSkin + " is no longer protected.");
+					i--;
+				}
+				if (e.getName().equals("reflection")) {
+					reflection = false;
+					System.out.println(nameSkin + " is no longer reflecting.");
 					i--;
 				}
 				if (e.getName().equals("refine")) {
@@ -2850,24 +3104,9 @@ public class Player {
 					System.out.println(nameSkin + " is no longer countering.");
 					i--;
 				}
-				if (e.getName().equals("mend")) {
-					mend = false;
-					System.out.println(nameSkin + " is no longer mending.");
-					i--;
-				}
 				if (e.getName().equals("fortify")) {
 					fortify = false;
 					System.out.println(nameSkin + " is no longer fortified.");
-					i--;
-				}
-				if (e.getName().equals("sight")) {
-					range = range - (ogRange * e.getIncrease());
-					System.out.println(nameSkin + " is no longer sightseeing.");
-					i--;
-				}
-				if (e.getName().equals("weary")) {
-					weary = false;
-					System.out.println(nameSkin + " is no longer weary.");
 					i--;
 				}
 				effects.remove(e);
@@ -2917,6 +3156,7 @@ public class Player {
 				effects.get(i).setTurns(1);
 			}
 			reduceEffects();
+			reduceEffectsPre();
 		} else {
 			turn = true;
 		}
@@ -2934,6 +3174,7 @@ public class Player {
 			effects.get(i).setTurns(1);
 		}
 		reduceEffects();
+		reduceEffectsPre();
 	}
 	
 	public void reviveDeny() {
@@ -2948,6 +3189,7 @@ public class Player {
 			effects.get(i).setTurns(1);
 		}
 		reduceEffects();
+		reduceEffectsPre();
 	}
 
 	public boolean revive() {
@@ -3085,6 +3327,16 @@ public class Player {
 					e = e * 1.25;
 				}
 			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isEnemy(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && !GameSim.utility.get(j).isEclipse()) {
+					e = e * 0.8;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && GameSim.utility.get(j).isEclipse()) {
+					e = e * 1.2;
+				}
+			}
 			for (int i = 0; i < permHeal; i++) {
 				e = e * 1.05;
 			}
@@ -3116,6 +3368,16 @@ public class Player {
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
 					e = e * 1.25;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isEnemy(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && !GameSim.utility.get(j).isEclipse()) {
+					e = e * 0.8;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && GameSim.utility.get(j).isEclipse()) {
+					e = e * 1.2;
 				}
 			}
 			for (int i = 0; i < permHeal; i++) {
@@ -3151,6 +3413,16 @@ public class Player {
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
 					e = e * 1.25;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isEnemy(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && !GameSim.utility.get(j).isEclipse()) {
+					e = e * 0.8;
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && GameSim.utility.get(j).isEclipse()) {
+					e = e * 1.2;
 				}
 			}
 			for (int k = 0; k < permHeal; k++) {
@@ -3461,6 +3733,158 @@ public class Player {
 
 	public double getRange() {
 		return range;
+	}
+	
+	public void counter(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("counter", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void fortify(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("fortify", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void mend(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("mend", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void regen(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("heal", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void power(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("power", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void protect(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("protect", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void refine(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("refine", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void reflect(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("reflection", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void sightsee(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("sight", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void blind(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("blind", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void daze(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("daze", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void freeze(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("freeze", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void ignite(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("ignite", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void paralyze(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("paralyze", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void poison(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("poison", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void stun(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("stun", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void vulnerable(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("vulnerable", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void weak(double d, int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("weak", d, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
+	}
+	
+	public void weary(int i) {
+		ArrayList<Effect> e = new ArrayList<Effect>();
+		Effect LunarPower = new Effect("weary", 0, i);
+		e.add(LunarPower);
+		addEffects(e);
+		applyEffects();
 	}
 
 	public String voiceline() {
@@ -4497,6 +4921,50 @@ public class Player {
 			}
 			if (randomNum == 3) {
 				return ("\"Nobody leave this matrix!\"");
+			}
+		}
+		if (name.equals("Lumiere")) {
+			if (randomNum == 1) {
+				return ("\"A cure for you. A nightmare for them.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Follow my bright sphères! Stay far from the shadows.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"It just won't sit still. Better go after it.\"");
+			}
+		}
+		if (name.equals("Willow")) {
+			if (randomNum == 1) {
+				return ("\"Refreshing isn't it?\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Almost as good as a shirley temple!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Those harmful spirits won't come anywhere near us.\"");
+			}
+		}
+		if (name.equals("Jazz")) {
+			if (randomNum == 1) {
+				return ("\"Excuse me for dropping in.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"This is the power of potential energy!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Leap of faith!\"");
+			}
+		}
+		if (name.equals("Harper")) {
+			if (randomNum == 1) {
+				return ("\"Smoke them outta there!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Blast them back to their mommas!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Watch out!\"");
 			}
 		}
 		return "";
