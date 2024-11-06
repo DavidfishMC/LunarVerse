@@ -46,13 +46,13 @@ public class GameSim {
 		}
 		*/
 		try {
-			String audio = "jade.wav";
+			String audio = "audio/jade.wav";
 			audioPlayer = new Music(audio, false);
 		}catch (Exception e) {
 			System.out.println(e);
 		}
 		try {
-			String audio = "lobby.wav";
+			String audio = "audio/lobby.wav";
 			menuPlayer = new Music(audio, false);
 			menuPlayer.play();
 		}catch (Exception e) {
@@ -297,7 +297,7 @@ public class GameSim {
 		System.out.println();
 		game = true;
 		try {
-			String audio = "matchstart.wav";
+			String audio = "audio/matchstart.wav";
 			Music victoryPlayer = new Music(audio, false);
 			victoryPlayer.play();
 		}catch (Exception e) {
@@ -343,10 +343,10 @@ public class GameSim {
 				if(party1.oneLeft() && play) {
 					try {
 						audioPlayer.stop();
-						String audio = "lastplayertheme2.wav";
+						String audio = "audio/lastplayertheme2.wav";
 						audioPlayer = new Music(audio, false);
 						audioPlayer.play();
-						String audio2 = "lastplayer.wav";
+						String audio2 = "audio/lastplayer.wav";
 						Music audioPlayer = new Music(audio2, false);
 						audioPlayer.play();
 						play = false;
@@ -1060,10 +1060,10 @@ public class GameSim {
 			if(turns >= 9 && play2) {
 				try {
 					audioPlayer.stop();
-					String audio = "overtimetheme.wav";
+					String audio = "audio/overtimetheme.wav";
 					audioPlayer = new Music(audio, false);
 					audioPlayer.play();
-					String audio2 = "overtimeline.wav";
+					String audio2 = "audio/overtimeline.wav";
 					Music audioPlayer = new Music(audio2, false);
 					audioPlayer.play();
 					play2 = false;
@@ -1075,10 +1075,10 @@ public class GameSim {
 				try {
 					b.endGame();
 					audioPlayer.stop();
-					String audio = "endgametheme.wav";
+					String audio = "audio/endgametheme.wav";
 					audioPlayer = new Music(audio, false);
 					audioPlayer.play();
-					String audio2 = "endgameline.wav";
+					String audio2 = "audio/endgameline.wav";
 					Music audioPlayer = new Music(audio2, false);
 					audioPlayer.play();
 					play4 = false;
@@ -1090,10 +1090,10 @@ public class GameSim {
 				try {
 					b.suddenDeath();
 					audioPlayer.stop();
-					String audio = "suddendeath.wav";
+					String audio = "audio/suddendeath.wav";
 					audioPlayer = new Music(audio, false);
 					audioPlayer.play();
-					String audio2 = "suddendeathline.wav";
+					String audio2 = "audio/suddendeathline.wav";
 					Music audioPlayer = new Music(audio2, false);
 					audioPlayer.play();
 					play5 = false;
@@ -1119,10 +1119,10 @@ public class GameSim {
 				if(party2.oneLeft() && play) {
 					try {
 						audioPlayer.stop();
-						String audio = "lastplayertheme2.wav";
+						String audio = "audio/lastplayertheme2.wav";
 						audioPlayer = new Music(audio, false);
 						audioPlayer.play();
-						String audio2 = "lastplayer.wav";
+						String audio2 = "audio/lastplayer.wav";
 						Music audioPlayer = new Music(audio2, false);
 						audioPlayer.play();
 						play = false;
@@ -1820,7 +1820,7 @@ public class GameSim {
 		} catch (LineUnavailableException e) {
 		}
 		try {
-			String audio = "victoryedit.wav";
+			String audio = "audio/victoryedit.wav";
 			Music victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
 			//String audio2 = "victoryvoice.wav";
@@ -1899,25 +1899,25 @@ public class GameSim {
         frame.setLocation(x, y);
 
         // Create buttons
-        JLabel buttonBackground = new JLabel(new ImageIcon("controller.png"));
-        JButton buttonJump = new JButton(new ImageIcon("jumpbutton.png"));
-        JButton buttonDash = new JButton(new ImageIcon("dashbutton.png"));
-        JButton buttonSwitch = new JButton(new ImageIcon("switchbutton.png"));
-        JButton buttonWeapon = new JButton(new ImageIcon("weaponbutton.png"));
-        JButton buttonAbility = new JButton(new ImageIcon("clockbutton.png"));
-        JButton buttonUltimate = new JButton(new ImageIcon("ultimatebutton.png"));
-        JButton buttonPass = new JButton(new ImageIcon("passbutton.png"));
-        JButton buttonSearch = new JButton(new ImageIcon("searchbutton.png"));
-        JButton buttonMovement = new JButton(new ImageIcon("movebutton.png"));
-        JButton buttonUp = new JButton(new ImageIcon("upbutton.png"));
-        JButton buttonLeft = new JButton(new ImageIcon("leftbutton.png"));
-        JButton buttonDown = new JButton(new ImageIcon("downbutton.png"));
-        JButton buttonRight = new JButton(new ImageIcon("rightbutton.png"));
-        JButton buttonMap = new JButton(new ImageIcon("mapbutton.png"));
-        JButton buttonConfirm = new JButton(new ImageIcon("confirmbutton.png"));
-        JButton buttonSelectTwo = new JButton(new ImageIcon("selecttwobutton.png"));
-        JButton buttonSelectOne = new JButton(new ImageIcon("selectonebutton.png"));
-        JButton buttonSelectThree = new JButton(new ImageIcon("selectthreebutton.png"));
+        JLabel buttonBackground = new JLabel(new ImageIcon("images/controller.png"));
+        JButton buttonJump = new JButton(new ImageIcon("images/jumpbutton.png"));
+        JButton buttonDash = new JButton(new ImageIcon("images/dashbutton.png"));
+        JButton buttonSwitch = new JButton(new ImageIcon("images/switchbutton.png"));
+        JButton buttonWeapon = new JButton(new ImageIcon("images/weaponbutton.png"));
+        JButton buttonAbility = new JButton(new ImageIcon("images/clockbutton.png"));
+        JButton buttonUltimate = new JButton(new ImageIcon("images/ultimatebutton.png"));
+        JButton buttonPass = new JButton(new ImageIcon("images/passbutton.png"));
+        JButton buttonSearch = new JButton(new ImageIcon("images/searchbutton.png"));
+        JButton buttonMovement = new JButton(new ImageIcon("images/movebutton.png"));
+        JButton buttonUp = new JButton(new ImageIcon("images/upbutton.png"));
+        JButton buttonLeft = new JButton(new ImageIcon("images/leftbutton.png"));
+        JButton buttonDown = new JButton(new ImageIcon("images/downbutton.png"));
+        JButton buttonRight = new JButton(new ImageIcon("images/rightbutton.png"));
+        JButton buttonMap = new JButton(new ImageIcon("images/mapbutton.png"));
+        JButton buttonConfirm = new JButton(new ImageIcon("images/confirmbutton.png"));
+        JButton buttonSelectTwo = new JButton(new ImageIcon("images/selecttwobutton.png"));
+        JButton buttonSelectOne = new JButton(new ImageIcon("images/selectonebutton.png"));
+        JButton buttonSelectThree = new JButton(new ImageIcon("images/selectthreebutton.png"));
 
         // Set bounds for buttons
         buttonJump.setBounds(65,60,75,75);
@@ -2954,7 +2954,7 @@ public class GameSim {
 	
 	public static void weaponFX() {
 		try {
-			String audio = "weapon.wav";
+			String audio = "audio/weapon.wav";
 			Music victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
 		}catch (Exception e) {
@@ -2964,7 +2964,7 @@ public class GameSim {
 	
 	public static void abilityFX() {
 		try {
-			String audio = "ability.wav";
+			String audio = "audio/ability.wav";
 			Music victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
 		}catch (Exception e) {
@@ -2974,7 +2974,7 @@ public class GameSim {
 	
 	public static void ultimateFX() {
 		try {
-			String audio = "ultimate.wav";
+			String audio = "audio/ultimate.wav";
 			Music victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
 		}catch (Exception e) {
@@ -4421,7 +4421,7 @@ public class GameSim {
 		}
 		
 		try {
-			String audio = "jump.wav";
+			String audio = "audio/jump.wav";
 			Music victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
 		}catch (Exception e) {
@@ -4496,7 +4496,7 @@ public class GameSim {
 			}
 			
 			try {
-				String audio = "jump.wav";
+				String audio = "audio/jump.wav";
 				Music victoryPlayer = new Music(audio, false); 
 				victoryPlayer.play();
 			}catch (Exception e) {
@@ -4523,7 +4523,7 @@ public class GameSim {
 				GameSim.utility.get(j).activate();
 				System.out.println("Turret back online.");
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4536,7 +4536,7 @@ public class GameSim {
 				GameSim.utility.get(j).setRookActive(false);
 				System.out.println("Enemy Rook Tower deactivated.");
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4589,7 +4589,7 @@ public class GameSim {
 		}
 		if(dashPlayers.size() > 0) {
 			try {
-				String audio = "dash.wav";
+				String audio = "audio/dash.wav";
 				Music victoryPlayer = new Music(audio, false); 
 				victoryPlayer.play();
 			}catch (Exception e) {
@@ -4603,7 +4603,7 @@ public class GameSim {
 				System.out.println("Enemy sound sensor destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4621,7 +4621,7 @@ public class GameSim {
 				}
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4640,7 +4640,7 @@ public class GameSim {
 				}
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4654,7 +4654,7 @@ public class GameSim {
 				System.out.println("Enemy Electromagnetic field destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4673,7 +4673,7 @@ public class GameSim {
 				System.out.println("Enemy Umbrella destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4687,7 +4687,7 @@ public class GameSim {
 				System.out.println("Enemy Honey Pylon destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4705,7 +4705,7 @@ public class GameSim {
 				}
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4719,7 +4719,7 @@ public class GameSim {
 				System.out.println("Enemy Pawn destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4733,7 +4733,7 @@ public class GameSim {
 				System.out.println("Enemy Mural destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4747,7 +4747,7 @@ public class GameSim {
 				System.out.println("Enemy Sock Monkey destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4761,7 +4761,7 @@ public class GameSim {
 				System.out.println("Enemy Sockyman Support destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4775,7 +4775,7 @@ public class GameSim {
 				System.out.println("Enemy Immortality Matrix destroyed.");
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4799,7 +4799,7 @@ public class GameSim {
 					}
 				}
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -4817,7 +4817,7 @@ public class GameSim {
 				}
 				p.useDash();
 				try {
-					String audio = "dash.wav";
+					String audio = "audio/dash.wav";
 					Music victoryPlayer = new Music(audio, false); 
 					victoryPlayer.play();
 				}catch (Exception e) {
@@ -5259,10 +5259,10 @@ public class GameSim {
 		Music victoryPlayer = null;
 		Music victoryPlayer2 = null;
 		try {
-			String audio = "wind.wav";
+			String audio = "audio/wind.wav";
 			victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
-			audio = "heli.wav";
+			audio = "audio/heli.wav";
 			victoryPlayer2 = new Music(audio, false);
 			victoryPlayer2.play();
 		}catch (Exception t) {
@@ -8182,7 +8182,7 @@ public class GameSim {
 	
 	public static void JulianUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
 		try {
-			String audio = "karma.wav";
+			String audio = "audio/karma.wav";
 			Music victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
 		}catch (Exception e1) {

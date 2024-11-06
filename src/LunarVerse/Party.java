@@ -317,7 +317,7 @@ public class Party {
 			}
 		}
 		try {
-			String audio = "passturnedit.wav";
+			String audio = "audio/passturnedit.wav";
 			Music victoryPlayer = new Music(audio, false); 
 			victoryPlayer.play();
 		}catch (Exception e) {

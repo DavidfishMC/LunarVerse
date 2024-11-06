@@ -1125,7 +1125,7 @@ public class Player {
 				if (maxHealth == 1600) {
 					health = 0;
 					try {
-						String audio = "downed.wav";
+						String audio = "audio/downed.wav";
 						Music victoryPlayer = new Music(audio, false);
 						victoryPlayer.play();
 					} catch (Exception e) {
@@ -2099,7 +2099,7 @@ public class Player {
 			return;
 		}
 		try {
-			String audio = "orbedit.wav";
+			String audio = "audio/orbedit.wav";
 			Music victoryPlayer = new Music(audio, false);
 			victoryPlayer.play();
 		} catch (Exception e) {
@@ -2379,7 +2379,7 @@ public class Player {
 		}
 		if (health == 0) {
 			try {
-				String audio = "downed.wav";
+				String audio = "audio/downed.wav";
 				Music victoryPlayer = new Music(audio, false);
 				victoryPlayer.play();
 			} catch (Exception e) {
@@ -2459,7 +2459,7 @@ public class Player {
 	public void down() {
 		health = 0;
 		try {
-			String audio = "downed.wav";
+			String audio = "audio/downed.wav";
 			Music victoryPlayer = new Music(audio, false);
 			victoryPlayer.play();
 		} catch (Exception e) {
@@ -4141,7 +4141,7 @@ public class Player {
 			}
 			if (randomNum == 3) {
 				try {
-					String audio = "fortedit.wav";
+					String audio = "audio/fortedit.wav";
 					Music victoryPlayer = new Music(audio, false);
 					victoryPlayer.play();
 				} catch (Exception e) {
