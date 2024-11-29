@@ -3,6 +3,7 @@ package LunarVerse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Scanner;
@@ -73,6 +74,9 @@ public class GameSim {
 		Player p2 = new Player(10, 225, false, "Finley", 40, 40, 9, 100, 0);
 		Player p4 = new Player(10, 200, false, "Louis", 40, 37, 10, 100, 0);
 		Player p6 = new Player(10000, 200, false, "Solar", 37, 40, 10, 100, 0);
+		
+		Player p = new Player(10000, 200, false, "Solar", 37, 40, 10, 100, 0);
+		Player t = new Player(10000, 200, false, "Solar", 37, 40, 10, 100, 0);
 		game = false;
 		Scanner input = new Scanner(System.in);
 		String title = p1.getGradientName("LunarVerse", "#B68CB8", "#6461A0", "#314CB6", "#0A81D1");
@@ -100,6 +104,12 @@ public class GameSim {
 			    break;
 			case "Charm":
 				mode = "Charm";
+			    break;
+			case "Rotate":
+				mode = "Rotate";
+			    break;
+			case "Evolution":
+				mode = "Evolution";
 			    break;
 			}
 			System.out.println();
@@ -181,15 +191,27 @@ public class GameSim {
 				String charm6 = input.next();
 				p6.setCharm(charm6);
 			}
+			if(mode.equals("Rotate")) {
+				System.out.println();
+				System.out.print("Team A, pick your rotate: ");
+				String temp9 = input.next();
+				p = CharacterSelection(p, temp9, true, 100, 100);
+				System.out.println();
+				System.out.print("Team B, pick your characters: ");
+				String temp12 = input.next();
+				t = CharacterSelection(t, temp12, true, 100, 100);
+				System.out.println();
+			}
 		}else {
-			p1 = new Player(10000, 75, true, "Thunder", 20, 20, 13, 10, 0);
+			p1 = new Player(2300, 75, true, "Norman", 20, 20, 10, 10, 1);
 			p1.addRole("tank");
-			p3 = new Player(1000, 475, false, "Solar", 20, 20, 10, 10, 0);
-			p5 = new Player(1000, 175, false, "Folden", 20, 20, 11, 9, 0);
+			p3 = new Player(2400, 475, false, "Solar", 20, 20, 10, 10, 0);
+			p5 = new Player(3600, 175, false, "Alex", 20, 20, 11, 9, 0);
 			
-			p2 = new Player(10000, 250, false, "Isabelle", 19, 19, 10, 10, 7);
-			p4 = new Player(10000, 250, false, "Lunar", 22, 22, 10, 10, 0);
-			p6 = new Player(10000, 200, false, "Sammi", 23, 23, 10, 10, 7);
+			p2 = new Player(10000, 250, false, "Lunar", 25, 20, 10, 10, 7);
+			p4 = new Player(9000, 250, false, "Solar", 23, 20, 10, 10, 0);
+			p6 = new Player(10000, 200, false, "Kithara", 20, 8, 10, 10, 7);
+			mode = "Evolution";
 			String skinName = "Sakura";
 			p1.changeSkin(skinName);
 			p3.changeSkin(skinName);
@@ -286,6 +308,18 @@ public class GameSim {
 		Party party1 = new Party(true, p1, p3, p5);
 		Party party2 = new Party(false, p2, p4, p6);
 		Player players[] = {p1, p2, p3, p4, p5, p6};
+		party1.setEnemyParty(party2);
+		party2.setEnemyParty(party1);
+		if(mode.equals("Rotate")) {
+			if (p != null && t != null) {
+				party1.setRotate(p);
+				party2.setRotate(t);
+			}
+		}
+		if(mode.equals("Evolution")) {
+			party1.evolve();
+			party2.evolve();
+		}
 		System.out.println();
 		System.out.print("Team A, enter your team name: ");
 		String teamA = input.next();
@@ -413,7 +447,24 @@ public class GameSim {
 						if (p1.getName().equals("Jazz")) {
 							JazzPassive(p1);
 						}
+						if (p1.getName().equals("Jade")) {
+							JadePassive(p1, p2, p4, p6);
+						}
 						ReviveDeny(p1, p3, p5);
+					}
+					if (response.equals("e2")) {
+						if (p1.getName().equals("Stellar")) {
+							StellarPassive(p1);
+						}
+					}
+					if (response.equals("rotate")) {
+						party1.rotate();
+						p1 = party1.first();
+						p3 = party1.second();
+						p5 = party1.third();
+					}
+					if (response.equals("l")) {
+						b.setLight();
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -512,7 +563,10 @@ public class GameSim {
 								System.out.println(p1.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p1.getName().equals("Victor")) {
+								if(p1.getName().equals("Stellar")) {
+									StellarAttack(p1, p2, p4 ,p6);
+									weaponFX();
+								}else if(p1.getName().equals("Victor")) {
 									VictorAttack(p1, p2, p4 ,p6);
 									weaponFX();
 								}else if(p1.getName().equals("Deny")) {
@@ -655,7 +709,24 @@ public class GameSim {
 						if (p3.getName().equals("Jazz")) {
 							JazzPassive(p3);
 						}
+						if (p3.getName().equals("Jade")) {
+							JadePassive(p3, p2, p4, p6);
+						}
 						ReviveDeny(p3, p1, p5);
+					}
+					if (response.equals("e2")) {
+						if (p3.getName().equals("Stellar")) {
+							StellarPassive(p3);
+						}
+					}
+					if (response.equals("rotate")) {
+						party1.rotate();
+						p1 = party1.first();
+						p3 = party1.second();
+						p5 = party1.third();
+					}
+					if (response.equals("l")) {
+						b.setLight();
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -736,7 +807,10 @@ public class GameSim {
 								System.out.println(p3.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p3.getName().equals("Victor")) {
+								if(p3.getName().equals("Stellar")) {
+									StellarAttack(p3, p2, p4 ,p6);
+									weaponFX();
+								}else if(p3.getName().equals("Victor")) {
 									VictorAttack(p3, p2, p4 ,p6);
 									weaponFX();
 								}else if(p3.getName().equals("Deny")) {
@@ -879,7 +953,24 @@ public class GameSim {
 						if (p5.getName().equals("Jazz")) {
 							JazzPassive(p5);
 						}
+						if (p5.getName().equals("Jade")) {
+							JadePassive(p5, p2, p4, p6);
+						}
 						ReviveDeny(p5, p3, p1);
+					}
+					if (response.equals("e2")) {
+						if (p5.getName().equals("Stellar")) {
+							StellarPassive(p5);
+						}
+					}
+					if (response.equals("rotate")) {
+						party1.rotate();
+						p1 = party1.first();
+						p3 = party1.second();
+						p5 = party1.third();
+					}
+					if (response.equals("l")) {
+						b.setLight();
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -960,7 +1051,10 @@ public class GameSim {
 								System.out.println(p5.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p5.getName().equals("Victor")) {
+								if(p5.getName().equals("Stellar")) {
+									StellarAttack(p5, p2, p4 ,p6);
+									weaponFX();
+								}else if(p5.getName().equals("Victor")) {
 									VictorAttack(p5, p2, p4 ,p6);
 									weaponFX();
 								}else if(p5.getName().equals("Deny")) {
@@ -1186,7 +1280,24 @@ public class GameSim {
 						if (p2.getName().equals("Jazz")) {
 							JazzPassive(p2);
 						}
+						if (p2.getName().equals("Jade")) {
+							JadePassive(p2, p1, p3, p5);
+						}
 						ReviveDeny(p2, p4, p6);
+					}
+					if (response.equals("e2")) {
+						if (p2.getName().equals("Stellar")) {
+							StellarPassive(p2);
+						}
+					}
+					if (response.equals("rotate")) {
+						party2.rotate();
+						p2 = party2.first();
+						p4 = party2.second();
+						p6 = party2.third();
+					}
+					if (response.equals("l")) {
+						b.setLight();
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -1267,7 +1378,10 @@ public class GameSim {
 								System.out.println(p2.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p2.getName().equals("Victor")) {
+								if(p2.getName().equals("Stellar")) {
+									StellarAttack(p2, p1, p3 ,p5);
+									weaponFX();
+								}else if(p2.getName().equals("Victor")) {
 									VictorAttack(p2, p1, p3 ,p5);
 									weaponFX();
 								}else if(p2.getName().equals("Deny")) {
@@ -1410,7 +1524,24 @@ public class GameSim {
 						if (p4.getName().equals("Jazz")) {
 							JazzPassive(p4);
 						}
+						if (p4.getName().equals("Jade")) {
+							JadePassive(p4, p1, p3, p5);
+						}
 						ReviveDeny(p4, p2, p6);
+					}
+					if (response.equals("e2")) {
+						if (p4.getName().equals("Stellar")) {
+							StellarPassive(p4);
+						}
+					}
+					if (response.equals("rotate")) {
+						party2.rotate();
+						p2 = party2.first();
+						p4 = party2.second();
+						p6 = party2.third();
+					}
+					if (response.equals("l")) {
+						b.setLight();
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -1491,7 +1622,10 @@ public class GameSim {
 								System.out.println(p4.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p4.getName().equals("Victor")) {
+								if(p4.getName().equals("Stellar")) {
+									StellarAttack(p4, p1, p3 ,p5);
+									weaponFX();
+								}else if(p4.getName().equals("Victor")) {
 									VictorAttack(p4, p1, p3 ,p5);
 									weaponFX();
 								}else if(p4.getName().equals("Deny")) {
@@ -1634,7 +1768,24 @@ public class GameSim {
 						if (p6.getName().equals("Jazz")) {
 							JazzPassive(p6);
 						}
+						if (p6.getName().equals("Jade")) {
+							JadePassive(p6, p1, p3, p5);
+						}
 						ReviveDeny(p6, p2, p4);
+					}
+					if (response.equals("e2")) {
+						if (p6.getName().equals("Stellar")) {
+							StellarPassive(p6);
+						}
+					}
+					if (response.equals("rotate")) {
+						party2.rotate();
+						p2 = party2.first();
+						p4 = party2.second();
+						p6 = party2.third();
+					}
+					if (response.equals("l")) {
+						b.setLight();
 					}
 					if(response.equals("f")) {
 						System.out.print("Are you sure you want to forfeit this game: ");
@@ -1715,7 +1866,10 @@ public class GameSim {
 								System.out.println(p6.getSkin() + " has already attacked this turn!");
 								System.out.println();
 							}else {
-								if(p6.getName().equals("Victor")) {
+								if(p6.getName().equals("Stellar")) {
+									StellarAttack(p6, p1, p3 ,p5);
+									weaponFX();
+								}else if(p6.getName().equals("Victor")) {
 									VictorAttack(p6, p1, p3 ,p5);
 									weaponFX();
 								}else if(p6.getName().equals("Deny")) {
@@ -2086,6 +2240,37 @@ public class GameSim {
 	}
 
 	public static void runAttacks(Player p, Player a, Player b, Player c, Player d, Player e) {
+
+		if (p.isCorrupt()) {
+			int randomNum = (int) (Math.random() * (6 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				a = d;
+				b = e;
+				break;
+			case 2:
+				a = e;
+				b = d;
+				break;
+			case 3:
+				b = d;
+				c = e;
+				break;
+			case 4:
+				c = d;
+				b = e;
+				break;
+			case 5:
+				a = d;
+				c = e;
+				break;
+			case 6:
+				c = d;
+				a = e;
+				break;
+			}
+		}
+
 		if(p.getName().equals("Lunar")) {
 			LunarAttack(p, a, b, c);
 		}
@@ -2329,6 +2514,15 @@ public class GameSim {
 		}
 		if(p.getName().equals("Harper")) {
 			HarperAttack(p, a);
+		}
+		if(p.getName().equals("Noah")) {
+			NoahAttack(p, a);
+		}
+		if(p.getName().equals("Jade")) {
+			JadeAttack(p, a);
+		}
+		if(p.getName().equals("Bonbon")) {
+			BonbonAttack(p, a, d, e);
 		}
 	}
 	
@@ -2651,9 +2845,35 @@ public class GameSim {
 			Location l = SetCursor(p, a, b, c, d, e, 5);
 			HarperAbility(p, a, b ,c, l);
 		}
+		if(p.getName().equals("Noah")) {
+			Location l = SetCursor(p, a, b, c, d, e, 4);
+			NoahAbility(p, d , e, l);
+		}
+		if(p.getName().equals("Jade")) {
+			JadeAbility(p);
+		}
+		if(p.getName().equals("Stellar")) {
+			StellarAbility(p, a, b, c, d, e, false);
+		}
+		if(p.getName().equals("Bonbon")) {
+			BonbonAbility(p, a, b ,c);
+		}
 	}
 	
 	public static void runUltimates(Player p, Player a, Player b, Player c, Player d, Player e, Party one, Party two) {
+		if(p.getName().equals("Bonbon")) {
+			System.out.println("This ultimate must be used while moving!");
+		}
+		if(p.getName().equals("Stellar")) {
+			StellarUltimate(p, a, b, c, d, e);
+		}
+		if(p.getName().equals("Jade")) {
+			Location l = SetCursor(p, a, b, c, d, e, 4);
+			JadeUltimate(p, a, b, c, d, e, l);
+		}
+		if(p.getName().equals("Noah")) {
+			NoahUltimate(p, a, b, c);
+		}
 		if(p.getName().equals("Harper")) {
 			Location l = SetCursor(p, a, b, c, d, e, 12);
 			HarperUltimate(p, a, b, c, d, e, l);
@@ -3065,6 +3285,11 @@ public class GameSim {
 	}
 	
 	public static void RinPassive(Player p, Player a, Player z, Player c, Player d, Player e) {
+		if (p.isSupressed()) {
+			System.out.println("Cannot use passive skill while supressed!");
+			System.out.println();
+			return;
+		}
 		Utility u = null;
 		for(int j = 0; j < GameSim.utility.size(); j++) {
 			if(GameSim.utility.get(j).getName().equals("Mochi") && GameSim.utility.get(j).owner(p)) {
@@ -3217,6 +3442,120 @@ public class GameSim {
 		}
 		if(targetResponse.equals("2")) {
 			u.returnBubble();
+		}
+		System.out.println();
+	}
+	
+	public static void JadePassive(Player p, Player a, Player b, Player c) {
+		if (p.isSupressed()) {
+			System.out.println("Cannot use passive skill while supressed!");
+			System.out.println();
+			return;
+		}
+		if (p.getLoc().eqLoc(a.getLoc())) {
+			a.removeJavelins();
+		}
+		if (p.getLoc().eqLoc(b.getLoc())) {
+			b.removeJavelins();
+		}
+		if (p.getLoc().eqLoc(c.getLoc())) {
+			c.removeJavelins();
+		}
+		System.out.println("\"Hand me those back!\"");
+	}
+	
+	public static void StellarPassive(Player p) {
+		p.useShield();
+	}
+	
+	public static void PolarisClash(Player p, Player a, Player b, Player c, Player d, Player e) {
+		try {
+			String audio = "audio/poker.wav";
+			Music victoryPlayer = new Music(audio, false);
+			//victoryPlayer.play();
+		} catch (Exception e1) {
+			System.out.println(e1);
+		}
+		int healthOne = 4;
+		int healthTwo = 4;
+		int blocksOne = 4;
+		int blocksTwo = 4;
+		String showBlocksOne = "";
+		String showBlocksTwo = "";
+		String ability = "";
+		Scanner input = new Scanner(System.in);
+		while (healthOne > 0 && healthTwo > 0) {
+			if (blocksOne > 0) {
+				showBlocksOne = ", (B)lock " + blocksOne;
+			}else {
+				showBlocksOne = "";
+			}
+			if (blocksTwo > 0) {
+				showBlocksTwo = ", (B)lock " + blocksTwo;
+			}else {
+				showBlocksTwo = "";
+			}
+			if (p.getCooldown() == 0) {
+				ability = ", (A)bility";
+			}else {
+				ability = "";
+			}
+			System.out.println("Enter your choices for the round!");
+			System.out.println(p.getSkin() + " current health: " + healthOne + ".");
+			System.out.println(a.getSkin() + " current health: " + healthTwo + ".");
+			System.out.println();
+			System.out.println(p.getSkin() + ": (W)eapon "+ showBlocksOne +", (N)othing" + ability);
+			System.out.println(a.getSkin() + ": (W)eapon "+ showBlocksTwo +", (N)othing");
+			System.out.println();
+			System.out.print(p.getSkin() + ", enter your action: ");
+			String pAction = input.next();
+			System.out.print(a.getSkin() + ", enter your action: ");
+			String aAction = input.next();
+			if (pAction.equals("n") && aAction.equals("n")) {
+				System.out.println("Nothing happens. Next round begins!");
+			}else if (pAction.equals("b") && aAction.equals("n")) {
+				blocksOne--;
+				System.out.println(p.getSkin() + " blocks! Next round begins!");
+			}else if (pAction.equals("n") && aAction.equals("b")) {
+				blocksTwo--;
+				System.out.println(a.getSkin() + " blocks! Next round begins!");
+			}else if (pAction.equals("b") && aAction.equals("b")) {
+				blocksOne--;
+				blocksTwo--;
+				System.out.println("Both players block! Next round begins!");
+			}else if (pAction.equals("w") && aAction.equals("n")) {
+				healthTwo--;
+				System.out.println(p.getSkin() + " strikes! "+ a.getSkin() +" is down to " + healthTwo+" health. Next round begins!");
+			}else if (pAction.equals("n") && aAction.equals("w")) {
+				healthOne--;
+				System.out.println(a.getSkin() + " strikes! "+ p.getSkin() +" is down to " + healthOne+" health. Next round begins!");
+			}else if (pAction.equals("w") && aAction.equals("b")) {
+				blocksTwo--;
+				System.out.println(a.getSkin() + " blocks! "+ p.getSkin() +" must skip their next action. Next round begins!");
+			}else if (pAction.equals("b") && aAction.equals("w")) {
+				blocksOne--;
+				System.out.println(p.getSkin() + " blocks! "+ a.getSkin() +" must skip their next action. Next round begins!");
+			}else if (pAction.equals("a") && aAction.equals("w")) {
+				StellarAbility(p, a, b, c, d, e, true);
+				abilityFX();
+				System.out.println(p.getSkin() + " blocks! "+ a.getSkin() +" must skip their next action. Next round begins!");
+			}else if (pAction.equals("a") && aAction.equals("n")) {
+				StellarAbility(p, a, b, c, d, e, true);
+				abilityFX();
+				System.out.println(p.getSkin() + " uses his ability! Next round begins!");
+			}else if (pAction.equals("w") && aAction.equals("w")) {
+				healthOne--;
+				healthTwo--;
+				System.out.println("Both players strike! "+ p.getSkin() +" is down to " + healthOne+" health. " + a.getSkin() +" is down to " + healthTwo+" health. Next round begins!");
+			}
+			System.out.println();
+		}
+		if (healthTwo == 0) {
+			a.transferStats(p, true);
+			System.out.println("\"Your fall was no surprise.\"");
+		}else if (healthOne == 0) {
+			a.transferStats(p, false);
+			System.out.println("\"There seems to be potential in you after all.\"");
 		}
 		System.out.println();
 	}
@@ -4066,7 +4405,7 @@ public class GameSim {
 			  p = new Player(2275, 150, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Everest", "#66F0B2", "#5671F5", "#2A134E");
 			  p.skin(name);
-			  p.setC(214);
+			  p.setC(85);
 			  System.out.println("\"Amid chaos, we will find harmony.\"");
 			  System.out.println();
 			  p.addRole("support");
@@ -4075,7 +4414,7 @@ public class GameSim {
 			  p = new Player(2900, 225, start, name, x, y, 11, 10, 6);
 			  name = p.getGradientName("Clementine", "#F3A639", "#FB9550", "#E760F0", "#363CE7");
 			  p.skin(name);
-			  p.setC(85);
+			  p.setC(208);
 			  System.out.println("\"Rolling out. Let’s do this!\"");
 			  System.out.println();
 			  p.addRole("tank");
@@ -4162,6 +4501,46 @@ public class GameSim {
 			  p.addRole("brawler");
 			  p.addRole("engineer");
 		    break;
+		  case "Noah":
+			  p = new Player(2375, 175, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Noah", "#5B618A", "#41658A");
+			  p.skin(name);
+			  p.setC(75);
+			  System.out.println("\"I will break any friendships they have.\"");
+			  System.out.println();
+			  p.addRole("support");
+		    break;
+		  case "Jade":
+			  p = new Player(2475, 200, start, name, x, y, 10, 10, 5);
+			  name = p.getGradientName("Jade", "#2EBFA5", "#AAFFE5");
+			  p.skin(name);
+			  p.setC(79);
+			  System.out.println("\"Every throw counts.\"");
+			  System.out.println();
+			  p.addRole("dive");
+			  p.addRole("brawler");
+		    break;
+		  case "Stellar":
+			  p = new Player(3700, 225, start, name, x, y, 7, 10, 7);
+			  name = p.getGradientName("Stellar", "#7692FF", "#2B3A67", "#29335C");
+			  p.skin(name);
+			  p.setC(7);
+			  System.out.println("\"Aura unmatched.\"");
+			  System.out.println();
+			  p.addRole("tank");
+			  p.addRole("brawler");
+		    break;
+		  case "Bonbon":
+			  p = new Player(2350, 275, start, name, x, y, 10, 10, 6);
+			  name = p.getGradientName("Bonbon", "#FF4D4D", "#6E39FE", "#CC7700");
+			  p.skin(name);
+			  p.setC(197);
+			  System.out.println("\"I won’t sugarcoat it. They are in for a treat.\"");
+			  System.out.println();
+			  p.addRole("dive");
+			  p.addRole("brawler");
+			  p.addRole("support");
+		    break;
 		}
 		return p;
 	}
@@ -4239,7 +4618,7 @@ public class GameSim {
 		}
 		
 		if (!p.isHoverDashing() && !p.hasDoubleJumped() && !p.getName().equals("Courtney")) {
-			if(!p.getLoc().eqLoc(a.getLoc()) && !p.getLoc().eqLoc(b.getLoc()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && ! peri && !umbrella && !mochi && !p.getName().equals("Gambit")) {
+			if((!p.getLoc().eqLoc(a.getLoc()) || a.isCorrupt()) && (!p.getLoc().eqLoc(b.getLoc()) || b.isCorrupt()) && !GameSim.b.hasBounce(p.getLoc().getX(), p.getLoc().getY()) && ! peri && !umbrella && !mochi && !p.getName().equals("Gambit")) {
 				System.out.println("Nothing in range to use a jump with!");
 				System.out.println();
 				return;
@@ -4867,6 +5246,9 @@ public class GameSim {
 			System.out.println();
 			return;
 		}
+		if (p.getSpin()) {
+			p.setSpinMove(true);
+		}
 		String s = "";
 		boolean move = true;
 		boolean hasMoved = false;
@@ -4959,6 +5341,11 @@ public class GameSim {
 				    break;
 				  case "p":
 					  p.increaseMovement(1);
+				    break;
+				  case "u":
+					  if (hasMoved && p.getName().equals("Bonbon")) {
+						  BonbonUltimate(p, a, z, c, lastMoved);
+					  }
 				    break;
 				  case "m":
 					  System.out.println("Movement completed.");
@@ -5114,11 +5501,38 @@ public class GameSim {
 						}
 					}
 					
+					if (p.getName().equals("Stellar") && p.hasAura()) {
+						if (p.inRange(a)) {
+							a.takeDamage(25);
+							p.addDamage(25);
+						}
+						if (p.inRange(z)) {
+							z.takeDamage(25);
+							p.addDamage(25);
+						}
+						if (p.inRange(c)) {
+							c.takeDamage(25);
+							p.addDamage(25);
+						}
+					}
+					
 					if (a.isTranscend() || z.isTranscend() || c.isTranscend()){
 						p.takeDamage(p.getMaxHP() * 0.02);
 					}
 					if (d.isTranscend() || e.isTranscend()){
 						p.increaseHP(p.getMaxHP() * 0.02);
+					}
+					
+					if (p.getSpin()) {
+						if (p.getLoc().eqLoc(a.getLoc())) {
+							a.resetCover();
+						}
+						if (p.getLoc().eqLoc(z.getLoc())) {
+							z.resetCover();
+						}
+						if (p.getLoc().eqLoc(c.getLoc())) {
+							c.resetCover();
+						}
 					}
 					
 					if (p.getBump() > 0) {
@@ -5240,14 +5654,17 @@ public class GameSim {
 				if(p.getMovement() <= 0) {
 					System.out.println("Out of movement.");
 					move = false;
+					p.setSpinMove(false);
 					System.out.println();
 				}
 				if(p.isParalyzed() && !p.isHoverDashing()) {
 					System.out.println("Paralyzed!");
 					move = false;
+					p.setSpinMove(false);
 					System.out.println();
 				}
 				if(!p.isAlive()) {
+					p.setSpinMove(false);
 					move = false;
 				}
 			}
@@ -5441,12 +5858,21 @@ public class GameSim {
 	}
 	
 	public static void LunarAttack(Player p, Player a, Player b, Player c) {
+		int chainHits = 0;
 		p.attack(a);
 		if(a.inRange(b, 5)) {
 			p.attack(b);
+			chainHits++;
 		}
 		if(a.inRange(c, 5)) {
 			p.attack(c);
+			chainHits++;
+		}
+		if (mode.equals("Evolution") && p.isEvolved()) {
+			for (int i = 0; i < chainHits; i++) {
+				a.takeDamage(75);
+				p.addDamage(75);
+			}
 		}
 		System.out.println();
 	}
@@ -5813,6 +6239,9 @@ public class GameSim {
 			if(rand <= 0.1) {
 				a.stun(1);
 			}
+			if (mode.equals("Evolution") && p.isEvolved()) {
+				p.protect(0.3, 1);
+	        }
 		}else {
 			double rand = Math.random();
 			if(rand <= 0.05) {
@@ -6586,6 +7015,14 @@ public class GameSim {
 	}
 	
 	public static void AlexAttack(Player p, Player a) {
+		if (mode.equals("Evolution") && p.isEvolved()) {
+			a.dragIn(p.getLoc(), 12);
+			p.attack(a);
+			a.knockbacked(p.getLoc());
+			p.increaseDPS(0.03);
+			System.out.println();
+			return;
+        }
 		a.dragIn(p.getLoc(), 6);
 		p.attack(a);
 		a.knockbacked(p.getLoc());
@@ -7207,21 +7644,39 @@ public class GameSim {
 	}
 	
 	public static void AidanAbility(Player p, Player a, Player b) {
-		p.heal(0.1);
-		a.heal(0.1);
-		b.heal(0.1);
-		p.addHealing(p.getMaxHP() * 0.10);
-		p.addHealing(a.getMaxHP() * 0.10);
-		p.addHealing(b.getMaxHP() * 0.10);
-		Cover c = new Cover("Partial", new Location(p.getLoc().getX(), p.getLoc().getY()));
-		Cover c2 = new Cover("Partial", new Location(a.getLoc().getX(), a.getLoc().getY()));
-		Cover c3 = new Cover("Partial", new Location(b.getLoc().getX(), b.getLoc().getY()));
-		p.setCover("Partial");
-		a.setCover("Partial");
-		b.setCover("Partial");
-		cover.add(c);
-		cover.add(c2);
-		cover.add(c3);
+		if (mode.equals("Evolution") && p.isEvolved()) {
+			Cover c = new Cover("Full", new Location(p.getLoc().getX(), p.getLoc().getY()));
+			Cover c2 = new Cover("Full", new Location(a.getLoc().getX(), a.getLoc().getY()));
+			Cover c3 = new Cover("Full", new Location(b.getLoc().getX(), b.getLoc().getY()));
+			p.setCover("Full");
+			a.setCover("Full");
+			b.setCover("Full");
+			cover.add(c);
+			cover.add(c2);
+			cover.add(c3);
+			p.heal(0.15);
+			a.heal(0.15);
+			b.heal(0.15);
+			p.addHealing(p.getMaxHP() * 0.15);
+			p.addHealing(a.getMaxHP() * 0.15);
+			p.addHealing(b.getMaxHP() * 0.15);
+		}else {
+			Cover c = new Cover("Partial", new Location(p.getLoc().getX(), p.getLoc().getY()));
+			Cover c2 = new Cover("Partial", new Location(a.getLoc().getX(), a.getLoc().getY()));
+			Cover c3 = new Cover("Partial", new Location(b.getLoc().getX(), b.getLoc().getY()));
+			p.setCover("Partial");
+			a.setCover("Partial");
+			b.setCover("Partial");
+			cover.add(c);
+			cover.add(c2);
+			cover.add(c3);
+			p.heal(0.1);
+			a.heal(0.1);
+			b.heal(0.1);
+			p.addHealing(p.getMaxHP() * 0.10);
+			p.addHealing(a.getMaxHP() * 0.10);
+			p.addHealing(b.getMaxHP() * 0.10);
+		}
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -7465,6 +7920,10 @@ public class GameSim {
 			p.addHealing(a.getMaxHP() * 0.10);
 			p.cleanse();
 			a.cleanse();
+			if (mode.equals("Evolution") && p.isEvolved()) {
+				p.increaseMovement(4);
+				a.increaseMovement(4);
+	        }
 			p.setCooldown(2);
 		}
 		if(targetResponse.equals("2")) {
@@ -7477,6 +7936,10 @@ public class GameSim {
 			p.addHealing(b.getMaxHP() * 0.1);
 			p.cleanse();
 			b.cleanse();
+			if (mode.equals("Evolution") && p.isEvolved()) {
+				p.increaseMovement(4);
+				b.increaseMovement(4);
+	        }
 			p.setCooldown(2);
 		}
 		System.out.println(p.voiceline());
@@ -8558,6 +9021,12 @@ public class GameSim {
 		b.weak(0.1,  1);
 		c.weary(1);
 		c.weak(0.1,  1);
+		if (mode.equals("Evolution") && p.isEvolved()) {
+			p.addDashes(1);
+			a.knockbacked(p.getLoc());
+			b.knockbacked(p.getLoc());
+			c.knockbacked(p.getLoc());
+        }
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -9006,6 +9475,13 @@ public class GameSim {
 	}
 	
 	public static void NormanUltimate(Player p, Player a, Player b) {
+		double power = 2.5;
+		System.out.println(p.normanPower());
+		if (mode.equals("Evolution") && p.isEvolved()) {
+			for(int i = 0; i < p.normanPower(); i++) {
+				power = power + 0.1;
+			}
+        }
 		Scanner input = new Scanner(System.in);
 		System.out.println("1: " + a.getSkin() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP() + ".");
 		System.out.println("2: " + b.getSkin() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP() + ".");
@@ -9013,19 +9489,19 @@ public class GameSim {
 		System.out.print("Who do you want to be able to one punch: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
-			a.power(2.5, 1);
+			a.power(power, 1);
 			p.resetUlt();
 			System.out.println();
 			System.out.println("\"You have one turn kill now!\"");
 		}
 		if(targetResponse.equals("2")) {
-			b.power(2.5, 1);
+			b.power(power, 1);
 			p.resetUlt();
 			System.out.println();
 			System.out.println("\"You have one turn kill now!\"");
 		}
 		if(targetResponse.equals("3")) {
-			p.power(2.5, 1);
+			p.power(power, 1);
 			p.resetUlt();
 			System.out.println("\"Why did I give myself this power?\"");
 		}
@@ -9038,6 +9514,20 @@ public class GameSim {
 		p.attack(b);
 		p.resetAttack();
 		p.attack(c);
+		if (mode.equals("Evolution") && p.isEvolved()) {
+			if (p.inRange(a)) {
+				p.attack(a);
+				p.resetAttack();
+			}
+			if (p.inRange(b)) {
+				p.attack(b);
+				p.resetAttack();
+			}
+			if (p.inRange(c)) {
+				p.attack(c);
+				p.resetAttack();
+			}
+        }
 		if (p.inRange(a)) {
 			a.ignite(1);
 			p.addDamage(175);
@@ -9116,7 +9606,17 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.1);
 		p.addHealing(a.getMaxHP() * 0.1);
 		p.addHealing(b.getMaxHP() * 0.1);
-		p.setCooldown(4);
+		if (mode.equals("Evolution") && p.isEvolved()) {
+			p.setShield();
+			a.setShield();
+			b.setShield();
+			p.power(0.15, 1);
+			a.power(0.15, 1);
+			b.power(0.15, 1);
+			p.setCooldown(3);
+        }else {
+        	p.setCooldown(4);
+        }
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -13606,5 +14106,427 @@ public class GameSim {
 		p.resetUlt();
 		System.out.println("\"Peri this you filthy casuals!\"");
 		System.out.println();
+	}
+	
+	public static void NoahAttack(Player p, Player a) {
+		p.attack(a);
+		a.addMarker();
+		System.out.println();
+	}
+	
+	public static void NoahAbility(Player p, Player a, Player b, Location l) {
+		double heal = 0.05;
+		if (p.inRange(l)) {
+			if (p.inRange(l, 4)) {
+				p.heal(heal);
+				p.addHealing(p.getMaxHP() * heal);
+			}
+			if (a.inRange(l, 4)) {
+				a.heal(heal);
+				p.addHealing(a.getMaxHP() * heal);
+			}
+			if (b.inRange(l, 4)) {
+				b.heal(heal);
+				p.addHealing(b.getMaxHP() * heal);
+
+			}
+			p.setCooldown(1);
+		}else {
+			heal = 0.1;
+			if (a.inRange(l, 4)) {
+				a.heal(heal);
+				p.addHealing(a.getMaxHP() * heal);
+				a.cleanse();
+			}
+			if (b.inRange(l, 4)) {
+				b.heal(heal);
+				p.addHealing(b.getMaxHP() * heal);
+				b.cleanse();
+			}
+			p.setCooldown(2);
+		}
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void NoahUltimate(Player p, Player a, Player b, Player c) {
+		a.setCorrupt(true);
+		b.setCorrupt(true);
+		c.setCorrupt(true);
+		p.resetUlt();
+		System.out.println("\"Your friendships mean nothing!\"");
+		System.out.println();
+	}
+	
+	public static void JadeAttack(Player p, Player a) {
+		p.attack(a);
+		a.addJavelin();
+		a.knockbacked(p.getLoc());
+		if (a.isParalyzed()) {
+			a.knockbacked(p.getLoc());
+		}
+		System.out.println();
+	}
+	
+	public static void JadeAbility(Player p) {
+		p.setSpin(true);
+		p.increaseMovement(8);
+		p.setCooldown(2);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void JadeUltimate(Player p, Player a, Player b, Player c, Player d, Player e, Location l) {
+		if (!p.inRange(l, 20)) {
+			System.out.println("Can't throw the Javelin that far!");
+			System.out.println();
+			return;
+		}
+		int damage = 300;
+		if (!a.isAlive() && !b.isAlive()) {
+			damage = 600;
+		}
+		if (a.inRange(l, 4)) {
+			a.takeDamage(damage);
+			a.resetCover();
+			p.addDamage(damage);
+		}
+		if (b.inRange(l, 4)) {
+			b.takeDamage(damage);
+			b.resetCover();
+			p.addDamage(damage);
+		}
+		if (c.inRange(l, 4)) {
+			c.takeDamage(damage);
+			c.resetCover();
+			p.addDamage(damage);
+		}
+		if (!a.isAlive() && !b.isAlive()) {
+			p.resetUlt();
+			System.out.println("\"Eat this Javelin!\"");
+			System.out.println();
+			return;
+		}
+		System.out.println();
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: " + d.getSkin() +a.showHP() +  d.getHealth() + "/" + d.getMaxHP() + ".");
+		System.out.println("2: " + e.getSkin() +b.showHP() +  e.getHealth() + "/" + e.getMaxHP() + ".");
+		System.out.print("Who do you want to send with the Javelin: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			d.getLoc().set(l.getX(), l.getY());
+			p.resetUlt();
+			System.out.println("\"Go screw them up!\"");
+			System.out.println();
+		}
+		if(targetResponse.equals("2")) {
+			e.getLoc().set(l.getX(), l.getY());
+			p.resetUlt();
+			System.out.println("\"Go screw them up!\"");
+			System.out.println();
+		}
+		System.out.println();
+	}
+	
+	public static void StellarAttack(Player p, Player a, Player b, Player c) {
+		boolean aRange = false;
+		boolean bRange = false;
+		boolean cRange = false;
+		if (a.getLoc().getX() == p.getLoc().getX() || a.getLoc().getX() == p.getLoc().getX() - 1 || a.getLoc().getX() == p.getLoc().getX() + 1 || a.getLoc().getY() == p.getLoc().getY() || a.getLoc().getY() == p.getLoc().getY() - 1 || a.getLoc().getY() == p.getLoc().getY() + 1) {
+			aRange = true;
+		}
+		if (b.getLoc().getX() == p.getLoc().getX() || b.getLoc().getX() == p.getLoc().getX() - 1 || b.getLoc().getX() == p.getLoc().getX() + 1 || b.getLoc().getY() == p.getLoc().getY() || b.getLoc().getY() == p.getLoc().getY() - 1 || b.getLoc().getY() == p.getLoc().getY() + 1) {
+			bRange = true;
+		}
+		if (c.getLoc().getX() == p.getLoc().getX() || c.getLoc().getX() == p.getLoc().getX() - 1 || c.getLoc().getX() == p.getLoc().getX() + 1 || c.getLoc().getY() == p.getLoc().getY() || c.getLoc().getY() == p.getLoc().getY() - 1 || c.getLoc().getY() == p.getLoc().getY() + 1) {
+			cRange = true;
+		}
+		if (!aRange && !bRange && !cRange) {
+			System.out.println("No enemies in range!");
+			System.out.println();
+			return;
+		}
+		if (aRange) {
+			p.attack(a);
+			a.dragIn(p.getLoc(), 4);
+			double rand = Math.random();
+			if (rand < 0.1) {
+				a.daze(1);
+			}
+			p.addAura();
+		}
+		if (bRange) {
+			p.attack(b);
+			b.dragIn(p.getLoc(), 4);
+			double rand = Math.random();
+			if (rand < 0.1) {
+				b.daze(1);
+			}
+			p.addAura();
+		}
+		if (cRange) {
+			p.attack(c);
+			c.dragIn(p.getLoc(), 4);
+			double rand = Math.random();
+			if (rand < 0.1) {
+				c.daze(1);
+			}
+			p.addAura();
+		}
+		System.out.println();
+	}
+	
+	public static void StellarAbility(Player p, Player a, Player b, Player c, Player d, Player e, boolean check) {
+		if (check) {
+			p.setShield();
+			d.setShield();
+			e.setShield();
+			a.takeDamage(a.getMaxHP() * 0.25);
+			p.addDamage(a.getMaxHP() * 0.25);
+			p.setCooldown(3);
+			System.out.println("\"Now alone, this is true pain!\"");
+			System.out.println();
+		}else {
+			p.setShield();
+			d.setShield();
+			e.setShield();
+			a.takeDamage(a.getMaxHP() * 0.05);
+			p.addDamage(a.getMaxHP() * 0.05);
+			b.takeDamage(b.getMaxHP() * 0.05);
+			p.addDamage(b.getMaxHP() * 0.05);
+			c.takeDamage(c.getMaxHP() * 0.05);
+			p.addDamage(c.getMaxHP() * 0.05);
+			p.setCooldown(3);
+			System.out.println(p.voiceline());
+			System.out.println();
+		}
+	}
+	
+	public static void StellarUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
+		Scanner input = new Scanner(System.in);
+		System.out.println("1: " + a.getName() +a.showHP() +  a.getHealth() + "/" + a.getMaxHP());
+		System.out.println("2: " + b.getName() +b.showHP() +  b.getHealth() + "/" + b.getMaxHP());
+		System.out.println("3: " + c.getName() +c.showHP() +  c.getHealth() + "/" + c.getMaxHP());
+		System.out.print("Who do you want to bring into the Polaris Clash: ");
+		String targetResponse = input.next();
+		System.out.println();
+		System.out.println("\"You will fall before me!\"");
+		System.out.println();
+		if(targetResponse.equals("1")) {
+			PolarisClash(p, a, b, c, d, e);
+			p.resetUlt();
+		}
+		if(targetResponse.equals("2")) {
+			PolarisClash(p, b, a, c, d, e);
+			p.resetUlt();
+		}
+		if(targetResponse.equals("3")) {
+			PolarisClash(p, c, b, a, d, e);
+			p.resetUlt();
+		}
+	}
+	
+	public static void BonbonAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		if (a.isDazed()) {
+			a.takeDamage(100);
+			p.addDamage(100);
+		}
+		double rand = Math.random();
+		if (rand < 0.1) {
+			a.paralyze(1);
+		}
+		p.increaseMovement(1);
+		b.increaseMovement(1);
+		c.increaseMovement(1);
+		p.heal(0.02);
+		b.heal(0.02);
+		c.heal(0.02);
+		p.addHealing(p.getMaxHP() * 0.02);
+		p.addHealing(b.getMaxHP() * 0.02);
+		p.addHealing(c.getMaxHP() * 0.02);
+		System.out.println();
+	}
+	
+	public static void BonbonAbility(Player p, Player a, Player b, Player c) {
+		Scanner input = new Scanner(System.in);
+		if(!p.inRange(a, 20) && !p.inRange(b, 20) && !p.inRange(c, 20)) {
+			System.out.println("No targets in range!");
+			System.out.println();
+			return;
+		}
+		String range = "No";
+		if(p.inRange(a, 20)) {
+			range = "Yes";
+		}
+		String range2 = "No";
+		if(p.inRange(b, 20)) {
+			range2 = "Yes";
+		}
+		String range3 = "No";
+		if(p.inRange(c, 20)) {
+			range3 = "Yes";
+		}
+		System.out.println("1: " + a.getSkin() +". Health: " +  a.getHealth() + "/" + a.getMaxHP() + ". In Range: " + range + ".");
+		System.out.println("2: " + b.getSkin() +". Health: " +  b.getHealth() + "/" + b.getMaxHP() + ". In Range: " + range2 + ".");
+		System.out.println("3: " + c.getSkin() +". Health: " +  c.getHealth() + "/" + c.getMaxHP() + ". In Range: " + range3 + ".");
+		System.out.println("Who do you want to sling bubblegum at: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			if(p.inRange(a, 20)) {
+				Utility Gum = new Utility("Gum", a.getLoc(), p, p, p, a, b, c);
+				utility.add(Gum);
+				Gum.activateGum(a);
+				a.daze(1);
+				p.setCooldown(3);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("2")) {
+			if(p.inRange(b, 20)) {
+				Utility Gum = new Utility("Gum", a.getLoc(), p, p, p, a, b, c);
+				utility.add(Gum);
+				Gum.activateGum(b);
+				b.daze(1);
+				p.setCooldown(3);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		if(targetResponse.equals("3")) {
+			if(p.inRange(c, 20)) {
+				Utility Gum = new Utility("Gum", a.getLoc(), p, p, p, a, b, c);
+				utility.add(Gum);
+				Gum.activateGum(c);
+				c.daze(1);
+				p.setCooldown(3);
+			}else {
+				System.out.println();
+				System.out.println("Target is out of range!");
+				System.out.println();
+			}
+		}
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void BonbonUltimate(Player p, Player a, Player b, Player c, String d) {
+		boolean z = false;
+		ArrayList<Player> list = new ArrayList<Player>();
+		switch (d) {
+		case "left":
+			for (int i = p.getLoc().getX(); i > -1; i--) {
+				if ((a.getLoc().getX() == i && a.getLoc().getY() == p.getLoc().getY()) || (b.getLoc().getX() == i && b.getLoc().getY() == p.getLoc().getY()) || (c.getLoc().getX() == i && c.getLoc().getY() == p.getLoc().getY())) {
+					z = true;
+					Location l = new Location(i, p.getLoc().getY());
+					if (a.getLoc().eqLoc(l)) {
+						list.add(a);
+					}
+					if (b.getLoc().eqLoc(l)) {
+						list.add(b);
+					}
+					if (c.getLoc().eqLoc(l)) {
+						list.add(c);
+					}
+				}
+			}
+			break;
+		case "right":
+			for (int i = p.getLoc().getX(); i < 42; i++) {
+				if ((a.getLoc().getX() == i && a.getLoc().getY() == p.getLoc().getY()) || (b.getLoc().getX() == i && b.getLoc().getY() == p.getLoc().getY()) || (c.getLoc().getX() == i && c.getLoc().getY() == p.getLoc().getY())) {
+					z = true;
+					Location l = new Location(i, p.getLoc().getY());
+					if (a.getLoc().eqLoc(l)) {
+						list.add(a);
+					}
+					if (b.getLoc().eqLoc(l)) {
+						list.add(b);
+					}
+					if (c.getLoc().eqLoc(l)) {
+						list.add(c);
+					}
+				}
+			}
+			break;
+		case "up":
+			for (int i = p.getLoc().getY(); i > -1; i--) {
+				if ((a.getLoc().getY() == i && a.getLoc().getX() == p.getLoc().getX()) || (b.getLoc().getY() == i && b.getLoc().getX() == p.getLoc().getX()) || (c.getLoc().getY() == i && c.getLoc().getX() == p.getLoc().getX())) {
+					z = true;
+					Location l = new Location(p.getLoc().getX(), i);
+					if (a.getLoc().eqLoc(l)) {
+						list.add(a);
+					}
+					if (b.getLoc().eqLoc(l)) {
+						list.add(b);
+					}
+					if (c.getLoc().eqLoc(l)) {
+						list.add(c);
+					}
+				}
+			}
+			break;
+		case "down":
+			for (int i = p.getLoc().getY(); i < 42; i++) {
+				if ((a.getLoc().getY() == i && a.getLoc().getX() == p.getLoc().getX()) || (b.getLoc().getY() == i && b.getLoc().getX() == p.getLoc().getX()) || (c.getLoc().getY() == i && c.getLoc().getX() == p.getLoc().getX())) {
+					z = true;
+					Location l = new Location(p.getLoc().getX(), i);
+					if (a.getLoc().eqLoc(l)) {
+						list.add(a);
+					}
+					if (b.getLoc().eqLoc(l)) {
+						list.add(b);
+					}
+					if (c.getLoc().eqLoc(l)) {
+						list.add(c);
+					}
+				}
+			}
+			break;
+		}
+		if (!z) {
+			System.out.println("No enemies in the path for the JawBreaker!");
+			System.out.println();
+			return;
+		}
+		int stun = 1;
+		if (list.size() > 1) {
+			Player minHealthPlayer = Collections.min(list, Comparator.comparing(Player::getHealth)); // Remove all players except the one with the smallest health 
+			list.removeIf(player -> player != minHealthPlayer);
+		}
+		if (!list.contains(a)) {
+			if (a.inRange(list.get(0), 6)) {
+				a.takeDamage(225);
+				p.addDamage(225);
+				a.weary(1);
+			}
+		}
+		if (!list.contains(b)) {
+			if (b.inRange(list.get(0), 6)) {
+				b.takeDamage(225);
+				p.addDamage(225);
+				b.weary(1);
+			}
+		}
+		if (!list.contains(c)) {
+			if (c.inRange(list.get(0), 6)) {
+				c.takeDamage(225);
+				p.addDamage(225);
+				c.weary(1);
+			}
+		}
+		if (p.getLoc().distance(list.get(0).getLoc()) >= 15) {
+			stun = 2;
+		}
+		list.get(0).takeDamage(450);
+		p.addDamage(450);
+		list.get(0).stun(stun);
+		System.out.println("\"Sweet destruction, straight ahead!\"");
+		System.out.println();
+		ultimateFX();
 	}
 }

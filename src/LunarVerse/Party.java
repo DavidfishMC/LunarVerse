@@ -1,6 +1,7 @@
 package LunarVerse;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Party {
 
@@ -8,8 +9,10 @@ public class Party {
 	boolean ebbFlow = false;
 	boolean enhance = false;
 	int count = 0;
+	int orbCount = 0;
 	double ebbFlowDamage = 0;
 	Player[] roster = new Player[3];
+	Player rotate = null;
 	String name;
 	Party enemy;
 	
@@ -18,6 +21,74 @@ public class Party {
 		roster[0] = p1;
 		roster[1] = p2;
 		roster[2] = p3;
+		roster[0].setParty(this);
+		roster[1].setParty(this);
+		roster[2].setParty(this);
+	}
+	
+	public void evolve() {
+		roster[0].setEvolve();
+		System.out.println(roster[0].getSkin() + " has evolved!");
+		System.out.println();
+	}
+	
+	public void addOrb() {
+		orbCount++;
+		if (orbCount % 3 == 0 && rotate != null) {
+			rotate.addOrb();
+		}
+	}
+	
+	public void setRotate(Player p) {
+		rotate = p;
+		rotate.setParty(this);
+	}
+	
+	public void rotate() {
+		if (rotate == null) {
+			return;
+		}
+		Player rotateOut = null;
+		Scanner input = new Scanner(System.in);
+		System.out.println("Rotating in: " + rotate.getSkin());
+		System.out.println(rotate);
+		System.out.println();
+		showRoster();
+		System.out.println();
+		System.out.println("Who do you want to rotate out: ");
+		String targetResponse = input.next();
+		if(targetResponse.equals("1")) {
+			rotateOut = roster[0];
+		}
+		if(targetResponse.equals("2")) {
+			rotateOut = roster[1];
+		}
+		if(targetResponse.equals("3")) {
+			rotateOut = roster[2];
+		}
+		if (rotateOut != null) {
+			rotate.getLoc().set(rotateOut.getLoc().getX(), rotateOut.getLoc().getY());
+			for (int i = 0; i < 3; i++) {
+				if (roster[i].equals(rotateOut)) {
+					roster[i] = rotate;
+				}
+			}
+			rotateOut.getLoc().set(100, 100);
+			rotate = rotateOut;
+		}
+		System.out.println();
+	}
+	
+	public Player first() {
+		return roster[0];
+	}
+	
+	public Player second() {
+		return roster[1];
+	}
+	
+	public Player third() {
+		return roster[2];
 	}
 	
 	public void showTeam() {
@@ -58,6 +129,9 @@ public class Party {
 			roster[i].setFrag(false);
 			roster[i].unhijack();
 			roster[i].setCogwork(false);
+			roster[i].setCorrupt(false);
+			roster[i].setSpin(false);
+			roster[i].removeAura();
 			if (roster[i].getHarmony()) {
 				roster[i].heal(0.1);
 			}
@@ -146,6 +220,12 @@ public class Party {
 						GameSim.utility.remove(j);
 						j--;
 					}
+				}
+			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Gum") && GameSim.utility.get(j).owner(roster[i])) {
+					GameSim.utility.remove(j);
+					j--;
 				}
 			}
 			int range = 4;
@@ -293,27 +373,33 @@ public class Party {
 		boolean sprint = false;
 		boolean power = false;
 		int randomNum = (int)(Math.random() * (3 - 1 + 1)) + 1;
-		int randomNum2 = (int)(Math.random() * (2 - 1 + 1)) + 1;
+		int randomNum2 = (int)(Math.random() * (3 - 1 + 1)) + 1;
 		if(randomNum == 1) {
 			if(randomNum2 == 1 && !oneLeft()) {
 				roster[0].teamChat(this);
-			}else if(roster[0].isAlive()){
+			}else if(roster[0].isAlive() && randomNum2 == 2){
 				roster[0].chat();
+			}else if(roster[0].isAlive() && randomNum2 == 3){
+				roster[0].enemyChat(enemy);
 			}
 			
 		}
 		if(randomNum == 2) {
 			if(randomNum2 == 1 && !oneLeft()) {
 				roster[1].teamChat(this);
-			}else if(roster[1].isAlive()){
+			}else if(roster[1].isAlive() && randomNum2 == 2){
 				roster[1].chat();
+			}else if(roster[1].isAlive() && randomNum2 == 3){
+				roster[1].enemyChat(enemy);
 			}
 		}
 		if(randomNum == 3) {
 			if(randomNum2 == 1 && !oneLeft()) {
 				roster[2].teamChat(this);
-			}else if(roster[2].isAlive()){
+			}else if(roster[2].isAlive() && randomNum2 == 2){
 				roster[2].chat();
+			}else if(roster[2].isAlive() && randomNum2 == 3){
+				roster[2].enemyChat(enemy);
 			}
 		}
 		try {
@@ -392,6 +478,7 @@ public class Party {
 			roster[i].setExpose(false);
 			roster[i].setClockwork(false);
 			roster[i].checkDecay();
+			roster[i].addSugar(5);
 			if (roster[i].getHitDarkness()) {
 				roster[i].takeDamage(100);
 			}
@@ -573,7 +660,7 @@ public class Party {
 		}else {
 			roster[0].setTurn();
 		}
-		getUpdates();
+		//getUpdates();
 		reduceTeamEffectsPre();
 	}
 	
@@ -658,6 +745,7 @@ public class Party {
 	}
 	
 	public void getUpdates() {
+		
 		if (roster[0].isAlive()) {
 			if (roster[0].getCooldown() == 0) {
 				System.out.println(roster[0].getSkin() + "'s ability is ready to use!");

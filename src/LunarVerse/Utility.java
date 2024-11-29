@@ -1104,5 +1104,15 @@ public class Utility {
 		}
 		owner.setShield();
 	}
+	
+	public void activateGum(Player p) {
+		for (Player e: enemies) {
+			if (!e.equals(p)) {
+				if (e.inRange(p, 5)) {
+					e.daze(1);
+				}
+			}
+		}
+	}
 
 }

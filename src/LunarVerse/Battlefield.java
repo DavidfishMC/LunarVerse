@@ -32,6 +32,7 @@ public class Battlefield {
 	public static boolean endgame = false;
 	public static boolean temple = false;
 	boolean start = false;
+	boolean lights = false;
 	Party trenchParty = null;
 	Location trenchLoc = null;
 
@@ -620,6 +621,16 @@ public class Battlefield {
 									Location l = new Location(k, h);
 									if(u.atRange(l, u.getSize())) {
 										background[h][k] = 87;
+									}
+								}
+							}
+						}
+						if(u.getName().equals("Gum")) {
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 5)) {
+										background[h][k] = 219;
 									}
 								}
 							}
@@ -1352,6 +1363,16 @@ public class Battlefield {
 								}
 							}
 						}
+						if(u.getName().equals("Gum")) {
+							for(int k = 0; k < 42; k++) {
+								for(int h = 0; h < 42; h++){
+									Location l = new Location(k, h);
+									if(u.atRange(l, 5)) {
+										background[h][k] = 219;
+									}
+								}
+							}
+						}
 						if(u.getName().equals("Steam")) {
 							for(int k = 0; k < 42; k++) {
 								for(int h = 0; h < 42; h++){
@@ -1603,6 +1624,9 @@ public class Battlefield {
 					}else {
 						field[i][j] = bold + a.getName().substring(0,1) + clear;
 						foreground[i][j] = a.skinC();
+						if (lights) {
+							background[i][j] = 118;
+						}
 						//background[i][j] = 255;
 					}
 				}
@@ -1612,6 +1636,9 @@ public class Battlefield {
 					}else {
 						field[i][j] = bold + b.getName().substring(0,1) + clear;
 						foreground[i][j] = b.skinC();
+						if (lights) {
+							background[i][j] = 117;
+						}
 						//background[i][j] = 255;
 					}
 				}
@@ -1621,6 +1648,9 @@ public class Battlefield {
 					}else {
 						field[i][j] = bold + c.getName().substring(0,1) + clear;
 						foreground[i][j] = c.skinC();
+						if (lights) {
+							background[i][j] = 118;
+						}
 						//background[i][j] = 255;
 					}
 				}
@@ -1630,6 +1660,9 @@ public class Battlefield {
 					}else {
 						field[i][j] = bold + d.getName().substring(0,1) + clear;
 						foreground[i][j] = d.skinC();
+						if (lights) {
+							background[i][j] = 117;
+						}
 						//background[i][j] = 255;
 					}
 				}
@@ -1639,6 +1672,9 @@ public class Battlefield {
 					}else {
 						field[i][j] = bold + e.getName().substring(0,1) + clear;
 						foreground[i][j] = e.skinC();
+						if (lights) {
+							background[i][j] = 118;
+						}
 						//background[i][j] = 255;
 					}
 				}
@@ -1648,6 +1684,9 @@ public class Battlefield {
 					}else {
 						field[i][j] = bold + f.getName().substring(0,1) + clear;
 						foreground[i][j] = f.skinC();
+						if (lights) {
+							background[i][j] = 117;
+						}
 						//background[i][j] = 255;
 					}
 				}
@@ -1887,6 +1926,10 @@ public class Battlefield {
 	
 	public void setStart(boolean b) {
 		start = b;
+	}
+	
+	public void setLight() {
+		lights = !lights;
 	}
 	
 	

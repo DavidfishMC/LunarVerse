@@ -1,6 +1,5 @@
 package LunarVerse;
 
-import java.applet.AudioClip;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,6 +118,12 @@ public class Player {
 	boolean cogwork = false;
 	boolean clockwork = false;
 	boolean periCounter = false;
+	boolean corrupt = false;
+	boolean spin = false;
+	boolean spinMove = false;
+	boolean stackedShield = false;
+	boolean trueAura = false;
+	boolean evolve = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -155,6 +160,12 @@ public class Player {
 	int permHeal = 0;
 	int safe = 0;
 	int firetick = 0;
+	int marker = 0;
+	int javelin = 0;
+	int aura = 0;
+	int normanPower = 0;
+	double normanPowerAdd = 0;
+	double sugar = 25;
 	double totalDamage = 0;
 	double critChance = 0;
 	double fulField = 0;
@@ -183,6 +194,7 @@ public class Player {
 	Player e1;
 	Player e2;
 	Player e3;
+	Party party;
 
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -201,11 +213,11 @@ public class Player {
 		ogRange = r;
 		nameSkin = name;
 		if (GameSim.mode.equals("Comet")) {
-			this.damage = damage + 100;
-			ogDamage = damage + 100;
+			this.damage = damage + 50;
+			ogDamage = damage + 50;
 			range = r + 2;
-			movement = m + 5;
-			ogMovement = m + 5;
+			movement = m + 3;
+			ogMovement = m + 3;
 			ultCharge = u - 2;
 			ogRange = r + 2;
 		}
@@ -225,6 +237,20 @@ public class Player {
 			applyEffects();
 		}
 		smolluskSkin = getGradientName("Smollusk", "#5C5C5C", "#ACD2D2", "#5C5C5C");
+	}
+	
+	public void setEvolve() {
+		evolve = true;
+		maxHealth = maxHealth + 100;
+		health = maxHealth;
+		changeSkin("Evolution");
+		if (name.equals("Norman")) {
+			ultCharge--;
+		}
+	}
+	
+	public boolean isEvolved() {
+		return evolve;
 	}
 	
 	public void setRooks(Player a, Player b, Player c, Player d, Player e) {
@@ -465,6 +491,9 @@ public class Player {
 		case "Nightmare":
 			nameSkin = getGradientName(tempName, "#CD35D0", "#6B6B6B", "#000000");
 			break;
+		case "Evolution":
+			nameSkin = getGradientName("Evolution", "#FFA970", "#9381FF", "#6622CC", "#6B0B98", "#2F004F") + " " + nameSkin;
+			break;
 		default:
 			break;
 		}
@@ -559,6 +588,111 @@ public class Player {
 	// Method to get the ANSI color code for RGB values
 	private static String getColorCode(int r, int g, int b) {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
+	}
+	
+	public int normanPower() {
+		return normanPower;
+	}
+	
+	public void setParty(Party p) {
+		party = p;
+	}
+	
+	public void addSugar(int i) {
+		sugar = sugar + i;
+	}
+	
+	public void transferStats(Player p, boolean b) {
+		if (b) {
+			double lostHealth = maxHealth * 0.2;
+			double lostDamage = damage * 0.3;
+			p.increaseHP(lostHealth);
+			p.increaseDPSNum(lostDamage);
+			maxHealth = maxHealth * 0.8;
+			if (health > maxHealth) {
+				health = maxHealth;
+			}
+			damage = damage * 0.7;
+		}else {
+			double lostHealth = maxHealth * 0.1;
+			double lostDamage = damage * 0.15;
+			p.increaseHP(lostHealth);
+			p.increaseDPSNum(lostDamage);
+			maxHealth = maxHealth * 0.9;
+			if (health > maxHealth) {
+				health = maxHealth;
+			}
+			damage = damage * 0.85;
+		}
+	}
+	
+	public void removeAura() {
+		trueAura = false;
+	}
+	
+	public boolean hasAura() {
+		return trueAura;
+	}
+	
+	public void addAura() {
+		if (trueAura) {
+			return;
+		}
+		aura++;
+		if (aura > 10) {
+			aura = 10;
+		}
+	}
+	
+	public void useShield() {
+		if (stackedShield) {
+			stackedShield = false;
+			increaseHP(300);
+		}
+		System.out.println();
+	}
+	
+	public void setSpin(boolean b) {
+		spin = b;
+	}
+	
+	public void setSpinMove(boolean b) {
+		spinMove = b;
+	}
+	
+	public boolean getSpin() {
+		return spin;
+	}
+	
+	public void addJavelin() {
+		javelin++;
+	}
+	
+	public void removeJavelins() {
+		for (int i = 0; i < javelin; i++) {
+			takeDamage(100);
+		}
+		javelin = 0;
+	}
+	
+	public void setCorrupt(boolean b) {
+		corrupt = b;
+	}
+	
+	public boolean isCorrupt() {
+		return corrupt;
+	}
+	
+	public void addMarker() {
+		marker = marker + 3;
+	}
+	
+	public int getMarker() {
+		return marker;
+	}
+	
+	public void reduceMarker() {
+		marker--;
 	}
 	
 	public void addFiretick() {
@@ -869,6 +1003,21 @@ public class Player {
 					GameSim.utility.get(j).activateDynamite();
 					GameSim.utility.remove(j);
 				}
+			}
+		}
+		if (name.equals("Stellar")) {
+			if (aura >= 10) {
+				System.out.println(nameSkin + "'s true aura is unleashed!");
+				aura = 0;
+				trueAura = true;
+				movement = movement + 5;
+			}
+		}
+		if (name.equals("Bonbon")) {
+			if (sugar > 0) {
+				System.out.println(nameSkin + "'s sugar rush is activated!");
+				power(sugar / 100, 1);
+				sugar = 0;
 			}
 		}
 		System.out.println();
@@ -1642,6 +1791,9 @@ public class Player {
 	}
 
 	public void reduceMovement(int i) {
+		if (spinMove) {
+			return;
+		}
 		movement = movement - i;
 		if (movement < 0) {
 			movement = 0;
@@ -1663,6 +1815,10 @@ public class Player {
 	}
 
 	public void setShield() {
+		if (shield && name.equals("Stellar")) {
+			stackedShield = true;
+			System.out.println(nameSkin + " is now stacked shielded.");
+		}
 		System.out.println(nameSkin + " is now shielded.");
 		shield = true;
 	}
@@ -2087,6 +2243,14 @@ public class Player {
 				yellowCharges = 3;
 			}
 		}
+		if (totalMovement % 2 == 0) {
+			sugar++;
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Gum") && GameSim.utility.get(j).owner(this) && this.inRange(GameSim.utility.get(j).getLoc(), 5)) {
+				sugar++;
+			}
+		}
 		System.out.println();
 	}
 
@@ -2106,6 +2270,25 @@ public class Player {
 			System.out.println(e);
 		}
 		System.out.println(nameSkin + " has gotten an orb.");
+		orbCount++;
+		party.addOrb();
+		if (orbCount == ultCharge) {
+			System.out.println(nameSkin + "'s ultimate is ready to use!");
+		}
+	}
+	
+	public void addOrb() {
+		if (isBrawler() && name.equals("Clementine")) {
+			return;
+		}
+		try {
+			String audio = "audio/orbedit.wav";
+			Music victoryPlayer = new Music(audio, false);
+			victoryPlayer.play();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		System.out.println("Benched player has gotten an orb.");
 		orbCount++;
 		if (orbCount == ultCharge) {
 			System.out.println(nameSkin + "'s ultimate is ready to use!");
@@ -2148,8 +2331,16 @@ public class Player {
 			return;
 		}
 		double rand = Math.random();
+		if (spinMove) {
+			return;
+		}
 		if (rand < dodgeChance) {
 			System.out.println("Damage evaded!");
+			return;
+		}
+		if (stackedShield) {
+			System.out.println("Stacked Shield broken!");
+			stackedShield = false;
 			return;
 		}
 		if (shield) {
@@ -2562,8 +2753,7 @@ public class Player {
 		double check = defaultCritChance;
 		if (isBrawler()) {
 			check = check + 0.05;
-		}
-		if (isBrawler() && isHybrid()) {
+		}else if (isBrawler() && isHybrid()) {
 			check = check + 0.025;
 		}
 		check = check + critChance;
@@ -2573,6 +2763,11 @@ public class Player {
 		if (name.equals("Harper") && !this.overRange(p, 8)) {
 			check = -1;
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Gum") && GameSim.utility.get(j).isEnemy(p) && p.inRange(GameSim.utility.get(j).getLoc(), 5)) {
+				check = 100;
+			}
+		}
 		if (rand2 <= check) {
 			if (name.equals("Harper")) {
 				movement = movement + 2;
@@ -2580,8 +2775,14 @@ public class Player {
 			}else {
 				c = damage * 0.25;
 			}
+			if (name.equals("Bonbon")) {
+				p.weary(1);
+			}
 		}
-		
+		if (p.getMarker() > 0) {
+			p.vulnerable(0.1, 1);
+			p.reduceMarker();
+		}
 		for(int j = 0; j < GameSim.utility.size(); j++) {
 			if(GameSim.utility.get(j).getName().equals("Peri") && GameSim.utility.get(j).owner(p) && this.inRange(GameSim.utility.get(j).getLoc(), 12) && !periCounter) {
 				periCounter = true;
@@ -2762,7 +2963,7 @@ public class Player {
 			return;
 		}
 		for (int j = 0; j < e.size(); j++) {
-			if (refined) {
+			if (refined || spinMove) {
 				if (e.get(j).getName().equals("ignite") || e.get(j).getName().equals("weak")
 						|| e.get(j).getName().equals("freeze") || e.get(j).getName().equals("vulnerable")
 						|| e.get(j).getName().equals("paralyze") || e.get(j).getName().equals("daze")
@@ -2826,7 +3027,7 @@ public class Player {
 			}
 			if (e.get(i).getName().equals("stun") && !stunned) {
 				stunned = true;
-				System.out.println(nameSkin + " has been stunned.");
+				System.out.println(nameSkin + " has been stunned for " + e.get(i).getTurns() + " turn(s).");
 			}
 			if (e.get(i).getName().equals("paralyze") && paralyzed) {
 				for (int j = 0; j < effects.size(); j++) {
@@ -3307,6 +3508,9 @@ public class Player {
 	}
 
 	public void decreaseMovement(int i) {
+		if (spinMove) {
+			return;
+		}
 		movement = movement - i;
 		if (movement < 0) {
 			movement = 0;
@@ -3519,6 +3723,10 @@ public class Player {
 
 	public void addHealing(double d) {
 		healingOutput = healingOutput + d;
+		if (GameSim.mode.equals("Evolution") && isEvolved()) {
+			normanPowerAdd = normanPowerAdd + d;
+			normanPower += (int)(normanPowerAdd / 750);
+        }
 	}
 
 	public double totalDamage() {
@@ -3688,6 +3896,12 @@ public class Player {
 		}
 		if (name.equals("Everest")){
 			echoChargeShow = "\n" + "Balance Orbs " + "\u001b[38;5;" + 122 + "m" + "🫧" + reset + ": " + balanceOrbs + "/" + "2.";
+		}
+		if (name.equals("Stellar")){
+			echoChargeShow = "\n" + "Aura Charges " + "\u001b[38;5;" + 55 + "m" + "🌌" + reset + ": " + aura + "/" + "10.";
+		}
+		if (name.equals("Bonbon")){
+			echoChargeShow = "\n" + "Sugar Rush " + "\u001b[38;5;" + 198 + "m" + "🍬" + reset + ": " + sugar + "%.";
 		}
 
 		if (name.equals("Clementine") && isBrawler()) {
@@ -4967,6 +5181,50 @@ public class Player {
 				return ("\"Watch out!\"");
 			}
 		}
+		if (name.equals("Noah")) {
+			if (randomNum == 1) {
+				return ("\"Healing cloud deployed.\"");
+			}
+			if (randomNum == 2) {
+				return ("\"I'm watching you guys from afar.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Easy now, rest up.\"");
+			}
+		}
+		if (name.equals("Jade")) {
+			if (randomNum == 1) {
+				return ("\"Cutting through!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Nothing is going to stop me now.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"I will clear our path!\"");
+			}
+		}
+		if (name.equals("Stellar")) {
+			if (randomNum == 1) {
+				return ("\"Crumble!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"The lights stand eternally.\"");
+			}
+			if (randomNum == 3) {
+				return ("\"You will feel the pain soon.\"");
+			}
+		}
+		if (name.equals("Bonbon")) {
+			if (randomNum == 1) {
+				return ("\"You're in for a sweet treat!\"");
+			}
+			if (randomNum == 2) {
+				return ("\"Chew on this!\"");
+			}
+			if (randomNum == 3) {
+				return ("\"Gum 'em up and shut 'em down!\"");
+			}
+		}
 		return "";
 	}
 
@@ -5609,6 +5867,34 @@ public class Player {
 				break;
 			case 3:
 				System.out.println(nameSkin + ": " + "\"Boss told me to leave no one standing.\"");
+				break;
+			}
+		}
+		if (name.equals("Airic")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"It's showoff time.\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"I can get you in there, just let me know!\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"Let's turn this against them!\"");
+				break;
+			}
+		}
+		if (name.equals("Norman")) {
+			int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
+			switch (randomNum) {
+			case 1:
+				System.out.println(nameSkin + ": " + "\"Which one of you guys should I pocket?\"");
+				break;
+			case 2:
+				System.out.println(nameSkin + ": " + "\"Let's go in for one turn kill!\"");
+				break;
+			case 3:
+				System.out.println(nameSkin + ": " + "\"My toxic screen will catch them by surprise!\"");
 				break;
 			}
 		}
@@ -7127,6 +7413,187 @@ public class Player {
 					System.out.println(nameSkin + ": " + "\"Let's see how good your sound technology is Echo.\"");
 					break;
 				}
+			}
+			if (name.equals("Airic")) {
+				switch (name3) {
+				case "Liam":
+					System.out.println(nameSkin + ": " + "\"Liam, back me up!\"");
+					break;
+				case "Aidan":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"I'll send you in if you're up for that.\"");
+						System.out.println(responseName + ": " + "\"I got a shotgun. Sounds good to me!\"");
+					}
+					break;
+				case "Dylan":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Dylan watch, I'm gonna surprise them from the behind.\"");
+						System.out.println(responseName + ": " + "\"From the what?!\"");
+					}
+					break;
+				case "Katrina":
+					System.out.println(nameSkin + ": " + "\"Let's get in there fast Katrina.\"");
+					break;
+				case "Sammi":
+					System.out.println(nameSkin + ": " + "\"Just like in Valorant Sammi. Shoot em down.\"");
+					break;
+				case "Mason":
+					System.out.println(nameSkin + ": " + "\"Show off that tech Mason.\"");
+					break;
+				case "Julian":
+					System.out.println(nameSkin + ": " + "\"Playing Bedwars now Julian?! At least it's working.\"");
+					break;
+				}
+			}
+			if (name.equals("Norman")) {
+				switch (name3) {
+				case "Lunar":
+					System.out.println(nameSkin + ": " + "\"Shine bright Lunar.\"");
+					break;
+				case "Chief":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Your mace is looking good to go Chief.\"");
+						System.out.println(responseName + ": " + "\"Neat! Thanks again Norman.\"");
+					}
+					break;
+				case "Cloud":
+					if (p.partyNames(this).get(cur).isAlive()) {
+						System.out.println(nameSkin + ": " + "\"Cloud I'm sorry. We can still fix your vision.\"");
+						System.out.println(responseName + ": " + "\"You're too late to fix anything.\"");
+					}
+					break;
+				case "Alex":
+					System.out.println(nameSkin + ": " + "\"Beat them up Alex!\"");
+					break;
+				case "Archer":
+					System.out.println(nameSkin + ": " + "\"Sharp shooting Archer.\"");
+					break;
+				case "Gash":
+					System.out.println(nameSkin + ": " + "\"We can one shot them together Gash.\"");
+					break;
+				case "Thunder":
+					System.out.println(nameSkin + ": " + "\"Thunder, let's see you create chaos out there today.\"");
+					break;
+				}
+			}
+		}
+	}
+	
+	public void enemyChat(Party p) {
+		System.out.println();
+		String name1 = p.partyNames(this).get(0).getName();
+		String name2 = p.partyNames(this).get(1).getName();
+		String name3 = "";
+		int cur = -1;
+		String responseName = null;
+		int randomNum = (int) (Math.random() * (2 - 1 + 1)) + 1;
+		if (randomNum == 1 && p.partyNames(this).get(0).isAlive()) {
+			name3 = name1;
+			cur = 0;
+			responseName = p.partyNames(this).get(0).getSkin();
+		} else if (randomNum == 2 && p.partyNames(this).get(1).isAlive()) {
+			name3 = name2;
+			cur = 1;
+			responseName = p.partyNames(this).get(1).getSkin();
+		}
+		if (name.equals("Lunar")) {
+			switch (name3) {
+			case "Solar":
+				System.out.println(nameSkin + ": " + "\"My sister is tough. Take her out fast!\"");
+				break;
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"Watch out for the enemy Lunar. He'll copy your powers!\"");
+				break;
+			case "Finley":
+				System.out.println(nameSkin + ": " + "\"Finley back to being a bully? Let's show him!\"");
+				break;
+			case "Alex":
+				System.out.println(nameSkin + ": " + "\"Sorry Alex, I gotta take you out.\"");
+				break;
+			case "Angelos":
+				System.out.println(nameSkin + ": " + "\"Don't let Angelos bring back his friends!\"");
+				break;
+			case "Kithara":
+				System.out.println(nameSkin + ": " + "\"Kithara is strong, don't underestimate her.\"");
+				break;
+			case "Echo":
+				System.out.println(nameSkin + ": " + "\"Stay quiet around Echo. He can hear everything.\"");
+				break;
+			}
+		}
+		if (name.equals("Solar")) {
+			switch (name3) {
+			case "Solar":
+				System.out.println(nameSkin + ": " + "\"That Solar burns bright. I burn brighter!\"");
+				break;
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"You are going down little brother!\"");
+				break;
+			case "Pearl":
+				System.out.println(nameSkin + ": " + "\"That Smollusk won't save her from my fire forever.\"");
+				break;
+			case "Orchid":
+				System.out.println(nameSkin + ": " + "\"Hope the enemy Orchid doesn't mind when I burn all her flowers down.\"");
+				break;
+			case "Rocco":
+				System.out.println(nameSkin + ": " + "\"Their Rocco is such a pain to deal with. Get him fast!");
+				break;
+			case "Jesse":
+				System.out.println(nameSkin + ": " + "\"Jesse's fire is weak. We'll burn him first.\"");
+				break;
+			case "Thunder":
+				System.out.println(nameSkin + ": " + "\"Thunder is no one to mess with. Let's take him out together.\"");
+				break;
+			}
+		}
+		if (name.equals("Zero")) {
+			switch (name3) {
+			case "Zero":
+				System.out.println(nameSkin + ": " + "\"My copy will have a storm for us. Make sure to avoid it.\"");
+				break;
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"That Lunar is hard to deal with. Take him out.\"");
+				break;
+			case "Archer":
+				System.out.println(nameSkin + ": " + "\"It's my turn to do the experiments Archer.\"");
+				break;
+			case "Dimentio":
+				System.out.println(nameSkin + ": " + "\"The enemy Dimentio fears me. Use that.\"");
+				break;
+			case "Rocco":
+				System.out.println(nameSkin + ": " + "\"If I had a choice, that Rocco would've been dead too.");
+				break;
+			case "Hopper":
+				System.out.println(nameSkin + ": " + "\"Hopper's leadership will take them far. Stop him.\"");
+				break;
+			case "Alex":
+				System.out.println(nameSkin + ": " + "\"That Alex will give us problems. Don't let your guard down.\"");
+				break;
+			}
+		}
+		if (name.equals("Finley")) {
+			switch (name3) {
+			case "Finley":
+				System.out.println(nameSkin + ": " + "\"That Finley thinks he's so strong. I probably bench more than him!\"");
+				break;
+			case "Axol":
+				System.out.println(nameSkin + ": " + "\"Sorry Axol, you are going down today.\"");
+				break;
+			case "Cherry":
+				System.out.println(nameSkin + ": " + "\"Take out Cherry before she gets her mech. It's strong.\"");
+				break;
+			case "Bedrock":
+				System.out.println(nameSkin + ": " + "\"I'm going to have a little rematch with the enemy Bedrock.\"");
+				break;
+			case "Drift":
+				System.out.println(nameSkin + ": " + "\"Their Drift can't run from us forever.");
+				break;
+			case "Mack":
+				System.out.println(nameSkin + ": " + "\"Don't let their Mack catch us by surprise!\"");
+				break;
+			case "Tom":
+				System.out.println(nameSkin + ": " + "\"Tom Phan isn't all that scary. Let's beat him back.\"");
+				break;
 			}
 		}
 	}
