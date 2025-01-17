@@ -195,6 +195,7 @@ public class Player {
 	Player e2;
 	Player e3;
 	Party party;
+	Bar bar;
 
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -237,6 +238,12 @@ public class Player {
 			applyEffects();
 		}
 		smolluskSkin = getGradientName("Smollusk", "#5C5C5C", "#ACD2D2", "#5C5C5C");
+		bar = new Bar();
+		bar.setBar(name, this);
+	}
+	
+	public String getBar() {
+		return bar.getBar();
 	}
 	
 	public void setEvolve() {
@@ -245,6 +252,12 @@ public class Player {
 		health = maxHealth;
 		changeSkin("Evolution");
 		if (name.equals("Norman")) {
+			ultCharge--;
+		}
+		if (name.equals("Sammi")) {
+			damage = damage + 50;
+		}
+		if (name.equals("Axol")) {
 			ultCharge--;
 		}
 	}
@@ -588,6 +601,10 @@ public class Player {
 	// Method to get the ANSI color code for RGB values
 	private static String getColorCode(int r, int g, int b) {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
+	}
+	
+	public void increaseRange(int i) {
+		range = range + i;
 	}
 	
 	public int normanPower() {
@@ -1250,6 +1267,14 @@ public class Player {
 		}
 		health = health + d;
 		overHealth = overHealth + d;
+	}
+	
+	public boolean hasOverhealth() {
+		return overHealth > 0;
+	}
+	
+	public double getOverhealth() {
+		return overHealth;
 	}
 	
 	public void removeOverhealth() {
@@ -1988,11 +2013,17 @@ public class Player {
 		if (!isAlive()) {
 			return;
 		}
+		if (sights == 0 && name.equals("Mack")) {
+			damage = damage + 125;
+		}
 		sights = i;
 	}
 
 	public void useSight() {
 		sights--;
+		if (sights == 0 && name.equals("Mack")) {
+			damage = damage - 125;
+		}
 	}
 
 	public int getMovement() {
@@ -2364,29 +2395,25 @@ public class Player {
 				d = d + (d * effects.get(i).getIncrease());
 			}
 		}
-		if (isTank()) {
-			if (health <= (maxHealth * 0.5 ) && !tectonic) {
-				if (tremor) {
-					d = d * 0.95;
-				}else {
-					d = d * 0.9;
-				}
+		if (bar.hasArmor() && !tectonic) {
+			if (tremor) {
+				d = d * 0.925;
+			}else {
+				d = d * 0.85;
 			}
 		}
-		if (isTank() && isHybrid() && !tectonic) {
-			if (health <= (maxHealth * 0.5)) {
-				if (tremor) {
-					d = d * 0.975;
-				}else {
-					d = d * 0.95;
-				}
-			}
-		}
-		if (patProtect) {
+		if (patProtect && !tectonic) {
 			if (tremor) {
 				d = d * 0.95;
 			}else {
 				d = d * 0.9;
+			}
+		}
+		if (sights > 0 && name.equals("Mack") && !tectonic) {
+			if (tremor) {
+				d = d * 0.8;
+			}else {
+				d = d * 0.6;
 			}
 		}
 		if (ultActive && name.equals("Magnet")) {
@@ -2745,16 +2772,21 @@ public class Player {
 			return;
 		}
 		double c = 0;
-		int randomNum = (int) (Math.random() * (10 - (-10) + 1)) + -10;
+		int randomNum = 0;
+		if (isBrawler()) {
+			randomNum = (int) (Math.random() * (20 - (-10) + 1)) + -10;
+		}else if (isBrawler() && isHybrid()) {
+			randomNum = (int) (Math.random() * (15 - (-10) + 1)) + -10;
+		}else {
+			randomNum = (int) (Math.random() * (10 - (-10) + 1)) + -10;
+		}
 		if (damage <= 0) {
 			randomNum = 0;
 		}
 		double rand2 = Math.random();
 		double check = defaultCritChance;
-		if (isBrawler()) {
+		if (bar.hasValor()) {
 			check = check + 0.05;
-		}else if (isBrawler() && isHybrid()) {
-			check = check + 0.025;
 		}
 		check = check + critChance;
 		if (name.equals("Harper") && this.overRange(p, 12)) {
@@ -3541,6 +3573,9 @@ public class Player {
 					e = e * 1.2;
 				}
 			}
+			if (bar.hasEssence()) {
+				e = e * 1.2;
+			}
 			for (int i = 0; i < permHeal; i++) {
 				e = e * 1.05;
 			}
@@ -3583,6 +3618,9 @@ public class Player {
 				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && GameSim.utility.get(j).isEclipse()) {
 					e = e * 1.2;
 				}
+			}
+			if (bar.hasEssence()) {
+				e = e * 1.2;
 			}
 			for (int i = 0; i < permHeal; i++) {
 				e = e * 1.05;
@@ -3628,6 +3666,9 @@ public class Player {
 				if(GameSim.utility.get(j).getName().equals("Eclipse") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 15) && GameSim.utility.get(j).isEclipse()) {
 					e = e * 1.2;
 				}
+			}
+			if (bar.hasEssence()) {
+				e = e * 1.2;
 			}
 			for (int k = 0; k < permHeal; k++) {
 				e = e * 1.05;
@@ -3911,7 +3952,7 @@ public class Player {
 		}else if (name.equals("Angelos") && !isAlive()) {
 			return "Ability: " + ability;
 		} else {
-			return (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + charms + "\n"
+			return ((getSkin() + ": " + getBar())) + "\n" + (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + charms + "\n"
 					+ weaponShow + weapon + ". Ability: " + ability + ultimate + ult + "\n" + loc
 					+ curLoc + moveshow + move + dash + dashes + jump + jumps + echoChargeShow);
 		}
@@ -7593,6 +7634,56 @@ public class Player {
 				break;
 			case "Tom":
 				System.out.println(nameSkin + ": " + "\"Tom Phan isn't all that scary. Let's beat him back.\"");
+				break;
+			}
+		}
+		if (name.equals("Hopper")) {
+			switch (name3) {
+			case "Hopper":
+				System.out.println(nameSkin + ": " + "\"Their Hopper will lead them in. Take down their backline!\"");
+				break;
+			case "Zero":
+				System.out.println(nameSkin + ": " + "\"I will bring justice to our world to their Zero!\"");
+				break;
+			case "Rocco":
+				System.out.println(nameSkin + ": " + "\"My brother over there can be crazy. Be careful around him.\"");
+				break;
+			case "Snowfall":
+				System.out.println(nameSkin + ": " + "\"Snowfall will freeze us to death. Kill him quick!\"");
+				break;
+			case "Alex":
+				System.out.println(nameSkin + ": " + "\"I've seen their Alex fight. We can team up on her.");
+				break;
+			case "Cloud":
+				System.out.println(nameSkin + ": " + "\"Cloud is a rogue experiment. Stay alert!\"");
+				break;
+			case "Lunar":
+				System.out.println(nameSkin + ": " + "\"Lunar will copy us. Be unpredictable.\"");
+				break;
+			}
+		}
+		if (name.equals("Norman")) {
+			switch (name3) {
+			case "Chief":
+				System.out.println(nameSkin + ": " + "\"The Chief will dive in on us. Protect each other.\"");
+				break;
+			case "Ashley":
+				System.out.println(nameSkin + ": " + "\"The enemy Ashley thinks they have good poison powers. I will show her.\"");
+				break;
+			case "Julian":
+				System.out.println(nameSkin + ": " + "\"Their Julian will blow us up if we aren't careful!\"");
+				break;
+			case "Orion":
+				System.out.println(nameSkin + ": " + "\"Their Orion will see what happens when he gets too close to us.\"");
+				break;
+			case "Eli":
+				System.out.println(nameSkin + ": " + "\"Eli has too much healing. Let's cut it down to size.");
+				break;
+			case "Cloud":
+				System.out.println(nameSkin + ": " + "\"Cloud will not reason with us. We must end him.\"");
+				break;
+			case "Bedrock":
+				System.out.println(nameSkin + ": " + "\"Bedrock looks strong, but he's slow. Take advantage of that.\"");
 				break;
 			}
 		}

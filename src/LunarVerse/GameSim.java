@@ -203,15 +203,16 @@ public class GameSim {
 				System.out.println();
 			}
 		}else {
-			p1 = new Player(2300, 75, true, "Norman", 20, 20, 10, 10, 1);
+			p1 = new Player(2000, 75, true, "Willow", 20, 20, 10, 10, 0);
+			//p1.takeDamage(950);
 			p1.addRole("tank");
 			p3 = new Player(2400, 475, false, "Solar", 20, 20, 10, 10, 0);
 			p5 = new Player(3600, 175, false, "Alex", 20, 20, 11, 9, 0);
 			
-			p2 = new Player(10000, 250, false, "Lunar", 25, 20, 10, 10, 7);
+			p2 = new Player(10000, 1250, false, "Lunar", 25, 20, 10, 10, 7);
 			p4 = new Player(9000, 250, false, "Solar", 23, 20, 10, 10, 0);
 			p6 = new Player(10000, 200, false, "Kithara", 20, 8, 10, 10, 7);
-			mode = "Evolution";
+			//mode = "Evolution";
 			String skinName = "Sakura";
 			p1.changeSkin(skinName);
 			p3.changeSkin(skinName);
@@ -399,8 +400,9 @@ public class GameSim {
 				}
 				while(p1.getTurn() && !p1.isStunned()) {
 					//p1.image().open();
-					System.out.println("Turn: " + tD);
-					System.out.println(party1.getPartyName() + "'s Turn (Go " + p1.getSkin() + "!)");
+					System.out.println(party1.getPartyName() + "'s Turn: " + tD);
+					//System.out.println(party1.getPartyName() + "'s Turn (Go " + p1.getSkin() + "!)");
+
 					System.out.println(p1);
 					System.out.print("What would " + p1.getSkin() + " like to do: ");
 					String response = input.next();
@@ -663,8 +665,7 @@ public class GameSim {
 				}
 				
 				while(p3.getTurn()) {
-					System.out.println("Turn: " + tD);
-					System.out.println(party1.getPartyName() + "'s Turn (Go " + p3.getSkin() + "!)");
+					System.out.println(party1.getPartyName() + "'s Turn: " + tD);
 					System.out.println(p3);
 					System.out.print("What would " + p3.getSkin() + " like to do: ");
 					String response = input.next();
@@ -907,8 +908,7 @@ public class GameSim {
 				}
 				
 				while(p5.getTurn()) {
-					System.out.println("Turn: " + tD);
-					System.out.println(party1.getPartyName() + "'s Turn (Go " + p5.getSkin() + "!)");
+					System.out.println(party1.getPartyName() + "'s Turn: " + tD);
 					System.out.println(p5);
 					System.out.print("What would " + p5.getSkin() + " like to do: ");
 					String response = input.next();
@@ -1234,8 +1234,7 @@ public class GameSim {
 					b.checkSpace();
 				}
 				while(p2.getTurn()) {
-					System.out.println("Turn: " + tD);
-					System.out.println(party2.getPartyName() + "'s Turn (Go " + p2.getSkin() + "!)");
+					System.out.println(party2.getPartyName() + "'s Turn: " + tD);
 					System.out.println(p2);
 					System.out.print("What would " + p2.getSkin() + " like to do: ");
 					String response = input.next();
@@ -1478,8 +1477,7 @@ public class GameSim {
 				}
 				
 				while(p4.getTurn()) {
-					System.out.println("Turn: " + tD);
-					System.out.println(party2.getPartyName() + "'s Turn (Go " + p4.getSkin() + "!)");
+					System.out.println(party2.getPartyName() + "'s Turn: " + tD);
 					System.out.println(p4);
 					System.out.print("What would " + p4.getSkin() + " like to do: ");
 					String response = input.next();
@@ -1722,8 +1720,7 @@ public class GameSim {
 				}
 				
 				while(p6.getTurn()) {
-					System.out.println("Turn: " + tD);
-					System.out.println(party2.getPartyName() + "'s Turn (Go " + p6.getSkin() + "!)");
+					System.out.println(party2.getPartyName() + "'s Turn: " + tD);
 					System.out.println(p6);
 					System.out.print("What would " + p6.getSkin() + " like to do: ");
 					String response = input.next();
@@ -2278,7 +2275,7 @@ public class GameSim {
 			SolarAttack(p, a);
 		}
 		if(p.getName().equals("Mack")) {
-			MackAttack(p, a);
+			MackAttack(p, a, b, c);
 		}
 		if(p.getName().equals("Finley")) {
 			FinleyAttack(p, a);
@@ -5868,7 +5865,7 @@ public class GameSim {
 			p.attack(c);
 			chainHits++;
 		}
-		if (mode.equals("Evolution") && p.isEvolved()) {
+		if (p.isEvolved()) {
 			for (int i = 0; i < chainHits; i++) {
 				a.takeDamage(75);
 				p.addDamage(75);
@@ -5981,11 +5978,21 @@ public class GameSim {
 		System.out.println();
 	}
 	
-	public static void MackAttack(Player p, Player a) {
+	public static void MackAttack(Player p, Player a, Player b, Player c) {
 		p.attack(a);
 		double rand = Math.random();
 		if(rand <= 0.1) {
 			a.daze(1);
+		}
+		if (p.isEvolved()) {
+			if (b.inRange(a, 3)){
+				p.attack(b);
+				b.getLoc().set(a.getLoc().getX(), a.getLoc().getY());
+			}
+			if (c.inRange(a, 3)){
+				p.attack(c);
+				c.getLoc().set(a.getLoc().getX(), a.getLoc().getY());
+			}
 		}
 		System.out.println();
 	}
@@ -6061,8 +6068,6 @@ public class GameSim {
 	
 	public static void MackUltimate(Player p) {
 		p.setSights(3);
-		p.power(0.4, 3);
-		p.protect(0.3, 3);
 		p.resetUlt();
 		System.out.println("\"Dalton! Rip them apart!\"");
 		System.out.println();
@@ -6239,7 +6244,7 @@ public class GameSim {
 			if(rand <= 0.1) {
 				a.stun(1);
 			}
-			if (mode.equals("Evolution") && p.isEvolved()) {
+			if (p.isEvolved()) {
 				p.protect(0.3, 1);
 	        }
 		}else {
@@ -7015,7 +7020,7 @@ public class GameSim {
 	}
 	
 	public static void AlexAttack(Player p, Player a) {
-		if (mode.equals("Evolution") && p.isEvolved()) {
+		if (p.isEvolved()) {
 			a.dragIn(p.getLoc(), 12);
 			p.attack(a);
 			a.knockbacked(p.getLoc());
@@ -7501,6 +7506,9 @@ public class GameSim {
 	}
 	
 	public static void SammiAbility(Player p) {
+		if (p.isEvolved()) {
+			p.increaseRange(2);
+		}
 		p.setRange(200);
 		p.setCooldown(2);
 		System.out.println(p.voiceline());
@@ -7644,7 +7652,7 @@ public class GameSim {
 	}
 	
 	public static void AidanAbility(Player p, Player a, Player b) {
-		if (mode.equals("Evolution") && p.isEvolved()) {
+		if (p.isEvolved()) {
 			Cover c = new Cover("Full", new Location(p.getLoc().getX(), p.getLoc().getY()));
 			Cover c2 = new Cover("Full", new Location(a.getLoc().getX(), a.getLoc().getY()));
 			Cover c3 = new Cover("Full", new Location(b.getLoc().getX(), b.getLoc().getY()));
@@ -7886,6 +7894,11 @@ public class GameSim {
 	}
 	
 	public static void AxolUltimate(Player p, Player a, Player b) {
+		if (p.isEvolved()) {
+			p.mend(0.2, 100);
+			a.mend(0.2, 100);
+			b.mend(0.2, 100);
+		}
 		p.setOverhealth(p.getMaxHP() * 0.25);
 		a.setOverhealth(a.getMaxHP() * 0.25);
 		b.setOverhealth(b.getMaxHP() * 0.25);
@@ -7920,7 +7933,7 @@ public class GameSim {
 			p.addHealing(a.getMaxHP() * 0.10);
 			p.cleanse();
 			a.cleanse();
-			if (mode.equals("Evolution") && p.isEvolved()) {
+			if (p.isEvolved()) {
 				p.increaseMovement(4);
 				a.increaseMovement(4);
 	        }
@@ -7936,7 +7949,7 @@ public class GameSim {
 			p.addHealing(b.getMaxHP() * 0.1);
 			p.cleanse();
 			b.cleanse();
-			if (mode.equals("Evolution") && p.isEvolved()) {
+			if (p.isEvolved()) {
 				p.increaseMovement(4);
 				b.increaseMovement(4);
 	        }
@@ -9021,7 +9034,7 @@ public class GameSim {
 		b.weak(0.1,  1);
 		c.weary(1);
 		c.weak(0.1,  1);
-		if (mode.equals("Evolution") && p.isEvolved()) {
+		if (p.isEvolved()) {
 			p.addDashes(1);
 			a.knockbacked(p.getLoc());
 			b.knockbacked(p.getLoc());
@@ -9477,7 +9490,7 @@ public class GameSim {
 	public static void NormanUltimate(Player p, Player a, Player b) {
 		double power = 2.5;
 		System.out.println(p.normanPower());
-		if (mode.equals("Evolution") && p.isEvolved()) {
+		if (p.isEvolved()) {
 			for(int i = 0; i < p.normanPower(); i++) {
 				power = power + 0.1;
 			}
@@ -9514,7 +9527,7 @@ public class GameSim {
 		p.attack(b);
 		p.resetAttack();
 		p.attack(c);
-		if (mode.equals("Evolution") && p.isEvolved()) {
+		if (p.isEvolved()) {
 			if (p.inRange(a)) {
 				p.attack(a);
 				p.resetAttack();
@@ -9606,7 +9619,7 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.1);
 		p.addHealing(a.getMaxHP() * 0.1);
 		p.addHealing(b.getMaxHP() * 0.1);
-		if (mode.equals("Evolution") && p.isEvolved()) {
+		if (p.isEvolved()) {
 			p.setShield();
 			a.setShield();
 			b.setShield();

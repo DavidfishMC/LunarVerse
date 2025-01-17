@@ -411,7 +411,7 @@ public class Party {
 		}
 		for(int i = 0; i < 3; i++) {
 			roster[i].resetMovement();
-			if(!roster[i].getName().equals("Zero")) {
+			if(!roster[i].getName().equals("Zero") && !roster[i].getName().equals("Mack")) {
 				roster[i].setSights(0);
 			}
 			roster[i].resetName();
@@ -447,9 +447,9 @@ public class Party {
 				if (roster[i].isTank() && roster[i].isSupport()) {
 					roster[i].heal(0.025);
 				}else if (roster[i].isHybrid() && roster[i].isSupport() && !roster[i].isTank()) {
-					roster[i].heal(0.05);
+					roster[i].heal(0.025);
 				}else if (roster[i].isSupport()) {
-					roster[i].heal(0.075);
+					roster[i].heal(0.05);
 				}
 			}
 			if (roster[i].getName().equals("Thunder") && !roster[i].tookDamage() && roster[i].isCountering()) {
