@@ -23,6 +23,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class Player {
 
 	Cover curCover = null;
+	ArrayList<Dynamic> dynamics = new ArrayList<Dynamic>();
 	double health;
 	double maxHealth;
 	double saveHealth = 0;
@@ -124,6 +125,8 @@ public class Player {
 	boolean stackedShield = false;
 	boolean trueAura = false;
 	boolean evolve = false;
+	boolean xara = false;
+	boolean dashedOn = false;
 	int sights = 0;
 	int actionTokens = 1;
 	int cooldown = 0;
@@ -164,6 +167,8 @@ public class Player {
 	int javelin = 0;
 	int aura = 0;
 	int normanPower = 0;
+	int fireImmune = 0;
+	int teleportCooldown = 3;
 	double normanPowerAdd = 0;
 	double sugar = 25;
 	double totalDamage = 0;
@@ -175,9 +180,11 @@ public class Player {
 	double fuel = 625;
 	double overHealth = 0;
 	double ebbFlowDamage = 0;
-	double petalBlockade = 500;
+	double petalBlockade = 750;
+	double petalBlockadeMax = 750;
 	double defaultCritChance = 0.1;
 	double orbCharges = 0;
+	double collectDamage = 0;
 	ArrayList<Effect> effects = new ArrayList<Effect>();
 	ArrayList<String> roles = new ArrayList<String>();
 	ArrayList<Player> players = new ArrayList<Player>();
@@ -196,6 +203,10 @@ public class Player {
 	Player e3;
 	Party party;
 	Bar bar;
+	double items[] = new double[3];
+	double items2[] = new double[3];
+	Location prev = new Location(0,0);
+	Location prev2 = new Location(0,0);
 
 	public Player(int hp, int damage, boolean turn, String name, int x, int y, int r, int m, int u) {
 		health = hp;
@@ -237,6 +248,10 @@ public class Player {
 			addEffects(e);
 			applyEffects();
 		}
+		if (roles.contains("boss")) {
+			dashes++;
+			jumps++;
+		}
 		smolluskSkin = getGradientName("Smollusk", "#5C5C5C", "#ACD2D2", "#5C5C5C");
 		bar = new Bar();
 		bar.setBar(name, this);
@@ -264,6 +279,31 @@ public class Player {
 	
 	public boolean isEvolved() {
 		return evolve;
+	}
+	
+	public void setDynamic(Dynamic d) {
+		dynamics.add(d);
+	}
+	
+	public void useDynamic() {
+	    if (dynamics.isEmpty()) {
+	        return;
+	    }
+
+	    for (Dynamic d : dynamics) {
+	        if (this.equals(d.getActi())) {
+	            d.useDynamic();
+	        }
+	    }
+	}
+
+	
+	public void reduceDyCooldown() {
+		for (Dynamic d: dynamics) {
+			if (d != null && this.equals(d.getActi())) {
+				d.reduceCooldown();
+			}
+		}
 	}
 	
 	public void setRooks(Player a, Player b, Player c, Player d, Player e) {
@@ -368,6 +408,9 @@ public class Player {
 
 	public void changeSkin(String type) {
 		String tempName = name;
+		if (name.equals("Ayson")) {
+			tempName = "Gray & Jay";
+		}
 		if (name.equals("Evil")) {
 			tempName = "Evil Lunar";
 		}
@@ -603,8 +646,61 @@ public class Player {
 		return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
 	}
 	
+	public void reduceTeleport() {
+		if (teleportCooldown > 0) {
+			teleportCooldown--;
+		}
+	}
+	
+	public void setItems(double d, int c, int u, Location l) {
+		items2[0] = items[0];
+		items2[1] = items[1];
+		items2[2] = items[2];
+		prev2.set(prev.getX(), prev.getY());
+		items[0] = d;
+		items[1] = c;
+		items[2] = u;
+		prev.set(l.getX(), l.getY());
+	}
+	
+	public void xaraDynamic() {
+		xara = true;
+	}
+	
+	public boolean xara() {
+		return xara;
+	}
+	
+	public void xaraend() {
+		xara = false;
+		collectDamage = 0;
+	}
+	
+	public double xaraDamage() {
+		return collectDamage;
+	}
+	
+	public void airicDynamic() {
+		health = items2[0];
+		cooldown = (int) items2[1];
+		orbCount = (int) items2[2];
+		curLoc.set(prev2.getX(), prev2.getY());
+		resetAttack();;
+	}
+	
 	public void increaseRange(int i) {
 		range = range + i;
+	}
+	
+	public void setFireImmune() {
+		fireImmune = 2;
+	}
+	
+	public void reduceFireImmune() {
+		fireImmune--;
+		if (fireImmune < 0) {
+			fireImmune = 0;
+		}
 	}
 	
 	public int normanPower() {
@@ -710,6 +806,10 @@ public class Player {
 	
 	public void reduceMarker() {
 		marker--;
+	}
+	
+	public void resetMarker() {
+		marker = 0;
 	}
 	
 	public void addFiretick() {
@@ -910,10 +1010,15 @@ public class Player {
 		return expose;
 	}
 	
+	public void orchidDynamic() {
+		petalBlockadeMax = petalBlockadeMax + 150;
+		petalBlockade = petalBlockadeMax;
+	}
+	
 	public void chargeBlockade() {
 		petalBlockade = petalBlockade + 150;
-		if (petalBlockade > 750) {
-			petalBlockade = 750;
+		if (petalBlockade > petalBlockadeMax) {
+			petalBlockade = petalBlockadeMax;
 		}
 	}
 	
@@ -1038,6 +1143,14 @@ public class Player {
 			}
 		}
 		System.out.println();
+	}
+	
+	public void setTeleport() {
+		teleportCooldown = 3;
+	}
+	
+	public int getTeleportBoss() {
+		return teleportCooldown;
 	}
 	
 	public void setResting(boolean b) {
@@ -1284,9 +1397,9 @@ public class Player {
 	
 	public void checkOverhealth() {
 		if (overHealth > 0) {
-			health = health - (overHealth * 0.1);
+			health = health - (maxHealth * 0.05);
 		}
-		overHealth = overHealth - (overHealth * 0.1);
+		overHealth = overHealth - (maxHealth * 0.05);
 		if (overHealth < 0) {
 			overHealth = 0;
 		}
@@ -1481,6 +1594,12 @@ public class Player {
 		return roles.size() > 1;
 	}
 	
+	public void setCherryTank() {
+		saveHealth = health;
+		health = 600;
+		maxHealth = 600;
+	}
+	
 	public void setMotorcycle() {
 		saveHealth = health;
 		health = 600;
@@ -1652,7 +1771,7 @@ public class Player {
 			return;
 		}
 		echoCharge = echoCharge + d;
-		if (echoCharge > 1200 && name.equals("Echo") && !charge) {
+		if (echoCharge >= 1200 && name.equals("Echo") && !charge) {
 			System.out.println(nameSkin + "'s soundwave barrier is fully charged.");
 		}
 		if (echoCharge > 1200 && name.equals("Echo")) {
@@ -1767,6 +1886,9 @@ public class Player {
 
 	public void resetJumps() {
 		jumps = 1;
+		if (roles.contains("boss")) {
+			jumps++;
+		}
 		if (charm.equals("Bunny")) {
 			jumps++;
 		}
@@ -1807,7 +1929,7 @@ public class Player {
 
 	public void resetDashes() {
 		dashes = 1;
-		if (emp > 0) {
+		if (roles.contains("boss")) {
 			dashes++;
 		}
 		if (charm.equals("Rhino")) {
@@ -2277,11 +2399,6 @@ public class Player {
 		if (totalMovement % 2 == 0) {
 			sugar++;
 		}
-		for(int j = 0; j < GameSim.utility.size(); j++) {
-			if(GameSim.utility.get(j).getName().equals("Gum") && GameSim.utility.get(j).owner(this) && this.inRange(GameSim.utility.get(j).getLoc(), 5)) {
-				sugar++;
-			}
-		}
 		System.out.println();
 	}
 
@@ -2290,6 +2407,9 @@ public class Player {
 	}
 
 	public void getOrb() {
+		if (orbCount == ultCharge) {
+			return;
+		}
 		if (isBrawler() && name.equals("Clementine")) {
 			return;
 		}
@@ -2356,6 +2476,14 @@ public class Player {
 		power(0.1,1);
 		sightsee(0.1,1);
 	}
+	
+	public void dashedOn() {
+		dashedOn = true;
+	}
+	
+	public void dashOff() {
+		dashedOn = false;
+	}
 
 	public void takeDamage(double d) {
 		if (!isAlive()) {
@@ -2378,6 +2506,9 @@ public class Player {
 			System.out.println("Shield broken!");
 			shield = false;
 			return;
+		}
+		if (xara) {
+			collectDamage = collectDamage + d;
 		}
 		if (chaos) {
 			d = d * 1.1;
@@ -2596,6 +2727,11 @@ public class Player {
 			addCharge(d);
 		}
 		if (health == 0) {
+			if (name.equals("Boss:Finley") && dashedOn == false) {
+				health = 1;
+				System.out.println("\"I will not go down that easily to a coward!\"");
+				return;
+			}
 			try {
 				String audio = "audio/downed.wav";
 				Music victoryPlayer = new Music(audio, false);
@@ -2610,6 +2746,12 @@ public class Player {
 				ultDown();
 				tire = false;
 				System.out.println("\"Hey, not cool man!\"");
+				return;
+			}
+			if (name.equals("Cherry") && maxHealth == 600) {
+				health = saveHealth;
+				maxHealth = 2300;
+				System.out.println("\"Time to abandon ship!\"");
 				return;
 			}
 			if (name.equals("Willow") && !ultActive && ultReady()) {
@@ -2640,6 +2782,7 @@ public class Player {
 				maxHealth = 800;
 				roles.clear();
 				roles.add("brawler");
+				bar.clemBar();
 				System.out.println("\"You're gonna pay for destroying my tank!\"");
 				return;
 			}
@@ -2690,6 +2833,12 @@ public class Player {
 			ultDown();
 			tire = false;
 			System.out.println("\"Hey, not cool man!\"");
+			return;
+		}
+		if (name.equals("Cherry") && maxHealth == 600) {
+			health = saveHealth;
+			maxHealth = 2300;
+			System.out.println("\"Time to abandon ship!\"");
 			return;
 		}
 		if (name.equals("Willow") && ultActive && maxHealth == 1000) {
@@ -2786,7 +2935,7 @@ public class Player {
 		double rand2 = Math.random();
 		double check = defaultCritChance;
 		if (bar.hasValor()) {
-			check = check + 0.05;
+			check = check + 0.1;
 		}
 		check = check + critChance;
 		if (name.equals("Harper") && this.overRange(p, 12)) {
@@ -2803,9 +2952,9 @@ public class Player {
 		if (rand2 <= check) {
 			if (name.equals("Harper")) {
 				movement = movement + 2;
-				c = damage * 0.5;
+				c = damage * 0.4;
 			}else {
-				c = damage * 0.25;
+				c = damage * 0.20;
 			}
 			if (name.equals("Bonbon")) {
 				p.weary(1);
@@ -2823,7 +2972,7 @@ public class Player {
 			}
 		}
 
-		if (p.getName().equals("Bedrock") && p.ultActive() && p.inRange(this)) {
+		if (p.getName().equals("Bedrock") && p.ultActive() && p.inRange(this, 11)) {
 			p.getLoc().set(curLoc.getX(), curLoc.getY());
 		}
 		if (name.equals("Sammi") && range > 100) {
@@ -3006,6 +3155,12 @@ public class Player {
 				}
 			}
 			if (name.equals("Pearl") && !resting) {
+				if (e.get(j).getName().equals("ignite")) {
+					e.remove(e.get(j));
+					j--;
+				}
+			}
+			if (fireImmune > 0) {
 				if (e.get(j).getName().equals("ignite")) {
 					e.remove(e.get(j));
 					j--;
@@ -3229,17 +3384,12 @@ public class Player {
 	public void reduceEffects() {
 		for (int i = 0; i < effects.size(); i++) {
 			Effect e = effects.get(i);
-			if (e.getName().equals("power") || e.getName().equals("posion") || e.getName().equals("blind") || e.getName().equals("vulnerable") || e.getName().equals("weak") || e.getName().equals("ignite") ||
-					e.getName().equals("daze") || e.getName().equals("stun") || e.getName().equals("paralyze") || e.getName().equals("freeze") || e.getName().equals("mend") || e.getName().equals("sight") ||
+			if (e.getName().equals("power2") || e.getName().equals("posion") || e.getName().equals("blind") || e.getName().equals("vulnerable") || e.getName().equals("weak") || e.getName().equals("ignite") ||
+					e.getName().equals("daze") || e.getName().equals("stun") || e.getName().equals("paralyze") || e.getName().equals("freeze") || e.getName().equals("mend") || e.getName().equals("sight2") ||
 					e.getName().equals("weary")) {
 				e.reduceTurns();
 			}
 			if (e.getTurns() <= 0) {
-				if (e.getName().equals("power")) {
-					damage = damage - (ogDamage * e.getIncrease());
-					System.out.println(nameSkin + " is no longer powered.");
-					i--;
-				}
 				if (e.getName().equals("poison")) {
 					absorb = absorb + e.getIncrease();
 					System.out.println(nameSkin + " is no longer poisoned.");
@@ -3313,10 +3463,15 @@ public class Player {
 	public void reduceEffectsPre() {
 		for (int i = 0; i < effects.size(); i++) {
 			Effect e = effects.get(i);
-			if (e.getName().equals("protect") || e.getName().equals("reflection") || e.getName().equals("refine") || e.getName().equals("counter") || e.getName().equals("fortify")) {
+			if (e.getName().equals("protect") || e.getName().equals("reflection") || e.getName().equals("refine") || e.getName().equals("counter") || e.getName().equals("fortify") || e.getName().equals("power") || e.getName().equals("sight")) {
 				e.reduceTurns();
 			}
 			if (e.getTurns() <= 0) {
+				if (e.getName().equals("power")) {
+					damage = damage - (ogDamage * e.getIncrease());
+					System.out.println(nameSkin + " is no longer powered.");
+					i--;
+				}
 				if (e.getName().equals("protect")) {
 					protect = protect + e.getIncrease();
 					System.out.println(nameSkin + " is no longer protected.");
@@ -3340,6 +3495,11 @@ public class Player {
 				if (e.getName().equals("fortify")) {
 					fortify = false;
 					System.out.println(nameSkin + " is no longer fortified.");
+					i--;
+				}
+				if (e.getName().equals("sight")) {
+					range = range - (ogRange * e.getIncrease());
+					System.out.println(nameSkin + " is no longer sightseeing.");
 					i--;
 				}
 				effects.remove(e);
@@ -3468,6 +3628,9 @@ public class Player {
 		if (!isAlive()) {
 			return;
 		}
+		if (supress) {
+			supress = false;
+		}
 		for (int i = 0; i < effects.size(); i++) {
 			Effect e = effects.get(i);
 			if (e.getName().equals("vulnerable")) {
@@ -3560,7 +3723,7 @@ public class Player {
 			double e = (maxHealth * d) * absorb2;
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
-					e = e * 1.25;
+					e = e * 1.5;
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
@@ -3586,7 +3749,9 @@ public class Player {
 				e = e / 2;
 			}
 			e = Math.round(e * 10.0) / 10.0;
-			if (overHealth == 0) {
+			if (health >= maxHealth && overHealth != 0) {
+				
+			}else {
 				health = health + e;
 			}
 			healingIn = healingIn + e;
@@ -3606,7 +3771,7 @@ public class Player {
 			double e = d * absorb2;
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
-					e = e * 1.25;
+					e = e * 1.5;
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
@@ -3654,7 +3819,7 @@ public class Player {
 			double e = (d * i) * absorb2;
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
-					e = e * 1.25;
+					e = e * 1.5;
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
@@ -3680,7 +3845,9 @@ public class Player {
 				e = e / 2;
 			}
 			e = Math.round(e * 10.0) / 10.0;
-			if (overHealth == 0) {
+			if (health >= maxHealth && overHealth != 0) {
+				
+			}else {
 				health = health + e;
 			}
 			healingIn = healingIn + e;
@@ -3787,8 +3954,8 @@ public class Player {
 	}
 
 	public String toString() {
-		String weapon = "Not Used " + "\u001b[38;5;" + 197 + "m" + "❎" + reset;
-		String ability = "Ready " + "\u001b[38;5;" + 10 + "m" + "✅" + reset;
+		String weapon =  "\u001b[38;5;" + 10 + "m" + "✅" + reset;
+		String ability =  "\u001b[38;5;" + 10 + "m" + "✅" + reset;
 		String move = String.valueOf(movement);
 		String healthshow = "Health " + bold + "\u001b[38;5;" + 196 + "m" + "❤️" + reset;
 		String damageshow = ", Damage " + "\u001b[38;5;" + 124 + "m" + "⚔️" + reset + ": ";
@@ -3799,15 +3966,25 @@ public class Player {
 		String jump = ", Jumps " + bold + "\u001b[38;5;" + 241 + "m" + "🦿" + reset + ": ";
 		String loc = "Location " + "\u001b[38;5;" + 130 + "m" + "🗺️" + reset + ": ";
 		String weaponShow = "Weapon";
+		String dynamicShow = "";
 		String charms = "";
+		for (Dynamic d: dynamics) {
+			if (d != null && this.equals(d.getActi())) {
+				if (d.getCooldown() == 0) {
+					dynamicShow = ". Dynamic: " + "\u001b[38;5;" + 10 + "m" + "✅" + reset;
+				}else {
+					dynamicShow = ". Dynamic: " + "\u001b[38;5;" + 220 + "m" + "🕒" + reset + "(" + d.getCooldown() + ")";
+				}
+			}
+		}
 		if (GameSim.mode.equals("Charm")) {
 			charms = ". Charm: " + charm;
 		}
 		if (attacked) {
-			weapon = "Used " + "\u001b[38;5;" + 10 + "m" + "✅" + reset;
+			weapon = "\u001b[38;5;" + 220 + "m" + "🕒" + reset;
 		}
 		if (cooldown > 0) {
-			ability = "On Cooldown " + "\u001b[38;5;" + 220 + "m" + "🕒" + reset + "(" + cooldown + ")";
+			ability =  "\u001b[38;5;" + 220 + "m" + "🕒" + reset + "(" + cooldown + ")";
 		}
 		if (freezed == true) {
 			weapon = "Freezed " + bold + "\u001b[38;5;" + 87 + "m" + "❄️" + reset;
@@ -3933,7 +4110,7 @@ public class Player {
 			echoChargeShow = "\n" + smolluskSkin + " " + "\u001b[38;5;" + 105 + "m" + "🦑" + reset + ": " + smolluskRest + " Hits: " + smolluskDashes + "/3.";
 		}
 		if (name.equals("Orchid")){
-			echoChargeShow = "\n" + "Petal Blockade " + "\u001b[38;5;" + 208 + "m" + "🌺" + reset + ": " + petalBlockade + "/" + "750.0";
+			echoChargeShow = "\n" + "Petal Blockade " + "\u001b[38;5;" + 208 + "m" + "🌺" + reset + ": " + petalBlockade + "/" + petalBlockadeMax;
 		}
 		if (name.equals("Everest")){
 			echoChargeShow = "\n" + "Balance Orbs " + "\u001b[38;5;" + 122 + "m" + "🫧" + reset + ": " + balanceOrbs + "/" + "2.";
@@ -3953,7 +4130,7 @@ public class Player {
 			return "Ability: " + ability;
 		} else {
 			return ((getSkin() + ": " + getBar())) + "\n" + (healthshow + health + "/" + maxHealth + damageshow + damage + covershow + cover + charms + "\n"
-					+ weaponShow + weapon + ". Ability: " + ability + ultimate + ult + "\n" + loc
+					+ weaponShow + weapon + ". Ability: " + ability + dynamicShow + ultimate + ult + "\n" + loc
 					+ curLoc + moveshow + move + dash + dashes + jump + jumps + echoChargeShow);
 		}
 
@@ -4146,253 +4323,253 @@ public class Player {
 		int randomNum = (int) (Math.random() * (3 - 1 + 1)) + 1;
 		if (name.equals("Lunar")) {
 			if (randomNum == 1) {
-				return ("\"Nothing hits as hard as a recharge.\"");
+				return (nameSkin + ": " + "\"Nothing hits as hard as a recharge.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Energy absorption in progress.\"");
+				return (nameSkin + ": " + "\"Energy absorption in progress.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I sure hope this stuff is good for you.\"");
+				return (nameSkin + ": " + "\"I sure hope this stuff is good for you.\"");
 			}
 		}
 		if (name.equals("Finley")) {
 			if (randomNum == 1) {
-				return ("\"They'll never see it coming. Trust me guys.\"");
+				return (nameSkin + ": " + "\"They'll never see it coming. Trust me guys.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"This skateboard has a whole lot of BOOM!\"");
+				return (nameSkin + ": " + "\"This skateboard has a whole lot of BOOM!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Enjoy the surprise nerds!\"");
+				return (nameSkin + ": " + "\"Enjoy the surprise nerds!\"");
 			}
 		}
 		if (name.equals("Mack")) {
 			if (randomNum == 1) {
-				return ("\"Stay safe, I'm coming for you.\"");
+				return (nameSkin + ": " + "\"Stay safe, I'm coming for you.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Looking the wrong way again huh?\"");
+				return (nameSkin + ": " + "\"Looking the wrong way again huh?\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Bet you didn't see me here!\"");
+				return (nameSkin + ": " + "\"Bet you didn't see me here!\"");
 			}
 		}
 		if (name.equals("Solar")) {
 			if (randomNum == 1) {
-				return ("\"Light shield is up and running!\"");
+				return (nameSkin + ": " + "\"Light shield is up and running!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Go hurt the others, I need a break.\"");
+				return (nameSkin + ": " + "\"Go hurt the others, I need a break.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I am protected! Wait did he say that?\"");
+				return (nameSkin + ": " + "\"I am protected! Wait did he say that?\"");
 			}
 		}
 		if (name.equals("Cherry")) {
 			if (ultActive) {
 				if (randomNum == 1) {
-					return ("\"EMP Neutralization deployed.\"");
+					return (nameSkin + ": " + "\"EMP Neutralization deployed.\"");
 				}
 				if (randomNum == 2) {
-					return ("\"Disabling their abilities and power.\"");
+					return (nameSkin + ": " + "\"Disabling their abilities and power.\"");
 				}
 				if (randomNum == 3) {
-					return ("\"I hope this doesn't short circuit my mech!\"");
+					return (nameSkin + ": " + "\"I hope this doesn't short circuit my mech!\"");
 				}
 			} else {
 				if (randomNum == 1) {
-					return ("\"They're weak, fear nothing now friends.\"");
+					return (nameSkin + ": " + "\"They're weak, fear nothing now friends.\"");
 				}
 				if (randomNum == 2) {
-					return ("\"Enjoying the exhaust pipe?\"");
+					return (nameSkin + ": " + "\"Enjoying the exhaust pipe?\"");
 				}
 				if (randomNum == 3) {
-					return ("\"I'm supposed to stop global warming not join it!\"");
+					return (nameSkin + ": " + "\"I'm supposed to stop global warming not join it!\"");
 				}
 			}
 		}
 		if (name.equals("Dylan")) {
 			if (randomNum == 1) {
-				return ("\"Greedy and bold, they're coming for your gold.\"");
+				return (nameSkin + ": " + "\"Greedy and bold, they're coming for your gold.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Sick em boys!\"");
+				return (nameSkin + ": " + "\"Sick em boys!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Behold my latest loyal pets!\"");
+				return (nameSkin + ": " + "\"Behold my latest loyal pets!\"");
 			}
 		}
 		if (name.equals("Burt")) {
 			if (randomNum == 1) {
-				return ("\"Hit me with your strongest attacks.\"");
+				return (nameSkin + ": " + "\"Hit me with your strongest attacks.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I'm not afraid, come at me.\"");
+				return (nameSkin + ": " + "\"I'm not afraid, come at me.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"How does a sword reflect everything?\"");
+				return (nameSkin + ": " + "\"How does a sword reflect everything?\"");
 			}
 		}
 		if (name.equals("Bolo")) {
 			if (randomNum == 1) {
-				return ("\"If I see you, you're dead.\"");
+				return (nameSkin + ": " + "\"If I see you, you're dead.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Peek me, I dare you.\"");
+				return (nameSkin + ": " + "\"Peek me, I dare you.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Don't doubt my aim if you want me to go easy on you!\"");
+				return (nameSkin + ": " + "\"Don't doubt my aim if you want me to go easy on you!\"");
 			}
 		}
 		if (name.equals("Zero")) {
 			if (randomNum == 1) {
-				return ("\"Applying my hacks one second. Ok we're all good!\"");
+				return (nameSkin + ": " + "\"Applying my hacks one second. Ok we're all good!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Enjoy the refresher, this is a rare nice moment from me.\"");
+				return (nameSkin + ": " + "\"Enjoy the refresher, this is a rare nice moment from me.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Cheating in progress. Blame the game.\"");
+				return (nameSkin + ": " + "\"Cheating in progress. Blame the game.\"");
 			}
 		}
 		if (name.equals("Max")) {
 			if (randomNum == 1) {
-				return ("\"Go get them tiger.\"");
+				return (nameSkin + ": " + "\"Go get them tiger.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"The perseverence lies within you.\"");
+				return (nameSkin + ": " + "\"The perseverence lies within you.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Why can't I give myself my own guidance?\"");
+				return (nameSkin + ": " + "\"Why can't I give myself my own guidance?\"");
 			}
 		}
 		if (name.equals("Eli")) {
 			if (randomNum == 1) {
-				return ("\"Buddies, lend us a hand!\"");
+				return (nameSkin + ": " + "\"Buddies, lend us a hand!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"The sea is freaking awesome.\"");
+				return (nameSkin + ": " + "\"The sea is freaking awesome.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Feeling refreshed? Good, now attack!\"");
+				return (nameSkin + ": " + "\"Feeling refreshed? Good, now attack!\"");
 			}
 		}
 		if (name.equals("Via")) {
 			if (randomNum == 1) {
-				return ("\"Arro, round them up!\"");
+				return (nameSkin + ": " + "\"Arro, round them up!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Group hug!\"");
+				return (nameSkin + ": " + "\"Group hug!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Group them up, then knock them down.\"");
+				return (nameSkin + ": " + "\"Group them up, then knock them down.\"");
 			}
 		}
 		if (name.equals("Louis")) {
 			if (randomNum == 1) {
-				return ("\"Execuse me, don't you know who I am?\"");
+				return (nameSkin + ": " + "\"Execuse me, don't you know who I am?\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Stay away!\"");
+				return (nameSkin + ": " + "\"Stay away!\"");
 			}
 			if (randomNum == 3) {
-				return ("\033[3m*Horn Noises, Doo Doo Doo Doooooooo*\033[0m");
+				return (nameSkin + ": " + "\033[3m*Horn Noises, Doo Doo Doo Doooooooo*\033[0m");
 			}
 		}
 		if (name.equals("Alex")) {
 			if (randomNum == 1) {
-				return ("\"Heads up, potion coming in!\"");
+				return (nameSkin + ": " + "\"Heads up, potion coming in!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Pray for something good!\"");
+				return (nameSkin + ": " + "\"Pray for something good!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"This was the last of my nether wart!\"");
+				return (nameSkin + ": " + "\"This was the last of my nether wart!\"");
 			}
 		}
 		if (name.equals("Orion")) {
 			if (randomNum == 1) {
-				return ("\"Speed it up guys!\"");
+				return (nameSkin + ": " + "\"Speed it up guys!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"The faster we crush them, the faster I get to go on lunch break!\"");
+				return (nameSkin + ": " + "\"The faster we crush them, the faster I get to go on lunch break!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Let's run those back quicker yeah?\"");
+				return (nameSkin + ": " + "\"Let's run those back quicker yeah?\"");
 			}
 		}
 		if (name.equals("Kailani")) {
 			if (randomNum == 1) {
-				return ("\"Shelly! Let's take them for a ride.\"");
+				return (nameSkin + ": " + "\"Shelly! Let's take them for a ride.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Lifeguard isn't here today!\"");
+				return (nameSkin + ": " + "\"Lifeguard isn't here today!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Out of my way!\"");
+				return (nameSkin + ": " + "\"Out of my way!\"");
 			}
 		}
 		if (name.equals("Ashley")) {
 			if (randomNum == 1) {
-				return ("\"Sparks flowers being grown.\"");
+				return (nameSkin + ": " + "\"Sparks flowers being grown.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Nature is beautiful isn't it? And cruel.\"");
+				return (nameSkin + ": " + "\"Nature is beautiful isn't it? And cruel.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"This will cut the pain, and them!\"");
+				return (nameSkin + ": " + "\"This will cut the pain, and them!\"");
 			}
 		}
 		if (name.equals("Rocco")) {
 			if (randomNum == 1) {
-				return ("\"Have fun with this guy!\"");
+				return (nameSkin + ": " + "\"Have fun with this guy!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Run for your lives! Oh I meant them not us.\"");
+				return (nameSkin + ": " + "\"Run for your lives! Oh I meant them not us.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Time to whip out combat tactic #245.\"");
+				return (nameSkin + ": " + "\"Time to whip out combat tactic #245.\"");
 			}
 		}
 		if (name.equals("Sammi")) {
 			if (randomNum == 1) {
-				return ("\"I never miss. Whoever said I did was lying.\"");
+				return (nameSkin + ": " + "\"I never miss. Whoever said I did was lying.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Activating aimbot, literally.\"");
+				return (nameSkin + ": " + "\"Activating aimbot, literally.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Don't try to hide, it's pointless.\"");
+				return (nameSkin + ": " + "\"Don't try to hide, it's pointless.\"");
 			}
 		}
 		if (name.equals("Clara")) {
 			if (randomNum == 1) {
-				return ("\"Look out, I'm coming through!\"");
+				return (nameSkin + ": " + "\"Look out, I'm coming through!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I got your backs, just from the front.\"");
+				return (nameSkin + ": " + "\"I got your backs, just from the front.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"No 4k camera will see me zoom by them.\"");
+				return (nameSkin + ": " + "\"No 4k camera will see me zoom by them.\"");
 			}
 		}
 		if (name.equals("Thunder")) {
 			if (randomNum == 1) {
-				return ("\"Mess with me? I'll mess with you.\"");
+				return (nameSkin + ": " + "\"Mess with me? I'll mess with you.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"You sure you want to hit me now?\"");
+				return (nameSkin + ": " + "\"You sure you want to hit me now?\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Go on, attack! You'll meet your fate sooner.\"");
+				return (nameSkin + ": " + "\"Go on, attack! You'll meet your fate sooner.\"");
 			}
 		}
 		if (name.equals("Aidan")) {
 			if (randomNum == 1) {
-				return ("\"Look at me, I'm cranking 90s!\"");
+				return (nameSkin + ": " + "\"Look at me, I'm cranking 90s!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I'm gonna make Tilted Towers the way I be building.\"");
+				return (nameSkin + ": " + "\"I'm gonna make Tilted Towers the way I be building.\"");
 			}
 			if (randomNum == 3) {
 				try {
@@ -4407,863 +4584,874 @@ public class Player {
 		}
 		if (name.equals("Liam")) {
 			if (randomNum == 1) {
-				return ("\"Your honor, my client is innocent!\"");
+				return (nameSkin + ": " + "\"Your honor, my client is innocent!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"The jury is here to defend us!\"");
+				return (nameSkin + ": " + "\"The jury is here to defend us!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Objection!\"");
+				return (nameSkin + ": " + "\"Objection!\"");
 			}
 		}
 		if (name.equals("Axol")) {
 			if (randomNum == 1) {
-				return ("\"Go help them out little fellas.\"");
+				return (nameSkin + ": " + "\"Go help them out little fellas.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"The healing power of friendship is here.\"");
+				return (nameSkin + ": " + "\"The healing power of friendship is here.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Aren't they so cute?\"");
+				return (nameSkin + ": " + "\"Aren't they so cute?\"");
 			}
 		}
 		if (name.equals("Katrina")) {
 			if (randomNum == 1) {
-				return ("\"Woomy!\"");
+				return (nameSkin + ": " + "\"Woomy!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I'm with you.\"");
+				return (nameSkin + ": " + "\"I'm with you.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"What's up?\"");
+				return (nameSkin + ": " + "\"What's up?\"");
 			}
 		}
 		if (name.equals("Midnite")) {
 			if (randomNum == 1) {
-				return ("\"Boo!\"");
+				return (nameSkin + ": " + "\"Boo!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Ghost power isn't anything to mess with.\"");
+				return (nameSkin + ": " + "\"Ghost power isn't anything to mess with.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I'll become your greatest fear.\"");
+				return (nameSkin + ": " + "\"I'll become your greatest fear.\"");
 			}
 		}
 		if (name.equals("Xara")) {
 			if (randomNum == 1) {
-				return ("\"Cyber Security protocols in place.\"");
+				return (nameSkin + ": " + "\"Cyber Security protocols in place.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Stay back, I'll show them what they're messing with.\"");
+				return (nameSkin + ": " + "\"Stay back, I'll show them what they're messing with.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Never cross the line between an admin.\"");
+				return (nameSkin + ": " + "\"Never cross the line between an admin.\"");
 			}
 		}
 		if (name.equals("Kithara")) {
 			if (randomNum == 1) {
-				return ("\"Wonder Shield activated!\"");
+				return (nameSkin + ": " + "\"Wonder Shield activated!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I'll show them what bulletproof means.\"");
+				return (nameSkin + ": " + "\"I'll show them what bulletproof means.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Try breaking through this!\"");
+				return (nameSkin + ": " + "\"Try breaking through this!\"");
 			}
 		}
 		if (name.equals("Anjelika")) {
 			if (randomNum == 1) {
-				return ("\"Angelic Ray spreading out.\"");
+				return (nameSkin + ": " + "\"Angelic Ray spreading out.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Not so pure is it?\"");
+				return (nameSkin + ": " + "\"Not so pure is it?\"");
 			}
 			if (randomNum == 3) {
-				return ("\"The more evil they are, the more pain they will feel.\"");
+				return (nameSkin + ": " + "\"The more evil they are, the more pain they will feel.\"");
 			}
 		}
 		if (name.equals("Archer")) {
 			if (randomNum == 1) {
-				return ("\"Don't let them out of your sights!\"");
+				return (nameSkin + ": " + "\"Don't let them out of your sights!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Carrots for the win!\"");
+				return (nameSkin + ": " + "\"Carrots for the win!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Out range them. Out gun them.\"");
+				return (nameSkin + ": " + "\"Out range them. Out gun them.\"");
 			}
 		}
 		if (name.equals("Tom")) {
 			if (randomNum == 1) {
-				return ("\"Your mistake for messing with me!\"");
+				return (nameSkin + ": " + "\"Your mistake for messing with me!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Microbot protection enhanced.\"");
+				return (nameSkin + ": " + "\"Microbot protection enhanced.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I control these bots. You're doomed.\"");
+				return (nameSkin + ": " + "\"I control these bots. You're doomed.\"");
 			}
 		}
 		if (name.equals("Dimentio")) {
 			if (randomNum == 1) {
-				return ("\"To the Shadow Realm with you!\"");
+				return (nameSkin + ": " + "\"To the Shadow Realm with you!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Feel free to appeal your ban with a moderator!\"");
+				return (nameSkin + ": " + "\"Feel free to appeal your ban with a moderator!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Not in my server you don't!\"");
+				return (nameSkin + ": " + "\"Not in my server you don't!\"");
 			}
 		}
 		if (name.equals("Grizz")) {
 			if (randomNum == 1) {
-				return ("\"Do your job!\"");
+				return (nameSkin + ": " + "\"Do your job!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"You're not clocking out that easily.\"");
+				return (nameSkin + ": " + "\"You're not clocking out that easily.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Overtime is mandatory today!\"");
+				return (nameSkin + ": " + "\"Overtime is mandatory today!\"");
 			}
 		}
 		if (name.equals("Evil")) {
 			if (randomNum == 1) {
-				return ("\"The brigade is here!\"");
+				return (nameSkin + ": " + "\"The brigade is here!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Happiness must be taken. I will take mine right now!\"");
+				return (nameSkin + ": " + "\"Happiness must be taken. I will take mine right now!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Bots, fire at them!\"");
+				return (nameSkin + ": " + "\"Bots, fire at them!\"");
 			}
 		}
 		if (name.equals("Mason")) {
 			if (randomNum == 1) {
-				return ("\"Delivery for you!\"");
+				return (nameSkin + ": " + "\"Delivery for you!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Disable them, then strike!\"");
+				return (nameSkin + ": " + "\"Disable them, then strike!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Same day shipping for this package!\"");
+				return (nameSkin + ": " + "\"Same day shipping for this package!\"");
 			}
 		}
 		if (name.equals("Airic")) {
 			if (randomNum == 1) {
-				return ("\"Need a lift?\"");
+				return (nameSkin + ": " + "\"Need a lift?\"");
 			}
 			if (randomNum == 2) {
-				return ("\"They'll never see you coming!\"");
+				return (nameSkin + ": " + "\"They'll never see you coming!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Don't lose a limb out there!\"");
+				return (nameSkin + ": " + "\"Don't lose a limb out there!\"");
 			}
 		}
 		if (name.equals("Julian")) {
 			if (randomNum == 1) {
-				return ("\"I still got it in me!\"");
+				return (nameSkin + ": " + "\"I still got it in me!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Prioritize obsidian first!\"");
+				return (nameSkin + ": " + "\"Prioritize obsidian first!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I'm gonna break their bed, protect the base.\"");
+				return (nameSkin + ": " + "\"I'm gonna break their bed, protect the base.\"");
 			}
 		}
 		if (name.equals("Gash")) {
 			if (randomNum == 1) {
-				return ("\"Laser precision guards are up.\"");
+				return (nameSkin + ": " + "\"Laser precision guards are up.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Initating contigency plan protocols.\"");
+				return (nameSkin + ": " + "\"Initating contigency plan protocols.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Stay close if you want to be hurt less out there!\"");
+				return (nameSkin + ": " + "\"Stay close if you want to be hurt less out there!\"");
 			}
 		}
 		if (name.equals("Mayhem")) {
 			if (randomNum == 1) {
-				return ("\"You stand no chance now!\"");
+				return (nameSkin + ": " + "\"You stand no chance now!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I developed this stuff myself!\"");
+				return (nameSkin + ": " + "\"I developed this stuff myself!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Target neutralized, almost.\"");
+				return (nameSkin + ": " + "\"Target neutralized, almost.\"");
 			}
 		}
 		if (name.equals("Gates")) {
 			if (randomNum == 1) {
-				return ("\"Enough hiding, you can take on anything.\"");
+				return (nameSkin + ": " + "\"Enough hiding, you can take on anything.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Hope they waste something big on that.\"");
+				return (nameSkin + ": " + "\"Hope they waste something big on that.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Big or small, it can absorb it all!\"");
+				return (nameSkin + ": " + "\"Big or small, it can absorb it all!\"");
 			}
 		}
 		if (name.equals("Audrey")) {
 			if (randomNum == 1) {
-				return ("\"Not so tough anymore!\"");
+				return (nameSkin + ": " + "\"Not so tough anymore!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Wonder what they feel like now.\"");
+				return (nameSkin + ": " + "\"Wonder what they feel like now.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Maybe we should go easy on them now yeah? Kidding!\"");
+				return (nameSkin + ": " + "\"Maybe we should go easy on them now yeah? Kidding!\"");
 			}
 		}
 		if (name.equals("Ayson")) {
 			if (randomNum == 1) {
-				return ("\"We outnumber you all!\"" + " " + "\"Extra bodies on the field!\"");
+				return (nameSkin + ": " + "\"We outnumber you all!\"" + " " + "\"Extra bodies on the field!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Teamwork really does-.\"" + " " + "\"Less talking more punching!\"");
+				return (nameSkin + ": " + "\"Teamwork really does-.\"" + " " + "\"Less talking more punching!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I'll go for the left if you take the right.\"" + " " + "\"You talking to our team or me?\"");
+				return (nameSkin + ": " + "\"I'll go for the left if you take the right.\"" + " " + "\"You talking to our team or me?\"");
 			}
 		}
 		if (name.equals("Chloe")) {
 			if (randomNum == 1) {
-				return ("\"Calling in the royal guard.\"");
+				return (nameSkin + ": " + "\"Calling in the royal guard.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I hope they trained enough for this.\"");
+				return (nameSkin + ": " + "\"I hope they trained enough for this.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"They'll treat you nicely. Otherwise, I'll have a word with them.\"");
+				return (nameSkin + ": " + "\"They'll treat you nicely. Otherwise, I'll have a word with them.\"");
 			}
 		}
 		if (name.equals("Hopper")) {
 			if (randomNum == 1) {
-				return ("\"Never back down never what?!\"");
+				return (nameSkin + ": " + "\"Never back down never what?!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Never surrender!\"");
+				return (nameSkin + ": " + "\"Never surrender!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"The warriors of justice would be ashamed if we backed down.\"");
+				return (nameSkin + ": " + "\"The warriors of justice would be ashamed if we backed down.\"");
 			}
 		}
 		if (name.equals("Redgar")) {
 			if (randomNum == 1) {
-				return ("\"Bought this off some guy on the Metaverse, hope it works!\"");
+				return (nameSkin + ": " + "\"Bought this off some guy on the Metaverse, hope it works!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Cleansing core is out!\"");
+				return (nameSkin + ": " + "\"Cleansing core is out!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"We'll be free from that toxic envrionment now.\"");
+				return (nameSkin + ": " + "\"We'll be free from that toxic envrionment now.\"");
 			}
 		}
 		if (name.equals("Radar")) {
 			if (randomNum == 1) {
-				return ("\"Can't keep up huh?\"");
+				return (nameSkin + ": " + "\"Can't keep up huh?\"");
 			}
 			if (randomNum == 2) {
-				return ("\"They're moving at snail's pace now!\"");
+				return (nameSkin + ": " + "\"They're moving at snail's pace now!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"You'll never get me alive!\"");
+				return (nameSkin + ": " + "\"You'll never get me alive!\"");
 			}
 		}
 		if (name.equals("Oona")) {
 			if (randomNum == 1) {
-				return ("\"You're legally blind now!\"");
+				return (nameSkin + ": " + "\"You're legally blind now!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Strike while they're distracted!\"");
+				return (nameSkin + ": " + "\"Strike while they're distracted!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"They can't see a damn thing. Awesome!\"");
+				return (nameSkin + ": " + "\"They can't see a damn thing. Awesome!\"");
 			}
 		}
 		if (name.equals("Augie")) {
 			if (randomNum == 1) {
-				return ("\"No excuse for not hitting your shots!\"");
+				return (nameSkin + ": " + "\"No excuse for not hitting your shots!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I see treasure! Wait that's just the enemy.\"");
+				return (nameSkin + ": " + "\"I see treasure! Wait that's just the enemy.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Shoot your shot now!\"");
+				return (nameSkin + ": " + "\"Shoot your shot now!\"");
 			}
 		}
 		if (name.equals("Ruby")) {
 			if (randomNum == 1) {
-				return ("\"Changing up the map!\"");
+				return (nameSkin + ": " + "\"Changing up the map!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"This should switch things up.\"");
+				return (nameSkin + ": " + "\"This should switch things up.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Editing our world as we speak.\"");
+				return (nameSkin + ": " + "\"Editing our world as we speak.\"");
 			}
 		}
 		if (name.equals("Norman")) {
 			if (randomNum == 1) {
-				return ("\"Toxins going up!\"");
+				return (nameSkin + ": " + "\"Toxins going up!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Get bamboozled!\"");
+				return (nameSkin + ": " + "\"Get bamboozled!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"No healing for you!\"");
+				return (nameSkin + ": " + "\"No healing for you!\"");
 			}
 		}
 		if (name.equals("Jesse")) {
 			if (randomNum == 1) {
-				return ("\"Burn!\"");
+				return (nameSkin + ": " + "\"Burn!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Am I too hot for you?\"");
+				return (nameSkin + ": " + "\"Am I too hot for you?\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I will engulf you in flames!\"");
+				return (nameSkin + ": " + "\"I will engulf you in flames!\"");
 			}
 		}
 		if (name.equals("Chief")) {
 			if (randomNum == 1) {
-				return ("\"Together, they will fall!\"");
+				return (nameSkin + ": " + "\"Together, they will fall!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Let's tank you guys up!\"");
+				return (nameSkin + ": " + "\"Let's tank you guys up!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Stand back, I will handle this.\"");
+				return (nameSkin + ": " + "\"Stand back, I will handle this.\"");
 			}
 		}
 		if (name.equals("Angelos")) {
 			if (isAlive()) {
 				if (randomNum == 1) {
-					return ("\"Protect the canon, protect each other.\"");
+					return (nameSkin + ": " + "\"Protect the canon, protect each other.\"");
 				}
 				if (randomNum == 2) {
-					return ("\"They think they're scary? We won't falter.\"");
+					return (nameSkin + ": " + "\"They think they're scary? We won't falter.\"");
 				}
 				if (randomNum == 3) {
-					return ("\"Orbit barriers are up and ready.\"");
+					return (nameSkin + ": " + "\"Orbit barriers are up and ready.\"");
 				}
 			} else {
 				if (randomNum == 1) {
-					return ("\"I'm still watching over you all.\"");
+					return (nameSkin + ": " + "\"I'm still watching over you all.\"");
 				}
 				if (randomNum == 2) {
-					return ("\"Don't let me down!\"");
+					return (nameSkin + ": " + "\"Don't let me down!\"");
 				}
 				if (randomNum == 3) {
-					return ("\"Little do they know, I'm not done yet.\"");
+					return (nameSkin + ": " + "\"Little do they know, I'm not done yet.\"");
 				}
 			}
 		}
 		if (name.equals("Melony")) {
 			if (randomNum == 1) {
-				return ("\"Run little man!\"");
+				return (nameSkin + ": " + "\"Run little man!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Get 'em, Swiftwing!\"");
+				return (nameSkin + ": " + "\"Get 'em, Swiftwing!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Swiftwing for the win!\"");
+				return (nameSkin + ": " + "\"Swiftwing for the win!\"");
 			}
 		}
 		if (name.equals("Echo")) {
 			if (randomNum == 1) {
-				return ("\"Sound Sensors out.\"");
+				return (nameSkin + ": " + "\"Sound Sensors out.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Absolutely no surprises here.\"");
+				return (nameSkin + ": " + "\"Absolutely no surprises here.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Why seek them out when you can hear their fear.\"");
+				return (nameSkin + ": " + "\"Why seek them out when you can hear their fear.\"");
 			}
 		}
 		if (name.equals("Makani")) {
 			if (onCooldown()) {
 				if (randomNum == 1) {
-					return ("\"Coming in! Or out.\"");
+					return (nameSkin + ": " + "\"Coming in! Or out.\"");
 				}
 				if (randomNum == 2) {
-					return ("\"What pushovers you lot are.\"");
+					return (nameSkin + ": " + "\"What pushovers you lot are.\"");
 				}
 				if (randomNum == 3) {
-					return ("\"Kailani was right, this is fun!\"");
+					return (nameSkin + ": " + "\"Kailani was right, this is fun!\"");
 				}
 			} else {
 				if (randomNum == 1) {
-					return ("\"Wind Point deployed.\"");
+					return (nameSkin + ": " + "\"Wind Point deployed.\"");
 				}
 				if (randomNum == 2) {
-					return ("\"I'll be back, or in!\"");
+					return (nameSkin + ": " + "\"I'll be back, or in!\"");
 				}
 				if (randomNum == 3) {
-					return ("\"Protect my wind point! I need it later.\"");
+					return (nameSkin + ": " + "\"Protect my wind point! I need it later.\"");
 				}
 			}
 		}
 		if (name.equals("Rhythm")) {
 			if (fitbit.equals("Recovery")) {
-				return ("\"Good vibes. Good healing!\"");
+				return (nameSkin + ": " + "\"Good vibes. Good healing!\"");
 			}
 			if (fitbit.equals("Sprint")) {
-				return ("\"Faster pace, let's go!\"");
+				return (nameSkin + ": " + "\"Faster pace, let's go!\"");
 			}
 			if (fitbit.equals("Powerburn")) {
-				return ("\"Time to up the tempo!\"");
+				return (nameSkin + ": " + "\"Time to up the tempo!\"");
 			}
 		}
 		if (name.equals("Grenadine")) {
 			if (randomNum == 1) {
-				return ("\"Blasting off!\"");
+				return (nameSkin + ": " + "\"Blasting off!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"We have liftoff!\"");
+				return (nameSkin + ": " + "\"We have liftoff!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Woo! This is fun.\"");
+				return (nameSkin + ": " + "\"Woo! This is fun.\"");
 			}
 		}
 		if (name.equals("Patitek")) {
 			if (randomNum == 1) {
-				return ("\"Everyone stay close to me!\"");
+				return (nameSkin + ": " + "\"Everyone stay close to me!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I'll take the punches, you guys have no worry.\"");
+				return (nameSkin + ": " + "\"I'll take the punches, you guys have no worry.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Hey, hit me!\"");
+				return (nameSkin + ": " + "\"Hey, hit me!\"");
 			}
 		}
 		if (name.equals("Crystal")) {
 			if (randomNum == 1) {
-				return ("\"Keep the Gemstone safe!\"");
+				return (nameSkin + ": " + "\"Keep the Gemstone safe!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"It'll grow with time. Just watch!\"");
+				return (nameSkin + ": " + "\"It'll grow with time. Just watch!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"If you hurt my Gemstone you WILL pay!\"");
+				return (nameSkin + ": " + "\"If you hurt my Gemstone you WILL pay!\"");
 			}
 		}
 		if (name.equals("Velvet")) {
 			if (randomNum == 1) {
-				return ("\"When playing roulette... ALWAYS bet on black!\"");
+				return (nameSkin + ": " + "\"When playing roulette... ALWAYS bet on black!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"You can't beat my roulette table! Unless you steal from it.\"");
+				return (nameSkin + ": " + "\"You can't beat my roulette table! Unless you steal from it.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Please please please please please.\"");
+				return (nameSkin + ": " + "\"Please please please please please.\"");
 			}
 		}
 		if (name.equals("Drift")) {
 			if (ultActive) {
 				if (randomNum == 1) {
-					return ("\"Not following traffic rules today!\"");
+					return (nameSkin + ": " + "\"Not following traffic rules today!\"");
 				}
 				if (randomNum == 2) {
-					return ("\"Time to run you all over.\"");
+					return (nameSkin + ": " + "\"Time to run you all over.\"");
 				}
 				if (randomNum == 3) {
-					return ("\"There's roadkill to collect out there.\"");
+					return (nameSkin + ": " + "\"There's roadkill to collect out there.\"");
 				}
 			} else {
 				if (randomNum == 1) {
-					return ("\"Move or get run through!\"");
+					return (nameSkin + ": " + "\"Move or get run through!\"");
 				}
 				if (randomNum == 2) {
-					return ("\"I'll push them away, just watch.\"");
+					return (nameSkin + ": " + "\"I'll push them away, just watch.\"");
 				}
 				if (randomNum == 3) {
-					return ("\"Get these clowns out of our way!\"");
+					return (nameSkin + ": " + "\"Get these clowns out of our way!\"");
 				}
 			}
 		}
 		if (name.equals("Snowfall")) {
 			if (randomNum == 1) {
-				return ("\"I'll give them the cold shoulder.\"");
+				return (nameSkin + ": " + "\"I'll give them the cold shoulder.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Stay near me! I want to keep this frost on.\"");
+				return (nameSkin + ": " + "\"Permafrost active!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"This is permanent! Almost.\"");
+				return (nameSkin + ": " + "\"This is permanent! Almost.\"");
 			}
 		}
 		if (name.equals("Shutter")) {
 			if (randomNum == 1) {
-				return ("\"You guys must be seeing things now!\"");
+				return (nameSkin + ": " + "\"You guys must be seeing things now!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"They'll see a different picture soon.\"");
+				return (nameSkin + ": " + "\"They'll see a different picture soon.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Wow, I got all of that in frame!\"");
+				return (nameSkin + ": " + "\"Wow, I got all of that in frame!\"");
 			}
 		}
 		if (name.equals("Magnet")) {
 			if (randomNum == 1) {
-				return ("\"Take a few hits, turn it into power!\"");
+				return (nameSkin + ": " + "\"Take a few hits, turn it into power!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Feeling electrified now?\"");
+				return (nameSkin + ": " + "\"Feeling electrified now?\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Let them punch us in the field.\"");
+				return (nameSkin + ": " + "\"Let them punch us in the field.\"");
 			}
 		}
 		if (name.equals("Jing")) {
 			if (randomNum == 1) {
-				return ("\"Entering the flow state!\"");
+				return (nameSkin + ": " + "\"Entering the flow state!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Stand your ground now!\"");
+				return (nameSkin + ": " + "\"Stand your ground now!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"If you're swift enough, you can dodge anything!\"");
+				return (nameSkin + ": " + "\"If you're swift enough, you can dodge anything!\"");
 			}
 		}
 		if (name.equals("Folden")) {
 			if (randomNum == 1) {
-				return ("\"No littering! Let's pick them up after.\"");
+				return (nameSkin + ": " + "\"No littering! Let's pick them up after.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Watch them fly!\"");
+				return (nameSkin + ": " + "\"1000 cranes coming in!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Help me pick up the cranes after and we'll be golden.\"");
+				return (nameSkin + ": " + "\"Help me pick up the cranes after and we'll be golden.\"");
 			}
 		}
 		if (name.equals("Bladee")) {
 			if (randomNum == 1) {
-				return ("\"Strike them from above!\"");
+				return (nameSkin + ": " + "\"Strike them from above!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Your tools are no match for my mantis!\"");
+				return (nameSkin + ": " + "\"Your tools are no match for my mantis!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Terror rains on you today!\"");
+				return (nameSkin + ": " + "\"Terror rains on you today!\"");
 			}
 		}
 		if (name.equals("Margo")) {
 			if (randomNum == 1) {
-				return ("\"To alcohol! The solution of all our problems!\"");
+				return (nameSkin + ": " + "\"To alcohol! The solution of all our problems!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Party rock is in the house tonight!\"");
+				return (nameSkin + ": " + "\"Party rock is in the house tonight!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Drinks on me guys!\"");
+				return (nameSkin + ": " + "\"Drinks on me guys!\"");
 			}
 		}
 		if (name.equals("Ivy")) {
 			if (randomNum == 1) {
-				return ("\"Medic at your service!\"");
+				return (nameSkin + ": " + "\"Medic at your service!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Did you call?\"");
+				return (nameSkin + ": " + "\"Did you call?\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I got you, don't worry.\"");
+				return (nameSkin + ": " + "\"I got you, don't worry.\"");
 			}
 		}
 		if (name.equals("Petra")) {
 			if (randomNum == 1) {
-				return ("\"Coming for you!\"");
+				return (nameSkin + ": " + "\"Coming for you!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I'm gonna catch you!\"");
+				return (nameSkin + ": " + "\"I'm gonna catch you!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Everybody come on in!\"");
+				return (nameSkin + ": " + "\"Everybody come on in!\"");
 			}
 		}
 		if (name.equals("Quincy")) {
 			if (randomNum == 1) {
-				return ("\"Have no fear, I will help you out!\"");
+				return (nameSkin + ": " + "\"Have no fear, I will help you out!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Paladin Link initiated.\"");
+				return (nameSkin + ": " + "\"Paladin Link initiated.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I can protect you!\"");
+				return (nameSkin + ": " + "\"I can protect you!\"");
 			}
 		}
 		if (name.equals("Unice")) {
 			if (randomNum == 1) {
-				return ("\"Use this jump boost!\"");
+				return (nameSkin + ": " + "\"Use this jump boost!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Take cover under Gale.\"");
+				return (nameSkin + ": " + "\"Take cover under Gale.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Make sure Gale comes back to me in once piece!\"");
+				return (nameSkin + ": " + "\"Make sure Gale comes back to me in once piece!\"");
 			}
 		}
 		if (name.equals("Flor")) {
 			if (randomNum == 1) {
-				return ("\"Honey Pylon is out!\"");
+				return (nameSkin + ": " + "\"Honey Pylon is out!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Stay near the Pylon!\"");
+				return (nameSkin + ": " + "\"Stay near the Pylon!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"If you want a sweet treat go over here!\"");
+				return (nameSkin + ": " + "\"If you want a sweet treat go over here!\"");
 			}
 		}
 		if (name.equals("Yuri")) {
 			if (randomNum == 1) {
-				return ("\"It's over for them, we have the advantage!\"");
+				return (nameSkin + ": " + "\"It's over for them, we have the advantage!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"They don't make grids like these anymore.\"");
+				return (nameSkin + ": " + "\"They don't make grids like these anymore.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Always have secure protocols in place.\"");
+				return (nameSkin + ": " + "\"Always have secure protocols in place.\"");
 			}
 		}
 		if (name.equals("Millie")) {
 			if (randomNum == 1) {
-				return ("\"No friends for you!\"");
+				return (nameSkin + ": " + "\"No friends for you!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Eat scrap ya freaks!\"");
+				return (nameSkin + ": " + "\"Eat scrap ya freaks!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Scrap is out!\"");
+				return (nameSkin + ": " + "\"Scrap is out!\"");
 			}
 		}
 		if (name.equals("Leaf")) {
 			if (randomNum == 1) {
-				return ("\"Breaking through the fault line.\"");
+				return (nameSkin + ": " + "\"Breaking through the fault line.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Their guard is down.\"");
+				return (nameSkin + ": " + "\"Their guard is down.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Shake things up!\"");
+				return (nameSkin + ": " + "\"Shake things up!\"");
 			}
 		}
 		if (name.equals("Courtney")) {
 			if (randomNum == 1) {
-				return ("\"I built this thing myself! Almost.\"");
+				return (nameSkin + ": " + "\"I built this thing myself! Almost.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Catch you on the flip side!\"");
+				return (nameSkin + ": " + "\"Catch you on the flip side!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I don't need legs to get around you!\"");
+				return (nameSkin + ": " + "\"I don't need legs to get around you!\"");
 			}
 		}
 		if (name.equals("Divine")) {
 			if (randomNum == 1) {
-				return ("\"Come here will you?\"");
+				return (nameSkin + ": " + "\"Come here will you?\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Stay close. You're gonna get killed out there!\"");
+				return (nameSkin + ": " + "\"Stay close. You're gonna get killed out there!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"We work better as a team I would say.\"");
+				return (nameSkin + ": " + "\"We work better as a team I would say.\"");
 			}
 		}
 		if (name.equals("Gambit")) {
 			if (randomNum == 1) {
-				return ("\"The queen lends her power to us!\"");
+				return (nameSkin + ": " + "\"The queen lends her power to us!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Charge in swiftly!\"");
+				return (nameSkin + ": " + "\"Charge in swiftly!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"This is more then just a game!\"");
+				return (nameSkin + ": " + "\"This is more then just a game!\"");
 			}
 		}
 		if (name.equals("Cloud")) {
 			if (randomNum == 1) {
-				return ("\"Cover going out.\"");
+				return (nameSkin + ": " + "\"Cover going out.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Hide in here while you can.\"");
+				return (nameSkin + ": " + "\"Hide in here while you can.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Jump them after.\"");
+				return (nameSkin + ": " + "\"Jump them after.\"");
 			}
 		}
 		if (name.equals("Winnie")) {
 			if (randomNum == 1) {
-				return ("\"Time for a little makover!\"");
+				return (nameSkin + ": " + "\"Time for a little makover!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Step into my world!\"");
+				return (nameSkin + ": " + "\"Step into my world!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"A comission, just for you!\"");
+				return (nameSkin + ": " + "\"A comission, just for you!\"");
 			}
 		}
 		if (name.equals("Pearl")) {
 			if (randomNum == 1) {
-				return ("\"Tide goes in, Tide comes out!\"" + "\n" + "\"ʸᵒᵘ ˢᵗᵃⁿᵈ ⁿᵒ ᶜʰᵃⁿᶜᵉ ⁿᵒʷ!\"");
+				return (nameSkin + ": " + "\"Tide goes in, Tide comes out!\"" + "\n" + "\"ʸᵒᵘ ˢᵗᵃⁿᵈ ⁿᵒ ᶜʰᵃⁿᶜᵉ ⁿᵒʷ!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"We'll wash you over!\"" + "\n" + "\"ᴰᵒⁿ'ᵗ ᵐᵉˢˢ ʷᶦᵗʰ ᵘˢ!\"");
+				return (nameSkin + ": " + "\"We'll wash you over!\"" + "\n" + "\"ᴰᵒⁿ'ᵗ ᵐᵉˢˢ ʷᶦᵗʰ ᵘˢ!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Bring them in? Or push them out?\"" + "\n" + "\"ᴴᵃ! ᵀʰᵒˢᵉ ᶠᵒᵒˡˢ ᵃʳᵉ ˢᶜᵃʷᵉᵈ.\"");
+				return (nameSkin + ": " + "\"Bring them in? Or push them out?\"" + "\n" + "\"ᴴᵃ! ᵀʰᵒˢᵉ ᶠᵒᵒˡˢ ᵃʳᵉ ˢᶜᵃʷᵉᵈ.\"");
 			}
 		}
 		if (name.equals("Andrew")) {
 			if (randomNum == 1) {
-				return ("\"Sock monkeys, attack!\"");
+				return (nameSkin + ": " + "\"Sock monkeys, attack!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Monkey business underway.\"");
+				return (nameSkin + ": " + "\"Monkey business underway.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Go minions!\"");
+				return (nameSkin + ": " + "\"Go minions!\"");
 			}
 		}
 		if (name.equals("Orchid")) {
 			if (randomNum == 1) {
-				return ("\"Nowhere to go now!\"");
+				return (nameSkin + ": " + "\"Nowhere to go now!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Chill out dudes.\"");
+				return (nameSkin + ": " + "\"Chill out dudes.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"We got them right where we want them.\"");
+				return (nameSkin + ": " + "\"We got them right where we want them.\"");
 			}
 		}
 		if (name.equals("Clementine")) {
 			if (randomNum == 1) {
-				return ("\"Dynamic reinforcement engaged.\"");
+				return (nameSkin + ": " + "\"Dynamic reinforcement engaged.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Reinforcement coming right up!\"");
+				return (nameSkin + ": " + "\"Reinforcement coming right up!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Let's stay safe, shall we?\"");
+				return (nameSkin + ": " + "\"Let's stay safe, shall we?\"");
 			}
 		}
 		if (name.equals("Rin")) {
 			if (randomNum == 1) {
-				return ("\"Caught out of position!\"");
+				return (nameSkin + ": " + "\"Caught out of position!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"No breathers for you!\"");
+				return (nameSkin + ": " + "\"No breathers for you!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Shouldn't have messed with us!\"");
+				return (nameSkin + ": " + "\"Shouldn't have messed with us!\"");
 			}
 		}
 		if (name.equals("Victor")) {
 			if (randomNum == 1) {
-				return ("\"Fortifying!\"");
+				return (nameSkin + ": " + "\"Fortifying!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I shall stand strong!\"");
+				return (nameSkin + ": " + "\"I shall stand strong!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Don't mess with the Steampunks!\"");
+				return (nameSkin + ": " + "\"Don't mess with the Steampunks!\"");
 			}
 		}
 		if (name.equals("Isabelle")) {
 			if (randomNum == 1) {
-				return ("\"Step inside, stay alive.\"");
+				return (nameSkin + ": " + "\"Step inside, stay alive.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Stay near the immortality matrix!\"");
+				return (nameSkin + ": " + "\"Stay near the immortality matrix!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Nobody leave this matrix!\"");
+				return (nameSkin + ": " + "\"Nobody leave this matrix!\"");
 			}
 		}
 		if (name.equals("Lumiere")) {
 			if (randomNum == 1) {
-				return ("\"A cure for you. A nightmare for them.\"");
+				return (nameSkin + ": " + "\"A cure for you. A nightmare for them.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Follow my bright sphères! Stay far from the shadows.\"");
+				return (nameSkin + ": " + "\"Follow my bright sphères! Stay far from the shadows.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"It just won't sit still. Better go after it.\"");
+				return (nameSkin + ": " + "\"It just won't sit still. Better go after it.\"");
 			}
 		}
 		if (name.equals("Willow")) {
 			if (randomNum == 1) {
-				return ("\"Refreshing isn't it?\"");
+				return (nameSkin + ": " + "\"Refreshing isn't it?\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Almost as good as a shirley temple!\"");
+				return (nameSkin + ": " + "\"Almost as good as a shirley temple!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Those harmful spirits won't come anywhere near us.\"");
+				return (nameSkin + ": " + "\"Those harmful spirits won't come anywhere near us.\"");
 			}
 		}
 		if (name.equals("Jazz")) {
 			if (randomNum == 1) {
-				return ("\"Excuse me for dropping in.\"");
+				return (nameSkin + ": " + "\"Excuse me for dropping in.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"This is the power of potential energy!\"");
+				return (nameSkin + ": " + "\"This is the power of potential energy!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Leap of faith!\"");
+				return (nameSkin + ": " + "\"Leap of faith!\"");
 			}
 		}
 		if (name.equals("Harper")) {
 			if (randomNum == 1) {
-				return ("\"Smoke them outta there!\"");
+				return (nameSkin + ": " + "\"Smoke them outta there!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Blast them back to their mommas!\"");
+				return (nameSkin + ": " + "\"Blast them back to their mommas!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Watch out!\"");
+				return (nameSkin + ": " + "\"Watch out!\"");
 			}
 		}
 		if (name.equals("Noah")) {
 			if (randomNum == 1) {
-				return ("\"Healing cloud deployed.\"");
+				return (nameSkin + ": " + "\"Healing cloud deployed.\"");
 			}
 			if (randomNum == 2) {
-				return ("\"I'm watching you guys from afar.\"");
+				return (nameSkin + ": " + "\"I'm watching you guys from afar.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Easy now, rest up.\"");
+				return (nameSkin + ": " + "\"Easy now, rest up.\"");
 			}
 		}
 		if (name.equals("Jade")) {
 			if (randomNum == 1) {
-				return ("\"Cutting through!\"");
+				return (nameSkin + ": " + "\"Cutting through!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Nothing is going to stop me now.\"");
+				return (nameSkin + ": " + "\"Nothing is going to stop me now.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"I will clear our path!\"");
+				return (nameSkin + ": " + "\"I will clear our path!\"");
 			}
 		}
 		if (name.equals("Stellar")) {
 			if (randomNum == 1) {
-				return ("\"Crumble!\"");
+				return (nameSkin + ": " + "\"Crumble!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"The lights stand eternally.\"");
+				return (nameSkin + ": " + "\"The lights stand eternally.\"");
 			}
 			if (randomNum == 3) {
-				return ("\"You will feel the pain soon.\"");
+				return (nameSkin + ": " + "\"You will feel the pain soon.\"");
 			}
 		}
 		if (name.equals("Bonbon")) {
 			if (randomNum == 1) {
-				return ("\"You're in for a sweet treat!\"");
+				return (nameSkin + ": " + "\"You're in for a sweet treat!\"");
 			}
 			if (randomNum == 2) {
-				return ("\"Chew on this!\"");
+				return (nameSkin + ": " + "\"Chew on this!\"");
 			}
 			if (randomNum == 3) {
-				return ("\"Gum 'em up and shut 'em down!\"");
+				return (nameSkin + ": " + "\"Gum 'em up and shut 'em down!\"");
+			}
+		}
+		if (name.equals("BossFinley")) {
+			if (randomNum == 1) {
+				return (nameSkin + ": " + "\"Burn alive!\"");
+			}
+			if (randomNum == 2) {
+				return (nameSkin + ": " + "\"You lot are not match for me!\"");
+			}
+			if (randomNum == 3) {
+				return (nameSkin + ": " + "\"You dare challenge me?!\"");
 			}
 		}
 		return "";

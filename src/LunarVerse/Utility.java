@@ -58,6 +58,9 @@ public class Utility {
 		if (s.equals("Peri")) {
 			health = 3;
 		}
+		if (s.equals("Finley")) {
+			health = 3;
+		}
 		if (s.equals("Iron")) {
 			for (Player e: enemies) {
 				if (e.inRange(loc, 3)) {
@@ -286,8 +289,8 @@ public class Utility {
 		if(escape) {
 			for (Player p: enemies) {
 				if (owner.inRange(p)) {
-					p.takeDamage(175);
-					owner.addDamage(175);
+					p.takeDamage(225);
+					owner.addDamage(225);
 					p.weak(0.1, 1);
 				}
 			}
@@ -296,8 +299,8 @@ public class Utility {
 			owner.getLoc().set(loc.getX(), loc.getY());
 			for (Player p: enemies) {
 				if (owner.inRange(p)) {
-					p.takeDamage(175);
-					owner.addDamage(175);
+					p.takeDamage(225);
+					owner.addDamage(225);
 					p.weak(0.1, 1);
 				}
 			}

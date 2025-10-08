@@ -40,6 +40,9 @@ public class GameSim {
 	public static boolean reduceCover = false;
 
 	public static void main(String[] args) {
+		String testPlayer1 = "Boss:Finley";
+		String testPlayer2 = "Victor";
+		String testPlayer3 = "Jing";
 		/*
 		try {
 			image = new Example();
@@ -67,7 +70,7 @@ public class GameSim {
 		String tD;
 		int turns = 0;
 		//HP, Damage, Turn, Name, X, Y, Range, Movement, Ult
-		Player p1 = new Player(2650, 175, true, "Lunar", 40, 40, 30, 100, 0);
+		Player p1 = new Player(2650, 175, true, "Deny", 40, 40, 30, 100, 0);
 		Player p3 = new Player(2900, 325, false, "Melony", 0, 3, 10, 100, 0);
 		Player p5 = new Player(4850, 575, false, "Rocco", 3, 0, 6, 500, 0);
 		
@@ -111,6 +114,9 @@ public class GameSim {
 			case "Evolution":
 				mode = "Evolution";
 			    break;
+			case "Boss":
+				mode = "Boss";
+			    break;
 			}
 			System.out.println();
 			System.out.println("Team A, pick your characters.");
@@ -126,24 +132,34 @@ public class GameSim {
 			String temp4 = input.next();
 			p5 = CharacterSelection(p5, temp4, false, 0, 0);
 			System.out.println();
-			System.out.println("Team B, pick your characters.");
-			System.out.print("Character Selection 1: ");
-			String temp5 = input.next();
-			p2 = CharacterSelection(p2, temp5, true, 41, 41);
-			System.out.print("Character Selection 2: ");
-			String temp6 = input.next();
-			p4 = CharacterSelection(p4, temp6, false, 41, 41);
-			System.out.print("Character Selection 3: ");
-			String temp7 = input.next();
-			p6 = CharacterSelection(p6, temp7, false, 41, 41);
-			System.out.println();
+			if (mode.equals("Boss")) {
+				System.out.println("Team B, pick your Boss.");
+				System.out.print("Character Selection 1: ");
+				String temp5 = input.next();
+				p2 = CharacterSelection(p2, temp5, true, 41, 41);
+				p4 = CharacterSelection(p4, "Bot", false, 141, 141);
+				p6 = CharacterSelection(p6, "Bot", false, 141, 141);
+				System.out.println();
+			}else {
+				System.out.println("Team B, pick your characters.");
+				System.out.print("Character Selection 1: ");
+				String temp5 = input.next();
+				p2 = CharacterSelection(p2, temp5, true, 41, 41);
+				System.out.print("Character Selection 2: ");
+				String temp6 = input.next();
+				p4 = CharacterSelection(p4, temp6, false, 41, 41);
+				System.out.print("Character Selection 3: ");
+				String temp7 = input.next();
+				p6 = CharacterSelection(p6, temp7, false, 41, 41);
+				System.out.println();
+			}
 			p1.changeSkin("awt");
 			p3.changeSkin("twa");
 			p5.changeSkin("twda");
 			p2.changeSkin("Militi");
 			p4.changeSkin("Milita");
 			p6.changeSkin("Miliia");
-			b = new Battlefield("Merge Castle", p1, p3, p5, p2, p4, p6);
+			b = new Battlefield("Merge Caste", p1, p3, p5, p2, p4, p6);
 			b.setStart(true);
 			System.out.println("Team A, where do you want to deploy " + p1.getSkin() + ".");
 			Location l = SetCursor(p1, p2, p4, p6, p3, p5, 0);
@@ -155,15 +171,21 @@ public class GameSim {
 			Location l3 = SetCursor(p5, p2, p4, p6, p3, p1, 0);
 			p5.getLoc().set(l3.getX(), l3.getY());
 			
-			System.out.println("Team B, where do you want to deploy " + p2.getSkin() + ".");
-			Location l4 = SetCursor(p2, p1, p3, p5, p4, p6, 0);
-			p2.getLoc().set(l4.getX(), l4.getY());
-			System.out.println("Team B, where do you want to deploy " + p4.getSkin() + ".");
-			Location l5 = SetCursor(p4, p1, p3, p5, p2, p6, 0);
-			p4.getLoc().set(l5.getX(), l5.getY());
-			System.out.println("Team B, where do you want to deploy " + p6.getSkin() + ".");
-			Location l6 = SetCursor(p6, p1, p3, p5, p4, p2, 0);
-			p6.getLoc().set(l6.getX(), l6.getY());
+			if (mode.equals("Boss")) {
+				System.out.println("Team B, where do you want to deploy " + p2.getSkin() + ".");
+				Location l4 = SetCursor(p2, p1, p3, p5, p4, p6, 0);
+				p2.getLoc().set(l4.getX(), l4.getY());
+			}else {
+				System.out.println("Team B, where do you want to deploy " + p2.getSkin() + ".");
+				Location l4 = SetCursor(p2, p1, p3, p5, p4, p6, 0);
+				p2.getLoc().set(l4.getX(), l4.getY());
+				System.out.println("Team B, where do you want to deploy " + p4.getSkin() + ".");
+				Location l5 = SetCursor(p4, p1, p3, p5, p2, p6, 0);
+				p4.getLoc().set(l5.getX(), l5.getY());
+				System.out.println("Team B, where do you want to deploy " + p6.getSkin() + ".");
+				Location l6 = SetCursor(p6, p1, p3, p5, p4, p2, 0);
+				p6.getLoc().set(l6.getX(), l6.getY());
+			}
 			b.setStart(false);
 			if(mode.equals("Charm")) {
 				System.out.println(p1.getSkin() + ", pick your charm.");
@@ -203,14 +225,14 @@ public class GameSim {
 				System.out.println();
 			}
 		}else {
-			p1 = new Player(2000, 75, true, "Willow", 20, 20, 10, 10, 0);
+			p1 = new Player(2000, 200, true, testPlayer1, 20, 20, 10, 10, 0);
 			//p1.takeDamage(950);
 			p1.addRole("tank");
-			p3 = new Player(2400, 475, false, "Solar", 20, 20, 10, 10, 0);
-			p5 = new Player(3600, 175, false, "Alex", 20, 20, 11, 9, 0);
+			p3 = new Player(2400, 475, false, testPlayer2, 20, 20, 10, 10, 0);
+			p5 = new Player(3600, 175, false, testPlayer3, 20, 20, 11, 9, 8);
 			
-			p2 = new Player(10000, 1250, false, "Lunar", 25, 20, 10, 10, 7);
-			p4 = new Player(9000, 250, false, "Solar", 23, 20, 10, 10, 0);
+			p2 = new Player(100, 1250, false, "Boss:Finley", 25, 20, 10, 10, 7);
+			p4 = new Player(9000, 250, false, "Zero", 23, 20, 10, 10, 0);
 			p6 = new Player(10000, 200, false, "Kithara", 20, 8, 10, 10, 7);
 			//mode = "Evolution";
 			String skinName = "Sakura";
@@ -305,7 +327,7 @@ public class GameSim {
 		p2.setPlayers(p1, p3, p5, p4, p6);
 		p4.setPlayers(p1, p3, p5, p2, p6);
 		p6.setPlayers(p1, p3, p5, p4, p2);
-		b = new Battlefield("Nexus Village", p1, p3, p5, p2, p4, p6);
+		b = new Battlefield("Nexus Villae", p1, p3, p5, p2, p4, p6);
 		Party party1 = new Party(true, p1, p3, p5);
 		Party party2 = new Party(false, p2, p4, p6);
 		Player players[] = {p1, p2, p3, p4, p5, p6};
@@ -321,6 +343,8 @@ public class GameSim {
 			party1.evolve();
 			party2.evolve();
 		}
+		checkDynamics(party1);
+		checkDynamics(party2);
 		System.out.println();
 		System.out.print("Team A, enter your team name: ");
 		String teamA = input.next();
@@ -338,7 +362,7 @@ public class GameSim {
 		}catch (Exception e) {
 			System.out.println(e);
 		}
-		//audioPlayer.play();
+		audioPlayer.play();
 		try {
 			menuPlayer.stop();
 		}catch (Exception e) {
@@ -519,8 +543,11 @@ public class GameSim {
 						} catch (LineUnavailableException e) {
 						}
 					}
+					if(response.equals("vr")) {
+						ViewRange(p1, p2, p4, p6, p3, p5, 0);
+					}
 					if(response.equals("i")) {
-						CheckProfile(p1, party2);
+						party2.showTeam();
 					}
 					if(response.equals("m")) {
 						Movement(p1, p2, p4, p6, p3, p5);
@@ -537,6 +564,9 @@ public class GameSim {
 					if(response.equals("j")) {
 						Location l = SetCursor(p1, p2, p4, p6, p3, p5, p1.getRange());
 						Jump(p1, p3, p5, l, p2, p4, p6);
+					}
+					if(response.equals("dy")) {
+						p1.useDynamic();
 					}
 					if(response.equals("u")) {
 						if(!p1.ultReady() || p1.ultActive()) {
@@ -762,8 +792,11 @@ public class GameSim {
 							}
 						}
 					}
+					if(response.equals("vr")) {
+						ViewRange(p3, p2, p4, p6, p1, p5, 0);
+					}
 					if(response.equals("i")) {
-						CheckProfile(p3, party2);
+						party2.showTeam();
 					}
 					if(response.equals("o")) {
 						ShowOrbs(p3);
@@ -777,6 +810,9 @@ public class GameSim {
 					if(response.equals("j")) {
 						Location l = SetCursor(p3, p2, p4, p6, p1, p5, p3.getRange());
 						Jump(p3, p1, p5, l, p2, p4, p6);
+					}
+					if(response.equals("dy")) {
+						p3.useDynamic();
 					}
 					if(response.equals("u")) {
 						if(!p3.ultReady() || p3.ultActive()) {
@@ -1005,8 +1041,11 @@ public class GameSim {
 							}
 						}
 					}
+					if(response.equals("vr")) {
+						ViewRange(p5, p2, p4, p6, p3, p1, 0);
+					}
 					if(response.equals("i")) {
-						CheckProfile(p5, party2);
+						party1.showTeam();
 					}
 					if(response.equals("m")) {
 						Movement(p5, p2, p4, p6, p1, p3);
@@ -1023,6 +1062,9 @@ public class GameSim {
 					if(response.equals("j")) {
 						Location l = SetCursor(p5, p2, p4, p6, p3, p1, p5.getRange());
 						Jump(p5, p3, p1, l, p2, p4, p6);
+					}
+					if(response.equals("dy")) {
+						p5.useDynamic();
 					}
 					if(response.equals("u")) {
 						if(!p5.ultReady() || p5.ultActive()) {
@@ -1210,7 +1252,7 @@ public class GameSim {
 					p4.setSupress(true);
 					p6.setSupress(true);
 				}
-				if(party2.oneLeft() && play) {
+				if(party2.oneLeft() && play && !mode.equals("Boss")) {
 					try {
 						audioPlayer.stop();
 						String audio = "audio/lastplayertheme2.wav";
@@ -1282,6 +1324,9 @@ public class GameSim {
 						if (p2.getName().equals("Jade")) {
 							JadePassive(p2, p1, p3, p5);
 						}
+						if (p2.getName().equals("Boss:Finley")) {
+							FinleyBossPassive(p2, p1, p3, p5, p4, p6);
+						}
 						ReviveDeny(p2, p4, p6);
 					}
 					if (response.equals("e2")) {
@@ -1331,8 +1376,11 @@ public class GameSim {
 							}
 						}
 					}
+					if(response.equals("vr")) {
+						ViewRange(p2, p1, p3, p5, p4, p6, 0);
+					}
 					if(response.equals("i")) {
-						CheckProfile(p2, party1);
+						party1.showTeam();
 					}
 					if(response.equals("m")) {
 						Movement(p2, p1, p3, p5, p4, p6);
@@ -1349,6 +1397,9 @@ public class GameSim {
 					if(response.equals("j")) {
 						Location l = SetCursor(p2, p1, p3, p5, p4, p6, p2.getRange());
 						Jump(p2, p4, p6, l, p1, p3, p5);
+					}
+					if(response.equals("dy")) {
+						p2.useDynamic();
 					}
 					if(response.equals("u")) {
 						if(!p2.ultReady() || p2.ultActive()) {
@@ -1574,8 +1625,11 @@ public class GameSim {
 							}
 						}
 					}
+					if(response.equals("vr")) {
+						ViewRange(p4, p1, p3, p5, p2, p6, 0);
+					}
 					if(response.equals("i")) {
-						CheckProfile(p4, party1);
+						party1.showTeam();
 					}
 					if(response.equals("m")) {
 						Movement(p4, p1, p3, p5, p2, p6);
@@ -1592,6 +1646,9 @@ public class GameSim {
 					if(response.equals("j")) {
 						Location l = SetCursor(p4, p1, p3, p5, p2, p6, p4.getRange());
 						Jump(p4, p2, p6, l, p1, p3, p5);
+					}
+					if(response.equals("dy")) {
+						p4.useDynamic();
 					}
 					if(response.equals("u")) {
 						if(!p4.ultReady() || p4.ultActive()) {
@@ -1817,8 +1874,11 @@ public class GameSim {
 							}
 						}
 					}
+					if(response.equals("vr")) {
+						ViewRange(p6, p1, p3, p5, p4, p2, 0);
+					}
 					if(response.equals("i")) {
-						CheckProfile(p6, party1);
+						party1.showTeam();
 					}
 					if(response.equals("m")) {
 						Movement(p6, p1, p3, p5, p2, p4);
@@ -1835,6 +1895,9 @@ public class GameSim {
 					if(response.equals("j")) {
 						Location l = SetCursor(p6, p1, p3, p5, p2, p4, p6.getRange());
 						Jump(p6, p4, p2, l, p1, p3, p5);
+					}
+					if(response.equals("dy")) {
+						p6.useDynamic();
 					}
 					if(response.equals("u")) {
 						if(!p6.ultReady() || p6.ultActive()) {
@@ -2521,6 +2584,9 @@ public class GameSim {
 		if(p.getName().equals("Bonbon")) {
 			BonbonAttack(p, a, d, e);
 		}
+		if(p.getName().equals("Boss:Finley")) {
+			FinleyBossAttack(p, a, d, e);
+		}
 	}
 	
 	public static void runAbilities(Player p, Player a, Player b, Player c, Player d, Player e) {
@@ -2855,9 +2921,16 @@ public class GameSim {
 		if(p.getName().equals("Bonbon")) {
 			BonbonAbility(p, a, b ,c);
 		}
+		if(p.getName().equals("Boss:Finley")) {
+			FinleyBossAbility(p, a, b ,c);
+		}
 	}
 	
 	public static void runUltimates(Player p, Player a, Player b, Player c, Player d, Player e, Party one, Party two) {
+		if(p.getName().equals("Boss:Finley")) {
+			Location l = SetCursor(p, a, b, c, d, e, 0);
+			FinleyBossUltimate(p, a, b, c, l);
+		}
 		if(p.getName().equals("Bonbon")) {
 			System.out.println("This ultimate must be used while moving!");
 		}
@@ -3209,6 +3282,97 @@ public class GameSim {
         }
 	}
 	
+	public static void checkDynamics(Party p) {
+		if (p.has("Lunar") && p.has("Evil")) {
+			p.makeDynamic("Evil", "Lunar");
+		}
+		if (p.has("Zero") && p.has("Aidan")) {
+			p.makeDynamic("Zero", "Aidan");
+		}
+		if (p.has("Dylan") && p.has("Jing")) {
+			p.makeDynamic("Dylan", "Jing");
+		}
+		if (p.has("Hopper") && p.has("Rocco")) {
+			p.makeDynamic("Hopper", "Rocco");
+		}
+		if (p.has("Kithara") && p.has("Julian")) {
+			p.makeDynamic("Kithara", "Julian");
+		}
+		if (p.has("Snowfall") && p.has("Eli")) {
+			p.makeDynamic("Snowfall", "Eli");
+		}
+		if (p.has("Solar") && p.has("Ashley")) {
+			p.makeDynamic("Solar", "Ashley");
+		}
+		if (p.has("Cloud") && p.has("Midnite")) {
+			p.makeDynamic("Cloud", "Midnite");
+		}
+		if (p.has("Mack") && p.has("Sammi")) {
+			p.makeDynamic("Mack", "Sammi");
+		}
+		if (p.has("Andrew") && p.has("Liam")) {
+			p.makeDynamic("Andrew", "Liam");
+		}
+		if (p.has("Axol") && p.has("Finley")) {
+			p.makeDynamic("Axol", "Finley");
+		}
+		if (p.has("Clementine") && p.has("Cherry")) {
+			p.makeDynamic("Clementine", "Cherry");
+		}
+		if (p.has("Bedrock") && p.has("Echo")) {
+			p.makeDynamic("Bedrock", "Echo");
+		}
+		if (p.has("Jesse") && p.has("Margo")) {
+			p.makeDynamic("Jesse", "Margo");
+		}
+		if (p.has("Kailani") && p.has("Makani")) {
+			p.makeDynamic("Kailani", "Makani");
+		}
+		if (p.has("Thunder") && p.has("Radar")) {
+			p.makeDynamic("Thunder", "Radar");
+		}
+		if (p.has("Deny") && p.has("Dimentio")) {
+			p.makeDynamic("Deny", "Dimentio");
+		}
+		if (p.has("Alex") && p.has("Clara")) {
+			p.makeDynamic("Alex", "Clara");
+		}
+		if (p.has("Gates") && p.has("Airic")) {
+			p.makeDynamic("Gates", "Airic");
+		}
+		if (p.has("Flor") && p.has("Orchid")) {
+			p.makeDynamic("Flor", "Orchid");
+		}
+		if (p.has("Archer") && p.has("Harper")) {
+			p.makeDynamic("Archer", "Harper");
+		}
+		if (p.has("Patitek") && p.has("Louis")) {
+			p.makeDynamic("Patitek", "Louis");
+		}
+		if (p.has("Noah") && p.has("Tom")) {
+			p.makeDynamic("Noah", "Tom");
+		}
+		if (p.has("Oona") && p.has("Xara")) {
+			p.makeDynamic("Oona", "Xara");
+		}
+		if (p.has("Gambit") && p.has("Chloe")) {
+			p.makeDynamic("Gambit", "Chloe");
+		}
+		if (p.has("Victor") && p.has("Grenadine")) {
+			p.makeDynamic("Victor", "Grenadine");
+		}
+		if (p.has("Millie") && p.has("Velvet")) {
+			p.makeDynamic("Millie", "Velvet");
+		}
+		if (p.has("Max") && p.has("Redgar")) {
+			p.makeDynamic("Max", "Redgar");
+		}
+		
+		if (p.has("Chief") && p.has("Dylan")) {
+			p.makeDynamic("Chief", "Dylan");
+		}
+	}
+	
 	public static void deathWillowUltimate(Player p) {
 		ultimateFX();
 		Player a = p.getPlayers().get(0);
@@ -3462,7 +3626,38 @@ public class GameSim {
 	}
 	
 	public static void StellarPassive(Player p) {
+		if (p.isSupressed()) {
+			System.out.println("Cannot use passive skill while supressed!");
+			System.out.println();
+			return;
+		}
 		p.useShield();
+	}
+	
+	public static void FinleyBossPassive(Player p, Player a, Player b, Player c, Player d, Player e) {
+		if (p.isSupressed()) {
+			System.out.println("Cannot use passive skill while supressed!");
+			System.out.println();
+			return;
+		}
+		if (p.getTeleportBoss() == 0) {
+			Location l = SetCursor(p, d, e, a, b, c, 0);
+			p.getLoc().set(l.getX(), l.getY());
+			System.out.println("Teleported!");
+			p.setTeleport();
+			if (a.inRange(l, 5)) {
+				a.weak(0.15, 1);
+			}
+			if (b.inRange(l, 5)) {
+				b.weak(0.15, 1);
+			}
+			if (c.inRange(l, 5)) {
+				c.weak(0.15, 1);
+			}
+		}else {
+			System.out.println("Teleport not ready!");
+		}
+		System.out.println();
 	}
 	
 	public static void PolarisClash(Player p, Player a, Player b, Player c, Player d, Player e) {
@@ -3591,7 +3786,7 @@ public class GameSim {
 		    break;
 		  case "Ayson":
 			  p = new Player(2650, 250, start, name, x, y, 10, 10, 6);
-			  name = p.getGradientName("Ayson Brothers", "#48C8FE", "#78CDDE", "#8F2D2D");
+			  name = p.getGradientName("Gray & Jay", "#8F2D2D", "#78CDDE", "#48C8FE");
 			  p.skin(name);
 			  p.setC(45);
 			  System.out.println("\"Let’s show them our real power.\"" + " " + "\"Right with you brother.\"");
@@ -3618,7 +3813,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Chief":
-			  p = new Player(3800, 175, start, name, x, y, 9, 9, 7);
+			  p = new Player(3800, 200, start, name, x, y, 9, 9, 7);
 			  name = p.getGradientName("Chief", "#2EA4FF", "#397BFE", "#0544C2");
 			  p.skin(name);
 			  p.setC(69);
@@ -3638,7 +3833,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Katrina":
-			  p = new Player(2350, 175, start, name, x, y, 10, 10, 7);
+			  p = new Player(2350, 175, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Katrina", "#1F63EA", "#2C9CF2", "#FE67DD", "#F165EC", "#FD75FF", "#1FB1F9", "#3874FF");
 			  p.skin(name);
 			  p.setC(32);
@@ -3788,7 +3983,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Eli":
-			  p = new Player(2225, 200, start, name, x, y, 10, 10, 7);
+			  p = new Player(2250, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Eli", "#51C0F0", "#35A7ED");
 			  p.skin(name);
 			  p.setC(39);
@@ -3817,7 +4012,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Grizz":
-			  p = new Player(3800, 200, start, name, x, y, 10, 10, 8);
+			  p = new Player(3800, 200, start, name, x, y, 10, 10, 9);
 			  name = p.getGradientName("Mr.Grizz", "#9D3F01", "#7E390C", "#471D95", "#741F7A");
 			  p.skin(name);
 			  p.setC(88);
@@ -3847,7 +4042,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Mayhem":
-			  p = new Player(3600, 225, start, name, x, y, 10, 10, 8);
+			  p = new Player(3600, 225, start, name, x, y, 10, 10, 9);
 			  name = p.getGradientName("Mayhem", "#D748FE", "#B423D1", "#9A21FD");
 			  p.skin(name);
 			  p.setC(171);
@@ -3856,7 +4051,7 @@ public class GameSim {
 			  p.addRole("tank");
 		    break;
 		  case "Bedrock":
-			  p = new Player(4100, 400, start, name, x, y, 7, 7, 8);
+			  p = new Player(4100, 400, start, name, x, y, 7, 7, 9);
 			  name = p.getGradientName("Bedrock", "#525252", "#787878", "#B0B0B0");
 			  p.skin(name);
 			  p.setC(240);
@@ -3913,7 +4108,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Dimentio":
-			  p = new Player(3500, 250, start, name, x, y, 10, 10, 8);
+			  p = new Player(3500, 250, start, name, x, y, 10, 10, 9);
 			  name = p.getGradientName("Dimentio", "#F54242", "#ED390C", "#30F83E", "#55F785");
 			  p.skin(name);
 			  p.setC(202);
@@ -3991,7 +4186,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Cherry":
-			  p = new Player(2300, 100, start, name, x, y, 12, 9, 8);
+			  p = new Player(2300, 100, start, name, x, y, 12, 9, 9);
 			  name = p.getGradientName("Cherry", "#EA98F0", "#F25FA6", "#F72222");
 			  p.skin(name);
 			  p.setC(196);
@@ -4233,7 +4428,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Ivy":
-			  p = new Player(2425, 200, start, name, x, y, 10, 10, 8);
+			  p = new Player(2425, 200, start, name, x, y, 10, 10, 9);
 			  name = p.getGradientName("Ivy", "#26C485", "#E18AD4");
 			  p.skin(name);
 			  p.setC(77);
@@ -4263,7 +4458,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Unice":
-			  p = new Player(2475, 250, start, name, x, y, 10, 10, 8);
+			  p = new Player(2475, 250, start, name, x, y, 10, 10, 9);
 			  name = p.getGradientName("Unice", "#635255", "#CE7B91", "#9F2042");
 			  p.skin(name);
 			  p.setC(58);
@@ -4348,7 +4543,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Cloud":
-			  p = new Player(2500, 100, start, name, x, y, 8, 7, 8);
+			  p = new Player(2500, 100, start, name, x, y, 8, 7, 9);
 			  name = p.getGradientName("Cloud", "#5E00BD", "#300693");
 			  p.skin(name);
 			  p.setC(56);
@@ -4426,7 +4621,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Rin":
-			  p = new Player(2450, 250, start, name, x, y, 10, 10, 8);
+			  p = new Player(2450, 250, start, name, x, y, 10, 10, 9);
 			  name = p.getGradientName("Rin", "#F3952B", "#C66D24");
 			  p.skin(name);
 			  p.setC(216);
@@ -4499,7 +4694,7 @@ public class GameSim {
 			  p.addRole("engineer");
 		    break;
 		  case "Noah":
-			  p = new Player(2375, 175, start, name, x, y, 10, 10, 6);
+			  p = new Player(2375, 175, start, name, x, y, 8, 10, 6);
 			  name = p.getGradientName("Noah", "#5B618A", "#41658A");
 			  p.skin(name);
 			  p.setC(75);
@@ -4537,6 +4732,26 @@ public class GameSim {
 			  p.addRole("dive");
 			  p.addRole("brawler");
 			  p.addRole("support");
+		    break;
+		  case "Boss:Finley":
+			  p = new Player(8550, 675, start, name, x, y, 15, 15, 12);
+			  name = p.getGradientName("Finley - Merge Monster", "#A40000", "#450093");
+			  p.skin(name);
+			  p.setC(124);
+			  System.out.println("\"This world shall be no more.\"");
+			  System.out.println();
+			  p.addRole("dive");
+			  p.addRole("tank");
+			  p.addRole("brawler");
+			  p.addRole("support");
+			  p.addRole("engineer");
+			  p.addRole("boss");
+		    break;
+		  case "Bot":
+			  p = new Player(0, 275, start, name, 100, 100, 10, 10, 6);
+			  name = "bot";
+			  p.skin(name);
+			  p.setC(197);
 		    break;
 		}
 		return p;
@@ -4938,6 +5153,7 @@ public class GameSim {
 			damage = 50;
 		}
 		for(Player e: dashPlayers) {
+			e.dashedOn();
 			if (e.isFortified()) {
 				e.takeDamage(damage / 2);
 				p.addDamage(damage / 2);
@@ -4962,6 +5178,7 @@ public class GameSim {
 					GameSim.utility.get(j).getOwner().addDamage(275);
 				}
 			}
+			e.dashOff();
 		}
 		if(dashPlayers.size() > 0) {
 			try {
@@ -5190,6 +5407,24 @@ public class GameSim {
 				if (GameSim.utility.get(j).getHealth() <= 0) {
 					GameSim.utility.remove(j);
 					System.out.println("Enemy Peri destroyed.");
+				}
+				p.useDash();
+				try {
+					String audio = "audio/dash.wav";
+					Music victoryPlayer = new Music(audio, false); 
+					victoryPlayer.play();
+				}catch (Exception e) {
+					System.out.println(e);
+				}
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Finley") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && (p.canDash() || p.isHoverDashing())) {
+				GameSim.utility.get(j).takeHit();
+				System.out.println("Enemy Finley Clone has " + GameSim.utility.get(j).getHealth() + " more health left.");
+				if (GameSim.utility.get(j).getHealth() <= 0) {
+					GameSim.utility.remove(j);
+					System.out.println("Enemy Finley Clone destroyed.");
 				}
 				p.useDash();
 				try {
@@ -5447,6 +5682,44 @@ public class GameSim {
 						}
 					}
 					
+					if(a.getName().equals("Bedrock") && a.ultActive() && a.inRange(p, 3) && !a.isStunned()) {
+						if (!p.getStep()) {
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.addDamage(375);
+							p.knockbacked(a.getLoc());
+							p.knockbacked(a.getLoc());
+						}
+					}
+					if(z.getName().equals("Bedrock") && z.ultActive() && z.inRange(p, 3) && !z.isStunned()) {
+						if (!p.getStep()) {
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.addDamage(375);
+							p.knockbacked(z.getLoc());
+							p.knockbacked(z.getLoc());
+						}
+					}
+					if(c.getName().equals("Bedrock") && c.ultActive() && c.inRange(p, 3) && !c.isStunned()) {
+						if (!p.getStep()) {
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.takeDamage(75);
+							p.addDamage(375);
+							p.knockbacked(c.getLoc());
+							p.knockbacked(c.getLoc());
+						}
+					}
+					
+					
 					if (!inCover) {
 						if(a.hasSights() && a.inRange(p) && !a.isStunned()) {
 							if (!p.getStep()) {
@@ -5455,6 +5728,10 @@ public class GameSim {
 								if(a.getName().equals("Zero") && rand <= 0.3) {
 									p.ignite(1);
 									p.daze(1);
+								}
+								if(a.getName().equals("Aidan")) {
+									p.weak(0.5, 1);
+									p.blind(0.5, 1);
 								}
 							}
 							a.useSight();
@@ -5467,6 +5744,10 @@ public class GameSim {
 									p.ignite(1);
 									p.daze(1);
 								}
+								if(z.getName().equals("Aidan")) {
+									p.weak(0.5, 1);
+									p.blind(0.5, 1);
+								}
 							}
 							z.useSight();
 						}
@@ -5477,6 +5758,10 @@ public class GameSim {
 								if(c.getName().equals("Zero") && rand <= 0.3) {
 									p.ignite(1);
 									p.daze(1);
+								}
+								if(c.getName().equals("Aidan")) {
+									p.weak(0.5, 1);
+									p.blind(0.5, 1);
 								}
 							}
 							c.useSight();
@@ -5723,6 +6008,210 @@ public class GameSim {
 				  }
 				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
 				  break;
+			  case "c":
+				  System.out.println("Cursor set to " + l + ".");
+				  move = false;
+			    break;
+			}
+			System.out.println();
+		}
+		try {
+			victoryPlayer.stop();
+			victoryPlayer2.stop();
+		} catch (UnsupportedAudioFileException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} catch (LineUnavailableException e1) {
+			e1.printStackTrace();
+		}
+		b.removeCursor();
+		return l;
+	}
+	
+	public static Location ViewRange(Player p, Player a, Player z, Player c, Player d, Player e, double i) {
+		b.setRange(i);
+		Music victoryPlayer = null;
+		Music victoryPlayer2 = null;
+		try {
+			String audio = "audio/wind.wav";
+			victoryPlayer = new Music(audio, false); 
+			victoryPlayer.play();
+			audio = "audio/heli.wav";
+			victoryPlayer2 = new Music(audio, false);
+			victoryPlayer2.play();
+		}catch (Exception t) {
+			System.out.println(t);
+		}
+		Scanner input = new Scanner(System.in);
+		boolean move = true;
+		Location l2 = new Location(p.getLoc().getX(), p.getLoc().getY());
+		Location l = new Location(p.getLoc().getX(), p.getLoc().getY());
+		b.setCursor(l);
+		while(move) {
+			b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+			System.out.print("Select a point on the battlefield with the cursor: ");
+			String moveResponse = input.next();
+			switch (moveResponse) {
+			  case "a":
+				  l.adjust(-1, 0);
+				  b.moveCursor(l);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "d":
+				  l.adjust(1, 0);
+				  b.moveCursor(l);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "w":
+				  l.adjust(0, -1);
+				  b.moveCursor(l);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "s":
+				  l.adjust(0, 1);
+				  b.moveCursor(l);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "a1":
+				  l.set(p.getLoc().getX(), p.getLoc().getY());
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "a2":
+				  l.set(d.getLoc().getX(), d.getLoc().getY());
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "a3":
+				  l.set(e.getLoc().getX(), e.getLoc().getY());
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "e1":
+				  l.set(a.getLoc().getX(), a.getLoc().getY());
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "e2":
+				  l.set(z.getLoc().getX(), z.getLoc().getY());
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "e3":
+				  l.set(c.getLoc().getX(), c.getLoc().getY());
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Moved cursor to " + l + ".");
+			    break;
+			  case "1":
+				  b.setRange(1);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "0":
+				  b.setRange(0);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "2":
+				  b.setRange(2);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "3":
+				  b.setRange(3);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "4":
+				  b.setRange(4);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "5":
+				  b.setRange(5);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "6":
+				  b.setRange(6);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "7":
+				  b.setRange(7);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "8":
+				  b.setRange(8);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "9":
+				  b.setRange(9);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "10":
+				  b.setRange(10);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "11":
+				  b.setRange(11);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "12":
+				  b.setRange(12);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "13":
+				  b.setRange(13);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "14":
+				  b.setRange(14);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "15":
+				  b.setRange(15);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "16":
+				  b.setRange(16);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "17":
+				  b.setRange(17);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "18":
+				  b.setRange(18);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "19":
+				  b.setRange(19);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
+			  case "20":
+				  b.setRange(20);
+				  b.printField(p, a, z, c, d, e, orbs, cover, p, a, z, c, utility);
+				  System.out.println("Range adjusted to " + i + ".");
+			    break;
 			  case "c":
 				  System.out.println("Cursor set to " + l + ".");
 				  move = false;
@@ -6674,7 +7163,7 @@ public class GameSim {
 			totalAttacks++;
 		}
 		for(int i = 0; i < totalAttacks; i++) {
-			p.heal(0.03);
+			p.heal(0.05);
 		}
 		System.out.println();
 	}
@@ -7242,7 +7731,7 @@ public class GameSim {
 	
 	public static void AshleyAttack(Player p, Player a) {
 		p.attack(a);
-		a.poison(0.35, 1);
+		a.poison(0.30, 1);
 		System.out.println();
 	}
 	
@@ -7332,9 +7821,7 @@ public class GameSim {
 	
 	public static void BedrockUltimate(Player p) {
 		p.setUlt();
-		p.sightsee(1, 100);
-		p.setMovement(9);
-		System.out.println("\"... ... ...!\"");
+		System.out.println("\"... ... ...!\" 👊");
 		System.out.println();
 	}
 	
@@ -7899,12 +8386,15 @@ public class GameSim {
 			a.mend(0.2, 100);
 			b.mend(0.2, 100);
 		}
-		p.setOverhealth(p.getMaxHP() * 0.25);
-		a.setOverhealth(a.getMaxHP() * 0.25);
-		b.setOverhealth(b.getMaxHP() * 0.25);
-		p.addHealing(p.getMaxHP() * 0.25);
-		p.addHealing(a.getMaxHP() * 0.25);
-		p.addHealing(b.getMaxHP() * 0.25);
+		p.power(0.25,  1);
+		a.power(0.25,  1);
+		b.power(0.25,  1);
+		p.setOverhealth(p.getMaxHP() * 0.35);
+		a.setOverhealth(a.getMaxHP() * 0.35);
+		b.setOverhealth(b.getMaxHP() * 0.35);
+		p.addHealing(p.getMaxHP() * 0.35);
+		p.addHealing(a.getMaxHP() * 0.35);
+		p.addHealing(b.getMaxHP() * 0.35);
 		p.resetUlt();
 		System.out.println("\"Oh yeah, we vibing with this upgrade.\"");
 		System.out.println();
@@ -8077,8 +8567,8 @@ public class GameSim {
 	
 	public static void KitharaAbility(Player p, Player a, Player b) {
 		p.protect(0.8, 1);
-		a.protect(1, 2);
-		b.protect(1, 2);
+		a.protect(1, 1);
+		b.protect(1, 1);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -8439,22 +8929,22 @@ public class GameSim {
 	
 	public static void MasonAbility(Player p, Player a, Player b, Player c, Location l) {
 
-		if(a.inRange(l, 5)) {
-			a.takeDamage(300);
-			p.addDamage(300);
+		if(a.inRange(l, 4)) {
+			a.takeDamage(250);
+			p.addDamage(250);
 			a.daze(1);
 		}
-		if(b.inRange(l, 5)) {
-			b.takeDamage(300);
-			p.addDamage(300);
+		if(b.inRange(l, 4)) {
+			b.takeDamage(250);
+			p.addDamage(250);
 			b.daze(1);
 		}
-		if(c.inRange(l, 5)) {
-			c.takeDamage(300);
-			p.addDamage(300);
+		if(c.inRange(l, 4)) {
+			c.takeDamage(250);
+			p.addDamage(250);
 			c.daze(1);
 		}
-		p.setCooldown(4);
+		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -10621,9 +11111,9 @@ public class GameSim {
 		b.mend(0.5,1);
 		c.mend(0.5,1);
 		p.attack(a);
-		p.setChance(0.03);
-		b.setChance(0.03);
-		c.setChance(0.03);
+		p.setChance(0.05);
+		b.setChance(0.05);
+		c.setChance(0.05);
 		System.out.println();
 	}
 	
@@ -11041,6 +11531,16 @@ public class GameSim {
 					}
 				}
 			}
+			for(int j = 0; j < GameSim.utility.size(); j++) {
+				if(GameSim.utility.get(j).getName().equals("Finley") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && (p.canDash() || p.isHoverDashing())) {
+					GameSim.utility.get(j).takeHit();
+					System.out.println("Enemy Finley Clone has " + GameSim.utility.get(j).getHealth() + " more health left.");
+					if (GameSim.utility.get(j).getHealth() <= 0) {
+						GameSim.utility.remove(j);
+						System.out.println("Enemy Finley Clone destroyed.");
+					}
+				}
+			}
 			p.useFuel(p.getLoc().distance(l) * 50);
 			System.out.println(p.voiceline());
 			System.out.println();
@@ -11171,6 +11671,13 @@ public class GameSim {
 			if(GameSim.utility.get(j).getName().equals("Peri") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
 				GameSim.utility.remove(j);
 				System.out.println("Enemy Peri destroyed.");
+				j--;
+			}
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Finley") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && (p.canDash() || p.isHoverDashing())) {
+				GameSim.utility.remove(j);
+				System.out.println("Enemy Finley Clone destroyed.");
 				j--;
 			}
 		}
@@ -13285,22 +13792,22 @@ public class GameSim {
 				System.out.println();
 				return;
 			}
-			Location l = SetCursor(p, a, b, c, d, e, 4);
-			if (a.inRange(l, 4)) {
+			Location l = SetCursor(p, a, b, c, d, e, 2);
+			if (a.inRange(l, 2)) {
 				ArrayList<Effect> e1 = new ArrayList<Effect>();
 				Effect AnjelikaBlind = new Effect("blind", 0.25, 1);
 				e1.add(AnjelikaBlind);
 				a.addEffects(e1);
 				a.applyEffects();
 			}
-			if (b.inRange(l, 4)) {
+			if (b.inRange(l, 2)) {
 				ArrayList<Effect> e1 = new ArrayList<Effect>();
 				Effect AnjelikaBlind = new Effect("blind", 0.25, 1);
 				e1.add(AnjelikaBlind);
 				b.addEffects(e1);
 				b.applyEffects();
 			}
-			if (c.inRange(l, 4)) {
+			if (c.inRange(l, 2)) {
 				ArrayList<Effect> e1 = new ArrayList<Effect>();
 				Effect AnjelikaBlind = new Effect("blind", 0.25, 1);
 				e1.add(AnjelikaBlind);
@@ -13328,14 +13835,14 @@ public class GameSim {
 				System.out.println();
 				return;
 			}
-			Location l = SetCursor(p, a, b, c, d, e, 6);
-			if (a.inRange(l, 6)) {
+			Location l = SetCursor(p, a, b, c, d, e, 5);
+			if (a.inRange(l, 5)) {
 				a.setSupress(true);
 			}
-			if (b.inRange(l, 6)) {
+			if (b.inRange(l, 5)) {
 				b.setSupress(true);
 			}
-			if (c.inRange(l, 6)) {
+			if (c.inRange(l, 5)) {
 				c.setSupress(true);
 			}
 			System.out.println("\"Shutting them down!\"");
@@ -13851,9 +14358,9 @@ public class GameSim {
 		p.refine(1);
 		a.refine(1);
 		b.refine(1);
-		p.setOverhealth(400);
-		a.setOverhealth(400);
-		b.setOverhealth(400);
+		p.setOverhealth(p.getMaxHP() * 0.2);
+		a.setOverhealth(p.getMaxHP() * 0.2);
+		b.setOverhealth(p.getMaxHP() * 0.2);
 		p.addHealing(1200);;
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
@@ -14541,5 +15048,66 @@ public class GameSim {
 		System.out.println("\"Sweet destruction, straight ahead!\"");
 		System.out.println();
 		ultimateFX();
+	}
+	
+	public static void FinleyBossAttack(Player p, Player a, Player b, Player c) {
+		p.attack(a);
+		a.weary(1);
+		a.vulnerable(0.15, 1);
+		if (a.inRange(b, 6)) {
+			p.attack(b);
+		}
+		if (a.inRange(c, 6)) {
+			p.attack(c);
+		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).owner(p) && GameSim.utility.get(j).getName().equals("Finley")) {
+				p.attack(a);
+				a.weary(1);
+				a.vulnerable(0.15, 1);
+				if (a.inRange(b, 6)) {
+					p.attack(b);
+				}
+				if (a.inRange(c, 6)) {
+					p.attack(c);
+				}
+			}
+		}
+		System.out.println();
+	}
+	
+	public static void FinleyBossAbility(Player p, Player a, Player b, Player c) {
+		a.knockbacked(p.getLoc());
+		a.ignite(2);
+		b.knockbacked(p.getLoc());
+		b.ignite(2);
+		c.knockbacked(p.getLoc());
+		c.ignite(2);
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).owner(p) && GameSim.utility.get(j).getName().equals("Finley")) {
+				a.knockbacked(GameSim.utility.get(j).getLoc());
+				a.ignite(2);
+				b.knockbacked(GameSim.utility.get(j).getLoc());
+				b.ignite(2);
+				c.knockbacked(GameSim.utility.get(j).getLoc());
+				c.ignite(2);
+			}
+		}
+		p.setCooldown(3);
+		System.out.println(p.voiceline());
+		System.out.println();
+	}
+	
+	public static void FinleyBossUltimate(Player p, Player a, Player b, Player c, Location l) {
+		if (!p.inRange(l, 6)) {
+			System.out.println("Can't create a clone that far!");
+			System.out.println();
+			return;
+		}
+		Utility Finley = new Utility("Finley", l, p, p, p, a, b, c);
+		utility.add(Finley);
+		p.resetUlt();
+		System.out.println("\"If you can't handle one of me, how can you expect to take on another of me!\"");
+		System.out.println();
 	}
 }

@@ -1,34 +1,43 @@
 package LunarVerse;
 
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class TimedLoop {
-    public static void main(String[] args) {
-        long startTime = System.currentTimeMillis(); // Get the start time
-        long elapsedTime = 0L;
+    public static void main(String[] args) throws InterruptedException, IOException {
         Scanner input = new Scanner(System.in);
-        int score = 1;
-        char []alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 
-                'h', 'i', 'j', 'k', 'l', 'm', 'n',  
-                'o', 'p', 'q', 'r', 's', 't', 'u', 
-                'v', 'w', 'x', 'y', 'z' }; 
+        String[] lots = {"🍒", "🍊", "🧲", "🍉", "🔔"};
+        String[] finalLots = new String[3];
+        int finalIndex = 0;
 
-        while (elapsedTime < 10*1000) { // Check if less than 5 seconds have passed
-            // Your repeated action goes here
-        	String res = ""; 
-        	for (int i = 0; i < 1; i++)  
-            	res = res + alphabet[(int) (Math.random() * 100 % 26)]; 
-            System.out.print("Charge up the attack by pressing " + res + ": ");
-            String targetResponse = input.next();
-            if(targetResponse.equals(String.valueOf(res))) {
-            	score++;
-            	System.out.println(score);
-            }else {
-            	break;
+        System.out.print("Press any button to start rolling on the slot machine!");
+        input.next(); // Wait for the user to press any button
+
+        while (finalIndex < finalLots.length) {
+            for (String emoji : lots) {
+                if (finalIndex >= finalLots.length) {
+                    break;
+                }
+
+                System.out.print("\r" + emoji); // Print the emoji on the same line
+                TimeUnit.MILLISECONDS.sleep(200); // 1-second delay
+
+                if (System.in.available() > 0) { // Check if there is any user input
+                    String selection = input.next();
+                    if ("c".equalsIgnoreCase(selection)) {
+                        finalLots[finalIndex] = emoji;
+                        finalIndex++;
+                        System.out.println("\nYou picked: " + emoji);
+                    }
+                }
             }
-            // Update the elapsed time
-            elapsedTime = System.currentTimeMillis() - startTime;
         }
-        System.out.println("Finished");
+
+        System.out.println("Final selection:");
+        for (String finalEmoji : finalLots) {
+            System.out.println(finalEmoji);
+        }
     }
 }
+

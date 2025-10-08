@@ -122,7 +122,7 @@ public class Party {
 			roster[i].resetStars();
 			roster[i].setNebula(false);
 			roster[i].setHover(false);
-			roster[i].checkOverhealth();
+			//roster[i].checkOverhealth();
 			roster[i].setTremor(false);
 			roster[i].setTectonic(false);
 			roster[i].setSupress(false);
@@ -131,6 +131,7 @@ public class Party {
 			roster[i].setCogwork(false);
 			roster[i].setCorrupt(false);
 			roster[i].setSpin(false);
+			roster[i].reduceDyCooldown();
 			roster[i].removeAura();
 			if (roster[i].getHarmony()) {
 				roster[i].heal(0.1);
@@ -464,6 +465,7 @@ public class Party {
 					roster[i].resetSmolluskDashes();
 				}
 			}
+			roster[i].checkOverhealth();
 			roster[i].setTookDamage(false);
 			roster[i].resetDashes();
 			roster[i].resetJumps();
@@ -478,7 +480,17 @@ public class Party {
 			roster[i].setExpose(false);
 			roster[i].setClockwork(false);
 			roster[i].checkDecay();
+			roster[i].resetMarker();
 			roster[i].addSugar(5);
+			roster[i].reduceTeleport();
+			if (roster[i].getName().equals("Xara") && roster[i].xara()) {
+				for (Player p: enemy.getRoster()) {
+					p.takeDamage(0.3 * roster[i].xaraDamage());
+				}
+				roster[i].xaraend();
+			}
+			roster[i].setItems(roster[i].getHealth(), roster[i].getCooldown(), roster[i].getOrbCount(), roster[i].getLoc());
+			roster[i].reduceFireImmune();
 			if (roster[i].getHitDarkness()) {
 				roster[i].takeDamage(100);
 			}
@@ -628,7 +640,7 @@ public class Party {
 				for (int j = 0; j < roster[i].getFiretick(); j++) {
 					roster[i].takeDamage(5);
 				}
-				roster[i].takeDamage(175);
+				roster[i].takeDamage(roster[i].getMaxHP() * 0.05);
 				if(teamDown()) {
 					GameSim.game = false;
 				}
@@ -771,6 +783,47 @@ public class Party {
 			}
 		}
 	}
+	
+	public boolean has(String s) {
+		if (roster[0].getName().equals(s) || roster[1].getName().equals(s) || roster[2].getName().equals(s)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public void makeDynamic(String s1, String s2) {
+	    Player player1 = null;
+	    Player player2 = null;
+	    Player player3 = null;
+
+	    // Identify player1 and player2 based on names
+	    for (Player player : roster) {
+	        if (player.getName().equals(s1)) {
+	            player1 = player;
+	        } else if (player.getName().equals(s2)) {
+	            player2 = player;
+	        }
+	    }
+
+	    // Identify player3 as the remaining player in the roster who is not player1 or player2
+	    for (Player player : roster) {
+	        if (!player.equals(player1) && !player.equals(player2)) {
+	            player3 = player;
+	            break;
+	        }
+	    }
+
+
+	    if (player1 != null && player2 != null && player3 != null) {
+	        Dynamic d = new Dynamic(player1, player2, player3, enemy.getRoster()[0], enemy.getRoster()[1], enemy.getRoster()[2]);
+	        player2.setDynamic(d); // Set the dynamic for the activator
+	    } 
+	}
+
+
+
+
 	
 	public int[] hexToRgb(String colorStr) {
 		return new int[] { Integer.valueOf(colorStr.substring(1, 3), 16), Integer.valueOf(colorStr.substring(3, 5), 16),

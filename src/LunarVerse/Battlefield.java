@@ -311,6 +311,9 @@ public class Battlefield {
 					field[j][i] = "∙";
 					foreground[j][i] = 196;
 				}
+				if(e1.inRange(l, 3) && e1.getName().equals("Bedrock") && e1.ultActive() && !e1.isStunned()) {
+					background[j][i] = 160;
+				}
 			}
 		}
 		for(int i = 0; i < 42; i++) {
@@ -320,6 +323,9 @@ public class Battlefield {
 					field[j][i] = "∙";
 					foreground[j][i] = 196;
 				}
+				if(e2.inRange(l, 3) && e2.getName().equals("Bedrock") && e2.ultActive() && !e2.isStunned()) {
+					background[j][i] = 160;
+				}
 			}
 		}
 		for(int i = 0; i < 42; i++) {
@@ -328,6 +334,9 @@ public class Battlefield {
 				if(e3.inRange(l) && e3.hasSights() && !e3.isStunned()) {
 					field[j][i] = "∙";
 					foreground[j][i] = 196;
+				}
+				if(e3.inRange(l, 3) && e3.getName().equals("Bedrock") && e3.ultActive() && !e3.isStunned()) {
+					background[j][i] = 160;
 				}
 			}
 		}
@@ -604,6 +613,11 @@ public class Battlefield {
 									}
 								}
 							}
+						}
+						if(u.getName().equals("Finley")) {
+							field[i][j] = "F";
+							foreground[i][j] = 0;
+							background[i][j] = 124;
 						}
 						if(u.getName().equals("Fulmination")) {
 							for(int k = 0; k < 42; k++) {
@@ -1157,6 +1171,34 @@ public class Battlefield {
 			}
 		}
 		
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e1.inRange(l, 3) && e1.getName().equals("Bedrock") && e1.ultActive() && !e1.isStunned()) {
+					field[j][i] = " ";
+					background[j][i] = 160;
+				}
+			}
+		}
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e2.inRange(l, 3) && e2.getName().equals("Bedrock") && e2.ultActive() && !e2.isStunned()) {
+					field[j][i] = " ";
+					background[j][i] = 160;
+				}
+			}
+		}
+		for(int i = 0; i < 42; i++) {
+			for(int j = 0; j < 42; j++){
+				Location l = new Location(i, j);
+				if(e3.inRange(l, 3) && e3.getName().equals("Bedrock") && e3.ultActive() && !e3.isStunned()) {
+					field[j][i] = " ";
+					background[j][i] = 160;
+				}
+			}
+		}
+		
 		
 		
 		for(int i = 0; i < 42; i++) {
@@ -1342,6 +1384,11 @@ public class Battlefield {
 									}
 								}
 							}
+						}
+						if(u.getName().equals("Finley")) {
+							field[i][j] = "F";
+							foreground[i][j] = 0;
+							background[i][j] = 124;
 						}
 						if(u.getName().equals("Fulmination")) {
 							for(int k = 0; k < 42; k++) {

@@ -16,7 +16,14 @@ public class Bar {
 		
 	}
 	
+	public void clemBar() {
+		type = "valor";
+	}
+	
 	public boolean hasValor() {
+		if (type.equals("boss")) {
+			return true;
+		}
 		double left = p.getHealth() / p.getMaxHP();
 		if (!type.equals("valor")) {
 			return false;
@@ -28,6 +35,9 @@ public class Bar {
 	}
 
 	public boolean hasArmor() {
+		if (type.equals("boss")) {
+			return true;
+		}
 		double left = p.getHealth() / p.getMaxHP();
 		if (!type.equals("armor")) {
 			return false;
@@ -39,6 +49,9 @@ public class Bar {
 	}
 	
 	public boolean hasEssence() {
+		if (type.equals("boss")) {
+			return true;
+		}
 		double left = p.getHealth() / p.getMaxHP();
 		if (!type.equals("essence")) {
 			return false;
@@ -91,6 +104,9 @@ public class Bar {
 	    if (type.equals("essence")) {
 	        color = "#78edff";
 	    }
+	    if (type.equals("boss")) {
+	        color = "#4c33ff";
+	    }
 	    try {
 	    	if (!specialBlocks.isEmpty()) {
 		        special = getGradientName(specialBlocks, color, color);
@@ -121,8 +137,11 @@ public class Bar {
 		    }
 	        over = getGradientName(overblocks, "#5fff7a", "#5fff7a");
 	    }
-
-	    bar = health + special + over;
+	    if (type.equals("boss")) {
+	    	bar = special + over;
+	    }else {
+	    	bar = health + special + over;
+	    }
 	}
 
 
@@ -156,11 +175,11 @@ public class Bar {
 		    break;
 		  case "Alex":
 			  type = "valor";
-			  amount = 0.3;
+			  amount = 0.35;
 		    break;
 		  case "Jesse":
 			  type = "valor";
-			  amount = 0.25;
+			  amount = 0.3;
 		    break;
 		  case "Chief":
 			  type = "armor";
@@ -359,7 +378,7 @@ public class Bar {
 			  amount = 0.4;
 		    break;
 		  case "Echo":
-			  type = "armor";
+			  type = "valor";
 			  amount = 0.5;
 		    break;
 		  case "Makani":
@@ -537,6 +556,10 @@ public class Bar {
 		  case "Bonbon":
 			  type = "valor";
 			  amount = 0.5;
+		    break;
+		  case "Boss:Finley":
+			  type = "boss";
+			  amount = 1;
 		    break;
 		}
 		updateBar();
