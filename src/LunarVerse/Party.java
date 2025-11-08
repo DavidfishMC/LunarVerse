@@ -638,7 +638,7 @@ public class Party {
 		for(int i = 0; i < 3; i++) {
 			if(roster[i].isIgnite()) {
 				for (int j = 0; j < roster[i].getFiretick(); j++) {
-					roster[i].takeDamage(5);
+					roster[i].takeDamage(roster[i].getMaxHP() * 0.01);
 				}
 				roster[i].takeDamage(roster[i].getMaxHP() * 0.05);
 				if(teamDown()) {

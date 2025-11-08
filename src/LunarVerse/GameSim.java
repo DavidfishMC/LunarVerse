@@ -40,8 +40,8 @@ public class GameSim {
 	public static boolean reduceCover = false;
 
 	public static void main(String[] args) {
-		String testPlayer1 = "Boss:Finley";
-		String testPlayer2 = "Victor";
+		String testPlayer1 = "Harper";
+		String testPlayer2 = "Zero";
 		String testPlayer3 = "Jing";
 		/*
 		try {
@@ -225,7 +225,7 @@ public class GameSim {
 				System.out.println();
 			}
 		}else {
-			p1 = new Player(2000, 200, true, testPlayer1, 20, 20, 10, 10, 0);
+			p1 = new Player(2000, 200, true, testPlayer1, 20, 20, 13, 10, 0);
 			//p1.takeDamage(950);
 			p1.addRole("tank");
 			p3 = new Player(2400, 475, false, testPlayer2, 20, 20, 10, 10, 0);
@@ -2699,7 +2699,7 @@ public class GameSim {
 			EvilAbility(p);
 		}
 		if(p.getName().equals("Mason")) {
-			Location l = SetCursor(p, a, b, c, d, e, 5);
+			Location l = SetCursor(p, a, b, c, d, e, 4);
 			MasonAbility(p, a, b, c, l);
 		}
 		if(p.getName().equals("Airic")) {
@@ -3926,7 +3926,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Mason":
-			  p = new Player(2450, 250, start, name, x, y, 11, 10, 7);
+			  p = new Player(2450, 300, start, name, x, y, 11, 10, 6);
 			  name = p.getGradientName("Mason", "#D963D5", "#A747F5", "#9718EC", "#330080");
 			  p.skin(name);
 			  p.setC(129);
@@ -4137,7 +4137,7 @@ public class GameSim {
 			  p.addRole("support");
 		    break;
 		  case "Thunder":
-			  p = new Player(3850, 300, start, name, x, y, 9, 9, 7);
+			  p = new Player(3900, 300, start, name, x, y, 9, 9, 7);
 			  name = p.getGradientName("Thunder", "#F1D627", "#E1DC37", "#B0B0B0", "#696969");
 			  p.skin(name);
 			  p.setC(226);
@@ -4205,7 +4205,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Audrey":
-			  p = new Player(2250, 150, start, name, x, y, 10, 10, 7);
+			  p = new Player(2250, 150, start, name, x, y, 10, 10, 6);
 			  name = p.getGradientName("Audrey", "#BC9CF7", "#72CBC9", "#40F2CE");
 			  p.skin(name);
 			  p.setC(111);
@@ -4330,7 +4330,7 @@ public class GameSim {
 			  p.addRole("tank");
 		    break;
 		  case "Crystal":
-			  p = new Player(3450, 175, start, name, x, y, 10, 10, 7);
+			  p = new Player(3625, 200, start, name, x, y, 10, 10, 7);
 			  name = p.getGradientName("Crystal", "#F186F9", "#647EFF", "#DA9A10");
 			  p.skin(name);
 			  p.setC(219);
@@ -6252,31 +6252,62 @@ public class GameSim {
 		}
 		if(turns2 >= 2) {
 			orbs.clear();
-			for(int i = 0; i < Math.floor((d + e) / 2); i++) {
-				int randomX = (int)(Math.random() * (25 - 16 + 1)) + 16;
-				int randomY = (int)(Math.random() * (25 - 21 + 1)) + 21;
-				Location l = new Location(randomX, randomY);
-				Orb o = new Orb(l);
-				orbs.add(o);
+			// Bottom half: y from 21 to 23
+			for (int i = 0; i < Math.floor((d + e) / 2); i++) {
+			    Location l;
+			    boolean duplicate;
+			    do {
+			        int x = (int)(Math.random() * (23 - 18 + 1)) + 18;
+			        int y = (int)(Math.random() * (23 - 21 + 1)) + 21;
+			        l = new Location(x, y);
+			        duplicate = false;
+			        for (Orb existing : orbs) {
+			            if (existing.getLoc().eqLoc(l)) {
+			                duplicate = true;
+			                break;
+			            }
+			        }
+			    } while (duplicate);
+			    orbs.add(new Orb(l));
 			}
-			for(int i = 0; i < Math.ceil((d + e) / 2); i++) {
-				int randomX = (int)(Math.random() * (25 - 16 + 1)) + 16;
-				int randomY = (int)(Math.random() * (20 - 16 + 1)) + 16;
-				Location l = new Location(randomX, randomY);
-				Orb o = new Orb(l);
-				orbs.add(o);
+
+			// Top half: y from 18 to 20
+			for (int i = 0; i < Math.ceil((d + e) / 2); i++) {
+			    Location l;
+			    boolean duplicate;
+			    do {
+			        int x = (int)(Math.random() * (23 - 18 + 1)) + 18;
+			        int y = (int)(Math.random() * (20 - 18 + 1)) + 18;
+			        l = new Location(x, y);
+			        duplicate = false;
+			        for (Orb existing : orbs) {
+			            if (existing.getLoc().eqLoc(l)) {
+			                duplicate = true;
+			                break;
+			            }
+			        }
+			    } while (duplicate);
+			    orbs.add(new Orb(l));
 			}
-			for(int i = 0; i < d; i++) {
-				int randomX = (int)(Math.random() * (4 - 0 + 1)) + 0;
-				int randomY = (int)(Math.random() * (41 - 0 + 1)) + 0;
-				double rand = Math.random();
-				if(rand <= 0.5) {
-					randomX = randomX + 37;
-				}
-				Location l = new Location(randomX, randomY);
-				Orb o = new Orb(l);
-				orbs.add(o);
-			}
+			// Orb 1: x between 16–25, y between 5–9
+			int x1 = (int)(Math.random() * (25 - 16 + 1)) + 16;
+			int y1 = (int)(Math.random() * (6 - 2 + 1)) + 2;
+			orbs.add(new Orb(new Location(x1, y1)));
+
+			// Orb 2: x between 16–25, y between 32–36
+			int x2 = (int)(Math.random() * (25 - 16 + 1)) + 16;
+			int y2 = (int)(Math.random() * (39 - 35 + 1)) + 35;
+			orbs.add(new Orb(new Location(x2, y2)));
+
+			// Orb 3: y between 16–25, x between 5–9
+			int x3 = (int)(Math.random() * (6 - 2 + 1)) + 2;
+			int y3 = (int)(Math.random() * (25 - 16 + 1)) + 16;
+			orbs.add(new Orb(new Location(x3, y3)));
+
+			// Orb 4: y between 16–25, x between 32–36
+			int x4 = (int)(Math.random() * (39 - 35 + 1)) + 35;
+			int y4 = (int)(Math.random() * (25 - 16 + 1)) + 16;
+			orbs.add(new Orb(new Location(x4, y4)));
 			System.out.println("New orbs have spawned!");
 			if (reduceSpawn) {
 				reduceSpawn = false;
@@ -7256,6 +7287,10 @@ public class GameSim {
 					System.out.println();
 				}
 			}
+			if(targetResponse.equals("c")) {
+				System.out.println();
+				break;
+			}
 		}
 		System.out.println();
 	}
@@ -7264,8 +7299,8 @@ public class GameSim {
 		Scanner input = new Scanner(System.in);
 		if(!a.isAlive() && !b.isAlive()) {
 			p.cleanse();
-			p.power(0.3, 1);
-			p.protect(0.2, 1);
+			p.power(0.5, 1);
+			p.protect(0.5, 1);
 			p.setCooldown(3);
 			System.out.println("\"Finally, I can start thinking about myself.\"");
 			System.out.println();
@@ -7277,14 +7312,14 @@ public class GameSim {
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
 			a.cleanse();
-			a.power(0.3, 1);
-			a.protect(0.2, 1);
+			a.power(0.5, 1);
+			a.protect(0.5, 1);
 			p.setCooldown(3);
 		}
 		if(targetResponse.equals("2")) {
 			b.cleanse();
-			b.power(0.3, 1);
-			b.protect(0.2, 1);
+			b.power(0.5, 1);
+			b.protect(0.5, 1);
 			p.setCooldown(3);
 		}
 		System.out.println(p.voiceline());
@@ -7612,7 +7647,7 @@ public class GameSim {
 		if(!p.ultReady()) {
 			p.getOrb();
 		}
-		p.setCooldown(4);
+		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -8060,7 +8095,7 @@ public class GameSim {
 	public static void ThunderAbility(Player p) {
 		p.setThunder(true);
 		p.counter(1);
-		p.protect(0.5, 1);
+		p.protect(0.75, 1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -8529,14 +8564,14 @@ public class GameSim {
 	
 	public static void XaraAbility(Player p, Player a, Player b) {
 		p.setSights(1);
-		p.protect(0.2, 2);
+		p.protect(0.25, 2);
 		p.fortify(2);
-		a.protect(0.2, 2);
+		a.protect(0.25, 2);
 		a.fortify(2);
-		b.protect(0.2, 2);
+		b.protect(0.25, 2);
 		b.fortify(2);
-		p.heal(0.05);
-		p.addHealing(p.getMaxHP() * 0.05);
+		p.heal(0.1);
+		p.addHealing(p.getMaxHP() * 0.1);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();
@@ -8896,9 +8931,9 @@ public class GameSim {
 	}
 	
 	public static void EvilAbility(Player p) {
-		p.protect(0.6, 1);
+		p.protect(0.5, 1);
 		p.setSights(3);
-		p.setCooldown(4);
+		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -9425,7 +9460,7 @@ public class GameSim {
 			}else {
 				a.heal(0.5);
 				a.addHealing(a.getMaxHP() * 0.5);
-				a.protect(0.5, 1);
+				a.protect(0.75, 1);
 				a.power(0.75, 1);
 				p.resetUlt();
 				System.out.println("\"You're unstoppable now!\"");
@@ -9436,12 +9471,11 @@ public class GameSim {
 				p.addHealing(b.getMaxHP() * 0.35);
 				p.resetUlt();
 				System.out.println();
-				p.resetUlt();
 				System.out.println("\"Job's not done yet " + b.getSkin() + "!\"");
 			}else {
 				b.heal(0.5);
 				b.addHealing(b.getMaxHP() * 0.5);
-				b.protect(0.5, 1);
+				b.protect(0.75, 1);
 				b.power(0.75, 1);
 				p.resetUlt();
 				System.out.println("\"You're unstoppable now!\"");
@@ -9450,7 +9484,7 @@ public class GameSim {
 		if(targetResponse.equals("3")) {
 			p.heal(0.5);
 			p.addHealing(p.getMaxHP() * 0.5);
-			p.protect(0.5, 1);
+			p.protect(0.75, 1);
 			p.power(0.75, 1);
 			p.resetUlt();
 			System.out.println("\"Energized again!\"");
@@ -9579,11 +9613,11 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.2);
 		p.addHealing(a.getMaxHP() * 0.2);
 		p.addHealing(b.getMaxHP() * 0.2);
-		p.mend(0.5, 1);
+		p.counter(1);
 		p.fortify(1);
-		a.mend(0.5, 1);
+		a.counter(1);
 		a.fortify(1);
-		b.mend(0.5, 1);
+		b.counter(1);
 		b.fortify(1);
 		p.setCooldown(3);
 		System.out.println(p.voiceline());
@@ -10218,11 +10252,11 @@ public class GameSim {
 			String targetResponse2 = input.next();
 			if(targetResponse2.equals("1")) {
 				if(p.inRange(a)) {
-					p.attack(a);
 					if(!a.isFortified()) {
 						a.resetCover();
 						a.getLoc().set(p.getLoc().getX(), p.getLoc().getY());
 					}
+					p.attack(a);
 				}else {
 					System.out.println();
 					System.out.println("Target is out of range!");
@@ -10231,11 +10265,11 @@ public class GameSim {
 			}
 			if(targetResponse2.equals("2")) {
 				if(p.inRange(b)) {
-					p.attack(b);
 					if(!b.isFortified()) {
 						b.resetCover();
 						b.getLoc().set(p.getLoc().getX(), p.getLoc().getY());
 					}
+					p.attack(b);
 				}else {
 					System.out.println();
 					System.out.println("Target is out of range!");
@@ -10244,11 +10278,11 @@ public class GameSim {
 			}
 			if(targetResponse2.equals("3")) {
 				if(p.inRange(c)) {
-					p.attack(c);
 					if(!c.isFortified()) {
 						c.resetCover();
 						c.getLoc().set(p.getLoc().getX(), p.getLoc().getY());
 					}
+					p.attack(c);
 				}else {
 					System.out.println();
 					System.out.println("Target is out of range!");
@@ -10777,11 +10811,6 @@ public class GameSim {
 	}
 	
 	public static void CrystalAbility(Player p, Player a, Player b, Player c, Player d, Player e) {
-		for(int j = 0; j < GameSim.utility.size(); j++) {
-			if(GameSim.utility.get(j).getName().equals("Gemstone") && GameSim.utility.get(j).owner(p)) {
-				GameSim.utility.remove(j);
-			}
-		}
 		Location l = SetCursor(p, a, b, c, d, e, 4);
 		if(!p.inRange(l)) {
 			System.out.println("Can't plant the Gemstone that far!");
@@ -11195,22 +11224,22 @@ public class GameSim {
 		p.addHealing(p.getMaxHP() * 0.2);
 		p.addHealing(a.getMaxHP() * 0.2);
 		p.addHealing(b.getMaxHP() * 0.2);
-		p.setChance(0.1);
-		a.setChance(0.1);
-		b.setChance(0.1);
-		p.setDodge(0.1);
-		a.setDodge(0.1);
-		b.setDodge(0.1);
-		p.setCooldown(4);
+		p.setChance(0.2);
+		a.setChance(0.2);
+		b.setChance(0.2);
+		p.setDodge(0.2);
+		a.setDodge(0.2);
+		b.setDodge(0.2);
+		p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
 	
 	public static void JingUltimate(Player p, Player a, Player b, Player c, Player d, Player e) {
 		p.setUlt();
-		p.setChance(0.15);
-		d.setChance(0.15);
-		e.setChance(0.15);
+		p.setChance(0.25);
+		d.setChance(0.25);
+		e.setChance(0.25);
 		p.setDodge(0.5);
 		d.setDodge(0.5);
 		e.setDodge(0.5);
@@ -12897,7 +12926,7 @@ public class GameSim {
 		p.power(0.1, 1);
 		a.power(0.1, 1);
 		b.power(0.1, 1);
-        p.setCooldown(4);
+        p.setCooldown(3);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -14804,6 +14833,9 @@ public class GameSim {
 			a.takeDamage(a.getMaxHP() * 0.25);
 			p.addDamage(a.getMaxHP() * 0.25);
 			p.setCooldown(3);
+			p.addAura();
+			p.addAura();
+			p.addAura();
 			System.out.println("\"Now alone, this is true pain!\"");
 			System.out.println();
 		}else {
@@ -14817,6 +14849,9 @@ public class GameSim {
 			c.takeDamage(c.getMaxHP() * 0.05);
 			p.addDamage(c.getMaxHP() * 0.05);
 			p.setCooldown(3);
+			p.addAura();
+			p.addAura();
+			p.addAura();
 			System.out.println(p.voiceline());
 			System.out.println();
 		}

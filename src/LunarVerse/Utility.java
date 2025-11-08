@@ -973,14 +973,15 @@ public class Utility {
 	}
 	
 	public void activateDynamite() {
-		System.out.println("Dyanmite blasted!");
+		System.out.println("Dynamite blasted!");
 		for (Player p: enemies) {
-			if (!p.isIgnite()) {
-				p.ignite(2);
-				owner.addDamage(350);
-			}else {
-				p.addFiretick();
-				owner.addDamage(25);
+			if (p.inRange(loc, 5)) {
+				if (!p.isIgnite()) {
+					p.ignite(2);
+					owner.addDamage(350);
+				}else {
+					p.addFiretick();
+				}
 			}
 		}
 		for(int j = 0; j < GameSim.utility.size(); j++) {

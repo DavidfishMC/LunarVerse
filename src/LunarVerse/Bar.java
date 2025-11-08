@@ -219,7 +219,7 @@ public class Bar {
 		    break;
 		  case "Zero":
 			  type = "essence";
-			  amount = 0.4;
+			  amount = 0.5;
 		    break;
 		  case "Ruby":
 			  type = "essence";

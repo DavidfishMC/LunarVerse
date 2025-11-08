@@ -752,8 +752,8 @@ public class Player {
 			return;
 		}
 		aura++;
-		if (aura > 10) {
-			aura = 10;
+		if (aura > 9) {
+			aura = 9;
 		}
 	}
 	
@@ -1128,11 +1128,11 @@ public class Player {
 			}
 		}
 		if (name.equals("Stellar")) {
-			if (aura >= 10) {
+			if (aura >= 9) {
 				System.out.println(nameSkin + "'s true aura is unleashed!");
 				aura = 0;
 				trueAura = true;
-				movement = movement + 5;
+				movement = movement + 10;
 			}
 		}
 		if (name.equals("Bonbon")) {
@@ -2237,7 +2237,9 @@ public class Player {
 	}
 
 	public void increaseDPS(double d) {
+		double temp = ogDamage * d;
 		damage = damage + (ogDamage * d);
+		ogDamage = ogDamage + temp;
 	}
 
 	public double getMaxHP() {
@@ -2757,6 +2759,7 @@ public class Player {
 			if (name.equals("Willow") && !ultActive && ultReady()) {
 				health = 1600;
 				maxHealth = 1600;
+				damage = damage + 275;
 				setUlt();
 				GameSim.deathWillowUltimate(this);
 				System.out.println("\"You thought it was over didn't ya!?\"");
@@ -2939,7 +2942,7 @@ public class Player {
 		}
 		check = check + critChance;
 		if (name.equals("Harper") && this.overRange(p, 12)) {
-			check = check + 0.35;
+			check = 1;
 		}
 		if (name.equals("Harper") && !this.overRange(p, 8)) {
 			check = -1;
@@ -3133,6 +3136,7 @@ public class Player {
 
 	public void increaseDPSNum(double d) {
 		damage = damage + d;
+		ogDamage = ogDamage + d;
 	}
 	
 	public void decreaseDPSNum(double d) {
@@ -3606,6 +3610,7 @@ public class Player {
 	public void endTurn() {
 		turn = false;
 		attacked = false;
+		periCounter = false;
 	}
 
 	public boolean getTurn() {
@@ -3737,7 +3742,7 @@ public class Player {
 				}
 			}
 			if (bar.hasEssence()) {
-				e = e * 1.2;
+				e = e * 1.3;
 			}
 			for (int i = 0; i < permHeal; i++) {
 				e = e * 1.05;
@@ -3785,7 +3790,7 @@ public class Player {
 				}
 			}
 			if (bar.hasEssence()) {
-				e = e * 1.2;
+				e = e * 1.3;
 			}
 			for (int i = 0; i < permHeal; i++) {
 				e = e * 1.05;
@@ -3833,7 +3838,7 @@ public class Player {
 				}
 			}
 			if (bar.hasEssence()) {
-				e = e * 1.2;
+				e = e * 1.3;
 			}
 			for (int k = 0; k < permHeal; k++) {
 				e = e * 1.05;
@@ -4116,7 +4121,7 @@ public class Player {
 			echoChargeShow = "\n" + "Balance Orbs " + "\u001b[38;5;" + 122 + "m" + "🫧" + reset + ": " + balanceOrbs + "/" + "2.";
 		}
 		if (name.equals("Stellar")){
-			echoChargeShow = "\n" + "Aura Charges " + "\u001b[38;5;" + 55 + "m" + "🌌" + reset + ": " + aura + "/" + "10.";
+			echoChargeShow = "\n" + "Aura Charges " + "\u001b[38;5;" + 55 + "m" + "🌌" + reset + ": " + aura + "/" + "9.";
 		}
 		if (name.equals("Bonbon")){
 			echoChargeShow = "\n" + "Sugar Rush " + "\u001b[38;5;" + 198 + "m" + "🍬" + reset + ": " + sugar + "%.";
