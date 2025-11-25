@@ -226,8 +226,8 @@ public class Roulette {
 		dealerHand.addAll(dealerHandHole);
 		playerHand.addAll(playerHandHole);
 		if (winner() == null) {
-			player.takeDamage(1400);
-			dealer.addDamage(1400);
+			player.takeDamage(1000);
+			dealer.addDamage(1000);
 			player.stun(1);
 			System.out.println("\"A tie!? Well you still lose by those terms!\"");
 			System.out.println();
@@ -249,14 +249,14 @@ public class Roulette {
 		System.out.println("The winner is " + winner().getSkin() + "!");
 		
 		if(winner().equals(dealer)) {
-			player.takeDamage(1400);
-			dealer.addDamage(1400);
+			player.takeDamage(1000);
+			dealer.addDamage(1000);
 			player.stun(1);
 			System.out.println("\"Undefeated baby! Woooooo!\"");
 			System.out.println();
 		}else {
-			player.takeDamage(500);
-			dealer.addDamage(500);
+			player.takeDamage(250);
+			dealer.addDamage(250);
 			System.out.println("\"Damn what!?! Did you cheat!?\"");
 			System.out.println();
 		}

@@ -188,11 +188,6 @@ public class Party {
 				}
 			}
 			for(int q = 0; q < GameSim.utility.size(); q++) {
-				if(GameSim.utility.get(q).getName().equals("Umbrella") && GameSim.utility.get(q).owner(roster[i])) {
-					GameSim.utility.get(q).activateUmbrella();
-				}
-			}
-			for(int q = 0; q < GameSim.utility.size(); q++) {
 				if(GameSim.utility.get(q).getName().equals("Pylon") && GameSim.utility.get(q).owner(roster[i])) {
 					GameSim.utility.get(q).activatePylon();
 				}
@@ -227,18 +222,6 @@ public class Party {
 				if(GameSim.utility.get(j).getName().equals("Gum") && GameSim.utility.get(j).owner(roster[i])) {
 					GameSim.utility.remove(j);
 					j--;
-				}
-			}
-			int range = 4;
-			for(int j = 0; j < GameSim.utility.size(); j++) {
-				if(GameSim.utility.get(j).getName().equals("Smoke") && GameSim.utility.get(j).isAlly(roster[i])) {
-					if (GameSim.utility.get(j).owner.getDarkness()) {
-						range = 6;
-					}
-					if (roster[i].inRange(GameSim.utility.get(j).getLoc(), range)) {
-						roster[i].setDodge(0.25);
-						break;
-					}
 				}
 			}
 			if(roster[i].getName().equals("Rhythm") && !roster[i].isDazed() && roster[i].isAlive()) {

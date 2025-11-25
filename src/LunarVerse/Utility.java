@@ -255,9 +255,9 @@ public class Utility {
 	
 	public void activateSound() {
 		for (Player p: enemies) {
-			if (p.inRange(loc, 6)) {
-				p.takeDamage(200);
-				owner.addDamage(200);
+			if (p.inRange(loc, 5)) {
+				p.takeDamage(400);
+				owner.addDamage(400);
 				p.paralyze(1);
 			}
 		}
@@ -291,7 +291,7 @@ public class Utility {
 				if (owner.inRange(p)) {
 					p.takeDamage(225);
 					owner.addDamage(225);
-					p.weak(0.1, 1);
+					p.weak(0.3, 1);
 				}
 			}
 			owner.getLoc().set(loc.getX(), loc.getY());
@@ -301,7 +301,7 @@ public class Utility {
 				if (owner.inRange(p)) {
 					p.takeDamage(225);
 					owner.addDamage(225);
-					p.weak(0.1, 1);
+					p.weak(0.3, 1);
 				}
 			}
 		}

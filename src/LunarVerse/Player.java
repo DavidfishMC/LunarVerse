@@ -2495,6 +2495,21 @@ public class Player {
 		if (spinMove) {
 			return;
 		}
+		for(int j = 0; j < GameSim.utility.size(); j++) {
+			if(GameSim.utility.get(j).getName().equals("Smoke") && GameSim.utility.get(j).isAlly(this)) {
+				int smokeRange = 4;
+				if (GameSim.utility.get(j).owner.getDarkness()) {
+					smokeRange = 6;
+				}
+				if (this.inRange(GameSim.utility.get(j).getLoc(), smokeRange)) {
+					double rand2 = Math.random();
+					if (rand2 < 0.5) {
+						System.out.println("Damage evaded!");
+						return;
+					}
+				}
+			}
+		}
 		if (rand < dodgeChance) {
 			System.out.println("Damage evaded!");
 			return;
@@ -2558,6 +2573,15 @@ public class Player {
 				d = d * 0.75;
 			}
 			fulField = fulField + d;
+		}
+		for(int q = 0; q < GameSim.utility.size(); q++) {
+			if(GameSim.utility.get(q).getName().equals("Umbrella") && GameSim.utility.get(q).isAlly(this) && GameSim.utility.get(q).getLoc().inRange(curLoc, 10) && !tectonic) {
+				if (tremor) {
+					d = d * 0.75;
+				}else {
+					d = d * 0.5;
+				}
+			}
 		}
 		for(int j = 0; j < GameSim.utility.size(); j++) {
 			if(GameSim.utility.get(j).getName().equals("Iron") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 3) && !tectonic) {
@@ -3158,11 +3182,31 @@ public class Player {
 					j--;
 				}
 			}
+			for(int q = 0; q < GameSim.utility.size(); q++) {
+				if(GameSim.utility.get(q).getName().equals("Umbrella") && GameSim.utility.get(q).isAlly(this)) {
+					if (e.get(j).getName().equals("ignite") || e.get(j).getName().equals("weak")
+							|| e.get(j).getName().equals("freeze") || e.get(j).getName().equals("vulnerable")
+							|| e.get(j).getName().equals("paralyze") || e.get(j).getName().equals("daze")
+							|| e.get(j).getName().equals("blind") || e.get(j).getName().equals("stun")
+							|| e.get(j).getName().equals("poison")) {
+						e.remove(e.get(j));
+						j--;
+					}
+				}
+			}
 			if (name.equals("Pearl") && !resting) {
 				if (e.get(j).getName().equals("ignite")) {
 					e.remove(e.get(j));
 					j--;
 				}
+			}
+			if (name.equals("Snowfall")) {
+				if (e.get(j).getName().equals("freeze")) {
+					e.remove(e.get(j));
+					j--;
+				}
+				setShield();
+				heal(0.05);
 			}
 			if (fireImmune > 0) {
 				if (e.get(j).getName().equals("ignite")) {
