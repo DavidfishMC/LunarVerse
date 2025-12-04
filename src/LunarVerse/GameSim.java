@@ -1193,10 +1193,10 @@ public class GameSim {
 				}
 			}
 			
-			if(turns >= 9 && play2) {
+			if(turns >= 7 && play2) {
 				try {
 					audioPlayer.stop();
-					String audio = "audio/overtimetheme.wav";
+					String audio = "audio/overtimetheme1.wav";
 					audioPlayer = new Music(audio, false);
 					audioPlayer.play();
 					String audio2 = "audio/overtimeline.wav";
@@ -1207,7 +1207,7 @@ public class GameSim {
 					System.out.println(e);
 				}
 			}
-			if(turns >= 19 && play4) {
+			if(turns >= 15 && play4) {
 				try {
 					b.endGame();
 					audioPlayer.stop();
@@ -1222,7 +1222,7 @@ public class GameSim {
 					System.out.println(e);
 				}
 			}
-			if(turns >= 29 && play5) {
+			if(turns >= 23 && play5) {
 				try {
 					b.suddenDeath();
 					audioPlayer.stop();
@@ -4490,7 +4490,7 @@ public class GameSim {
 			  p.addRole("engineer");
 		    break;
 		  case "Millie":
-			  p = new Player(3375, 75, start, name, x, y, 11, 10, 4);
+			  p = new Player(3575, 100, start, name, x, y, 11, 10, 4);
 			  name = p.getGradientName("Millie", "#FD77D9", "#CD914C", "#808085");
 			  p.skin(name);
 			  p.setC(208);
@@ -4501,7 +4501,7 @@ public class GameSim {
 			  p.addRole("engineer");
 		    break;
 		  case "Leaf":
-			  p = new Player(3675, 75, start, name, x, y, 11, 11, 6);
+			  p = new Player(3675, 100, start, name, x, y, 11, 11, 6);
 			  name = p.getGradientName("Professor Leaf", "#EDEEC0", "#433E0E", "#7C9082");
 			  p.skin(name);
 			  p.setC(149);
@@ -4564,7 +4564,7 @@ public class GameSim {
 			  p.addRole("engineer");
 		    break;
 		  case "Pearl":
-			  p = new Player(2425, 275, start, name, x, y, 10, 10, 5);
+			  p = new Player(2425, 325, start, name, x, y, 10, 10, 5);
 			  name = p.getGradientName("Pearl", "#CDA667", "#C7B6A5", "#F37EA8");
 			  p.skin(name);
 			  p.setC(3);
@@ -4619,6 +4619,7 @@ public class GameSim {
 			  System.out.println("\"Suppress them to get the last laugh.\"");
 			  System.out.println();
 			  p.addRole("brawler");
+			  p.addRole("support");
 		    break;
 		  case "Rin":
 			  p = new Player(2450, 250, start, name, x, y, 10, 10, 9);
@@ -4641,7 +4642,7 @@ public class GameSim {
 			  p.addRole("brawler");
 		    break;
 		  case "Isabelle":
-			  p = new Player(2300, 125, start, name, x, y, 12, 9, 6);
+			  p = new Player(2500, 125, start, name, x, y, 12, 9, 6);
 			  name = p.getGradientName("Isabelle", "#DAB6FC", "#BBADFF", "#9FA0FF", "#8E94F2");
 			  p.skin(name);
 			  p.setC(177);
@@ -4662,7 +4663,7 @@ public class GameSim {
 			  p.addRole("engineer");
 		    break;
 		  case "Willow":
-			  p = new Player(2325, 225, start, name, x, y, 10, 12, 6);
+			  p = new Player(2375, 225, start, name, x, y, 10, 12, 6);
 			  name = p.getGradientName("Willow", "#E35BF9", "#6D33B4");
 			  p.skin(name);
 			  p.setC(201);
@@ -5363,20 +5364,6 @@ public class GameSim {
 			}
 		}
 		for(int j = 0; j < GameSim.utility.size(); j++) {
-			if(GameSim.utility.get(j).getName().equals("Matrix") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && (p.canDash() || p.isHoverDashing())) {
-				GameSim.utility.remove(j);
-				System.out.println("Enemy Immortality Matrix destroyed.");
-				p.useDash();
-				try {
-					String audio = "audio/dash.wav";
-					Music victoryPlayer = new Music(audio, false); 
-					victoryPlayer.play();
-				}catch (Exception e) {
-					System.out.println(e);
-				}
-			}
-		}
-		for(int j = 0; j < GameSim.utility.size(); j++) {
 			if(GameSim.utility.get(j).getName().equals("Dynamite") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && p.getLoc().eqLoc(GameSim.utility.get(j).getLoc()) && (p.canDash() || p.isHoverDashing())) {
 				GameSim.utility.get(j).takeHit();
 				System.out.println("Enemy Dynamite has " + GameSim.utility.get(j).getHealth() + " more health left.");
@@ -5629,7 +5616,8 @@ public class GameSim {
 					}
 					for(int j = 0; j < GameSim.utility.size(); j++) {
 						if(GameSim.utility.get(j).getName().equals("Mural") && GameSim.utility.get(j).isAlly(p) && GameSim.utility.get(j).inRange(p, 4)) {
-							p.keepMovement(originalMovement);
+							p.power(0.05, 1);
+							break;
 						}
 					}
 					if (p.getNebula()) {
@@ -6236,14 +6224,14 @@ public class GameSim {
 	public static void SpawnOrbs() {
 		int d = 2;
 		int e = 0;
-		if(turns2 >= 5) {
+		if(turns2 >= 4) {
 			e = 2;
 		}
-		if(turns2 >= 10) {
+		if(turns2 >= 8) {
 			e = 6;
 			d = 0;
 		}
-		if(turns2 >= 15) {
+		if(turns2 >= 12) {
 			e = 10;
 		}
 		if (reduceSpawn) {
@@ -6318,7 +6306,7 @@ public class GameSim {
 	public static void SpawnCover() {
 		int d1 = 2;
 		int d2 = 4;
-		if(turns2 >= 5) {
+		if(turns2 >= 4) {
 			d1 = 1;
 			d2 = 2;
 		}
@@ -6326,7 +6314,7 @@ public class GameSim {
 			d1 = d1 / 2;
 			d2 = d2 / 2;
 		}
-		if(turns2 >= 10) {
+		if(turns2 >= 8) {
 			d1 = 0;
 			d2 = 0;
 		}
@@ -11536,13 +11524,6 @@ public class GameSim {
 				}
 			}
 			for(int j = 0; j < GameSim.utility.size(); j++) {
-				if(GameSim.utility.get(j).getName().equals("Matrix") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 3)) {
-					GameSim.utility.remove(j);
-					System.out.println("Enemy Immortality Matrix destroyed.");
-					j--;
-				}
-			}
-			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Dynamite") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 3)) {
 					GameSim.utility.get(j).takeHit();
 					System.out.println("Enemy Dynamite has " + GameSim.utility.get(j).getHealth() + " more health left.");
@@ -11681,13 +11662,6 @@ public class GameSim {
 			if(GameSim.utility.get(j).getName().equals("Support") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
 				GameSim.utility.remove(j);
 				System.out.println("Enemy Sockyman Support destroyed.");
-				j--;
-			}
-		}
-		for(int j = 0; j < GameSim.utility.size(); j++) {
-			if(GameSim.utility.get(j).getName().equals("Matrix") && (utility.get(j).owner(a) || utility.get(j).owner(b) || utility.get(j).owner(c)) && utility.get(j).getLoc().inRange(l, 10)) {
-				GameSim.utility.remove(j);
-				System.out.println("Enemy Immortality Matrix destroyed.");
 				j--;
 			}
 		}
@@ -12542,7 +12516,7 @@ public class GameSim {
 			for(int j = 0; j < GameSim.utility.size(); j++) {
 				if(GameSim.utility.get(j).getName().equals("Turret") && GameSim.utility.get(j).owner(p)) {
 					GameSim.utility.get(j).activate();
-					if (p.getUltcharge() == 5) {
+					if (p.getUltcharge() == 3) {
 						GameSim.utility.get(j).setSpikes();
 						p.increaseUltcharge();
 						p.resetUlt();
@@ -12550,14 +12524,14 @@ public class GameSim {
 						System.out.println();
 						return;
 					}
-					if (p.getUltcharge() == 6) {
+					if (p.getUltcharge() == 4) {
 						p.increaseUltcharge();
 						p.resetUlt();
 						System.out.println("\"Why didn't this turret have a flamethrower before? I'll add one now!\"");
 						System.out.println();
 						return;
 					}
-					if (p.getUltcharge() == 7) {
+					if (p.getUltcharge() == 5) {
 						GameSim.utility.get(j).setHealth(2);
 						p.increaseUltcharge();
 						p.resetUlt();
@@ -12565,7 +12539,7 @@ public class GameSim {
 						System.out.println();
 						return;
 					}
-					if (p.getUltcharge() == 8) {
+					if (p.getUltcharge() == 6) {
 						ArrayList<Effect> e = new ArrayList<Effect>();
 						Effect MidnitePower = new Effect("power", 0.5, 100);
 						e.add(MidnitePower);
@@ -12727,6 +12701,9 @@ public class GameSim {
 		a.weary(1);
 		b.weary(1);
 		c.weary(1);
+		a.weak(0.5, 1);
+		b.weak(0.5, 1);
+		c.weak(0.5, 1);
 		a.setTremor(true);
 		b.setTremor(true);
 		c.setTremor(true);
@@ -13199,7 +13176,7 @@ public class GameSim {
 			break;
 		}
 		Trap.setColor(p.getColor());
-		p.setCooldown(3);
+		p.setCooldown(2);
 		System.out.println(p.voiceline());
 		System.out.println();
 	}
@@ -13878,7 +13855,7 @@ public class GameSim {
 	}
 	
 	public static void DenyUltimate(Player p, Player a, Player b, Player c) {
-		p.power(0.25, 3);
+		p.power(0.5, 3);
 		p.setUlt();
 		p.setEMP();
 		a.setSupress(true);
@@ -14172,11 +14149,11 @@ public class GameSim {
 		System.out.print("Which ally do you want to send the burst healing to: ");
 		String targetResponse = input.next();
 		if(targetResponse.equals("1")) {
-			b.increaseHP(250);
-			p.addHealing(250);
+			b.increaseHP(350);
+			p.addHealing(350);
 			if (p.inRange(b, 4)) {
-				p.increaseHP(100);
-				p.addHealing(100);
+				p.increaseHP(175);
+				p.addHealing(175);
 			}
 			if (c.inRange(b, 4)) {
 				c.increaseHP(100);
@@ -14184,15 +14161,15 @@ public class GameSim {
 			}
 		}
 		if(targetResponse.equals("2")) {
-			c.increaseHP(250);
-			p.addHealing(250);
+			c.increaseHP(350);
+			p.addHealing(350);
 			if (p.inRange(c, 4)) {
-				p.increaseHP(100);
-				p.addHealing(100);
+				p.increaseHP(175);
+				p.addHealing(175);
 			}
 			if (b.inRange(c, 4)) {
-				b.increaseHP(100);
-				p.addHealing(100);
+				b.increaseHP(175);
+				p.addHealing(175);
 			}
 		}
 		System.out.println();
@@ -14384,10 +14361,9 @@ public class GameSim {
 		p.refine(1);
 		a.refine(1);
 		b.refine(1);
-		p.setOverhealth(p.getMaxHP() * 0.2);
-		a.setOverhealth(p.getMaxHP() * 0.2);
-		b.setOverhealth(p.getMaxHP() * 0.2);
-		p.addHealing(1200);;
+		p.setOverhealth(p.getMaxHP() * 0.3);
+		a.setOverhealth(p.getMaxHP() * 0.3);
+		b.setOverhealth(p.getMaxHP() * 0.3);
 		p.setCooldown(4);
 		System.out.println(p.voiceline());
 		System.out.println();

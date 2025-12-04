@@ -82,7 +82,7 @@ public class Dynamic {
 				  e3.ignite(3);
 				  acti.heal(0.15);
 				  System.out.println(acti.getSkin() + ": " + "\"Two fire breathing dragons? Awesome!\"");
-				  System.out.println(init.getSkin() + ": " + "\"Let's get a third next time.\"");
+				  System.out.println(init.getSkin() + ": " + "\"The more the better!.\"");
 			    break;
 			  case "Rocco":
 				  e1.knockbacked(acti.getLoc());

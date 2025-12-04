@@ -2719,8 +2719,8 @@ public class Player {
 		tookDamage = true;
 		for(int j = 0; j < GameSim.utility.size(); j++) {
 			if(GameSim.utility.get(j).getName().equals("Matrix") && GameSim.utility.get(j).isAlly(this) && GameSim.utility.get(j).getLoc().inRange(curLoc, 6)) {
-				if (health < (maxHealth * 0.1)) {
-					health = maxHealth * 0.1;
+				if (health < (maxHealth * 0.2)) {
+					health = maxHealth * 0.2;
 				}
 			}
 		}
@@ -3789,7 +3789,7 @@ public class Player {
 				e = e * 1.3;
 			}
 			for (int i = 0; i < permHeal; i++) {
-				e = e * 1.05;
+				e = e * 1.1;
 			}
 			if (dagger) {
 				e = e * 0.25;
@@ -3837,7 +3837,7 @@ public class Player {
 				e = e * 1.3;
 			}
 			for (int i = 0; i < permHeal; i++) {
-				e = e * 1.05;
+				e = e * 1.1;
 			}
 			if (dagger) {
 				e = e * 0.25;
@@ -3885,7 +3885,7 @@ public class Player {
 				e = e * 1.3;
 			}
 			for (int k = 0; k < permHeal; k++) {
-				e = e * 1.05;
+				e = e * 1.1;
 			}
 			if (dagger) {
 				e = e * 0.25;
